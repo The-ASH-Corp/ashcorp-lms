@@ -1,21 +1,16 @@
-import { Request, Response } from "express";
-import { MongoUserRepository } from "../../users/infrastructure/repositories/MongoUserRepository";
-import { RegisterUsecase } from "../application/usecase/RegisterUsecase";
+import { Request, Response, NextFunction } from "express";
+import { registerUsecase } from "../di";
+import { RegisterDTO } from "../application/dto/RegisterDTO";
 
-const userRepository = new MongoUserRepository();
-const registerUsecase = new RegisterUsecase(userRepository);
-
-
-
-export const registerController = async (req:Request, res:Response) => {
+export const registerController = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-        const {name,phone,email,password} = req.body;
+        const body: RegisterDTO = req.body;
 
-        const result = await registerUsecase.execute({name,phone,email,password});
+        const result = await registerUsecase.execute(body);
         
-        return res.status(201).json(result);
+        res.status(201).json(result);
         
-    } catch (error:any) {
-        return res.status(500).json({ error:error.message });
+    } catch (error: any) {
+        next(error);
     }
 }   

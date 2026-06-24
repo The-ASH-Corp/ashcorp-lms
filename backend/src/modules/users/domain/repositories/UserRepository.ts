@@ -1,12 +1,9 @@
 import { User } from "../entities/User";
+import { RegisterDTO } from "../../../auth/application/dto/RegisterDTO";
 
 export interface UserRepository{
-    create(data:{
-        name:string;
-        phone:string;
-        email:string;
-        password:string;
-    }):Promise<User>;
+    
+    create(data: RegisterDTO):Promise<User>;
 
     findByEmail(email:string):Promise<User|null>;
 

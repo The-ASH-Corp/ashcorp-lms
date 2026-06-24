@@ -1,15 +1,18 @@
 import { User } from "../../domain/entities/User";
 import { UserRepository } from "../../domain/repositories/UserRepository";
 import { UserModel } from "../models/UserModel";
+import { RegisterDTO } from "../../../auth/application/dto/RegisterDTO";
+import bcrypt from "bcrypt";
 
 export class MongoUserRepository implements UserRepository{
-    async create(data: {
-        name: string;
-        phone: string;
-        email: string;
-        password: string;
-    }): Promise<User> {
-        const user = await UserModel.create(data);
+    
+    async create(data: RegisterDTO): Promise<User> {
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(data.password, salt);
+        const user = await UserModel.create({
+            ...data,
+            password: hashedPassword
+        });
         return user;
     }
 
