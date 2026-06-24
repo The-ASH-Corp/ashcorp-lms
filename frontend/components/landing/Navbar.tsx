@@ -3,6 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { ChevronDown } from "lucide-react";
+import Image from "next/image";
 
 export default function Navbar() {
   return (
@@ -11,9 +12,7 @@ export default function Navbar() {
         {/* Logo */}
         <div className="flex items-center gap-8">
           <Link href="/" className="flex items-center gap-2">
-            <span className="text-xl font-bold tracking-tight text-indigo-950">
-              Ash <span className="text-purple-600">Academy</span>
-            </span>
+            <Image src="https://ashacademylms.com/storage/setting/logo/xrDvetmZgdczqHBL4GDygfTgdeyzPmZyq0Fa6Eo8.png" alt="Logo" width={90} height={90} />
           </Link>
 
           {/* Navigation Links */}
@@ -34,10 +33,10 @@ export default function Navbar() {
               Courses
             </Link>
             <Link href="#" className="text-sm font-medium text-gray-600 transition-colors hover:text-purple-700">
-              Mentors
+              About Us
             </Link>
             <Link href="#" className="text-sm font-medium text-gray-600 transition-colors hover:text-purple-700">
-              Pricing
+              Contact Us
             </Link>
           </nav>
         </div>
@@ -45,16 +44,10 @@ export default function Navbar() {
         {/* Action Buttons */}
         <div className="flex items-center gap-4">
           <Link
-            href="#"
-            className="text-sm font-medium text-gray-700 transition-colors hover:text-purple-700"
-          >
-            Login
-          </Link>
-          <Link
-            href="#"
+            href="/login"
             className="rounded-full bg-purple-600 px-5 py-2 text-sm font-medium text-white transition-all shadow-md shadow-purple-200 hover:bg-purple-700 hover:shadow-lg hover:shadow-purple-300"
           >
-            Join for free
+            Login
           </Link>
         </div>
       </div>
