@@ -1,8 +1,12 @@
 import app from "./server";
-import "dotenv/config"
+import { ENV } from "./shared/env/ENV";
 
-const PORT = process.env.PORT;
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+if (!ENV.PORT) {
+  throw new Error("PORT is not defined");
+}
+
+
+app.listen(ENV.PORT, () => {
+  console.info(`Server running on port ${ENV.PORT}`);
 });
