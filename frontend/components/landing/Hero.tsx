@@ -12,7 +12,7 @@ export default function Hero() {
 
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
         {/* Sparkle Badge */}
-        <div className="inline-flex items-center gap-1.5 rounded-full bg-purple-50 px-4 py-1.5 text-xs font-semibold text-purple-700 ring-1 ring-purple-600/10 mb-8 animate-fade-in">
+        <div className="inline-flex items-center gap-1.5 rounded-full bg-purple-50 px-4 py-1.5 text-xs font-semibold text-purple-700 ring-1 ring-purple-600/10 mb-8 animate-bounce [animation-duration:2s]">
           <Sparkles className="h-3.5 w-3.5" />
           <span>New: Creative Illustration Masterclass</span>
         </div>
@@ -20,7 +20,7 @@ export default function Hero() {
         {/* Headline */}
         <h1 className="mx-auto max-w-4xl text-4xl font-extrabold tracking-tight text-indigo-950 sm:text-5xl lg:text-6xl/tight">
           Master the Art of{" "}
-          <span className="relative inline-block px-1 font-serif italic text-purple-600 underline decoration-purple-300 decoration-wavy decoration-2">
+          <span className="relative inline-block px-1 font-serif italic text-purple-600 underline decoration-purple-300 decoration-wavy decoration-3">
             Creative Learning
           </span>
         </h1>
