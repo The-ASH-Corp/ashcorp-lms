@@ -21,6 +21,10 @@ export class LoginUsecase {
     throw new AppError("Invalid email or password", 401);
   }
 
+  if (!user._id) {
+    throw new AppError("User id is missing", 500);
+  }
+
   // Generate a token 
   const token = generateToken(user._id);
 
