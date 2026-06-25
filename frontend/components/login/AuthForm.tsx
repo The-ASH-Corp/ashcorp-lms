@@ -244,7 +244,7 @@ export default function AuthForm({
         <Button
           id={isSignUp ? "signup-submit-btn" : "login-submit-btn"}
           type="submit"
-          className="w-full rounded-xl bg-sidebar-primary py-6 text-sm font-semibold text-sidebar-primary-foreground shadow-lg shadow-sidebar-primary/40 transition hover:bg-sidebar-primary/90 hover:shadow-sidebar-primary/50"
+          className="w-full rounded-xl bg-purple-600 py-6 text-sm border-none font-semibold text-white shadow-lg shadow-purple-600/40 transition hover:bg-purple-700 hover:shadow-purple-600/50"
         >
           {isSignUp ? "Create Account" : "Login"}
           <ArrowRight className="ml-2 h-4 w-4" />
@@ -256,7 +256,7 @@ export default function AuthForm({
         <button
           type="button"
           onClick={onToggleMode}
-          className="font-semibold text-foreground transition hover:text-sidebar-primary"
+          className="font-semibold text-foreground transition hover:text-purple-600"
         >
           {isSignUp ? "Login" : "Create an Account"}
         </button>
