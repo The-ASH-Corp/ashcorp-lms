@@ -12,7 +12,7 @@ export interface RegisterRequest {
   email: string;
   phone: string;
   password: string;
-  password_confirmation: string;
+  confirmPassword: string;
 }
 
 export interface AuthResponse {
@@ -36,11 +36,15 @@ const getAuthCredentials = (response: AuthResponse) => {
 
 export const authApi = api.injectEndpoints({
   endpoints: (builder) => ({
+    
     login: builder.mutation<AuthResponse, LoginRequest>({
       query: (credentials) => ({
         url: "/auth/login",
         method: "POST",
         body: credentials,
+        headers: {
+          "Content-Type": "application/json",
+        },
       }),
       async onQueryStarted(_, { dispatch, queryFulfilled }) {
         try {

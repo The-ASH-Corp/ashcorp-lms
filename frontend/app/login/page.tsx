@@ -5,8 +5,12 @@ import AuthLayout from "@/components/login/AuthLayout";
 import { useLoginMutation, useRegisterMutation } from "@/lib/redux/features/auth/authApi";
 import { getApiErrorMessage } from "@/lib/utils";
 import { LoginFormData, RegisterFormData } from "@/lib/validations/auth";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner"
+
 
 export default function LoginPage() {
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isSignUp, setIsSignUp] = useState(false);
@@ -20,6 +24,8 @@ export default function LoginPage() {
     if (isSignUp) {
       try {
         await register(data as RegisterFormData).unwrap();
+        router.push("/");
+        toast.success("Registration successful! Please log in.");
       } catch (error) {
         setErrorMessage(getApiErrorMessage(error));
       }
@@ -28,6 +34,7 @@ export default function LoginPage() {
 
     try {
       await login(data as LoginFormData).unwrap();
+      router.push("/");
     } catch (error) {
       setErrorMessage(getApiErrorMessage(error));
     }

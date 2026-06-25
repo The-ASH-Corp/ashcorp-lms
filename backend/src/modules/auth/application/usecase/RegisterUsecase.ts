@@ -17,7 +17,8 @@ export class RegisterUsecase{
             throw new AppError("User already exists", 409);
         }
         
-        const user = await this.userRepository.create(data);
+        let user = await this.userRepository.create(data);
+
         return user;
     }
 

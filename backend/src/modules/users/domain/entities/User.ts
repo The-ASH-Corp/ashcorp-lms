@@ -1,8 +1,11 @@
+import mongoose from "mongoose";
+
 export class User{
     constructor(
         public name:string,
-        public phone:string,
+        public phone:number,
         public email:string,
         public password:string,
+        public _id?: mongoose.Types.ObjectId |string,
     ){}
 }

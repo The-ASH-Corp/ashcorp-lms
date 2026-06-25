@@ -47,7 +47,7 @@ export default function AuthForm({
       remember: false,
       name: "",
       phone: "",
-      password_confirmation: "",
+      confirmPassword: "",
     },
   });
 
@@ -235,7 +235,7 @@ export default function AuthForm({
                 <input
                   id="signup-confirm-password"
                   type={showConfirmPassword ? "text" : "password"}
-                  {...register("password_confirmation")}
+                  {...register("confirmPassword")}
                   placeholder="••••••••"
                   className="w-full rounded-xl bg-input py-3 pl-10 pr-11 text-sm text-foreground placeholder-muted-foreground outline-none ring-1 ring-border transition focus:ring-sidebar-primary/60"
                 />
@@ -247,8 +247,8 @@ export default function AuthForm({
                   {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                 </button>
               </div>
-              {errors.password_confirmation && (
-                <p className="text-xs text-red-400">{errors.password_confirmation.message}</p>
+              {errors.confirmPassword && (
+                <p className="text-xs text-red-400">{errors.confirmPassword.message}</p>
               )}
             </div>
           </>

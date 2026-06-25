@@ -1,6 +1,6 @@
 export interface RegisterDTO {
     name:string;
-    phone:string;
+    phone:number;
     email:string;
     password:string;
 }
