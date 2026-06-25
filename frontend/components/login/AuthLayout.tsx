@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import AuthForm from "@/components/login/AuthForm";
-
 import { AuthFormValues } from "@/lib/validations/auth";
 
 interface AuthLayoutProps {
