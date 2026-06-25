@@ -18,6 +18,20 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
+## API Configuration
+
+Redux Toolkit and RTK Query are wired through `lib/redux`. Set the API base URL in `.env.local` when the backend is not served from the same Next.js origin:
+
+```bash
+NEXT_PUBLIC_API_BASE_URL=http://localhost:5000/api
+```
+
+The auth endpoints currently expect:
+
+- `POST /auth/login`
+- `POST /auth/register`
+- `GET /auth/me`
+
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
 ## Learn More

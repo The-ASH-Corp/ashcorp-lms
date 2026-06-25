@@ -27,7 +27,7 @@ app.use(cookieParser());
 
 app.use(morgan("dev"));
 
-app.use(routes);
+app.use("/api",routes);
 
 app.use(errorHandler);
 

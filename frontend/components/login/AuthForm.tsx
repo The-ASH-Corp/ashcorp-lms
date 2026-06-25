@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { Mail, Lock, Eye, EyeOff, ArrowRight, User, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/spinner";
 
 interface AuthFormProps {
   isSignUp: boolean;
@@ -16,6 +17,8 @@ interface AuthFormProps {
   signupPhone: string;
   signupPassword: string;
   signupConfirmPassword: string;
+  errorMessage: string | null;
+  isSubmitting: boolean;
   onTogglePassword: () => void;
   onToggleConfirmPassword: () => void;
   onToggleStayLoggedIn: () => void;
@@ -42,6 +45,8 @@ export default function AuthForm({
   signupPhone,
   signupPassword,
   signupConfirmPassword,
+  errorMessage,
+  isSubmitting,
   onTogglePassword,
   onToggleConfirmPassword,
   onToggleStayLoggedIn,
@@ -241,13 +246,21 @@ export default function AuthForm({
           </>
         )}
 
+        {errorMessage && (
+          <p className="rounded-xl bg-red-500/10 px-4 py-3 text-sm font-medium text-red-300 ring-1 ring-red-500/20">
+            {errorMessage}
+          </p>
+        )}
+
         <Button
           id={isSignUp ? "signup-submit-btn" : "login-submit-btn"}
           type="submit"
+          disabled={isSubmitting}
           className="w-full rounded-xl bg-purple-600 py-6 text-sm border-none font-semibold text-white shadow-lg shadow-purple-600/40 transition hover:bg-purple-700 hover:shadow-purple-600/50"
         >
-          {isSignUp ? "Create Account" : "Login"}
-          <ArrowRight className="ml-2 h-4 w-4" />
+          {isSubmitting && <Spinner className="mr-2 h-4 w-4" />}
+          {isSubmitting ? "Please wait" : isSignUp ? "Create Account" : "Login"}
+          {!isSubmitting && <ArrowRight className="ml-2 h-4 w-4" />}
         </Button>
       </form>
 

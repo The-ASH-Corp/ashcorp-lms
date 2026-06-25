@@ -2,12 +2,18 @@
 
 import { useState, type FormEvent } from "react";
 import AuthLayout from "@/components/login/AuthLayout";
+import { useLoginMutation, useRegisterMutation } from "@/lib/redux/features/auth/authApi";
+import { getApiErrorMessage } from "@/lib/utils";
+
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [stayLoggedIn, setStayLoggedIn] = useState(false);
   const [isSignUp, setIsSignUp] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [login, { isLoading: isLoggingIn }] = useLoginMutation();
+  const [register, { isLoading: isRegistering }] = useRegisterMutation();
 
   const [loginEmail, setLoginEmail] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
@@ -18,21 +24,40 @@ export default function LoginPage() {
   const [signupPassword, setSignupPassword] = useState("");
   const [signupConfirmPassword, setSignupConfirmPassword] = useState("");
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setErrorMessage(null);
 
     if (isSignUp) {
-      console.log("Create account", {
-        signupName,
-        signupEmail,
-        signupPhone,
-        signupPassword,
-        signupConfirmPassword,
-      });
+      if (signupPassword !== signupConfirmPassword) {
+        setErrorMessage("Passwords do not match.");
+        return;
+      }
+
+      try {
+        await register({
+          name: signupName,
+          email: signupEmail,
+          phone: signupPhone,
+          password: signupPassword,
+          password_confirmation: signupConfirmPassword,
+        }).unwrap();
+      } catch (error) {
+        setErrorMessage(getApiErrorMessage(error));
+      }
+
       return;
     }
 
-    console.log("Login", { loginEmail, loginPassword, stayLoggedIn });
+    try {
+      await login({
+        email: loginEmail,
+        password: loginPassword,
+        remember: stayLoggedIn,
+      }).unwrap();
+    } catch (error) {
+      setErrorMessage(getApiErrorMessage(error));
+    }
   };
 
   return (
@@ -48,10 +73,15 @@ export default function LoginPage() {
       signupPhone={signupPhone}
       signupPassword={signupPassword}
       signupConfirmPassword={signupConfirmPassword}
+      errorMessage={errorMessage}
+      isSubmitting={isLoggingIn || isRegistering}
       onTogglePassword={() => setShowPassword((prev) => !prev)}
       onToggleConfirmPassword={() => setShowConfirmPassword((prev) => !prev)}
       onToggleStayLoggedIn={() => setStayLoggedIn((prev) => !prev)}
-      onToggleMode={() => setIsSignUp((prev) => !prev)}
+      onToggleMode={() => {
+        setErrorMessage(null);
+        setIsSignUp((prev) => !prev);
+      }}
       onLoginEmailChange={(value) => setLoginEmail(value)}
       onLoginPasswordChange={(value) => setLoginPassword(value)}
       onSignupNameChange={(value) => setSignupName(value)}

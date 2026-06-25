@@ -15,6 +15,8 @@ interface AuthLayoutProps {
   signupPhone: string;
   signupPassword: string;
   signupConfirmPassword: string;
+  errorMessage: string | null;
+  isSubmitting: boolean;
   onTogglePassword: () => void;
   onToggleConfirmPassword: () => void;
   onToggleStayLoggedIn: () => void;
@@ -41,6 +43,8 @@ export default function AuthLayout({
   signupPhone,
   signupPassword,
   signupConfirmPassword,
+  errorMessage,
+  isSubmitting,
   onTogglePassword,
   onToggleConfirmPassword,
   onToggleStayLoggedIn,
@@ -127,6 +131,8 @@ export default function AuthLayout({
           signupPhone={signupPhone}
           signupPassword={signupPassword}
           signupConfirmPassword={signupConfirmPassword}
+          errorMessage={errorMessage}
+          isSubmitting={isSubmitting}
           onTogglePassword={onTogglePassword}
           onToggleConfirmPassword={onToggleConfirmPassword}
           onToggleStayLoggedIn={onToggleStayLoggedIn}
