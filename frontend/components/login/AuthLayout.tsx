@@ -3,55 +3,29 @@
 import Image from "next/image";
 import AuthForm from "@/components/login/AuthForm";
 
+import { AuthFormValues } from "@/lib/validations/auth";
+
 interface AuthLayoutProps {
   isSignUp: boolean;
   showPassword: boolean;
   showConfirmPassword: boolean;
-  stayLoggedIn: boolean;
-  loginEmail: string;
-  loginPassword: string;
-  signupName: string;
-  signupEmail: string;
-  signupPhone: string;
-  signupPassword: string;
-  signupConfirmPassword: string;
+  errorMessage: string | null;
+  isSubmitting: boolean;
   onTogglePassword: () => void;
   onToggleConfirmPassword: () => void;
-  onToggleStayLoggedIn: () => void;
   onToggleMode: () => void;
-  onLoginEmailChange: (value: string) => void;
-  onLoginPasswordChange: (value: string) => void;
-  onSignupNameChange: (value: string) => void;
-  onSignupEmailChange: (value: string) => void;
-  onSignupPhoneChange: (value: string) => void;
-  onSignupPasswordChange: (value: string) => void;
-  onSignupConfirmPasswordChange: (value: string) => void;
-  onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
+  onSubmit: (data: AuthFormValues) => void;
 }
 
 export default function AuthLayout({
   isSignUp,
   showPassword,
   showConfirmPassword,
-  stayLoggedIn,
-  loginEmail,
-  loginPassword,
-  signupName,
-  signupEmail,
-  signupPhone,
-  signupPassword,
-  signupConfirmPassword,
+  errorMessage,
+  isSubmitting,
   onTogglePassword,
   onToggleConfirmPassword,
-  onToggleStayLoggedIn,
   onToggleMode,
-  onLoginEmailChange,
-  onLoginPasswordChange,
-  onSignupNameChange,
-  onSignupEmailChange,
-  onSignupPhoneChange,
-  onSignupPasswordChange,
-  onSignupConfirmPasswordChange,
   onSubmit,
 }: AuthLayoutProps) {
   return (
@@ -114,30 +88,16 @@ export default function AuthLayout({
         </p>
       </div>
 
-      <div className="flex w-full flex-col items-center justify-center p-6 lg:w-[480px] lg:shrink-0 lg:p-10">
+      <div className="flex w-full flex-col items-center justify-center p-6 lg:w-120 lg:shrink-0 lg:p-10">
         <AuthForm
           isSignUp={isSignUp}
           showPassword={showPassword}
           showConfirmPassword={showConfirmPassword}
-          stayLoggedIn={stayLoggedIn}
-          loginEmail={loginEmail}
-          loginPassword={loginPassword}
-          signupName={signupName}
-          signupEmail={signupEmail}
-          signupPhone={signupPhone}
-          signupPassword={signupPassword}
-          signupConfirmPassword={signupConfirmPassword}
+          errorMessage={errorMessage}
+          isSubmitting={isSubmitting}
           onTogglePassword={onTogglePassword}
           onToggleConfirmPassword={onToggleConfirmPassword}
-          onToggleStayLoggedIn={onToggleStayLoggedIn}
           onToggleMode={onToggleMode}
-          onLoginEmailChange={onLoginEmailChange}
-          onLoginPasswordChange={onLoginPasswordChange}
-          onSignupNameChange={onSignupNameChange}
-          onSignupEmailChange={onSignupEmailChange}
-          onSignupPhoneChange={onSignupPhoneChange}
-          onSignupPasswordChange={onSignupPasswordChange}
-          onSignupConfirmPasswordChange={onSignupConfirmPasswordChange}
           onSubmit={onSubmit}
         />
       </div>
