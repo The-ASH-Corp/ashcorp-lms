@@ -2,11 +2,10 @@
 
 import React from "react";
 import Link from "next/link";
-import { ChevronDown, LogOut } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import Image from "next/image";
 import { useAppDispatch, useAppSelector } from "@/lib/redux/hooks";
 import { logout } from "@/lib/redux/features/auth/authSlice";
-import { useGetCurrentUserQuery } from "@/lib/redux/features/auth/authApi";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import {
   DropdownMenu,
@@ -18,12 +17,8 @@ import {
 
 export default function Navbar() {
   const dispatch = useAppDispatch();
-  let user = useAppSelector((state) => state.auth.user);
-  let data;
-  if (!user) {
-    data = useGetCurrentUserQuery();
-    user = data?.data;
-  }
+  const user = useAppSelector((state) => state.auth.user);
+
   return (
     <header className="sticky top-0 z-50 w-full border-b border-purple-100 bg-white/80 backdrop-blur-md">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">

@@ -4,6 +4,7 @@ import "./globals.css";
 import { cn } from "@/lib/utils";
 import { ReduxProvider } from "@/lib/redux/provider";
 import { Toaster } from "@/components/ui/sonner"
+import AuthProvider from "@/components/login/AuthProvider";
 
 const inter = Inter({subsets:['latin'],variable:'--font-sans'});
 
@@ -34,7 +35,7 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col">
         <Toaster richColors position="top-right"/>
-        <ReduxProvider>{children}</ReduxProvider>
+        <ReduxProvider><AuthProvider>{children}</AuthProvider></ReduxProvider>
       </body>
     </html>
   );
