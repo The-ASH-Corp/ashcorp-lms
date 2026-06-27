@@ -2,7 +2,6 @@
 
 import React from "react";
 import Link from "next/link";
-import { ChevronDown } from "lucide-react";
 import Image from "next/image";
 import { useAppDispatch, useAppSelector } from "@/lib/redux/hooks";
 import { logout } from "@/lib/redux/features/auth/authSlice";
@@ -14,6 +13,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
+import { Tabs, TabsList, TabsTrigger } from "../ui/tabs";
+import { NativeSelect, NativeSelectOption } from "../ui/native-select";
 
 export default function Navbar() {
   const dispatch = useAppDispatch();
@@ -35,56 +36,32 @@ export default function Navbar() {
 
           {/* Navigation Links */}
           <nav className="hidden md:flex items-center gap-6">
-            <div className="relative group">
-              <button className="flex items-center gap-1 text-sm font-medium text-purple-600 transition-colors hover:text-purple-800">
-                Categories
-                <ChevronDown className="h-4 w-4" />
-              </button>
-              <div className="absolute top-full left-0 mt-1 hidden w-48 rounded-md bg-white p-2 shadow-lg ring-1 ring-black/5 group-hover:block">
-                <Link
-                  href="#"
-                  className="block rounded-md px-3 py-2 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-700"
-                >
-                  Digital Illustration
-                </Link>
-                <Link
-                  href="#"
-                  className="block rounded-md px-3 py-2 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-700"
-                >
-                  Creative UI
-                </Link>
-                <Link
-                  href="#"
-                  className="block rounded-md px-3 py-2 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-700"
-                >
-                  Motion Design
-                </Link>
-                <Link
-                  href="#"
-                  className="block rounded-md px-3 py-2 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-700"
-                >
-                  Creative Writing
-                </Link>
-              </div>
-            </div>
-            <Link
-              href="#"
-              className="text-sm font-medium text-gray-600 transition-colors hover:text-purple-700"
-            >
-              Courses
-            </Link>
-            <Link
-              href="#"
-              className="text-sm font-medium text-gray-600 transition-colors hover:text-purple-700"
-            >
-              About Us
-            </Link>
-            <Link
-              href="#"
-              className="text-sm font-medium text-gray-600 transition-colors hover:text-purple-700"
-            >
-              Contact Us
-            </Link>
+            <Tabs defaultValue="Categories">
+              <TabsList variant={"line"} className="">
+                <TabsTrigger value="Categories" >
+                  <NativeSelect className="w-[115px] border-0 border-none bg-transparent text-gray-600 data-[state=active]:text-violet-600">
+                    <NativeSelectOption value="Categories">
+                      Categories
+                    </NativeSelectOption>
+                    <NativeSelectOption value="Categories">
+                      Digital Illustration
+                    </NativeSelectOption>
+                    <NativeSelectOption value="Courses">
+                      Creative UI
+                    </NativeSelectOption>
+                    <NativeSelectOption value="About Us">
+                      Motion Design
+                    </NativeSelectOption>
+                    <NativeSelectOption value="Contact Us">
+                      Creative Writing
+                    </NativeSelectOption>
+                  </NativeSelect>
+                </TabsTrigger>
+                <TabsTrigger value="Courses" className="text-gray-600 data-[state=active]:text-violet-600">Courses</TabsTrigger>
+                <TabsTrigger value="About Us" className="text-gray-600 data-[state=active]:text-violet-600">About Us</TabsTrigger>
+                <TabsTrigger value="Contact Us" className="text-gray-600 data-[state=active]:text-violet-600">Contact Us</TabsTrigger>
+              </TabsList>
+            </Tabs>
           </nav>
         </div>
 
