@@ -3,6 +3,7 @@
 import Image from "next/image";
 import AuthForm from "@/components/login/AuthForm";
 import { AuthFormValues } from "@/lib/validations/auth";
+import { Link } from "lucide-react";
 
 interface AuthLayoutProps {
   isSignUp: boolean;
@@ -39,7 +40,7 @@ export default function AuthLayout({
             priority
           />
         </div>
-
+        
         <div className="relative z-10 flex items-center gap-3">
           <Image
             src="https://ashacademylms.com/storage/setting/logo/xrDvetmZgdczqHBL4GDygfTgdeyzPmZyq0Fa6Eo8.png"

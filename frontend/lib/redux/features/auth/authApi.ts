@@ -19,17 +19,19 @@ export interface AuthResponse {
   token?: string;
   accessToken?: string;
   user?: AuthUser;
+  result?: AuthUser;
   data?: {
     token?: string;
     accessToken?: string;
     user?: AuthUser;
+    result?: AuthUser;
   };
   message?: string;
 }
 
 const getAuthCredentials = (response: AuthResponse) => {
   const token = response.token ?? response.accessToken ?? response.data?.token ?? response.data?.accessToken ?? null;
-  const user = response.user ?? response.data?.user ?? null;
+  const user = response.user ?? response.result ?? response.data?.user ?? response.data?.result ?? null;
 
   return { token, user };
 };
@@ -77,10 +79,6 @@ export const authApi = api.injectEndpoints({
     getCurrentUser: builder.query<AuthUser, void>({
       query: () => "/auth/me",
       transformResponse: (response: AuthUser | { data?: AuthUser }) => {
-        if ("data" in response && response.data) {
-          return response.data;
-        }
-
         return response as AuthUser;
       },
       providesTags: ["User"],
