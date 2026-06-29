@@ -8,7 +8,7 @@ import { Paintbrush, Code, Play, PenTool, Rocket, ArrowRight } from "lucide-reac
 export default function ExploreCategories() {
   return (
     <section className="bg-white py-20">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto w-full px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
         {/* Header */}
         <div className="flex items-end justify-between mb-12">
           <div>
