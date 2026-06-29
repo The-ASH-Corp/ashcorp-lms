@@ -57,9 +57,9 @@ export default function Navbar() {
                     </NativeSelectOption>
                   </NativeSelect>
                 </TabsTrigger>
-                <TabsTrigger value="Courses" className="text-gray-600 data-[state=active]:text-violet-600">Courses</TabsTrigger>
-                <TabsTrigger value="About Us" className="text-gray-600 data-[state=active]:text-violet-600">About Us</TabsTrigger>
-                <TabsTrigger value="Contact Us" className="text-gray-600 data-[state=active]:text-violet-600">Contact Us</TabsTrigger>
+                <TabsTrigger value="Courses" className="text-gray-600 data-[state=active]:text-violet-600"><Link href="/courses">Courses</Link></TabsTrigger>
+                <TabsTrigger value="About Us" className="text-gray-600 data-[state=active]:text-violet-600"><Link href="/about">About Us</Link></TabsTrigger>
+                <TabsTrigger value="Contact Us" className="text-gray-600 data-[state=active]:text-violet-600"><Link href="/contact">Contact Us</Link></TabsTrigger>
               </TabsList>
             </Tabs>
           </nav>
