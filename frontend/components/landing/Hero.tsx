@@ -10,7 +10,7 @@ export default function Hero() {
       <div className="absolute top-1/4 -left-20 h-72 w-72 rounded-full bg-blue-200/40 blur-3xl" />
       <div className="absolute top-1/3 -right-20 h-96 w-96 rounded-full bg-purple-300/30 blur-3xl" />
 
-      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
+      <div className="relative mx-auto w-full px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16 text-center">
         {/* Sparkle Badge */}
         <div className="inline-flex items-center gap-1.5 rounded-full bg-purple-50 px-4 py-1.5 text-xs font-semibold text-purple-700 ring-1 ring-purple-600/10 mb-8 animate-bounce [animation-duration:2s]">
           <Sparkles className="h-3.5 w-3.5" />

@@ -5,7 +5,7 @@ import React from "react";
 export default function Stats() {
   return (
     <section className="bg-white py-12">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto w-full px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
         <div className="rounded-3xl bg-purple-600 px-6 py-12 text-white shadow-xl shadow-purple-100 sm:px-12 md:py-16">
           <div className="grid grid-cols-1 gap-y-10 md:grid-cols-3 md:gap-y-0 md:divide-x md:divide-purple-500/40">
             {/* Stat 1 */}
