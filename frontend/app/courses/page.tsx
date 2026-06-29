@@ -116,7 +116,7 @@ export default function CoursesPage() {
 
           {/* Sidebar */}
           <div
-            className={`${sidebarOpen ? "block" : "hidden"} lg:block lg:w-56 lg:flex-shrink-0`}
+            className={`${sidebarOpen ? "block" : "hidden"} lg:block lg:w-56 lg:flex-shrink-0 lg:sticky lg:top-24 lg:self-start lg:max-h-[calc(100vh-7rem)] lg:overflow-y-auto`}
           >
             <FilterSidebar />
           </div>
@@ -124,7 +124,7 @@ export default function CoursesPage() {
           {/* Course Grid */}
           <div className="flex-1 w-full">
             {/* Header Controls */}
-            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-8 lg:mb-10">
+            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-8 lg:mb-10 bg-white shadow-sm rounded-lg p-4">
               <p className="text-gray-600 font-medium text-sm sm:text-base">
                 Showing 24 Courses
               </p>
@@ -136,9 +136,9 @@ export default function CoursesPage() {
                   />
                   <InputGroupAddon
                     align="inline-end"
-                    className="bg-white border border-gray-300 rounded-lg hover:border-violet-600 transition-colors text-gray-700 font-medium text-sm w-full sm:w-auto px-2"
+                    className="mr-1 flex h-[calc(100%-8px)] items-center justify-center rounded-lg bg-violet-600 px-4 cursor-pointer"
                   >
-                    <SearchIcon className="text-muted-foreground cursor-pointer hover:text-violet-600 transition-colors" />
+                    <SearchIcon className="h-5 w-5 text-white" />
                   </InputGroupAddon>
                 </InputGroup>
                 <span className="text-gray-700 font-medium text-sm">
@@ -167,10 +167,10 @@ export default function CoursesPage() {
                   <PaginationPrevious href="#" />
                 </PaginationItem>
                 <PaginationItem>
-                  <PaginationLink href="#">1</PaginationLink>
+                  <PaginationLink href="#" isActive>1</PaginationLink>
                 </PaginationItem>
                 <PaginationItem>
-                  <PaginationLink href="#" isActive>
+                  <PaginationLink href="#">
                     2
                   </PaginationLink>
                 </PaginationItem>
