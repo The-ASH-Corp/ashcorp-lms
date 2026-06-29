@@ -91,8 +91,8 @@ export default function Navbar() {
                   </Avatar>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
-                  <DropdownMenuItem>My Account</DropdownMenuItem>
-                  <DropdownMenuSeparator /> 
+                  <DropdownMenuItem><Link href="/dashboard">Dashboard</Link></DropdownMenuItem>
+                  <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={() => dispatch(logout())}>
                     Logout
                   </DropdownMenuItem>
