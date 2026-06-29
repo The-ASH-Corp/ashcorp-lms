@@ -20,7 +20,7 @@ export default function FilterSidebar() {
   };
 
   return (
-    <div className="w-full lg:w-56 lg:flex-shrink-0 bg-white px-5 py-8 rounded-lg shadow-xl">
+    <div className="w-full lg:w-56 lg:flex-shrink-0 bg-white px-5 py-8 rounded-lg border-gray-200 border shadow-2xl ">
       {/* Filters Header */}
       <div className="flex justify-between items-center mb-4 lg:mb-6">
         <h2 className="text-lg font-bold text-gray-900">Filters</h2>
