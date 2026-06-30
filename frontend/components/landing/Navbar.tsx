@@ -4,7 +4,7 @@ import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useAppDispatch, useAppSelector } from "@/lib/redux/hooks";
-import { logout } from "@/lib/redux/features/auth/authSlice";
+import { Logout } from "@/lib/redux/features/auth/authSlice";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import {
   DropdownMenu,
@@ -15,11 +15,17 @@ import {
 } from "../ui/dropdown-menu";
 import { Tabs, TabsList, TabsTrigger } from "../ui/tabs";
 import { NativeSelect, NativeSelectOption } from "../ui/native-select";
+import { useLogoutMutation } from "@/lib/redux/features/auth/authApi";
 
 export default function Navbar() {
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.auth.user);
+  const [logout] = useLogoutMutation();
 
+  const handleLogout = async () => {
+    await logout();
+    dispatch(Logout());
+  };
   return (
     <header className="sticky top-0 z-50 w-full border-b border-purple-100 bg-white/80 backdrop-blur-md">
       <div className="mx-auto flex h-16 w-full items-center justify-between px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
@@ -93,7 +99,7 @@ export default function Navbar() {
                 <DropdownMenuContent>
                   <DropdownMenuItem><Link href="/dashboard">Dashboard</Link></DropdownMenuItem>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={() => dispatch(logout())}>
+                  <DropdownMenuItem onClick={() => handleLogout()}>
                     Logout
                   </DropdownMenuItem>
                 </DropdownMenuContent>

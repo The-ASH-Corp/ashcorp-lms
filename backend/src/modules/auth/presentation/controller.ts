@@ -83,3 +83,17 @@ export const getCurrentUserController = async (
     next(error);
   }
 };
+
+export const logoutController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
+  try {
+    res.clearCookie("accessToken", accessTokenCookieOptions);
+
+    res.status(200).json({ message: "Logout successful" });
+  } catch (error: any) {
+    next(error);
+  }
+};
