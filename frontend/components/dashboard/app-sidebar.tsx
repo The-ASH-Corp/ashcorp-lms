@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+import { usePathname, useRouter } from "next/navigation"
 
 import {
   Sidebar,
@@ -16,46 +17,60 @@ import {
 } from "@/components/ui/sidebar"
 import { Card } from "../ui/card"
 import { Avatar, AvatarImage } from "../ui/avatar"
-import { useAppSelector } from "@/lib/redux/hooks"
+import { useAppSelector, useAppDispatch } from "@/lib/redux/hooks"
+import { Logout } from "@/lib/redux/features/auth/authSlice"
+import { useLogoutMutation } from "@/lib/redux/features/auth/authApi"
+import Link from "next/link"
+import { LayoutDashboard, User, BookOpen, History, CreditCard, LogOut } from "lucide-react"
 
-
-const data = {
-  navMain: [
-    {
-      url: "#",
-      items: [
-        {
-          title: "Dashboard",
-          url: "#",
-          isActive: true,
-        },
-        {
-          title: "Profile",
-          url: "#",
-        },
-        {
-          title: "My Courses",
-          url: "#",
-        },
-        {
-          title: "Payment History",
-          url: "#",
-        },
-        {
-          title: "Plan & Payment",
-          url: "#",
-        },
-        {
-          title: "Logout",
-          url: "#",
-        }
-      ],
-    },
-  ],
-}
+const navItems = [
+  {
+    title: "Dashboard",
+    url: "/dashboard",
+    icon: <LayoutDashboard />,
+  },
+  {
+    title: "Profile",
+    url: "/profile",
+    icon: <User />,
+  },
+  {
+    title: "My Courses",
+    url: "/my-courses",
+    icon: <BookOpen />,
+  },
+  {
+    title: "Payment History",
+    url: "/payment-history",
+    icon: <History />,
+  },
+  {
+    title: "Plan & Payment",
+    url: "/plan-payment",
+    icon: <CreditCard />,
+  },
+  {
+    title: "Logout",
+    url: "#",
+    isLogout: true,
+    icon: <LogOut />,
+  }
+]
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const user = useAppSelector((state) => state.auth.user);
+  const pathname = usePathname();
+  const dispatch = useAppDispatch();
+  const router = useRouter();
+  const [logout] = useLogoutMutation();
+
+  const handleLogout = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    await logout();
+    dispatch(Logout());
+    router.push("/");
+  };
+
   return (
     <Sidebar variant="floating" className="!top-16 !h-[calc(100svh-4rem)]" {...props}>
       <SidebarHeader>
@@ -70,7 +85,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                         "https://ashacademylms.com/assets/images/profile/demo-profile.png"
                       }
                     />
-
                   </Avatar>
                   <div className="flex flex-col text-center justify-center">
                     <span className="font-medium">{user?.name}</span>
@@ -85,21 +99,31 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarContent>
         <SidebarGroup>
           <SidebarMenu className="gap-2">
-            {data.navMain.map((item) => (
-              <SidebarMenuItem key={item.title || " "}>
-                {item.items?.length ? (
-                  <SidebarMenuSub className="ml-0 border-l-0 px-1.5 gap-5">
-                    {item.items.map((item) => (
+            <SidebarMenuItem>
+              <SidebarMenuSub className="ml-0 border-l-0 px-1.5 gap-2">
+                {navItems.map((item) => {
+                  const isActive = pathname === item.url;
+                  
+                  if (item.isLogout) {
+                    return (
                       <SidebarMenuSubItem key={item.title}>
-                        <SidebarMenuSubButton asChild isActive={item.isActive} className={`rounded-xl p-3 hover:bg-violet-100 hover:text-black ${item.isActive ? "bg-violet-500 text-black" : ""}`}>
-                          <a href={item.url} className="p-5">{item.title}</a>
+                        <SidebarMenuSubButton asChild className="rounded-xl p-6 hover:bg-red-600 hover:text-white transition-colors cursor-pointer">
+                          <a onClick={handleLogout} className="p-5 flex items-center gap-3 w-full">{item.icon} {item.title}</a>
                         </SidebarMenuSubButton>
                       </SidebarMenuSubItem>
-                    ))}
-                  </SidebarMenuSub>
-                ) : null}
-              </SidebarMenuItem>
-            ))}
+                    );
+                  }
+
+                  return (
+                    <SidebarMenuSubItem key={item.title}>
+                      <SidebarMenuSubButton asChild isActive={isActive} className={`rounded-xl p-6 hover:bg-violet-200 hover:text-white transition-colors ${isActive ? "!bg-violet-600 !text-white" : ""}`}>
+                        <Link href={item.url} className="p-5 flex items-center gap-3 w-full">{item.icon} {item.title}</Link>
+                      </SidebarMenuSubButton>
+                    </SidebarMenuSubItem>
+                  )
+                })}
+              </SidebarMenuSub>
+            </SidebarMenuItem>
           </SidebarMenu>
         </SidebarGroup>
       </SidebarContent>
