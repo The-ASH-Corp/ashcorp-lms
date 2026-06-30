@@ -38,8 +38,8 @@ export default function Navbar() {
           <nav className="hidden md:flex items-center gap-6">
             <Tabs defaultValue="Categories">
               <TabsList variant={"line"} className="">
-                <TabsTrigger value="Categories" >
-                  <NativeSelect className="w-[115px] border-0 border-none bg-transparent text-gray-600 data-[state=active]:text-violet-600">
+                <TabsTrigger value="Categories">
+                  <NativeSelect className="w-28.75 border-0 border-none bg-transparent text-gray-600 data-[state=active]:primary">
                     <NativeSelectOption value="Categories">
                       Categories
                     </NativeSelectOption>
@@ -57,9 +57,24 @@ export default function Navbar() {
                     </NativeSelectOption>
                   </NativeSelect>
                 </TabsTrigger>
-                <TabsTrigger value="Courses" className="text-gray-600 data-[state=active]:text-violet-600"><Link href="/courses">Courses</Link></TabsTrigger>
-                <TabsTrigger value="About Us" className="text-gray-600 data-[state=active]:text-violet-600"><Link href="/about">About Us</Link></TabsTrigger>
-                <TabsTrigger value="Contact Us" className="text-gray-600 data-[state=active]:text-violet-600"><Link href="/contact">Contact Us</Link></TabsTrigger>
+                <TabsTrigger
+                  value="Courses"
+                  className="text-gray-600 data-[state=active]:text-primary"
+                >
+                  <Link href="/courses">Courses</Link>
+                </TabsTrigger>
+                <TabsTrigger
+                  value="About Us"
+                  className="text-gray-600 data-[state=active]:text-primary"
+                >
+                  <Link href="/about">About Us</Link>
+                </TabsTrigger>
+                <TabsTrigger
+                  value="Contact Us"
+                  className="text-gray-600 data-[state=active]:text-primary"
+                >
+                  <Link href="/contact">Contact Us</Link>
+                </TabsTrigger>
               </TabsList>
             </Tabs>
           </nav>
@@ -92,7 +107,7 @@ export default function Navbar() {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
                   <DropdownMenuItem>My Account</DropdownMenuItem>
-                  <DropdownMenuSeparator /> 
+                  <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={() => dispatch(logout())}>
                     Logout
                   </DropdownMenuItem>
@@ -102,7 +117,7 @@ export default function Navbar() {
           ) : (
             <Link
               href="/login"
-              className="rounded-full bg-purple-600 px-5 py-2 text-sm font-medium text-white transition-all shadow-md shadow-purple-200 hover:bg-purple-700 hover:shadow-lg hover:shadow-purple-300"
+              className="rounded-full bg-primary px-5 py-2 text-sm font-medium text-white transition-all shadow-md shadow-purple-200 hover:bg-purple-700 hover:shadow-lg hover:shadow-purple-300"
             >
               Login
             </Link>

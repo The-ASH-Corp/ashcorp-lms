@@ -12,10 +12,11 @@ export default function Footer() {
           {/* Brand Info */}
           <div className="md:col-span-1">
             <span className="text-xl font-bold tracking-tight text-indigo-950">
-              Ash <span className="text-purple-600">Academy</span>
+              Ash <span className="text-primary">Academy</span>
             </span>
             <p className="mt-4 text-xs leading-relaxed text-gray-500">
-              Making creative education accessible, fun, and results-driven for learners everywhere.
+              Making creative education accessible, fun, and results-driven for
+              learners everywhere.
             </p>
             {/* Social / Utility Buttons */}
             <div className="mt-6 flex items-center gap-3">
@@ -30,25 +31,42 @@ export default function Footer() {
 
           {/* Links: Academy */}
           <div>
-            <h4 className="text-xs font-bold uppercase tracking-wider text-indigo-950">Academy</h4>
+            <h4 className="text-xs font-bold uppercase tracking-wider text-indigo-950">
+              Academy
+            </h4>
             <ul className="mt-4 space-y-2">
-              {["About Us", "Careers", "Mentors", "Success Stories"].map((link) => (
-                <li key={link}>
-                  <Link href="#" className="text-xs text-gray-500 hover:text-purple-600 transition-colors">
-                    {link}
-                  </Link>
-                </li>
-              ))}
+              {["About Us", "Careers", "Mentors", "Success Stories"].map(
+                (link) => (
+                  <li key={link}>
+                    <Link
+                      href="#"
+                      className="text-xs text-gray-500 hover:text-purple-600 transition-colors"
+                    >
+                      {link}
+                    </Link>
+                  </li>
+                ),
+              )}
             </ul>
           </div>
 
           {/* Links: Legal */}
           <div>
-            <h4 className="text-xs font-bold uppercase tracking-wider text-indigo-950">Legal</h4>
+            <h4 className="text-xs font-bold uppercase tracking-wider text-indigo-950">
+              Legal
+            </h4>
             <ul className="mt-4 space-y-2">
-              {["Privacy Policy", "Terms of Service", "Help Center", "Contact"].map((link) => (
+              {[
+                "Privacy Policy",
+                "Terms of Service",
+                "Help Center",
+                "Contact",
+              ].map((link) => (
                 <li key={link}>
-                  <Link href="#" className="text-xs text-gray-500 hover:text-purple-600 transition-colors">
+                  <Link
+                    href="#"
+                    className="text-xs text-gray-500 hover:text-purple-600 transition-colors"
+                  >
                     {link}
                   </Link>
                 </li>
@@ -58,7 +76,9 @@ export default function Footer() {
 
           {/* Newsletter / Stay Inspired */}
           <div>
-            <h4 className="text-xs font-bold uppercase tracking-wider text-indigo-950">Stay Inspired</h4>
+            <h4 className="text-xs font-bold uppercase tracking-wider text-indigo-950">
+              Stay Inspired
+            </h4>
             <p className="mt-4 text-xs text-gray-500">
               Get weekly creative prompts and course discounts.
             </p>
@@ -70,7 +90,7 @@ export default function Footer() {
               />
               <button
                 type="submit"
-                className="rounded-full bg-purple-600 px-4 py-2.5 text-xs font-semibold text-white transition-colors hover:bg-purple-700 active:scale-98"
+                className="rounded-full bg-primary px-4 py-2.5 text-xs font-semibold text-white transition-colors hover:bg-purple-700 active:scale-98"
               >
                 Subscribe
               </button>
