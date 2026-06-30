@@ -4,6 +4,7 @@ import Image from "next/image";
 import AuthForm from "@/components/login/AuthForm";
 import { AuthFormValues } from "@/lib/validations/auth";
 import { Link } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 interface AuthLayoutProps {
   isSignUp: boolean;
@@ -28,6 +29,12 @@ export default function AuthLayout({
   onToggleMode,
   onSubmit,
 }: AuthLayoutProps) {
+  const router = useRouter();
+
+  const handleLogoClick = () => {
+    router.push("/");
+  }
+
   return (
     <div className="relative flex min-h-screen overflow-hidden bg-background">
       <div className="relative hidden flex-1 flex-col justify-between overflow-hidden p-10 lg:flex">
@@ -47,6 +54,8 @@ export default function AuthLayout({
             alt="Logo"
             width={90}
             height={90}
+            onClick={handleLogoClick}
+            className="cursor-pointer"
           />
         </div>
 
