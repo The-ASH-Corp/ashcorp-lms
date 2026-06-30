@@ -31,12 +31,12 @@ export const authSlice = createSlice({
       state.token = action.payload.token ?? null;
       state.user = action.payload.user ?? null;
     },
-    logout: (state) => {
+    Logout: (state) => {
       state.token = null;
       state.user = null;
     },
   },
 });
 
-export const { logout, setCredentials } = authSlice.actions;
+export const { Logout, setCredentials } = authSlice.actions;
 export const authReducer = authSlice.reducer;

@@ -13,11 +13,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
-import { Tabs, TabsList, TabsTrigger } from "../ui/tabs";
-import { NativeSelect, NativeSelectOption } from "../ui/native-select";
 import { useLogoutMutation } from "@/lib/redux/features/auth/authApi";
 
-export default function Navbar() {
+export default function ProtectedNavbar() {
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.auth.user);
   const [logout] = useLogoutMutation();
@@ -26,6 +24,7 @@ export default function Navbar() {
     await logout();
     dispatch(Logout());
   };
+
   return (
     <header className="sticky top-0 z-50 w-full border-b border-purple-100 bg-white/80 backdrop-blur-md">
       <div className="mx-auto flex h-16 w-full items-center justify-between px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
@@ -39,50 +38,26 @@ export default function Navbar() {
               height={90}
             />
           </Link>
-
-          {/* Navigation Links */}
-          <nav className="hidden md:flex items-center gap-6">
-            <Tabs defaultValue="Categories">
-              <TabsList variant={"line"} className="">
-                <TabsTrigger value="Categories" >
-                  <NativeSelect className="w-[115px] border-0 border-none bg-transparent text-gray-600 data-[state=active]:text-violet-600">
-                    <NativeSelectOption value="Categories">
-                      Categories
-                    </NativeSelectOption>
-                    <NativeSelectOption value="Categories">
-                      Digital Illustration
-                    </NativeSelectOption>
-                    <NativeSelectOption value="Courses">
-                      Creative UI
-                    </NativeSelectOption>
-                    <NativeSelectOption value="About Us">
-                      Motion Design
-                    </NativeSelectOption>
-                    <NativeSelectOption value="Contact Us">
-                      Creative Writing
-                    </NativeSelectOption>
-                  </NativeSelect>
-                </TabsTrigger>
-                <TabsTrigger value="Courses" className="text-gray-600 data-[state=active]:text-violet-600"><Link href="/courses">Courses</Link></TabsTrigger>
-                <TabsTrigger value="About Us" className="text-gray-600 data-[state=active]:text-violet-600"><Link href="/about">About Us</Link></TabsTrigger>
-                <TabsTrigger value="Contact Us" className="text-gray-600 data-[state=active]:text-violet-600"><Link href="/contact">Contact Us</Link></TabsTrigger>
-              </TabsList>
-            </Tabs>
-          </nav>
         </div>
 
-        {/* Action Buttons */}
-        <div className="flex items-center gap-4">
+        {/* Action Buttons & Links aligned to the right */}
+        <div className="flex items-center gap-6">
+          {/* Navigation Links near profile */}
+          <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
+            <Link href="/" className="text-gray-600 hover:text-violet-600 transition-colors">
+              Home
+            </Link>
+            <Link href="/about" className="text-gray-600 hover:text-violet-600 transition-colors">
+              About Us
+            </Link>
+            <Link href="/contact" className="text-gray-600 hover:text-violet-600 transition-colors">
+              Contact Us
+            </Link>
+          </nav>
+
           {user ? (
             <div className="flex items-center gap-3">
-              <div className="hidden flex-col items-end sm:flex">
-                <div className=" text-sm font-medium text-gray-700 ">
-                  <span>{user.name ?? user.email}</span>
-                </div>
-                <div className=" text-xs font-medium text-gray-700 ">
-                  <span>{user.email ?? user.name}</span>
-                </div>
-              </div>
+              {/* User Name and Email intentionally hidden as requested */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Avatar className="h-12 w-12 cursor-pointer">
@@ -97,7 +72,7 @@ export default function Navbar() {
                   </Avatar>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
-                  <DropdownMenuItem><Link href="/dashboard">Dashboard</Link></DropdownMenuItem>
+                  <DropdownMenuItem><Link href="/">Home</Link></DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={() => handleLogout()}>
                     Logout
