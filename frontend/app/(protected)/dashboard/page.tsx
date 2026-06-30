@@ -1,5 +1,4 @@
 import { AppSidebar } from "@/components/dashboard/app-sidebar"
-import Navbar from "@/components/landing/Navbar"
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -18,7 +17,6 @@ import {
 export default function Page() {
   return (
     <>
-    <Navbar />
     <SidebarProvider
       style={
         {
