@@ -8,7 +8,7 @@ interface StatCardProps {
 
 export default function StatCard({ label, number, unit, description, detail }: StatCardProps) {
   return (
-    <div className="bg-gradient-to-br from-gray-50 to-gray-100 border border-gray-200 rounded-lg sm:rounded-xl p-6 sm:p-8">
+    <div className="bg-linear-to-br from-gray-50 to-gray-100 border border-gray-200 rounded-lg sm:rounded-xl p-6 sm:p-8">
       <p className="text-xs sm:text-sm font-bold text-gray-500 uppercase tracking-widest mb-6">
         {label}
       </p>

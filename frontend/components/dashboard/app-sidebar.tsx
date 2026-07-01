@@ -72,7 +72,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   };
 
   return (
-    <Sidebar variant="floating" className="!top-16 !h-[calc(100svh-4rem)]" {...props}>
+    <Sidebar variant="floating" className="top-16! h-[calc(100svh-4rem)]!" {...props}>
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
@@ -116,7 +116,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
                   return (
                     <SidebarMenuSubItem key={item.title}>
-                      <SidebarMenuSubButton asChild isActive={isActive} className={`rounded-xl p-6 hover:bg-violet-200 hover:text-white transition-colors ${isActive ? "!bg-violet-600 !text-white" : ""}`}>
+                      <SidebarMenuSubButton asChild isActive={isActive} className={`rounded-xl p-6 hover:bg-violet-200 hover:text-white transition-colors ${isActive ? "bg-violet-600! text-white!" : ""}`}>
                         <Link href={item.url} className="p-5 flex items-center gap-3 w-full">{item.icon} {item.title}</Link>
                       </SidebarMenuSubButton>
                     </SidebarMenuSubItem>
