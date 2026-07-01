@@ -16,8 +16,10 @@ import {
 import { Tabs, TabsList, TabsTrigger } from "../ui/tabs";
 import { NativeSelect, NativeSelectOption } from "../ui/native-select";
 import { useLogoutMutation } from "@/lib/redux/features/auth/authApi";
+import { usePathname } from "next/navigation";
 
 export default function Navbar() {
+  const pathname = usePathname();
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.auth.user);
   const [logout] = useLogoutMutation();
@@ -26,6 +28,14 @@ export default function Navbar() {
     await logout();
     dispatch(Logout());
   };
+
+  const navLinkClass = (path: string) =>
+    `relative pb-1 transition-colors ${
+      pathname === path
+        ? "text-primary font-semibold border-b-2 border-primary"
+        : "text-gray-600 hover:text-primary"
+    }`;
+
   return (
     <header className="sticky top-0 z-50 w-full border-b border-purple-100 bg-white/80 backdrop-blur-md">
       <div className="mx-auto flex h-16 w-full items-center justify-between px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
@@ -41,48 +51,38 @@ export default function Navbar() {
           </Link>
 
           {/* Navigation Links */}
-          <nav className="hidden md:flex items-center gap-6">
-            <Tabs defaultValue="Categories">
-              <TabsList variant={"line"} className="">
-                <TabsTrigger value="Categories">
-                  <NativeSelect className="w-28.75 border-0 border-none bg-transparent text-gray-600 data-[state=active]:primary">
-                    <NativeSelectOption value="Categories">
-                      Categories
-                    </NativeSelectOption>
-                    <NativeSelectOption value="Categories">
-                      Digital Illustration
-                    </NativeSelectOption>
-                    <NativeSelectOption value="Courses">
-                      Creative UI
-                    </NativeSelectOption>
-                    <NativeSelectOption value="About Us">
-                      Motion Design
-                    </NativeSelectOption>
-                    <NativeSelectOption value="Contact Us">
-                      Creative Writing
-                    </NativeSelectOption>
-                  </NativeSelect>
-                </TabsTrigger>
-                <TabsTrigger
-                  value="Courses"
-                  className="text-gray-600 data-[state=active]:text-primary"
-                >
-                  <Link href="/courses">Courses</Link>
-                </TabsTrigger>
-                <TabsTrigger
-                  value="About Us"
-                  className="text-gray-600 data-[state=active]:text-primary"
-                >
-                  <Link href="/about">About Us</Link>
-                </TabsTrigger>
-                <TabsTrigger
-                  value="Contact Us"
-                  className="text-gray-600 data-[state=active]:text-primary"
-                >
-                  <Link href="/contact">Contact Us</Link>
-                </TabsTrigger>
-              </TabsList>
-            </Tabs>
+          <nav className="hidden md:flex items-center gap-8">
+            <NativeSelect className="w-32 border-0 bg-transparent text-gray-600">
+              <NativeSelectOption value="">Categories</NativeSelectOption>
+
+              <NativeSelectOption value="Digital Illustration">
+                Digital Illustration
+              </NativeSelectOption>
+              
+
+              <NativeSelectOption value="Creative UI">
+                Creative UI
+              </NativeSelectOption>
+
+              <NativeSelectOption value="Motion Design">
+                Motion Design
+              </NativeSelectOption>
+
+              <NativeSelectOption value="Creative Writing">
+                Creative Writing
+              </NativeSelectOption>
+            </NativeSelect>
+            <Link href="/courses" className={navLinkClass("/courses")}>
+              Courses
+            </Link>
+
+            <Link href="/about" className={navLinkClass("/about")}>
+              About Us
+            </Link>
+
+            <Link href="/contact" className={navLinkClass("/contact")}>
+              Contact Us
+            </Link>
           </nav>
         </div>
 
@@ -112,7 +112,9 @@ export default function Navbar() {
                   </Avatar>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
-                  <DropdownMenuItem><Link href="/dashboard">Dashboard</Link></DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <Link href="/dashboard">Dashboard</Link>
+                  </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={() => handleLogout()}>
                     Logout
