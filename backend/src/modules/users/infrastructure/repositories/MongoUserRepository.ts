@@ -11,7 +11,8 @@ export class MongoUserRepository implements UserRepository{
         const hashedPassword = await bcrypt.hash(data.password, salt);
         const user = await UserModel.create({
             ...data,
-            password: hashedPassword
+            password: hashedPassword,
+            role: "user",
         });
         return user;
     }
