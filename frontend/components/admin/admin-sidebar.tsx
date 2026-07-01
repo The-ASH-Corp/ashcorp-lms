@@ -15,7 +15,7 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
-import { useAppSelector, useAppDispatch } from "@/lib/redux/hooks";
+import { useAppDispatch } from "@/lib/redux/hooks";
 import { Logout } from "@/lib/redux/features/auth/authSlice";
 import { useLogoutMutation } from "@/lib/redux/features/auth/authApi";
 import {
@@ -211,7 +211,7 @@ export function AdminSidebar({
                   {/* Nested children */}
                   {isOpen && (
                     <div className="mt-3 ml-8 flex flex-col gap-3">
-                      {item.children.map((child: any, idx: number) => {
+                      {item.children.map((child: any, _idx: number) => {
                         // if child has its own children (like Plan Management -> Plan List, Create)
                         if (child.children) {
                           const childActive = child.children.some((cc: any) =>
@@ -280,7 +280,7 @@ export function AdminSidebar({
               className="rounded-xl px-4 py-5 text-[13px] font-medium text-gray-600 hover:bg-violet-50 hover:text-violet-700 transition-colors"
             >
               <Link href="/admin/settings" className="flex items-center gap-3">
-                <Settings className="h-[18px] w-[18px]" />
+                <Settings className="h-4.5 w-4.5" />
                 <span>Settings</span>
               </Link>
             </SidebarMenuButton>
@@ -290,7 +290,7 @@ export function AdminSidebar({
               className="rounded-xl px-4 py-5 text-[13px] font-medium text-red-500 hover:bg-red-50 hover:text-red-600 transition-colors cursor-pointer"
               onClick={handleLogout}
             >
-              <LogOut className="h-[18px] w-[18px]" />
+              <LogOut className="h-4.5 w-4.5" />
               <span>Logout</span>
             </SidebarMenuButton>
           </SidebarMenuItem>

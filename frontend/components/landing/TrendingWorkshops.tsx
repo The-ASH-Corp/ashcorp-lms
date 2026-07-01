@@ -60,8 +60,12 @@ export default function TrendingWorkshops() {
       <div className="mx-auto w-full px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
         {/* Header */}
         <div className="text-center mb-16">
-          <h2 className="text-3xl font-bold tracking-tight text-indigo-950">Trending Workshops</h2>
-          <p className="mt-2 text-sm text-gray-500">Don't miss out on what everyone is learning.</p>
+          <h2 className="text-3xl font-bold tracking-tight text-indigo-950">
+            Trending Workshops
+          </h2>
+          <p className="mt-2 text-sm text-gray-500">
+            Don't miss out on what everyone is learning.
+          </p>
         </div>
 
         {/* Cards Grid */}
@@ -80,7 +84,9 @@ export default function TrendingWorkshops() {
                   className="object-cover group-hover:scale-102 transition-transform duration-300"
                 />
                 {workshop.badge && (
-                  <span className={`absolute left-4 top-4 rounded-full px-3 py-1 text-xs font-semibold ${workshop.badgeColor}`}>
+                  <span
+                    className={`absolute left-4 top-4 rounded-full px-3 py-1 text-xs font-semibold ${workshop.badgeColor}`}
+                  >
                     {workshop.badge}
                   </span>
                 )}
@@ -90,15 +96,19 @@ export default function TrendingWorkshops() {
               <div className="flex flex-1 flex-col p-6">
                 {/* Category & Rating */}
                 <div className="flex items-center justify-between text-xs text-gray-500">
-                  <span className="font-semibold text-purple-600 uppercase tracking-wider">{workshop.category}</span>
+                  <span className="font-semibold text-primary uppercase tracking-wider">
+                    {workshop.category}
+                  </span>
                   <div className="flex items-center gap-1">
                     <Star className="h-3.5 w-3.5 fill-amber-400 stroke-amber-400" />
-                    <span className="font-bold text-gray-700">{workshop.rating.toFixed(1)}</span>
+                    <span className="font-bold text-gray-700">
+                      {workshop.rating.toFixed(1)}
+                    </span>
                   </div>
                 </div>
 
                 {/* Title */}
-                <h3 className="mt-4 flex-1 text-base font-bold text-indigo-950 line-clamp-2 group-hover:text-purple-700 transition-colors">
+                <h3 className="mt-4 flex-1 text-base font-bold text-indigo-950 line-clamp-2 group-hover:text-primary transition-colors">
                   {workshop.title}
                 </h3>
 
@@ -112,13 +122,17 @@ export default function TrendingWorkshops() {
                       className="object-cover"
                     />
                   </div>
-                  <span className="text-sm font-medium text-gray-600">{workshop.instructorName}</span>
+                  <span className="text-sm font-medium text-gray-600">
+                    {workshop.instructorName}
+                  </span>
                 </div>
 
                 {/* Footer / Price & Add to Cart */}
                 <div className="mt-6 flex items-center justify-between pt-4 border-t border-purple-50">
-                  <span className="text-xl font-bold text-indigo-950">{workshop.price}</span>
-                  <button className="flex h-10 w-10 items-center justify-center rounded-full bg-purple-50 text-purple-600 transition-colors hover:bg-purple-600 hover:text-white active:scale-95">
+                  <span className="text-xl font-bold text-indigo-950">
+                    {workshop.price}
+                  </span>
+                  <button className="flex h-10 w-10 items-center justify-center rounded-full bg-purple-50 text-primary transition-colors hover:bg-purple-600 hover:text-white active:scale-95">
                     <ShoppingCart className="h-5 w-5" />
                   </button>
                 </div>
