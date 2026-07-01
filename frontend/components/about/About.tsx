@@ -3,7 +3,7 @@ import Image from "next/image";
 
 const About = () => {
   return (
-    <section id="about" className="bg-secondary/40 py-20">
+    <section id="about" className="bg-secondary py-20">
       <div className="mx-auto grid max-w-6xl items-center gap-12 px-6 md:grid-cols-2">
         <div className="overflow-hidden rounded-xl border border-border shadow-sm">
           <Image
