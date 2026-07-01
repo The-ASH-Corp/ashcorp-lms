@@ -6,7 +6,7 @@ import { Share2, Heart } from "lucide-react";
 
 export default function Footer() {
   return (
-    <footer className="bg-[#F9F7FC] border-t border-purple-100 pt-16 pb-8">
+    <footer className="bg-secondary border-t border-purple-100 pt-16 pb-8">
       <div className="mx-auto w-full px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
         <div className="grid grid-cols-1 gap-10 md:grid-cols-4 lg:gap-12">
           {/* Brand Info */}

@@ -3,7 +3,7 @@ import { Button } from '../ui/button';
 
 const Institution = () => {
   return (
-    <section className="bg-secondary/40 py-20">
+    <section className="bg-secondary py-20">
     <div className="mx-auto max-w-6xl px-6">
       <div className="grid gap-12 items-center lg:grid-cols-2">
         <div>
