@@ -20,6 +20,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import { useGetAllCourseQuery } from "@/lib/redux/features/course/courseApi";
 
 const courses = [
   {
@@ -99,6 +100,13 @@ export default function CoursesPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
+  const {data,isLoading,isError} = useGetAllCourseQuery();
+  if(isLoading){
+    return <div>Loading...</div>
+  }
+  if(isError){
+    return <div>Error...</div>
+  }
   return (
     <>
       <Navbar />
@@ -116,7 +124,7 @@ export default function CoursesPage() {
 
           {/* Sidebar */}
           <div
-            className={`${sidebarOpen ? "block" : "hidden"} lg:block lg:w-56 lg:flex-shrink-0 lg:sticky lg:top-24 lg:self-start lg:max-h-[calc(100vh-7rem)] lg:overflow-y-auto`}
+            className={`${sidebarOpen ? "block" : "hidden"} lg:block lg:w-56 lg:shrink-0 lg:sticky lg:top-24 lg:self-start lg:max-h-[calc(100vh-7rem)] lg:overflow-y-auto`}
           >
             <FilterSidebar />
           </div>

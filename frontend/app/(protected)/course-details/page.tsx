@@ -46,7 +46,7 @@ export default function CourseDetail() {
 
               {/* Instructor */}
               <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-purple-400 to-pink-600 flex-shrink-0" />
+                <div className="w-12 h-12 rounded-full bg-linear-to-br from-purple-400 to-pink-600 shrink-0" />
                 <div>
                   <p className="text-xs text-gray-600 uppercase font-semibold">Instructor</p>
                   <p className="font-semibold text-gray-900">Hazeem</p>
@@ -92,7 +92,7 @@ export default function CourseDetail() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="border border-gray-200 rounded-lg p-6 hover:border-violet-600 transition-colors">
                     <div className="flex items-start gap-4">
-                      <div className="w-12 h-12 rounded-lg bg-violet-100 flex items-center justify-center flex-shrink-0">
+                      <div className="w-12 h-12 rounded-lg bg-violet-100 flex items-center justify-center shrink-0">
                         <Zap size={24} className="text-violet-600" />
                       </div>
                       <div>
@@ -104,7 +104,7 @@ export default function CourseDetail() {
 
                   <div className="border border-gray-200 rounded-lg p-6 hover:border-violet-600 transition-colors">
                     <div className="flex items-start gap-4">
-                      <div className="w-12 h-12 rounded-lg bg-violet-100 flex items-center justify-center flex-shrink-0">
+                      <div className="w-12 h-12 rounded-lg bg-violet-100 flex items-center justify-center shrink-0">
                         <Star size={24} className="text-violet-600" />
                       </div>
                       <div>
@@ -149,10 +149,10 @@ export default function CourseDetail() {
           <div className="lg:col-span-1">
             <div className="sticky top-4 space-y-6">
               {/* Course Card */}
-              <div className="bg-gradient-to-br from-gray-900 to-violet-900 rounded-xl overflow-hidden shadow-lg">
-                <div className="aspect-video bg-gradient-to-br from-purple-600 to-pink-600 flex items-center justify-center relative overflow-hidden">
+              <div className="bg-linear-to-br from-gray-900 to-violet-900 rounded-xl overflow-hidden shadow-lg">
+                <div className="aspect-video bg-linear-to-br from-purple-600 to-pink-600 flex items-center justify-center relative overflow-hidden">
                   <div className="absolute inset-0 opacity-20">
-                    <div className="absolute inset-0 bg-gradient-to-r from-transparent to-white/20" />
+                    <div className="absolute inset-0 bg-linear-to-r from-transparent to-white/20" />
                   </div>
                   <div className="relative z-10 text-center">
                     <p className="text-white text-xs font-semibold mb-2">PREMIUM COURSE</p>
@@ -201,7 +201,7 @@ export default function CourseDetail() {
                     'Completion Certificate'
                   ].map((item, idx) => (
                     <div key={idx} className="flex items-center gap-3">
-                      <div className="w-5 h-5 rounded-full bg-violet-100 flex items-center justify-center flex-shrink-0">
+                      <div className="w-5 h-5 rounded-full bg-violet-100 flex items-center justify-center shrink-0">
                         <span className="text-violet-600 text-xs">✓</span>
                       </div>
                       <span className="text-sm text-gray-700">{item}</span>

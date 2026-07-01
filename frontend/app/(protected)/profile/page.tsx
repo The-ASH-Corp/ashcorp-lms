@@ -37,12 +37,12 @@ export default function AccountSettingsPage() {
       {/* Main Content */}
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
         {/* Profile Section */}
-        <div className="bg-gradient-to-br from-gray-50 to-white border border-gray-200 rounded-lg sm:rounded-xl p-6 sm:p-8 lg:p-10 mb-8 lg:mb-12">
+        <div className="bg-linear-to-br from-gray-50 to-white border border-gray-200 rounded-lg sm:rounded-xl p-6 sm:p-8 lg:p-10 mb-8 lg:mb-12">
           <div className="flex flex-col sm:flex-row items-center gap-8 mb-8">
             {/* Avatar */}
-            <div className="flex-shrink-0">
+            <div className="shrink-0">
               <div className="relative">
-                <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full border-4 border-violet-600 bg-gradient-to-br from-violet-100 to-violet-50 flex items-center justify-center">
+                <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full border-4 border-violet-600 bg-linear-to-br from-violet-100 to-violet-50 flex items-center justify-center">
                   <Shield size={48} className="text-violet-600" />
                 </div>
                 <div className="absolute top-0 right-0 bg-red-100 text-red-700 text-xs font-semibold px-2 py-1 rounded-full">
