@@ -23,7 +23,7 @@ export default function UserCourseList({ course, viewType }: CourseCardProps) {
   if (viewType === 'list') {
     return (
       <div className="flex flex-col sm:flex-row gap-4 bg-white border border-gray-200 rounded-lg p-4 sm:p-6 hover:shadow-md transition-shadow">
-        <div className="w-full sm:w-32 h-32 sm:h-32 rounded-lg overflow-hidden flex-shrink-0">
+        <div className="w-full sm:w-32 h-32 sm:h-32 rounded-lg overflow-hidden shrink-0">
           <img
             src={course.image}
             alt={course.title}

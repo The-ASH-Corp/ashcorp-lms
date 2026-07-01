@@ -30,7 +30,7 @@ export default function ExploreCategories() {
         {/* Bento Grid */}
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
           {/* Card 1: Digital Illustration (Spans 2 rows on desktop) */}
-          <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-blue-100 to-indigo-100 p-8 lg:row-span-2 flex flex-col justify-between min-h-[380px] shadow-sm hover:shadow-md transition-shadow group">
+          <div className="relative overflow-hidden rounded-3xl bg-linear-to-br from-blue-100 to-indigo-100 p-8 lg:row-span-2 flex flex-col justify-between min-h-[380px] shadow-sm hover:shadow-md transition-shadow group">
             {/* Top Icon */}
             <div>
               <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white text-blue-600 shadow-sm">
@@ -123,7 +123,7 @@ export default function ExploreCategories() {
                 src="/writing_pen.png"
                 alt="Fountain Pen"
                 fill
-                className="object-contain object-right-bottom group-hover:scale-105 transition-transform duration-500"
+                className="object-contain object-bottom-right group-hover:scale-105 transition-transform duration-500"
               />
             </div>
           </div>

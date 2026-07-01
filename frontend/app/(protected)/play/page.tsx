@@ -25,7 +25,7 @@ export default function PlayPage() {
           {/* Left Content - Video and Details */}
           <div className="lg:col-span-2">
             {/* Video Player */}
-            <div className="relative bg-gradient-to-br from-violet-900 to-violet-950 rounded-xl overflow-hidden mb-6 aspect-video">
+            <div className="relative bg-linear-to-br from-violet-900 to-violet-950 rounded-xl overflow-hidden mb-6 aspect-video">
               <div className="absolute inset-0 flex items-center justify-center">
                 <button className="w-16 h-16 bg-violet-600 rounded-full flex items-center justify-center hover:bg-violet-700 transition-colors">
                   <Play size={32} className="text-white fill-white ml-1" />
@@ -117,7 +117,7 @@ export default function PlayPage() {
           {/* Right Sidebar - Progress */}
           <div className="lg:col-span-1">
             {/* Course Progress Card */}
-            <div className="bg-gradient-to-br from-violet-50 to-gray-50 rounded-xl p-6 border border-violet-200 mb-6 sticky top-6">
+            <div className="bg-linear-to-br from-violet-50 to-gray-50 rounded-xl p-6 border border-violet-200 mb-6 sticky top-6">
               <div className="flex justify-between items-start mb-4">
                 <h3 className="text-lg font-bold text-gray-900">Course Progress</h3>
                 <span className="text-2xl font-bold text-violet-600">{progress}%</span>
@@ -141,7 +141,7 @@ export default function PlayPage() {
                   <div className="space-y-2 ml-2">
                     {lessons.slice(0, 2).map(lesson => (
                       <div key={lesson.id} className="flex items-start gap-2 p-2 rounded hover:bg-white cursor-pointer transition-colors">
-                        <CheckCircle2 size={18} className="text-violet-600 flex-shrink-0 mt-0.5" />
+                        <CheckCircle2 size={18} className="text-violet-600 shrink-0 mt-0.5" />
                         <div className="min-w-0">
                           <p className="text-sm font-medium text-gray-900">{lesson.id} {lesson.title}</p>
                           <p className="text-xs text-gray-500">{lesson.duration}</p>
@@ -165,11 +165,11 @@ export default function PlayPage() {
                         } cursor-pointer`}
                       >
                         {lesson.completed ? (
-                          <CheckCircle2 size={18} className="text-violet-600 flex-shrink-0 mt-0.5" />
+                          <CheckCircle2 size={18} className="text-violet-600 shrink-0 mt-0.5" />
                         ) : lesson.isPlaying ? (
-                          <Play size={18} className="text-violet-600 flex-shrink-0 mt-0.5" />
+                          <Play size={18} className="text-violet-600 shrink-0 mt-0.5" />
                         ) : (
-                          <div className="w-4.5 h-4.5 rounded-full border-2 border-gray-300 flex-shrink-0 mt-0.5"></div>
+                          <div className="w-4.5 h-4.5 rounded-full border-2 border-gray-300 shrink-0 mt-0.5"></div>
                         )}
                         <div className="min-w-0">
                           <p className={`text-sm font-medium ${lesson.isPlaying ? 'text-violet-600' : 'text-gray-900'}`}>
@@ -190,9 +190,9 @@ export default function PlayPage() {
                     {lessons.slice(6).map(lesson => (
                       <div key={lesson.id} className="flex items-start gap-2 p-2 rounded hover:bg-white cursor-pointer transition-colors">
                         {lesson.locked ? (
-                          <Lock size={18} className="text-gray-400 flex-shrink-0 mt-0.5" />
+                          <Lock size={18} className="text-gray-400 shrink-0 mt-0.5" />
                         ) : (
-                          <div className="w-4.5 h-4.5 rounded-full border-2 border-gray-300 flex-shrink-0 mt-0.5"></div>
+                          <div className="w-4.5 h-4.5 rounded-full border-2 border-gray-300 shrink-0 mt-0.5"></div>
                         )}
                         <div className="min-w-0">
                           <p className={`text-sm font-medium ${lesson.locked ? 'text-gray-400' : 'text-gray-900'}`}>

@@ -5,14 +5,14 @@ import { Search, Sparkles, Paintbrush } from "lucide-react";
 
 export default function Hero() {
   return (
-    <section className="relative overflow-hidden bg-gradient-to-b from-[#FAF5FF] via-[#F5F3FF] to-white py-20 lg:py-28">
+    <section className="relative overflow-hidden bg-linear-to-b from-[#FAF5FF] via-[#F5F3FF] to-white py-20 lg:py-28">
       {/* Background blobs */}
       <div className="absolute top-1/4 -left-20 h-72 w-72 rounded-full bg-blue-200/40 blur-3xl" />
       <div className="absolute top-1/3 -right-20 h-96 w-96 rounded-full bg-purple-300/30 blur-3xl" />
 
       <div className="relative mx-auto w-full px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16 text-center">
         {/* Sparkle Badge */}
-        <div className="inline-flex items-center gap-1.5 rounded-full bg-purple-50 px-4 py-1.5 text-xs font-semibold text-primary ring-1 ring-purple-600/10 mb-8 animate-bounce [animation-duration:2s]">
+        <div className="inline-flex items-center gap-1.5 rounded-full bg-purple-50 px-4 py-1.5 text-xs font-semibold text-primary ring-1 ring-purple-600/10 mb-8 animate-bounce animation-duration-[2s]">
           <Sparkles className="h-3.5 w-3.5" />
           <span>New: Creative Illustration Masterclass</span>
         </div>
@@ -49,7 +49,7 @@ export default function Hero() {
         </div>
 
         {/* Floating Icons */}
-        <div className="absolute right-[12%] top-[60%] hidden lg:block animate-bounce [animation-duration:4s]">
+        <div className="absolute right-[12%] top-[60%] hidden lg:block animate-bounce animation-duration-[4s]">
           <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white shadow-lg text-primary ring-1 ring-purple-100">
             <Paintbrush className="h-6 w-6" />
           </div>

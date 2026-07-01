@@ -29,10 +29,10 @@ export default function CertificatePage() {
             </div>
 
             {/* Certificate Display */}
-            <div className="bg-gradient-to-br from-violet-50 to-purple-50 rounded-2xl p-6 sm:p-8 lg:p-12 mb-8 lg:mb-12 border border-violet-100">
+            <div className="bg-linear-to-br from-violet-50 to-purple-50 rounded-2xl p-6 sm:p-8 lg:p-12 mb-8 lg:mb-12 border border-violet-100">
               <div className="bg-white rounded-xl p-4 sm:p-6 shadow-lg border border-gray-200 max-w-2xl mx-auto">
                 {/* Certificate Content */}
-                <div className="bg-gradient-to-br from-slate-900 via-violet-900 to-slate-900 rounded-lg p-6 sm:p-8 text-center min-h-80 sm:min-h-96 flex flex-col justify-between relative overflow-hidden">
+                <div className="bg-linear-to-br from-slate-900 via-violet-900 to-slate-900 rounded-lg p-6 sm:p-8 text-center min-h-80 sm:min-h-96 flex flex-col justify-between relative overflow-hidden">
                   {/* Decorative Elements */}
                   <div className="absolute top-0 right-0 w-32 h-32 bg-violet-500/10 rounded-full -mr-16 -mt-16"></div>
                   <div className="absolute bottom-0 left-0 w-24 h-24 bg-violet-500/10 rounded-full -ml-12 -mb-12"></div>
@@ -57,7 +57,7 @@ export default function CertificatePage() {
 
                     {/* Medal Badge */}
                     <div className="flex justify-center mb-8">
-                      <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full border-4 border-amber-500 flex items-center justify-center bg-gradient-to-br from-amber-400 to-amber-600 shadow-lg">
+                      <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full border-4 border-amber-500 flex items-center justify-center bg-linear-to-br from-amber-400 to-amber-600 shadow-lg">
                         <div className="text-2xl">🏅</div>
                       </div>
                     </div>
@@ -105,7 +105,7 @@ export default function CertificatePage() {
 
           {/* Right Section - Course Details */}
           <div className="lg:col-span-1">
-            <div className="bg-gradient-to-br from-violet-50 to-purple-50 rounded-xl p-6 sm:p-8 border border-violet-100 sticky top-6">
+            <div className="bg-linear-to-br from-violet-50 to-purple-50 rounded-xl p-6 sm:p-8 border border-violet-100 sticky top-6">
               <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-6">Course Details</h2>
 
               {/* Detail Items */}
@@ -153,8 +153,8 @@ export default function CertificatePage() {
                     "This certificate is widely recognized by our network of 500+ global hiring partners."
                   </p>
                   <div className="flex gap-2">
-                    <div className="w-6 h-6 bg-gradient-to-br from-violet-400 to-violet-600 rounded-full flex items-center justify-center text-white text-xs font-bold">H</div>
-                    <div className="w-6 h-6 bg-gradient-to-br from-purple-400 to-pink-600 rounded-full flex items-center justify-center text-white text-xs font-bold">L</div>
+                    <div className="w-6 h-6 bg-linear-to-br from-violet-400 to-violet-600 rounded-full flex items-center justify-center text-white text-xs font-bold">H</div>
+                    <div className="w-6 h-6 bg-linear-to-br from-purple-400 to-pink-600 rounded-full flex items-center justify-center text-white text-xs font-bold">L</div>
                   </div>
                 </div>
               </div>
@@ -163,7 +163,7 @@ export default function CertificatePage() {
         </div>
 
         {/* Next Steps Section */}
-        <div className="mt-16 lg:mt-20 bg-gradient-to-br from-violet-50 to-purple-50 rounded-2xl p-8 sm:p-12 border border-violet-100">
+        <div className="mt-16 lg:mt-20 bg-linear-to-br from-violet-50 to-purple-50 rounded-2xl p-8 sm:p-12 border border-violet-100">
           <div className="max-w-2xl">
             <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">Ready for the Next Peak?</h2>
             <p className="text-gray-600 mb-8 text-sm sm:text-base leading-relaxed">

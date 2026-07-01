@@ -34,7 +34,7 @@ export default function CourseCard({ course }: CourseCardProps) {
   return (
     <div className="group bg-white border border-gray-200 rounded-lg sm:rounded-xl overflow-hidden hover:shadow-lg transition-shadow h-full flex flex-col">
       {/* Image Container */}
-      <div className="relative h-40 sm:h-48 lg:h-56 overflow-hidden bg-gray-100 flex-shrink-0">
+      <div className="relative h-40 sm:h-48 lg:h-56 overflow-hidden bg-gray-100 shrink-0">
         <img
           src={course.image}
           alt={course.title}
