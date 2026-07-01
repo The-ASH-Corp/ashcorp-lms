@@ -28,6 +28,7 @@ export default function Navbar() {
     await logout();
     dispatch(Logout());
   };
+  
 
   const navLinkClass = (path: string) =>
     `relative pb-1 transition-colors ${
