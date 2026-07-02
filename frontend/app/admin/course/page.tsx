@@ -1,0 +1,302 @@
+"use client";
+
+import React, { useState } from "react";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+  PaginationEllipsis,
+} from "@/components/ui/pagination";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Pencil, MoreVertical, Plus, Search, Check, X } from "lucide-react";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from "@/components/ui/input-group";
+import Image from "next/image";
+
+/* ─── Mock Students Data ─── */
+const students = [
+  {
+    id: 1,
+    title: "Web Development",
+    freeAndPublish: false,
+    course:"Web Development Course",
+    price:"$120",
+    instructor:"Elena Sterling",
+    status: "Active" as const,
+  },
+  {
+    id: 2,
+    title: "Data Science",
+    freeAndPublish: true,
+    course:"Data Science Course",
+    price:"$120",
+    instructor:"Elena Sterling",
+    status: "Active" as const,
+  },
+  {
+    id: 3,
+    title: "Artificial Intelligence",
+    freeAndPublish: true,
+    course:"Artificial Intelligence Course",
+    price:"$120",
+    instructor:"Elena Sterling",
+    status: "Active" as const,
+  },
+  {
+    id: 4,
+    title: "Amara Okafor",
+    freeAndPublish: true,
+    course:"Artificial Intelligence Course",
+    price:"$120",
+    instructor:"Elena Sterling",
+    status: "Active" as const,
+  },
+];
+
+const statusStyles: Record<string, { dot: string; bg: string; text: string }> =
+  {
+    Active: {
+      dot: "bg-emerald-500",
+      bg: "bg-emerald-50",
+      text: "text-emerald-700",
+    },
+    "On Hold": {
+      dot: "bg-amber-500",
+      bg: "bg-amber-50",
+      text: "text-amber-700",
+    },
+    Inactive: { dot: "bg-gray-400", bg: "bg-gray-100", text: "text-gray-600" },
+  };
+
+export default function CoursesPage() {
+  const [currentPage] = useState(1);
+
+  return (
+    <>
+      <div className="space-y-6">
+        {/* ─── Page Header ─── */}
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900">
+              Course Management
+            </h1>
+          </div>
+          <div className="flex items-center gap-3">
+            <Button className="rounded-xl bg-violet-600 text-white shadow-md shadow-violet-200 hover:bg-violet-700 h-10 px-5">
+              <Plus className="h-4 w-4 mr-2" />
+              Add Course
+            </Button>
+          </div>
+        </div>
+
+        {/* ─── Data Table ─── */}
+        <Card className="border-0 shadow-sm bg-white overflow-hidden">
+          <InputGroup className="w-sm ml-4">
+            <InputGroupInput placeholder="Search Category..." />
+            <InputGroupAddon align="inline-end">
+              <Button size="icon" variant="ghost" className="h-8 w-8 shrink-0">
+                <Search className="h-4 w-4" />
+              </Button>
+            </InputGroupAddon>
+          </InputGroup>
+          <Table>
+            <TableHeader>
+              <TableRow className="bg-gray-50/80 hover:bg-gray-50/80 border-b border-gray-100 ">
+                <TableHead className="text-xs font-semibold uppercase tracking-wider text-gray-500 ml-10 text-center ">
+                  #
+                </TableHead>
+                <TableHead className="text-xs font-semibold uppercase tracking-wider text-gray-500 text-center">
+                  Id
+                </TableHead>
+                <TableHead className="text-xs font-semibold uppercase tracking-wider text-gray-500 text-center ">
+                 Free & Publish
+                </TableHead>
+                <TableHead className="text-xs font-semibold uppercase tracking-wider text-gray-500 text-center ">
+                  Course
+                </TableHead>
+                <TableHead className="text-xs font-semibold uppercase tracking-wider text-gray-500 text-center ">
+                  Price
+                </TableHead>
+                <TableHead className="text-xs font-semibold uppercase tracking-wider text-gray-500 text-center ">
+                  Instructor
+                </TableHead>
+                <TableHead className="text-xs font-semibold uppercase tracking-wider text-gray-500 text-center ">
+                  Status
+                </TableHead>
+                <TableHead className="text-xs font-semibold uppercase tracking-wider text-gray-500 text-center ">
+                  Actions
+                </TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {students.map((student) => {
+                const style = statusStyles[student.status];
+
+                return (
+                  <TableRow
+                    key={student.id}
+                    className="hover:bg-violet-50/30 transition-colors border-b border-gray-50"
+                  >
+                    <TableCell>
+                      <div className="flex items-center gap-3 justify-center">
+                        <p className="text-sm font-semibold text-gray-900">
+                          {student.id}
+                        </p>
+                      </div>
+                    </TableCell>
+
+                    <TableCell>
+                      <div className="flex items-center gap-3 min-w-[120px] justify-center">
+                        <span className="text-sm font-semibold text-gray-900 w-10">
+                          {student.title}
+                        </span>
+                      </div>
+                    </TableCell>
+
+                    <TableCell>
+                        <div className="flex items-center gap-3 justify-center">
+                            <span className="text-sm font-semibold text-gray-900 w-10">
+                                {student.freeAndPublish ? "Free" : "Publish"}
+                            </span>
+                        </div>
+                    </TableCell>
+
+                    {/* Featured */}
+                    <TableCell className="flex  justify-center">
+                      <div className="flex items-center gap-3 justify-center overflow-clip w-20">
+                        <span className="text-sm font-semibold text-gray-900 w-10">
+                          {student.course}
+                        </span>
+                      </div>
+                    </TableCell>
+
+                    <TableCell>
+                      <div className="flex items-center gap-3 justify-center">
+                        <span className="text-sm font-semibold text-gray-900 w-10">
+                          {student.price}
+                        </span>
+                      </div>
+                    </TableCell>
+
+                    <TableCell>
+                      <div className="flex items-center gap-3 justify-center">
+                        <span className="text-sm font-semibold text-gray-900 w-10">
+                          {student.instructor}
+                        </span>
+                      </div>
+                    </TableCell>
+
+                    {/* Status */}
+                    <TableCell className="text-center ">
+                      <span
+                        className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium justify-center ${style.bg} ${style.text}`}
+                      >
+                        <span
+                          className={`h-1.5 w-1.5 rounded-full ${style.dot}`}
+                        />
+                        {student.status}
+                      </span>
+                    </TableCell>
+
+                    {/* Actions */}
+                    <TableCell className="flex justify-center">
+                      <div className="flex items-center justify-end gap-1">
+                        <button className="flex h-8 w-8 items-center justify-center rounded-lg text-gray-400 transition-colors hover:bg-violet-50 hover:text-violet-600">
+                          <Pencil className="h-4 w-4" />
+                        </button>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <button className="flex h-8 w-8 items-center justify-center rounded-lg text-gray-400 transition-colors hover:bg-violet-50 hover:text-violet-600">
+                              <MoreVertical className="h-4 w-4" />
+                            </button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end" className="w-40">
+                            <DropdownMenuItem>View Profile</DropdownMenuItem>
+                            <DropdownMenuItem>Send Email</DropdownMenuItem>
+                            <DropdownMenuItem>Edit Details</DropdownMenuItem>
+                            <DropdownMenuItem className="text-red-600">
+                              Remove Student
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
+            </TableBody>
+          </Table>
+
+          {/* Pagination Footer */}
+          <div className="flex items-center justify-center border-t border-gray-100 px-5 py-4">
+            <Pagination className="w-auto mx-0">
+              <PaginationContent>
+                <PaginationItem>
+                  <PaginationPrevious
+                    href="#"
+                    text=""
+                    className="h-8 w-8 p-0 rounded-lg border border-gray-200 hover:border-violet-300 hover:bg-violet-50"
+                  />
+                </PaginationItem>
+                {[1, 2, 3].map((page) => (
+                  <PaginationItem key={page}>
+                    <PaginationLink
+                      href="#"
+                      isActive={page === currentPage}
+                      className={`h-8 w-8 rounded-lg text-sm ${
+                        page === currentPage
+                          ? "bg-violet-600! text-white! border-violet-600! hover:bg-violet-700!"
+                          : "border border-gray-200 hover:border-violet-300 hover:bg-violet-50"
+                      }`}
+                    >
+                      {page}
+                    </PaginationLink>
+                  </PaginationItem>
+                ))}
+                <PaginationItem>
+                  <PaginationEllipsis />
+                </PaginationItem>
+                <PaginationItem>
+                  <PaginationLink
+                    href="#"
+                    className="h-8 w-8 rounded-lg text-sm border border-gray-200 hover:border-violet-300 hover:bg-violet-50"
+                  >
+                    128
+                  </PaginationLink>
+                </PaginationItem>
+                <PaginationItem>
+                  <PaginationNext
+                    href="#"
+                    text=""
+                    className="h-8 w-8 p-0 rounded-lg border border-gray-200 hover:border-violet-300 hover:bg-violet-50"
+                  />
+                </PaginationItem>
+              </PaginationContent>
+            </Pagination>
+          </div>
+        </Card>
+      </div>
+    </>
+  );
+}
