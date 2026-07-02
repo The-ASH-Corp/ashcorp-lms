@@ -13,10 +13,10 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
-import { Tabs, TabsList, TabsTrigger } from "../ui/tabs";
 import { NativeSelect, NativeSelectOption } from "../ui/native-select";
 import { useLogoutMutation } from "@/lib/redux/features/auth/authApi";
 import { usePathname } from "next/navigation";
+import { getDashboardPath } from "@/lib/auth/navigation";
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -37,6 +37,7 @@ export default function Navbar() {
         : "text-gray-600 hover:text-primary"
     }`;
 
+    const route =user?.role == "admin" ? "/admin" :"/dashboard"
   return (
     <header className="sticky top-0 z-50 w-full border-b border-purple-100 bg-white/80 backdrop-blur-md">
       <div className="mx-auto flex h-16 w-full items-center justify-between px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
@@ -114,7 +115,7 @@ export default function Navbar() {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
                   <DropdownMenuItem>
-                    <Link href="/dashboard">Dashboard</Link>
+                    <Link href={route}>Dashboard</Link>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={() => handleLogout()}>

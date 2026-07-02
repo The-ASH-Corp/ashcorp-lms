@@ -12,7 +12,8 @@
     "build": "tsc",
     "lint": "eslint src",
     "lint:fix": "eslint --fix src",
-    "format": "prettier --write \"src/**/*.{ts,json}\""
+    "format": "prettier --write \"src/**/*.{ts,json}",
+    "create-admin": "tsx src/shared/config/createAdmin.ts"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1075.0",

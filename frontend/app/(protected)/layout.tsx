@@ -30,7 +30,7 @@ export default function ProtectedLayout({
   const pageTitle = currentPathName.charAt(0).toUpperCase() + currentPathName.slice(1);
 
   return (
-    <ProtectedRoute>
+    <ProtectedRoute requiredRole="user" unauthorizedRedirect="/admin">
       <ProtectedNavbar />
       <SidebarProvider
         style={

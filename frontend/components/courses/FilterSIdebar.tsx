@@ -2,20 +2,24 @@
 
 import { useState } from 'react';
 
-export default function FilterSidebar() {
-  const [filters, setFilters] = useState({
-    flutter: false,
-    marketing: false,
-    design: false,
-    beginner: false,
-    intermediate: false,
-    advanced: false,
-    free: false,
-    paid: false,
-    rating: false
-  });
+const initialFilters = {
+  flutter: false,
+  marketing: false,
+  design: false,
+  beginner: false,
+  intermediate: false,
+  advanced: false,
+  free: false,
+  paid: false,
+  rating: false
+};
 
-  const handleFilterChange = (key: string) => {
+type FilterKey = keyof typeof initialFilters;
+
+export default function FilterSidebar() {
+  const [filters, setFilters] = useState(initialFilters);
+
+  const handleFilterChange = (key: FilterKey) => {
     setFilters(prev => ({ ...prev, [key]: !prev[key] }));
   };
 
@@ -44,7 +48,7 @@ export default function FilterSidebar() {
               <input
                 type="checkbox"
                 checked={filters[item.key as keyof typeof filters]}
-                onChange={() => handleFilterChange(item.key)}
+                onChange={() => handleFilterChange(item.key as FilterKey)}
                 className="w-4 h-4 rounded border-gray-300 text-violet-600 focus:ring-violet-600 cursor-pointer"
               />
               <span className="text-gray-700 text-sm">{item.label}</span>
@@ -68,7 +72,7 @@ export default function FilterSidebar() {
               <input
                 type="checkbox"
                 checked={filters[item.key as keyof typeof filters]}
-                onChange={() => handleFilterChange(item.key)}
+                onChange={() => handleFilterChange(item.key as FilterKey)}
                 className="w-4 h-4 rounded border-gray-300 text-violet-600 focus:ring-violet-600 cursor-pointer"
               />
               <span className="text-gray-700 text-sm">{item.label}</span>

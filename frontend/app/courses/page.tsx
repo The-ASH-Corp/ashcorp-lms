@@ -56,7 +56,6 @@ const courses = [
       "https://images.unsplash.com/photo-1561070791-2526d30994b5?w=500&h=400&fit=crop",
     rating: 4.5,
     reviews: "2.4k Reviews",
-    badge: null,
   },
   {
     id: 4,
@@ -68,7 +67,6 @@ const courses = [
       "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=500&h=400&fit=crop",
     rating: 4,
     reviews: "512 Reviews",
-    badge: null,
   },
   {
     id: 5,
@@ -79,7 +77,6 @@ const courses = [
       "https://images.unsplash.com/photo-1552664730-d307ca884978?w=500&h=400&fit=crop",
     rating: 5,
     reviews: "3.1k Reviews",
-    badge: null,
   },
   {
     id: 6,

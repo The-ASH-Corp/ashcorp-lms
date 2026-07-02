@@ -1,5 +1,5 @@
 import { type CookieOptions, Request, Response, NextFunction } from "express";
-import { loginUsecase, registerUsecase, userRepository } from "../di";
+import { adminRepository, loginUsecase, registerUsecase, userRepository } from "../di";
 import { RegisterDTO } from "../application/dto/RegisterDTO";
 import { LoginDTO } from "../application/dto/LoginDTO";
 import { ENV } from "../../../shared/env/ENV";
@@ -68,16 +68,19 @@ export const getCurrentUserController = async (
     }
 
     const user = await userRepository.findById(String(userId));
+    const admin = user ? null : await adminRepository.findById(String(userId));
+    const currentUser = user ?? admin;
 
-    if (!user) {
+    if (!currentUser) {
       throw new AppError("User not found", 404);
     }
 
     res.status(200).json({
-      id: user._id?.toString(),
-      name: user.name,
-      email: user.email,
-      phone: user.phone,
+      id: currentUser._id?.toString(),
+      name: currentUser.name,
+      email: currentUser.email,
+      phone: currentUser.phone,
+      role: currentUser.role,
     });
   } catch (error: any) {
     next(error);
@@ -85,7 +88,7 @@ export const getCurrentUserController = async (
 };
 
 export const logoutController = async (
-  req: Request,
+  _req: Request,
   res: Response,
   next: NextFunction,
 ): Promise<void> => {
