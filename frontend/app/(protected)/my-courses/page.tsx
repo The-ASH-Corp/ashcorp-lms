@@ -5,7 +5,20 @@ import { Grid3x3, List } from 'lucide-react';
 import UserCourseList from '@/components/courses/UserCourseList';
 import StatCard from '@/components/courses/StatCard';
 
-const courses = [
+type ViewType = 'grid' | 'list';
+
+type Course = {
+  id: number;
+  title: string;
+  instructor: string;
+  category: string;
+  image: string;
+  progress: number;
+  status: 'in-progress' | 'completed';
+  hasCheckmark: boolean;
+};
+
+const courses: Course[] = [
   {
     id: 1,
     title: 'Mastering Flutter: From Basics to Advanced UI',
@@ -39,7 +52,7 @@ const courses = [
 ];
 
 export default function MyCourses() {
-  const [viewType, setViewType] = useState('grid');
+  const [viewType, setViewType] = useState<ViewType>('grid');
   const [activeTab, setActiveTab] = useState('all');
 
   return (

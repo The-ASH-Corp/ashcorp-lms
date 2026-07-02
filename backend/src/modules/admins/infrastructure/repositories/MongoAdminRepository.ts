@@ -14,4 +14,9 @@ export class MongoAdminRepository implements AdminRepository {
         const admin = await AdminModel.findOne({ email }).select("+password");
         return admin;
     }
+
+    async findById(id: string): Promise<Admin | null> {
+        const admin = await AdminModel.findById(id);
+        return admin;
+    }
 }

@@ -2,41 +2,34 @@
 
 import { useEffect, useState } from "react";
 import AuthLayout from "@/components/login/AuthLayout";
-import { useGetCurrentUserQuery, useLoginMutation, useRegisterMutation } from "@/lib/redux/features/auth/authApi";
+import { useLoginMutation, useRegisterMutation } from "@/lib/redux/features/auth/authApi";
 import { getApiErrorMessage } from "@/lib/utils";
 import { LoginFormData, RegisterFormData } from "@/lib/validations/auth";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner"
-import { useAppDispatch, useAppSelector } from "@/lib/redux/hooks";
-import { setCredentials } from "@/lib/redux/features/auth/authSlice";
+import { useAppSelector } from "@/lib/redux/hooks";
+import { getDashboardPath } from "@/lib/auth/navigation";
 
 
 export default function LoginPage() {
   const router = useRouter();
+  const user = useAppSelector((state) => state.auth.user);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isSignUp, setIsSignUp] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [login, { isLoading: isLoggingIn }] = useLoginMutation();
   const [register, { isLoading: isRegistering }] = useRegisterMutation();
-  const dispatch = useAppDispatch();
 
-   const { data, isLoading } = useGetCurrentUserQuery();
-  
-    useEffect(() => {
-      if (data) {
-        dispatch(
-          setCredentials({
-            user: data,
-            token: null,
-          }),
-        );
-      }
-    }, [data, dispatch]);
-  
-    if (isLoading) {
-      return null;
+  useEffect(() => {
+    if (user) {
+      router.replace(getDashboardPath(user.role));
     }
+  }, [router, user]);
+
+  if (user) {
+    return null;
+  }
 
   const handleFormSubmit = async (data: LoginFormData | RegisterFormData) => {
     setErrorMessage(null);
@@ -44,7 +37,7 @@ export default function LoginPage() {
     if (isSignUp) {
       try {
         await register(data as RegisterFormData).unwrap();
-        router.push("/");
+        setIsSignUp(false);
         toast.success("Registration successful! Please log in.");
       } catch (error) {
         setErrorMessage(getApiErrorMessage(error));
@@ -54,12 +47,7 @@ export default function LoginPage() {
 
     try {
       const res = await login(data as LoginFormData).unwrap();
-      if(res.user?.role === "admin"){
-        router.push("/admin");
-      }
-      else{
-        router.push("/");
-      }
+      router.replace(getDashboardPath(res.user?.role));
     } catch (error) {
       setErrorMessage(getApiErrorMessage(error));
     }
