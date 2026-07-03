@@ -8,6 +8,10 @@ export class CreateCategoryUseCase {
     
     async execute(category: Category): Promise<Category> {
 
+        if (!category.categoryName || !category.color || !category.iconUrl) {
+          throw new AppError("Category name, color and icon are required", 400);
+        }
+
         const existingCategory = await this.categoryRepository.findCategoryByName(category.categoryName);
 
         if(existingCategory){

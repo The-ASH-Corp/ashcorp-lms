@@ -2,6 +2,7 @@ export interface CategoryRequestDTO {
   categoryName: string;
   color: string;
   iconUrl: string;
+  isFeatured: boolean;
 }
 
 export interface CategoryResponseDTO {
@@ -11,4 +12,5 @@ export interface CategoryResponseDTO {
   iconUrl: string;
   createdAt: Date;
   updatedAt: Date;
+  isFeatured: boolean;
 }

@@ -1,31 +1,37 @@
-'use client';
+"use client";
 
-import { useState, ChangeEvent, FormEvent } from 'react';
-import { Upload, Plus } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { useState, ChangeEvent, FormEvent } from "react";
+import { Upload, Plus } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { toast } from "sonner";
+import { useCreateCategoryMutation } from "@/lib/redux/features/category/categoryApi";
+import { getApiErrorMessage } from "@/lib/utils";
+import { useRouter } from "next/navigation";
 
 interface CategoryFormData {
-  title: string;
+  categoryName: string;
   icon: File | null;
   color: string;
-  featureOnHomepage: boolean;
-  coursesCount: number;
+  isFeatured: boolean;
 }
 
 export default function CreateCategoryPage() {
   const [formData, setFormData] = useState<CategoryFormData>({
-    title: 'Your Title Here',
+    categoryName: "Your Title Here",
     icon: null,
-    color: '#7C3AED',
-    featureOnHomepage: false,
-    coursesCount: 0
+    color: "#7C3AED",
+    isFeatured: false,
   });
+  const [createCategory, { isLoading }] = useCreateCategoryMutation();
+  const router = useRouter();
+
+
 
   const [iconPreview, setIconPreview] = useState<string | null>(null);
 
   const handleTitleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, title: e.target.value || 'Your Title Here' });
+    setFormData({ ...formData, categoryName: e.target.value || "Your Title Here" });
   };
 
   const handleColorChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -45,12 +51,28 @@ export default function CreateCategoryPage() {
   };
 
   const handleToggle = () => {
-    setFormData({ ...formData, featureOnHomepage: !formData.featureOnHomepage });
+    setFormData({
+      ...formData,
+      isFeatured: !formData.isFeatured,
+    });
   };
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    console.log('Category created:', formData);
+    try {
+      const fd = new FormData();
+      fd.append("categoryName", formData.categoryName);
+      if (formData.icon) {
+        fd.append("icon", formData.icon);
+      }
+      fd.append("color", formData.color);
+      fd.append("isFeatured", formData.isFeatured.toString());
+      await createCategory(fd).unwrap();
+      toast.success("Category created successfully");
+      router.replace("/admin/category");
+    } catch (error) {
+      toast.error(getApiErrorMessage(error));
+    }
   };
 
   return (
@@ -59,7 +81,9 @@ export default function CreateCategoryPage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
           {/* Form Section */}
           <div className="bg-white border border-gray-200 rounded-xl p-6 lg:p-8">
-            <h2 className="text-xl font-bold text-gray-900 mb-8">Create Category</h2>
+            <h2 className="text-xl font-bold text-gray-900 mb-8">
+              Create Category
+            </h2>
 
             <form onSubmit={handleSubmit} className="space-y-8">
               {/* Category Title */}
@@ -70,10 +94,12 @@ export default function CreateCategoryPage() {
                 <Input
                   type="text"
                   placeholder="Enter category title..."
-                  value={formData.title === 'Your Title Here' ? '' : formData.title}
+                  value={
+                    formData.categoryName === "Your Title Here" ? "" : formData.categoryName
+                  }
                   onChange={handleTitleChange}
                   className="w-full px-4 py-3 border !h-12 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary bg-gray-50 text-gray-900 placeholder-gray-400"
-                />  
+                />
               </div>
 
               {/* Icon Upload */}
@@ -89,13 +115,17 @@ export default function CreateCategoryPage() {
                     className="hidden"
                     id="icon-upload"
                   />
-                  <label    
+                  <label
                     htmlFor="icon-upload"
                     className="flex flex-col items-center justify-center px-4 py-12 border-2 border-dashed border-gray-300 rounded-lg hover:border-primary hover:bg-violet-50 cursor-pointer transition-colors bg-gray-50"
                   >
                     <Upload size={32} className="text-gray-400 mb-2" />
-                    <span className="text-gray-600 font-medium">Choose File or Drop here</span>
-                    <span className="text-xs text-gray-500 mt-2">Recommended size: 512x512px</span>
+                    <span className="text-gray-600 font-medium">
+                      Choose File or Drop here
+                    </span>
+                    <span className="text-xs text-gray-500 mt-2">
+                      Recommended size: 512x512px
+                    </span>
                   </label>
                 </div>
               </div>
@@ -123,26 +153,35 @@ export default function CreateCategoryPage() {
                     />
                   </div>
                 </div>
-                <p className="text-xs text-gray-500 mt-2">This color defines the card&apos;s accent in student view.</p>
+                <p className="text-xs text-gray-500 mt-2">
+                  This color defines the card&apos;s accent in student view.
+                </p>
               </div>
 
               {/* Feature on Homepage Toggle */}
               <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
                 <div className="flex items-start justify-between gap-4">
                   <div>
-                    <h3 className="font-semibold text-gray-900">Feature on Homepage</h3>
-                    <p className="text-sm text-gray-600 mt-1">Promote this category in the &apos;Popular&apos; section of the learner dashboard.</p>
+                    <h3 className="font-semibold text-gray-900">
+                      Feature on Homepage
+                    </h3>
+                    <p className="text-sm text-gray-600 mt-1">
+                      Promote this category in the &apos;Popular&apos; section
+                      of the learner dashboard.
+                    </p>
                   </div>
                   <button
                     type="button"
                     onClick={handleToggle}
                     className={`flex-shrink-0 w-12 h-7 rounded-full transition-colors ${
-                      formData.featureOnHomepage ? 'bg-primary' : 'bg-gray-300'
+                      formData.isFeatured ? "bg-primary" : "bg-gray-300"
                     }`}
                   >
                     <div
                       className={`w-6 h-6 rounded-full bg-white transition-transform ${
-                        formData.featureOnHomepage ? 'translate-x-5' : 'translate-x-0.5'
+                        formData.isFeatured
+                          ? "translate-x-5"
+                          : "translate-x-0.5"
                       }`}
                     />
                   </button>
@@ -172,7 +211,9 @@ export default function CreateCategoryPage() {
 
           {/* Live Preview Section */}
           <div className="bg-white border border-gray-200 rounded-xl p-6 lg:p-8">
-            <h2 className="text-xl font-bold text-gray-900 mb-8">Live Preview</h2>
+            <h2 className="text-xl font-bold text-gray-900 mb-8">
+              Live Preview
+            </h2>
 
             <div className="space-y-8">
               {/* Preview Card */}
@@ -181,27 +222,50 @@ export default function CreateCategoryPage() {
                 className="rounded-2xl p-8 min-h-64 flex flex-col items-center justify-center text-white relative overflow-hidden"
               >
                 {/* Decorative circles */}
-                <div className="absolute top-0 right-0 w-32 h-32 rounded-full opacity-20" style={{ backgroundColor: 'rgba(255, 255, 255, 0.2)' }} />
-                <div className="absolute bottom-0 left-0 w-24 h-24 rounded-full opacity-20" style={{ backgroundColor: 'rgba(255, 255, 255, 0.2)' }} />
+                <div
+                  className="absolute top-0 right-0 w-32 h-32 rounded-full opacity-20"
+                  style={{ backgroundColor: "rgba(255, 255, 255, 0.2)" }}
+                />
+                <div
+                  className="absolute bottom-0 left-0 w-24 h-24 rounded-full opacity-20"
+                  style={{ backgroundColor: "rgba(255, 255, 255, 0.2)" }}
+                />
 
                 {/* Icon */}
                 <div className="w-16 h-16 bg-black bg-opacity-30 rounded-xl flex items-center justify-center mb-6 relative z-10">
                   {iconPreview ? (
-                    <img src={iconPreview} alt="Category icon" className="w-10 h-10" />
+                    <img
+                      src={iconPreview}
+                      alt="Category icon"
+                      className="w-10 h-10"
+                    />
                   ) : (
-                    <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+                    <svg
+                      className="w-8 h-8 text-white"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"
+                      />
                     </svg>
                   )}
                 </div>
 
                 {/* Title */}
-                <h3 className="text-3xl font-bold text-center mb-3 relative z-10">{formData.title}</h3>
+                <h3 className="text-3xl font-bold text-center mb-3 relative z-10">
+                  {formData.categoryName}
+                </h3>
               </div>
 
               {/* Description */}
-              <p className="text-center text-gray-600 italic">Learners will see this in the academy catalog.</p>
-
+              <p className="text-center text-gray-600 italic">
+                Learners will see this in the academy catalog.
+              </p>
             </div>
           </div>
         </div>
