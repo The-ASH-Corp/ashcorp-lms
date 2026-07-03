@@ -11,7 +11,11 @@ import { errorHandler } from "./shared/error/errorHandler";
 
 const app = express();
 
-app.use(helmet());
+app.use(
+  helmet({
+    crossOriginResourcePolicy: { policy: "cross-origin" },
+  })
+);
 
 app.use(
   cors({

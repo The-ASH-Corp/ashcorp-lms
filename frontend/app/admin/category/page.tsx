@@ -64,6 +64,14 @@ export default function CategoryPage() {
 
   const { data: categories, isLoading, isError } = useGetAllCategoriesQuery();
 
+  const getCategoryImageUrl = (iconUrl: string) => {
+    if (!iconUrl) return "";
+    if (/^https?:\/\//i.test(iconUrl)) return iconUrl;
+    const baseUrl = process.env.NEXT_PUBLIC_IMAGE_URL?.replace(/\/+$/, "") ?? "";
+    const path = iconUrl.replace(/^\/+/, "");
+    return `${baseUrl}/${path}`;
+  };
+
   if (isLoading) {
     return (
       <div className="flex justify-center items-center min-h-[80vh]">
@@ -160,9 +168,10 @@ export default function CategoryPage() {
                         <Image
                           width={100}
                           height={100}
-                          src="/illustration_course.png"
-                          alt={""}
-                          className="h-18 w-18 rounded-md"
+                          src={getCategoryImageUrl(category.iconUrl)}
+                          alt={category.categoryName || "Category image"}
+                          className="h-24 w-24 rounded-md object-cover"
+                          unoptimized
                         />
                       </div>
                     </TableCell>
