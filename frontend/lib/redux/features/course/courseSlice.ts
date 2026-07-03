@@ -24,11 +24,9 @@ export const courseSlice = createSlice({
     name:"course",
     initialState,
     reducers:{
-        setCourses: (state, action) => {
-            state.push(...action.payload);
-        },
+        
     }
 })
 
-export const {setCourses} = courseSlice.actions;
+export const {} = courseSlice.actions;
 export const courseReducer = courseSlice.reducer;

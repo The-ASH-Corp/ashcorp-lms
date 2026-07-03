@@ -1,10 +1,11 @@
 import { Router } from "express";
-import { getAllCourseController } from "./controller";
+import { createCourseController, getAllCourseController } from "./controller";
 
 
 const router = Router();
 
-// router.post("/create",create)
+router.post("/create",createCourseController)
+
 router.get("/all-course",getAllCourseController);
 
 

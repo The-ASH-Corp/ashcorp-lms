@@ -43,34 +43,34 @@ const navItems = [
   },
   {
     title: "Subscriptions",
-    url: "/admin/subscriptions",
+    url: "/admin",
     icon: CreditCard,
     children: [
       {
         title: "Plan Management",
-        url: "/admin/subscriptions/plans",
+        url: "/admin/plans",
         children: [
-          { title: "Plan List", url: "/admin/subscriptions/plans" },
+          { title: "Plan List", url: "/admin/plans" },
           {
             title: "Create New Plan",
-            url: "/admin/subscriptions/plans/create",
+            url: "/admin/plans/create",
           },
         ],
       },
       {
         title: "Subscriber Management",
-        url: "/admin/subscriptions/subscribers",
+        url: "/admin/subscribers",
       },
     ],
   },
   {
     title: "Course Management",
-    url: "/admin/courses",
+    url: "/admin",
     icon: BookOpen,
     children: [
-      { title: "Category", url: "/admin/courses/category" },
-      { title: "Course", url: "/admin/courses/course" },
-      { title: "Chapter", url: "/admin/courses/chapter" },
+      { title: "Category", url: "/admin/category" },
+      { title: "Course", url: "/admin/course" },
+      { title: "Chapter", url: "/admin/chapter" },
     ],
   },
   {
@@ -268,11 +268,6 @@ export function AdminSidebar({
 
       {/* Footer */}
       <SidebarFooter className="px-4 pb-5 space-y-1">
-        <Button className="w-full rounded-xl bg-violet-600 py-5 text-sm font-semibold text-white shadow-md shadow-violet-200 hover:bg-violet-700 transition-colors">
-          <FileBarChart className="h-4 w-4 mr-2" />
-          Generate Report
-        </Button>
-
         <SidebarMenu className="mt-2">
           <SidebarMenuItem>
             <SidebarMenuButton
