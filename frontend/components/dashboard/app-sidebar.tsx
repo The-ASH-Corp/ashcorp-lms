@@ -49,13 +49,14 @@ const navItems = [
     url: "/plan-payment",
     icon: <CreditCard />,
   },
+
   {
     title: "Logout",
     url: "#",
     isLogout: true,
     icon: <LogOut />,
-  }
-]
+  },
+];
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const user = useAppSelector((state) => state.auth.user);

@@ -150,7 +150,7 @@ export default function CertificatePage() {
 
                 <div className="border-t border-violet-200 pt-6">
                   <p className="text-xs text-gray-600 italic mb-4">
-                    "This certificate is widely recognized by our network of 500+ global hiring partners."
+                    This certificate is widely recognized by our network of 500+ global hiring partners.
                   </p>
                   <div className="flex gap-2">
                     <div className="w-6 h-6 bg-linear-to-br from-violet-400 to-violet-600 rounded-full flex items-center justify-center text-white text-xs font-bold">H</div>
