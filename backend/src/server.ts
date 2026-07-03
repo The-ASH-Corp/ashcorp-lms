@@ -1,11 +1,12 @@
 import express from "express";
+import path from "path";
 import cors from "cors";
 import helmet from "helmet";
 import compression from "compression";
 import cookieParser from "cookie-parser";
 import morgan from "morgan";
 import { ENV } from "./shared/env/ENV";
-import routes from "./app/routes"
+import routes from "./app/routes";
 import { errorHandler } from "./shared/error/errorHandler";
 
 const app = express();
@@ -25,9 +26,11 @@ app.use(express.json());
 
 app.use(cookieParser());
 
+app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
+
 app.use(morgan("dev"));
 
-app.use("/api",routes);
+app.use("/api", routes);
 
 app.use(errorHandler);
 
