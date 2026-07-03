@@ -26,7 +26,14 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Pencil, MoreVertical, Plus, Search, Check, X } from "lucide-react";
+import {
+  Pencil,
+  MoreVertical,
+  Plus,
+  Search,
+  Check,
+  X,
+} from "lucide-react";
 import {
   InputGroup,
   InputGroupAddon,
@@ -34,34 +41,8 @@ import {
 } from "@/components/ui/input-group";
 import Image from "next/image";
 import Link from "next/link";
-
-/* ─── Mock Students Data ─── */
-const students = [
-  {
-    id: 1,
-    title: "Elena Sterling",
-    isFeatured: false,
-    status: "Active" as const,
-  },
-  {
-    id: 2,
-    title:"julian Vance",
-    isFeatured: true,
-    status: "On Hold" as const,
-  },
-  {
-    id: 3,
-    title: "Marcus Thorne",
-    isFeatured: false,
-    status: "Active" as const,
-  },
-  {
-    id: 4,
-    title: "Amara Okafor",
-    isFeatured: true,
-    status: "Inactive" as const,
-  },
-];
+import { useGetAllCategoriesQuery } from "@/lib/redux/features/category/categoryApi";
+import { PropagateLoader } from "react-spinners";
 
 const statusStyles: Record<string, { dot: string; bg: string; text: string }> =
   {
@@ -81,6 +62,26 @@ const statusStyles: Record<string, { dot: string; bg: string; text: string }> =
 export default function CategoryPage() {
   const [currentPage] = useState(1);
 
+  const { data: categories, isLoading, isError } = useGetAllCategoriesQuery();
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center min-h-[80vh]">
+        <PropagateLoader color="#7E23FE" loading={true} size={15} />
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="flex justify-center items-center min-h-[80vh]">
+        <h1 className="text-2xl font-bold text-gray-900">
+          Something went wrong
+        </h1>
+      </div>
+    );
+  }
+
   return (
     <>
       <div className="space-y-6">
@@ -93,7 +94,10 @@ export default function CategoryPage() {
           </div>
           <div className="flex items-center gap-3">
             <Button className="rounded-xl bg-violet-600 text-white shadow-md shadow-violet-200 hover:bg-violet-700 h-10 px-5">
-              <Link href="/admin/category/addCategory" className="flex items-center">
+              <Link
+                href="/admin/category/addCategory"
+                className="flex items-center"
+              >
                 <Plus className="h-4 w-4 mr-2" />
                 Add Category
               </Link>
@@ -135,18 +139,18 @@ export default function CategoryPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {students.map((student) => {
-                const style = statusStyles[student.status];
+              {categories?.map((category: any, index: number) => {
+                const style = statusStyles[category.status];
 
                 return (
                   <TableRow
-                    key={student.id}
+                    key={index}
                     className="hover:bg-violet-50/30 transition-colors border-b border-gray-50"
                   >
                     <TableCell>
                       <div className="flex items-center gap-3 justify-center">
                         <p className="text-sm font-semibold text-gray-900">
-                          {student.id}
+                          {index + 1}
                         </p>
                       </div>
                     </TableCell>
@@ -166,15 +170,25 @@ export default function CategoryPage() {
                     <TableCell>
                       <div className="flex items-center gap-3 min-w-[120px] justify-center">
                         <span className="text-sm font-semibold text-gray-900 w-10">
-                          {student.title}
+                          {category.categoryName}
                         </span>
                       </div>
                     </TableCell>
 
                     {/* Featured */}
                     <TableCell className="flex  justify-center">
-                      <div className={student.isFeatured?"bg-green-300 w-20 h-10 rounded-xl flex justify-center items-center ":""}>
-                        {student.isFeatured ? <Check className="h-4 w-4 text-green-600" /> : <X className="h-4 w-4 text-amber-600" />}
+                      <div
+                        className={
+                          category.isFeatured
+                            ? "bg-green-300 w-20 h-10 rounded-xl flex justify-center items-center "
+                            : ""
+                        }
+                      >
+                        {category.isFeatured ? (
+                          <Check className="h-4 w-4 text-green-600" />
+                        ) : (
+                          <X className="h-4 w-4 text-amber-600" />
+                        )}
                       </div>
                     </TableCell>
 
@@ -186,7 +200,7 @@ export default function CategoryPage() {
                         <span
                           className={`h-1.5 w-1.5 rounded-full ${style.dot}`}
                         />
-                        {student.status}
+                        {category.status}
                       </span>
                     </TableCell>
 

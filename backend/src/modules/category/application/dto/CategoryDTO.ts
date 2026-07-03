@@ -3,6 +3,7 @@ export interface CategoryRequestDTO {
   color: string;
   iconUrl: string;
   isFeatured: boolean;
+  status: string;
 }
 
 export interface CategoryResponseDTO {
@@ -13,4 +14,5 @@ export interface CategoryResponseDTO {
   createdAt: Date;
   updatedAt: Date;
   isFeatured: boolean;
+  status: string;
 }

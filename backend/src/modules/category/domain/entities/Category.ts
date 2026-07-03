@@ -6,6 +6,7 @@ export interface CategoryResponseDTO {
   createdAt: Date;
   updatedAt: Date;
   isFeatured: boolean;
+  status:string
 }
 
 export class Category {
@@ -14,8 +15,9 @@ export class Category {
         public color:string,
         public iconUrl:string,
         public isFeatured:boolean,
+        public status:string,
         public id?:string,
         public createdAt?:Date,
-        public updatedAt?:Date
+        public updatedAt?:Date,
     ){}
 }
