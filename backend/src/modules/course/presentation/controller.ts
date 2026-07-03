@@ -1,11 +1,12 @@
 import { NextFunction, Request, Response } from "express";
 import { courseFindAllUseCase, createCourseUseCase } from "../di";
+import { CourseRequestDTO } from "../application/dto/CourseDTO";
 
 export const getAllCourseController = async (
-  req: Request,
+  _req: Request,
   res: Response,
   next: NextFunction,
-) => {
+): Promise<void> => {
   try {
     const courses = await courseFindAllUseCase.execute();
 
@@ -22,15 +23,15 @@ export const createCourseController = async (
   req: Request,
   res: Response,
   next: NextFunction,
-) => {
+): Promise<void> => {
   try {
-    const courseData = req.body;
+    const courseData: CourseRequestDTO = req.body;
 
-    const courses = await createCourseUseCase.execute(courseData);
+    const course = await createCourseUseCase.execute(courseData);
 
     res.status(201).json({
       success: true,
-      data: courses,
+      data: course,
     });
   } catch (error) {
     next(error);
