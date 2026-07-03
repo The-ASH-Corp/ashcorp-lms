@@ -26,7 +26,6 @@ export class LoginUsecase {
       authenticatedUser.password,
     );
 
-    console.log(await bcrypt.compare(" Admin@ash",authenticatedUser.password))
     if (!isPasswordValid) {
       throw new AppError("Invalid email or password", 401);
     }
