@@ -33,6 +33,7 @@ import {
   InputGroupInput,
 } from "@/components/ui/input-group";
 import Image from "next/image";
+import Link from "next/link";
 
 /* ─── Mock Students Data ─── */
 const students = [
@@ -92,8 +93,10 @@ export default function CategoryPage() {
           </div>
           <div className="flex items-center gap-3">
             <Button className="rounded-xl bg-violet-600 text-white shadow-md shadow-violet-200 hover:bg-violet-700 h-10 px-5">
-              <Plus className="h-4 w-4 mr-2" />
-              Add Category
+              <Link href="/admin/category/addCategory" className="flex items-center">
+                <Plus className="h-4 w-4 mr-2" />
+                Add Category
+              </Link>
             </Button>
           </div>
         </div>
