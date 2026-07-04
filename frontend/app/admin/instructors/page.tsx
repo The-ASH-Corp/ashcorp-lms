@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
@@ -28,8 +28,10 @@ import {
 } from "@/components/ui/input-group";
 import Image from "next/image";
 import Link from "next/link";
-import { useGetAllCategoriesQuery } from "@/lib/redux/features/category/categoryApi";
 import { PropagateLoader } from "react-spinners";
+import { useGetAllInstructorsQuery } from "@/lib/redux/features/instructor/instructorApi";
+import { useAppDispatch } from "@/lib/redux/hooks";
+import { getAllInstructors } from "@/lib/redux/features/instructor/instructorSlice";
 
 const statusStyles: Record<string, { dot: string; bg: string; text: string }> =
   {
@@ -46,56 +48,65 @@ const statusStyles: Record<string, { dot: string; bg: string; text: string }> =
     Inactive: { dot: "bg-gray-400", bg: "bg-gray-100", text: "text-gray-600" },
   };
 
-export default function CategoryPage() {
-  const [currentPage] = useState(1);
+export default function InstructorsPage() {
 
-  const { data: categories, isLoading, isError } = useGetAllCategoriesQuery();
+    const [currentPage] = useState(1);
+    
+      const { data: instructors, isLoading, isError } = useGetAllInstructorsQuery();
+      const dispatch = useAppDispatch();
 
-  const getCategoryImageUrl = (iconUrl: string) => {
-    if (!iconUrl) return "";
-    if (/^https?:\/\//i.test(iconUrl)) return iconUrl;
-    const baseUrl =
-      process.env.NEXT_PUBLIC_IMAGE_URL?.replace(/\/+$/, "") ?? "";
-    const path = iconUrl.replace(/^\/+/, "");
-    return `${baseUrl}/${path}`;
-  };
+      useEffect(() => {
+        if (instructors) {
+          dispatch(getAllInstructors(instructors));
+        }
+      }, [instructors, dispatch]);
 
-  if (isLoading) {
+      const getInstructorImageUrl = (iconUrl: string) => {
+        if (!iconUrl) return "";
+        if (/^https?:\/\//i.test(iconUrl)) return iconUrl;
+        const baseUrl =
+          process.env.NEXT_PUBLIC_IMAGE_URL?.replace(/\/+$/, "") ?? "";
+        const path = iconUrl.replace(/^\/+/, "");
+        return `${baseUrl}/${path}`;
+      };
+    
+      if (isLoading) {
+        return (
+          <div className="flex justify-center items-center min-h-[80vh]">
+            <PropagateLoader color="#7E23FE" loading={true} size={15} />
+          </div>
+        );
+      }
+    
+      if (isError) {
+        return (
+          <div className="flex justify-center items-center min-h-[80vh]">
+            <h1 className="text-2xl font-bold text-gray-900">
+              Something went wrong
+            </h1>
+          </div>
+        );
+      }
+
+
     return (
-      <div className="flex justify-center items-center min-h-[80vh]">
-        <PropagateLoader color="#7E23FE" loading={true} size={15} />
-      </div>
-    );
-  }
-
-  if (isError) {
-    return (
-      <div className="flex justify-center items-center min-h-[80vh]">
-        <h1 className="text-2xl font-bold text-gray-900">
-          Something went wrong
-        </h1>
-      </div>
-    );
-  }
-
-  return (
-    <>
+         <>
       <div className="space-y-6">
         {/* ─── Page Header ─── */}
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h1 className="text-2xl font-bold text-gray-900">
-              Category Management
+              Instructors Management
             </h1>
           </div>
           <div className="flex items-center gap-3">
             <Button className="rounded-xl bg-violet-600 text-white shadow-md shadow-violet-200 hover:bg-violet-700 h-10 px-5">
               <Link
-                href="/admin/category/addCategory"
+                href="/admin/instructors/createInstructor"
                 className="flex items-center"
               >
                 <Plus className="h-4 w-4 mr-2" />
-                Add Category
+                Add Instructor
               </Link>
             </Button>
           </div>
@@ -104,7 +115,7 @@ export default function CategoryPage() {
         {/* ─── Data Table ─── */}
         <Card className="border-0 shadow-sm bg-white overflow-hidden">
           <InputGroup className="w-sm ml-4">
-            <InputGroupInput placeholder="Search Category..." />
+            <InputGroupInput placeholder="Search Instructor..." />
             <InputGroupAddon align="inline-end">
               <Button size="icon" variant="ghost" className="h-8 w-8 shrink-0">
                 <Search className="h-4 w-4" />
@@ -118,13 +129,19 @@ export default function CategoryPage() {
                   #
                 </TableHead>
                 <TableHead className="text-xs font-semibold uppercase tracking-wider text-gray-500 text-center">
-                  Thumbnail
+                  Image
+                </TableHead>
+                <TableHead className="text-xs font-semibold uppercase tracking-wider text-gray-500 text-center ">
+                  Name
+                </TableHead>
+                <TableHead className="text-xs font-semibold uppercase tracking-wider text-gray-500 text-center ">
+                  Email
                 </TableHead>
                 <TableHead className="text-xs font-semibold uppercase tracking-wider text-gray-500 text-center ">
                   Title
                 </TableHead>
                 <TableHead className="text-xs font-semibold uppercase tracking-wider text-gray-500 text-center ">
-                  Featured
+                  IsFeatured
                 </TableHead>
                 <TableHead className="text-xs font-semibold uppercase tracking-wider text-gray-500 text-center ">
                   Status
@@ -135,8 +152,8 @@ export default function CategoryPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {categories?.map((category: any, index: number) => {
-                const style = statusStyles[category.status];
+              {instructors?.map((instructor: any, index: number) => {
+                const style = statusStyles[instructor.status];
 
                 return (
                   <TableRow
@@ -156,8 +173,8 @@ export default function CategoryPage() {
                         <Image
                           width={100}
                           height={100}
-                          src={getCategoryImageUrl(category.iconUrl)}
-                          alt={category.categoryName || "Category image"}
+                          src={getInstructorImageUrl(instructor.profileImage)}
+                          alt={instructor.name || "Instructor image"}
                           className="h-24 w-24 rounded-md object-cover"
                           unoptimized
                         />
@@ -167,24 +184,38 @@ export default function CategoryPage() {
                     <TableCell>
                       <div className="flex items-center gap-3 min-w-[120px] justify-center">
                         <span className="text-sm font-semibold text-gray-900 w-10">
-                          {category.categoryName}
+                          {instructor.name}
                         </span>
                       </div>
                     </TableCell>
 
+                    <TableCell>
+                        <div className="flex items-center gap-3 min-w-[120px] justify-center">
+                            <span className="text-sm font-semibold text-gray-900 w-10">
+                                {instructor.email}
+                            </span>
+                        </div>
+                    </TableCell>
+                    <TableCell>
+                        <div className="flex items-center gap-3 min-w-[120px] justify-center">
+                            <span className="text-sm font-semibold text-gray-900 w-10">
+                                {instructor.instructorTitle}
+                            </span>
+                        </div>
+                    </TableCell>
                     {/* Featured */}
                     <TableCell className="flex text-center justify-center">
                       <div
                         className={
-                          category.isFeatured
+                          instructor.isFeatured
                             ? "bg-green-300 w-20 h-10 rounded-xl flex justify-center items-center "
-                            : ""
+                            : "bg-red-300 w-20 h-10 rounded-xl flex justify-center items-center"
                         }
                       >
-                        {category.isFeatured ? (
+                        {instructor.isFeatured ? (
                           <Check className="h-4 w-4 text-green-600" />
                         ) : (
-                          <X className="h-4 w-4 text-amber-600" />
+                          <X className="h-4 w-4 text-red-600" />
                         )}
                       </div>
                     </TableCell>
@@ -197,7 +228,7 @@ export default function CategoryPage() {
                         <span
                           className={`h-1.5 w-1.5 rounded-full ${style.dot} animate-pulse`}
                         />
-                        {category.status}
+                        {instructor.status}
                       </span>
                     </TableCell>
 
@@ -276,5 +307,5 @@ export default function CategoryPage() {
         </Card>
       </div>
     </>
-  );
+    );
 }

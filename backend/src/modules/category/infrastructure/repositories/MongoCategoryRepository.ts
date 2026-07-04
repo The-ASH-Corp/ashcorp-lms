@@ -16,9 +16,7 @@ export class MongoCategoryRepository implements CategoryRepository {
     }
 
     async getAllCategories(): Promise<CategoryResponseDTO[]> {
-        const categories = await CategoryModel.find({
-            status: "Active"
-        });
+        const categories = await CategoryModel.find().sort({createdAt: -1});
         return categories;
     }
 }
