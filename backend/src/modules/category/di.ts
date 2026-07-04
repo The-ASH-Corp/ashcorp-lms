@@ -1,6 +1,6 @@
 import { CreateCategoryUseCase } from "./application/usecase/CreateCategoryUseCase";
 import { FindCategoryByNameUseCase } from "./application/usecase/FindCategoryByNameUseCase";
-import { MongoCategoryRepository } from "./infrastructure/reposotories/MongoCategoryRepository";
+import { MongoCategoryRepository } from "./infrastructure/repositories/MongoCategoryRepository";
 import { GetAllCategoriesUseCase } from "./application/usecase/GetAllCategoriesUseCase";
 
 export const categoryRepository = new MongoCategoryRepository();
