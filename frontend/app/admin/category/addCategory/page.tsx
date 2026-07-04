@@ -1,19 +1,26 @@
 "use client";
 
 import { useState, ChangeEvent, FormEvent } from "react";
-import { Upload, Plus } from "lucide-react";
+import { Upload, Plus, Check, X, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { useCreateCategoryMutation } from "@/lib/redux/features/category/categoryApi";
 import { getApiErrorMessage } from "@/lib/utils";
 import { useRouter } from "next/navigation";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 interface CategoryFormData {
   categoryName: string;
   icon: File | null;
   color: string;
   isFeatured: boolean;
+  status: string;
 }
 
 export default function CreateCategoryPage() {
@@ -22,16 +29,18 @@ export default function CreateCategoryPage() {
     icon: null,
     color: "#7C3AED",
     isFeatured: false,
+    status: "Active",
   });
   const [createCategory, { isLoading }] = useCreateCategoryMutation();
   const router = useRouter();
 
-
-
   const [iconPreview, setIconPreview] = useState<string | null>(null);
 
   const handleTitleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, categoryName: e.target.value || "Your Title Here" });
+    setFormData({
+      ...formData,
+      categoryName: e.target.value || "Your Title Here",
+    });
   };
 
   const handleColorChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -57,6 +66,10 @@ export default function CreateCategoryPage() {
     });
   };
 
+  const handleStatusChange = (status: "Active" | "Inactive" | "On Hold") => {
+    setFormData({ ...formData, status });
+  };
+
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     try {
@@ -67,6 +80,7 @@ export default function CreateCategoryPage() {
       }
       fd.append("color", formData.color);
       fd.append("isFeatured", formData.isFeatured.toString());
+      fd.append("status", formData.status);
       await createCategory(fd).unwrap();
       toast.success("Category created successfully");
       router.replace("/admin/category");
@@ -95,7 +109,9 @@ export default function CreateCategoryPage() {
                   type="text"
                   placeholder="Enter category title..."
                   value={
-                    formData.categoryName === "Your Title Here" ? "" : formData.categoryName
+                    formData.categoryName === "Your Title Here"
+                      ? ""
+                      : formData.categoryName
                   }
                   onChange={handleTitleChange}
                   className="w-full px-4 py-3 border !h-12 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary bg-gray-50 text-gray-900 placeholder-gray-400"
@@ -185,6 +201,38 @@ export default function CreateCategoryPage() {
                       }`}
                     />
                   </button>
+                </div>
+              </div>
+
+              <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                <div className="flex items-start justify-between gap-4">
+                  <div>
+                    <h3 className="font-semibold text-gray-900">Status</h3>
+                  </div>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="outline" size="sm" className="h-8 px-3">
+                        {formData.status} <ChevronDown className="w-3.5 h-3.5 mr-1" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem
+                        onClick={() => handleStatusChange("Active")}
+                      >
+                        Active
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        onClick={() => handleStatusChange("Inactive")}
+                      >
+                        Inactive
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        onClick={() => handleStatusChange("On Hold")}
+                      >
+                        On Hold
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </div>
               </div>
 
