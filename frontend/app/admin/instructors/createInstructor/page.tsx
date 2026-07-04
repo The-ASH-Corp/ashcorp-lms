@@ -128,7 +128,7 @@ export default function CreateInstructorPage() {
           <div className="border border-gray-200 rounded-lg p-4 sm:p-6 lg:p-8">
             <div className="flex items-center gap-3 mb-6">
               <div className="w-10 h-10 rounded-lg bg-violet-50 flex items-center justify-center">
-                <span className="text-violet-600 text-lg font-bold">👤</span>
+                <span className="text-primary text-lg font-bold">👤</span>
               </div>
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">
                 Personal Information
@@ -147,7 +147,7 @@ export default function CreateInstructorPage() {
                   value={formData.name}
                   onChange={handleInputChange}
                   placeholder="Enter user name"
-                  className="w-full h-12 px-4 py-3 rounded-lg border border-gray-300 focus:border-violet-600 focus:ring-2 focus:ring-violet-100 outline-none transition-colors"
+                  className="w-full h-12 px-4 py-3 rounded-lg border border-gray-300 focus:border-primary focus:ring-2 focus:ring-violet-100 outline-none transition-colors"
                 />
                 {errors.name ? (
                   <p className="text-xs text-red-500 mt-2">{errors.name}</p>
@@ -167,7 +167,7 @@ export default function CreateInstructorPage() {
                   value={formData.email}
                   onChange={handleInputChange}
                   placeholder="Enter user email"
-                  className="w-full h-12 px-4 py-3 rounded-lg border border-gray-300 focus:border-violet-600 focus:ring-2 focus:ring-violet-100 outline-none transition-colors"
+                  className="w-full h-12 px-4 py-3 rounded-lg border border-gray-300 focus:border-primary focus:ring-2 focus:ring-violet-100 outline-none transition-colors"
                 />
                 {errors.email && (
                   <p className="text-xs text-red-500 mt-2">{errors.email}</p>
@@ -185,7 +185,7 @@ export default function CreateInstructorPage() {
                   value={formData.phone}
                   onChange={handleInputChange}
                   placeholder="Enter user phone"
-                  className="w-full h-12 px-4 py-3 rounded-lg border border-gray-300 focus:border-violet-600 focus:ring-2 focus:ring-violet-100 outline-none transition-colors"
+                  className="w-full h-12 px-4 py-3 rounded-lg border border-gray-300 focus:border-primary focus:ring-2 focus:ring-violet-100 outline-none transition-colors"
                 />
                 {errors.phone && (
                   <p className="text-xs text-red-500 mt-2">{errors.phone}</p>
@@ -198,7 +198,7 @@ export default function CreateInstructorPage() {
           <div className="border border-gray-200 rounded-lg p-4 sm:p-6 lg:p-8">
             <div className="flex items-center gap-3 mb-6">
               <div className="w-10 h-10 rounded-lg bg-violet-50 flex items-center justify-center">
-                <span className="text-violet-600 text-lg font-bold">📚</span>
+                <span className="text-primary text-lg font-bold">📚</span>
               </div>
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">
                 Academic Profile
@@ -217,7 +217,7 @@ export default function CreateInstructorPage() {
                   value={formData.instructorTitle}
                   onChange={handleInputChange}
                   placeholder="e.g. Senior Machine Learning Engineer"
-                  className="w-full h-12 px-4 py-3 rounded-lg border border-gray-300 focus:border-violet-600 focus:ring-2 focus:ring-violet-100 outline-none transition-colors"
+                  className="w-full h-12 px-4 py-3 rounded-lg border border-gray-300 focus:border-primary focus:ring-2 focus:ring-violet-100 outline-none transition-colors"
                 />
                 {errors.instructorTitle ? (
                   <p className="text-xs text-red-500 mt-2">
@@ -236,7 +236,7 @@ export default function CreateInstructorPage() {
                     Profile Picture (JPG, JPEG, PNG){" "}
                     <span className="text-red-500">*</span>
                   </label>
-                  <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 sm:p-8 text-center hover:border-violet-600 transition-colors cursor-pointer">
+                  <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 sm:p-8 text-center hover:border-primary transition-colors cursor-pointer">
                     <Input
                       type="file"
                       accept="image/*"
@@ -254,7 +254,7 @@ export default function CreateInstructorPage() {
                       />
                       <p className="text-gray-600 text-sm font-medium mb-1">
                         Drag and drop or{" "}
-                        <span className="text-violet-600 font-bold">
+                        <span className="text-primary font-bold">
                           Choose a file
                         </span>
                       </p>
@@ -286,7 +286,7 @@ export default function CreateInstructorPage() {
                     onChange={handleInputChange}
                     placeholder="Share a brief academic biography..."
                     rows={6}
-                    className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-violet-600 focus:ring-2 focus:ring-violet-100 outline-none transition-colors resize-none"
+                    className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-primary focus:ring-2 focus:ring-violet-100 outline-none transition-colors resize-none"
                   />
                   {errors.about ? (
                     <p className="text-xs text-red-500 mt-2">{errors.about}</p>
@@ -304,7 +304,7 @@ export default function CreateInstructorPage() {
           <div className="border border-gray-200 rounded-lg p-4 sm:p-6 lg:p-8">
             <div className="flex items-center gap-3 mb-6">
               <div className="w-10 h-10 rounded-lg bg-violet-50 flex items-center justify-center">
-                <span className="text-violet-600 text-lg font-bold">🔒</span>
+                <span className="text-primary text-lg font-bold">🔒</span>
               </div>
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">
                 Security & Visibility
@@ -326,7 +326,7 @@ export default function CreateInstructorPage() {
                       value={formData.password}
                       onChange={handleInputChange}
                       placeholder="Enter user password"
-                      className="w-full h-12 px-4 py-3 pr-12 rounded-lg border border-gray-300 focus:border-violet-600 focus:ring-2 focus:ring-violet-100 outline-none transition-colors"
+                      className="w-full h-12 px-4 py-3 pr-12 rounded-lg border border-gray-300 focus:border-primary focus:ring-2 focus:ring-violet-100 outline-none transition-colors"
                     />
                     <button
                       type="button"
@@ -355,7 +355,7 @@ export default function CreateInstructorPage() {
                       value={formData.confirmPassword}
                       onChange={handleInputChange}
                       placeholder="Enter user password again"
-                      className="w-full h-12 px-4 py-3 pr-12 rounded-lg border border-gray-300 focus:border-violet-600 focus:ring-2 focus:ring-violet-100 outline-none transition-colors"
+                      className="w-full h-12 px-4 py-3 pr-12 rounded-lg border border-gray-300 focus:border-primary focus:ring-2 focus:ring-violet-100 outline-none transition-colors"
                     />
                     <button
                       type="button"
@@ -390,7 +390,7 @@ export default function CreateInstructorPage() {
                     type="button"
                     onClick={() => handleToggle("isFeatured")}
                     className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                      formData.isFeatured ? "bg-violet-600" : "bg-gray-300"
+                      formData.isFeatured ? "bg-primary" : "bg-gray-300"
                     }`}
                   >
                     <span
@@ -410,7 +410,7 @@ export default function CreateInstructorPage() {
                     type="button"
                     onClick={() => handleToggle("verifyByDefault")}
                     className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                      formData.verifyByDefault ? "bg-violet-600" : "bg-gray-300"
+                      formData.verifyByDefault ? "bg-primary" : "bg-gray-300"
                     }`}
                   >
                     <span
@@ -430,7 +430,7 @@ export default function CreateInstructorPage() {
           <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-4">
             <button
               type="submit"
-              className="px-8 py-3 bg-violet-600 text-white rounded-lg hover:bg-violet-700 font-medium transition-colors"
+              className="px-8 py-3 bg-primary text-white rounded-lg hover:bg-violet-700 font-medium transition-colors"
             >
               Create Instructor Profile
             </button>

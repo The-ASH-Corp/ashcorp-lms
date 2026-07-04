@@ -42,8 +42,8 @@ export default function AccountSettingsPage() {
             {/* Avatar */}
             <div className="shrink-0">
               <div className="relative">
-                <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full border-4 border-violet-600 bg-linear-to-br from-violet-100 to-violet-50 flex items-center justify-center">
-                  <Shield size={48} className="text-violet-600" />
+                <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full border-4 border-primary bg-linear-to-br from-violet-100 to-violet-50 flex items-center justify-center">
+                  <Shield size={48} className="text-primary" />
                 </div>
                 <div className="absolute top-0 right-0 bg-red-100 text-red-700 text-xs font-semibold px-2 py-1 rounded-full">
                   ✕ Not Verified
@@ -59,7 +59,7 @@ export default function AccountSettingsPage() {
               <p className="text-gray-600 text-sm sm:text-base mb-4">
                 Premium Member
               </p>
-              <button className="px-4 sm:px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hover:border-violet-600 hover:text-violet-600 transition-colors font-medium text-sm sm:text-base">
+              <button className="px-4 sm:px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hover:border-primary hover:text-primary transition-colors font-medium text-sm sm:text-base">
                 <Upload size={16} className="inline mr-2" />
                 Change Photo
               </button>
@@ -85,7 +85,7 @@ export default function AccountSettingsPage() {
                   name="name"
                   value={formData.name}
                   onChange={handleInputChange}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg text-gray-900 focus:border-violet-600 focus:ring-2 focus:ring-violet-100 outline-none transition-colors text-sm"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg text-gray-900 focus:border-primary focus:ring-2 focus:ring-violet-100 outline-none transition-colors text-sm"
                   placeholder="Enter your name"
                 />
               </div>
@@ -99,7 +99,7 @@ export default function AccountSettingsPage() {
                   name="mobile"
                   value={formData.mobile}
                   onChange={handleInputChange}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg text-gray-900 focus:border-violet-600 focus:ring-2 focus:ring-violet-100 outline-none transition-colors text-sm"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg text-gray-900 focus:border-primary focus:ring-2 focus:ring-violet-100 outline-none transition-colors text-sm"
                   placeholder="Enter mobile number"
                 />
               </div>
@@ -115,7 +115,7 @@ export default function AccountSettingsPage() {
                 name="email"
                 value={formData.email}
                 onChange={handleInputChange}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg text-gray-900 focus:border-violet-600 focus:ring-2 focus:ring-violet-100 outline-none transition-colors text-sm"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg text-gray-900 focus:border-primary focus:ring-2 focus:ring-violet-100 outline-none transition-colors text-sm"
                 placeholder="Enter email address"
               />
             </div>
@@ -140,7 +140,7 @@ export default function AccountSettingsPage() {
                   name="currentPassword"
                   value={formData.currentPassword}
                   onChange={handleInputChange}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg text-gray-900 focus:border-violet-600 focus:ring-2 focus:ring-violet-100 outline-none transition-colors text-sm"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg text-gray-900 focus:border-primary focus:ring-2 focus:ring-violet-100 outline-none transition-colors text-sm"
                   placeholder="Enter current password"
                 />
               </div>
@@ -154,7 +154,7 @@ export default function AccountSettingsPage() {
                   name="newPassword"
                   value={formData.newPassword}
                   onChange={handleInputChange}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg text-gray-900 focus:border-violet-600 focus:ring-2 focus:ring-violet-100 outline-none transition-colors text-sm"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg text-gray-900 focus:border-primary focus:ring-2 focus:ring-violet-100 outline-none transition-colors text-sm"
                   placeholder="Enter new password"
                 />
               </div>
@@ -168,7 +168,7 @@ export default function AccountSettingsPage() {
                   name="confirmPassword"
                   value={formData.confirmPassword}
                   onChange={handleInputChange}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg text-gray-900 focus:border-violet-600 focus:ring-2 focus:ring-violet-100 outline-none transition-colors text-sm"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg text-gray-900 focus:border-primary focus:ring-2 focus:ring-violet-100 outline-none transition-colors text-sm"
                   placeholder="Confirm password"
                 />
               </div>
@@ -180,7 +180,7 @@ export default function AccountSettingsPage() {
         <button
           onClick={handleUpdateProfile}
           disabled={isLoading}
-          className="w-full px-6 py-3 sm:py-4 bg-violet-600 hover:bg-violet-700 disabled:bg-violet-400 text-white rounded-lg font-semibold text-base transition-colors mb-12"
+          className="w-full px-6 py-3 sm:py-4 bg-primary hover:bg-violet-700 disabled:bg-violet-400 text-white rounded-lg font-semibold text-base transition-colors mb-12"
         >
           {isLoading ? 'Updating...' : 'Update Profile'}
         </button>

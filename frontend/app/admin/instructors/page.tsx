@@ -100,7 +100,7 @@ export default function InstructorsPage() {
             </h1>
           </div>
           <div className="flex items-center gap-3">
-            <Button className="rounded-xl bg-violet-600 text-white shadow-md shadow-violet-200 hover:bg-violet-700 h-10 px-5">
+            <Button className="rounded-xl bg-primary text-white shadow-md shadow-violet-200 hover:bg-violet-700 h-10 px-5">
               <Link
                 href="/admin/instructors/createInstructor"
                 className="flex items-center"
@@ -236,7 +236,7 @@ export default function InstructorsPage() {
                     <TableCell className="flex justify-center">
                       <div className="flex items-center justify-end gap-1">
                         <Button
-                          className="flex h-8 w-8 items-center justify-center rounded-lg text-gray-400 transition-colors hover:bg-violet-500/10 hover:text-violet-600"
+                          className="flex h-8 w-8 items-center justify-center rounded-lg text-gray-400 transition-colors hover:bg-violet-500/10 hover:text-primary"
                           size="sm"
                           variant="ghost"
                         >
@@ -275,7 +275,7 @@ export default function InstructorsPage() {
                       isActive={page === currentPage}
                       className={`h-8 w-8 rounded-lg text-sm ${
                         page === currentPage
-                          ? "bg-violet-600! text-white! border-violet-600! hover:bg-violet-700!"
+                          ? "bg-primary! text-white! border-primary! hover:bg-violet-700!"
                           : "border border-gray-200 hover:border-violet-300 hover:bg-violet-50"
                       }`}
                     >

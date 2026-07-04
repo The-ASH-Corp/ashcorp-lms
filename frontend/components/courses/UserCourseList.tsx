@@ -18,7 +18,7 @@ interface CourseCardProps {
 export default function UserCourseList({ course, viewType }: CourseCardProps) {
   const getProgressColor = () => {
     if (course.status === 'completed') return 'bg-green-500';
-    return 'bg-violet-600';
+    return 'bg-primary';
   };
 
   if (viewType === 'list') {
@@ -41,7 +41,7 @@ export default function UserCourseList({ course, viewType }: CourseCardProps) {
             </div>
             <span className="text-sm font-semibold text-gray-700">{course.progress}%</span>
           </div>
-          <button className="text-violet-600 font-semibold text-sm hover:text-violet-700 flex items-center gap-2">
+          <button className="text-primary font-semibold text-sm hover:text-violet-700 flex items-center gap-2">
             Resume Lesson <ArrowRight size={16} />
           </button>
         </div>
@@ -52,7 +52,7 @@ export default function UserCourseList({ course, viewType }: CourseCardProps) {
             </div>
           )}
           {course.status === 'completed' && (
-            <button className="px-6 py-2 bg-violet-600 text-white rounded-lg font-semibold hover:bg-violet-700 transition-colors">
+            <button className="px-6 py-2 bg-primary text-white rounded-lg font-semibold hover:bg-violet-700 transition-colors">
               Review
             </button>
           )}
@@ -113,7 +113,7 @@ export default function UserCourseList({ course, viewType }: CourseCardProps) {
         {/* Actions */}
         <div className="flex flex-col sm:flex-row gap-3">
           {course.status !== "completed" && (
-            <button className="flex-1 text-violet-600 font-semibold text-sm hover:text-violet-700 flex items-center justify-center gap-2 py-2">
+            <button className="flex-1 text-primary font-semibold text-sm hover:text-violet-700 flex items-center justify-center gap-2 py-2">
               Resume Lesson <ArrowRight size={16} />
             </button>
           )}
@@ -121,7 +121,7 @@ export default function UserCourseList({ course, viewType }: CourseCardProps) {
           {course.status === "completed" && (
             <Link
               href={`/certificate/${course.id}`}
-              className="flex-1 px-4 py-2 bg-violet-600 text-white rounded-lg font-semibold hover:bg-violet-700 transition-colors text-sm"
+              className="flex-1 px-4 py-2 bg-primary text-white rounded-lg font-semibold hover:bg-violet-700 transition-colors text-sm"
             >
               Review
             </Link>

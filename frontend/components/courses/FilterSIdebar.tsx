@@ -28,7 +28,7 @@ export default function FilterSidebar() {
       {/* Filters Header */}
       <div className="flex justify-between items-center mb-4 lg:mb-6">
         <h2 className="text-lg font-bold text-gray-900">Filters</h2>
-        <button className="text-violet-600 hover:text-violet-700 text-xs sm:text-sm font-semibold transition-colors">
+        <button className="text-primary hover:text-violet-700 text-xs sm:text-sm font-semibold transition-colors">
           CLEAR ALL
         </button>
       </div>
@@ -49,7 +49,7 @@ export default function FilterSidebar() {
                 type="checkbox"
                 checked={filters[item.key as keyof typeof filters]}
                 onChange={() => handleFilterChange(item.key as FilterKey)}
-                className="w-4 h-4 rounded border-gray-300 text-violet-600 focus:ring-violet-600 cursor-pointer"
+                className="w-4 h-4 rounded border-gray-300 text-primary focus:ring-primary cursor-pointer"
               />
               <span className="text-gray-700 text-sm">{item.label}</span>
             </label>
@@ -73,7 +73,7 @@ export default function FilterSidebar() {
                 type="checkbox"
                 checked={filters[item.key as keyof typeof filters]}
                 onChange={() => handleFilterChange(item.key as FilterKey)}
-                className="w-4 h-4 rounded border-gray-300 text-violet-600 focus:ring-violet-600 cursor-pointer"
+                className="w-4 h-4 rounded border-gray-300 text-primary focus:ring-primary cursor-pointer"
               />
               <span className="text-gray-700 text-sm">{item.label}</span>
             </label>
@@ -99,7 +99,7 @@ export default function FilterSidebar() {
                 onChange={() => {
                   setFilters(prev => ({ ...prev, free: false, paid: false, [item.key]: true }));
                 }}
-                className="w-4 h-4 rounded-full border-gray-300 text-violet-600 focus:ring-violet-600 cursor-pointer"
+                className="w-4 h-4 rounded-full border-gray-300 text-primary focus:ring-primary cursor-pointer"
               />
               <span className="text-gray-700 text-sm">{item.label}</span>
             </label>
@@ -117,7 +117,7 @@ export default function FilterSidebar() {
             type="checkbox"
             checked={filters.rating}
             onChange={() => handleFilterChange('rating')}
-            className="w-4 h-4 rounded border-gray-300 text-violet-600 focus:ring-violet-600 cursor-pointer"
+            className="w-4 h-4 rounded border-gray-300 text-primary focus:ring-primary cursor-pointer"
           />
           <span className="text-gray-700 text-sm">★★★★★ 4+ Stars</span>
         </label>

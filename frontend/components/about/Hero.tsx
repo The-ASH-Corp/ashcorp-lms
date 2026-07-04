@@ -5,7 +5,7 @@ const Hero = () => {
     <section className="relative overflow-hidden">
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute -top-32 left-1/2 h-72 w-160 -translate-x-1/2 rounded-full bg-violet-600/30 blur-3xl"
+        className="pointer-events-none absolute -top-32 left-1/2 h-72 w-160 -translate-x-1/2 rounded-full bg-primary/30 blur-3xl"
       />
       <div className="relative mx-auto max-w-3xl px-6 py-24 text-center md:py-32">
         <p className="mb-6 text-xs font-semibold uppercase tracking-[0.3em] text-primary">
