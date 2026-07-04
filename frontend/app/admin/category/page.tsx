@@ -20,20 +20,7 @@ import {
   PaginationPrevious,
   PaginationEllipsis,
 } from "@/components/ui/pagination";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
-  Pencil,
-  MoreVertical,
-  Plus,
-  Search,
-  Check,
-  X,
-} from "lucide-react";
+import { Pencil, Plus, Search, Check, X, Trash } from "lucide-react";
 import {
   InputGroup,
   InputGroupAddon,
@@ -67,7 +54,8 @@ export default function CategoryPage() {
   const getCategoryImageUrl = (iconUrl: string) => {
     if (!iconUrl) return "";
     if (/^https?:\/\//i.test(iconUrl)) return iconUrl;
-    const baseUrl = process.env.NEXT_PUBLIC_IMAGE_URL?.replace(/\/+$/, "") ?? "";
+    const baseUrl =
+      process.env.NEXT_PUBLIC_IMAGE_URL?.replace(/\/+$/, "") ?? "";
     const path = iconUrl.replace(/^\/+/, "");
     return `${baseUrl}/${path}`;
   };
@@ -185,7 +173,7 @@ export default function CategoryPage() {
                     </TableCell>
 
                     {/* Featured */}
-                    <TableCell className="flex  justify-center">
+                    <TableCell className="flex text-center justify-center">
                       <div
                         className={
                           category.isFeatured
@@ -207,7 +195,7 @@ export default function CategoryPage() {
                         className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium justify-center ${style.bg} ${style.text}`}
                       >
                         <span
-                          className={`h-1.5 w-1.5 rounded-full ${style.dot}`}
+                          className={`h-1.5 w-1.5 rounded-full ${style.dot} animate-pulse`}
                         />
                         {category.status}
                       </span>
@@ -216,24 +204,20 @@ export default function CategoryPage() {
                     {/* Actions */}
                     <TableCell className="flex justify-center">
                       <div className="flex items-center justify-end gap-1">
-                        <button className="flex h-8 w-8 items-center justify-center rounded-lg text-gray-400 transition-colors hover:bg-violet-50 hover:text-violet-600">
+                        <Button
+                          className="flex h-8 w-8 items-center justify-center rounded-lg text-gray-400 transition-colors hover:bg-violet-500/10 hover:text-violet-600"
+                          size="sm"
+                          variant="ghost"
+                        >
                           <Pencil className="h-4 w-4" />
-                        </button>
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <button className="flex h-8 w-8 items-center justify-center rounded-lg text-gray-400 transition-colors hover:bg-violet-50 hover:text-violet-600">
-                              <MoreVertical className="h-4 w-4" />
-                            </button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end" className="w-40">
-                            <DropdownMenuItem>View Profile</DropdownMenuItem>
-                            <DropdownMenuItem>Send Email</DropdownMenuItem>
-                            <DropdownMenuItem>Edit Details</DropdownMenuItem>
-                            <DropdownMenuItem className="text-red-600">
-                              Remove Student
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
+                        </Button>
+                        <Button
+                          className="flex h-8 w-8 items-center justify-center rounded-lg text-red-400 transition-colors hover:bg-red-50 hover:text-red-600"
+                          size="sm"
+                          variant="ghost"
+                        >
+                          <Trash className="h-4 w-4" />
+                        </Button>
                       </div>
                     </TableCell>
                   </TableRow>
