@@ -1,5 +1,6 @@
 import { Star } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 
 interface CourseCardProps {
   course: {
@@ -80,9 +81,14 @@ export default function CourseCard({ course }: CourseCardProps) {
               </span>
             )}
           </div>
-          <button className="px-3 sm:px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:border-violet-600 hover:text-violet-600 transition-colors font-medium text-xs sm:text-sm whitespace-nowrap">
-            View Details
-          </button>
+          
+            <Link
+              href={`/course-details/${course.id}`}
+              className="px-3 sm:px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:border-violet-600 hover:text-violet-600 transition-colors font-medium text-xs sm:text-sm whitespace-nowrap"
+            >
+              View Details
+            </Link>
+          
         </div>
       </div>
     </div>
