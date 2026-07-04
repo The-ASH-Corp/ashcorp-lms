@@ -1,4 +1,5 @@
 import { ArrowRight, Lock } from 'lucide-react';
+import Link from 'next/link';
 
 interface CourseCardProps {
   course: {
@@ -94,32 +95,38 @@ export default function UserCourseList({ course, viewType }: CourseCardProps) {
         {/* Progress Bar */}
         <div className="flex items-center gap-3 mb-6 mt-auto">
           <div className="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
-            <div 
+            <div
               className={`h-full transition-all ${getProgressColor()}`}
               style={{ width: `${course.progress}%` }}
             ></div>
           </div>
           <span className="text-xs sm:text-sm font-semibold text-gray-700 w-10 text-right">
-            {course.status === 'completed' ? 'Done' : `${course.progress}%`}
+            {course.status === "completed" ? "Done" : `${course.progress}%`}
           </span>
         </div>
 
         {/* Status Text */}
-        {course.status === 'completed' && (
+        {course.status === "completed" && (
           <p className="text-sm font-semibold text-green-600 mb-4">Completed</p>
         )}
 
         {/* Actions */}
         <div className="flex flex-col sm:flex-row gap-3">
-          <button className="flex-1 text-violet-600 font-semibold text-sm hover:text-violet-700 flex items-center justify-center gap-2 py-2">
-            Resume Lesson <ArrowRight size={16} />
-          </button>
-          {course.status === 'completed' && (
-            <button className="flex-1 px-4 py-2 bg-violet-600 text-white rounded-lg font-semibold hover:bg-violet-700 transition-colors text-sm">
-              Review
+          {course.status !== "completed" && (
+            <button className="flex-1 text-violet-600 font-semibold text-sm hover:text-violet-700 flex items-center justify-center gap-2 py-2">
+              Resume Lesson <ArrowRight size={16} />
             </button>
           )}
-          {course.status === 'completed' && (
+
+          {course.status === "completed" && (
+            <Link
+              href={`/certificate/${course.id}`}
+              className="flex-1 px-4 py-2 bg-violet-600 text-white rounded-lg font-semibold hover:bg-violet-700 transition-colors text-sm"
+            >
+              Review
+            </Link>
+          )}
+          {course.status === "completed" && (
             <button className="p-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
               <Lock size={18} className="text-gray-700" />
             </button>

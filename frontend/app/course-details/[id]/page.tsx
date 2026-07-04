@@ -1,24 +1,26 @@
 'use client';
 
-import { useState } from 'react';
+import { use, useState } from 'react';
+import { useRouter } from "next/navigation";
 import { Star, Users, BookOpen, Play, Headphones, Clock, Award, Zap, Heart, Share2, ArrowLeft } from 'lucide-react';
 
 export default function CourseDetail() {
+  const router = useRouter();
   const [activeTab, setActiveTab] = useState('about');
   const [isWishlisted, setIsWishlisted] = useState(false);
 
   return (
     <div className="min-h-screen bg-white">
       {/* Back Button */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
-        <button className="flex items-center gap-2 text-gray-600 hover:text-violet-600 transition-colors font-medium text-sm">
+      <div className="max-w-fill mx-auto px-4 sm:px-6 lg:px-15 py-4 sm:py-6">
+        <button onClick={()=> router.back()} className="flex items-center gap-2 text-gray-600 hover:text-violet-600 transition-colors font-medium text-sm">
           <ArrowLeft size={18} />
           Back to Courses
         </button>
       </div>
 
       {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
+      <div className="max-w-fill mx-auto px-4 sm:px-6 lg:px-15 pb-12">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
           {/* Left Content */}
           <div className="lg:col-span-2">
