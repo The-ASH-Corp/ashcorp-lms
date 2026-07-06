@@ -44,13 +44,13 @@ export default function ProtectedNavbar() {
         <div className="flex items-center gap-6">
           {/* Navigation Links near profile */}
           <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
-            <Link href="/" className="text-gray-600 hover:text-violet-600 transition-colors">
+            <Link href="/" className="text-gray-600 hover:text-primary transition-colors">
               Home
             </Link>
-            <Link href="/about" className="text-gray-600 hover:text-violet-600 transition-colors">
+            <Link href="/about" className="text-gray-600 hover:text-primary transition-colors">
               About Us
             </Link>
-            <Link href="/contact" className="text-gray-600 hover:text-violet-600 transition-colors">
+            <Link href="/contact" className="text-gray-600 hover:text-primary transition-colors">
               Contact Us
             </Link>
           </nav>

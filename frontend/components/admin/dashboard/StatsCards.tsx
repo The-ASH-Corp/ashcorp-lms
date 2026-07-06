@@ -13,7 +13,7 @@ const summaryStats = [
     title: "Total Course Enrollments",
     value: "26",
     icon: Users,
-    accent: "text-violet-600 bg-violet-50",
+    accent: "text-primary bg-violet-50",
   },
   {
     title: "Total Students",

@@ -68,7 +68,7 @@ export default function Graphs() {
                   key={tab.label}
                   type="button"
                   className={`rounded-2xl px-3 py-2 font-medium transition ${
-                    tab.active ? "bg-violet-600 text-white" : "hover:text-slate-900"
+                    tab.active ? "bg-primary text-white" : "hover:text-slate-900"
                   }`}
                 >
                   {tab.label}

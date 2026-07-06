@@ -55,8 +55,8 @@ const statCards = [
     badge: "+12% this month",
     icon: Users,
     iconBg: "bg-violet-100",
-    iconColor: "text-violet-600",
-    badgeColor: "text-violet-600",
+    iconColor: "text-primary",
+    badgeColor: "text-primary",
   },
   {
     title: "Active Learners",
@@ -188,7 +188,7 @@ export default function StudentsPage() {
             <Download className="h-4 w-4 mr-2" />
             Export List
           </Button>
-          <Button className="rounded-xl bg-violet-600 text-white shadow-md shadow-violet-200 hover:bg-violet-700 h-10 px-5">
+          <Button className="rounded-xl bg-primary text-white shadow-md shadow-violet-200 hover:bg-violet-700 h-10 px-5">
             <UserPlus className="h-4 w-4 mr-2" />
             Enroll Student
           </Button>
@@ -275,7 +275,7 @@ export default function StudentsPage() {
               {/* Advanced Filters */}
               <Button
                 variant="ghost"
-                className="text-violet-600 hover:bg-violet-50 hover:text-violet-700 h-10"
+                className="text-primary hover:bg-violet-50 hover:text-violet-700 h-10"
               >
                 <Filter className="h-4 w-4 mr-2" />
                 Advanced Filters
@@ -294,7 +294,7 @@ export default function StudentsPage() {
                 <button
                   key={action.label}
                   title={action.label}
-                  className="flex h-8 w-8 items-center justify-center rounded-lg text-gray-400 transition-colors hover:bg-violet-50 hover:text-violet-600"
+                  className="flex h-8 w-8 items-center justify-center rounded-lg text-gray-400 transition-colors hover:bg-violet-50 hover:text-primary"
                 >
                   <action.icon className="h-4 w-4" />
                 </button>
@@ -314,7 +314,7 @@ export default function StudentsPage() {
                   type="checkbox"
                   checked={selectedStudents.length === students.length}
                   onChange={toggleAll}
-                  className="h-4 w-4 rounded border-gray-300 text-violet-600 focus:ring-violet-500 accent-violet-600"
+                  className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-violet-500 accent-primary"
                 />
               </TableHead>
               <TableHead className="text-xs font-semibold uppercase tracking-wider text-gray-500">
@@ -349,7 +349,7 @@ export default function StudentsPage() {
                       type="checkbox"
                       checked={selectedStudents.includes(student.id)}
                       onChange={() => toggleStudent(student.id)}
-                      className="h-4 w-4 rounded border-gray-300 text-violet-600 focus:ring-violet-500 accent-violet-600"
+                      className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-violet-500 accent-primary"
                     />
                   </TableCell>
 
@@ -425,12 +425,12 @@ export default function StudentsPage() {
                   {/* Actions */}
                   <TableCell className="text-right pr-5">
                     <div className="flex items-center justify-end gap-1">
-                      <button className="flex h-8 w-8 items-center justify-center rounded-lg text-gray-400 transition-colors hover:bg-violet-50 hover:text-violet-600">
+                      <button className="flex h-8 w-8 items-center justify-center rounded-lg text-gray-400 transition-colors hover:bg-violet-50 hover:text-primary">
                         <Pencil className="h-4 w-4" />
                       </button>
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                          <button className="flex h-8 w-8 items-center justify-center rounded-lg text-gray-400 transition-colors hover:bg-violet-50 hover:text-violet-600">
+                          <button className="flex h-8 w-8 items-center justify-center rounded-lg text-gray-400 transition-colors hover:bg-violet-50 hover:text-primary">
                             <MoreVertical className="h-4 w-4" />
                           </button>
                         </DropdownMenuTrigger>
@@ -474,7 +474,7 @@ export default function StudentsPage() {
                     isActive={page === currentPage}
                     className={`h-8 w-8 rounded-lg text-sm ${
                       page === currentPage
-                        ? "bg-violet-600! text-white! border-violet-600! hover:bg-violet-700!"
+                        ? "bg-primary! text-white! border-primary! hover:bg-violet-700!"
                         : "border border-gray-200 hover:border-violet-300 hover:bg-violet-50"
                     }`}
                   >
@@ -551,7 +551,7 @@ export default function StudentsPage() {
 
             <div className="grid grid-cols-2 gap-3">
               {[
-                { icon: Mail, label: "Broadcast Email", color: "text-violet-600" },
+                { icon: Mail, label: "Broadcast Email", color: "text-primary" },
                 { icon: ShieldCheck, label: "Review Roles", color: "text-blue-600" },
                 { icon: ClipboardList, label: "Download Logs", color: "text-emerald-600" },
                 { icon: ShieldCheck, label: "Compliance Check", color: "text-red-500" },

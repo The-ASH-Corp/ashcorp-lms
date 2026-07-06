@@ -25,7 +25,7 @@ export default function CourseCard({ course }: CourseCardProps) {
         size={14}
         className={
           i < Math.floor(rating)
-            ? "fill-violet-600 text-violet-600"
+            ? "fill-primary text-primary"
             : "text-gray-300"
         }
       />
@@ -72,11 +72,11 @@ export default function CourseCard({ course }: CourseCardProps) {
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mt-auto pt-3 sm:pt-4 border-t border-gray-100">
           <div>
             {course.priceLabel ? (
-              <span className="text-base sm:text-lg font-bold text-violet-600">
+              <span className="text-base sm:text-lg font-bold text-primary">
                 {course.priceLabel}
               </span>
             ) : (
-              <span className="text-base sm:text-lg font-bold text-violet-600">
+              <span className="text-base sm:text-lg font-bold text-primary">
                 ${course.price?.toFixed(2)}
               </span>
             )}
@@ -84,7 +84,7 @@ export default function CourseCard({ course }: CourseCardProps) {
           
             <Link
               href={`/course-details/${course.id}`}
-              className="px-3 sm:px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:border-violet-600 hover:text-violet-600 transition-colors font-medium text-xs sm:text-sm whitespace-nowrap"
+              className="px-3 sm:px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:border-primary hover:text-primary transition-colors font-medium text-xs sm:text-sm whitespace-nowrap"
             >
               View Details
             </Link>

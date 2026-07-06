@@ -33,7 +33,7 @@ const topInstructors = [
                 className="flex items-center justify-between rounded-3xl border border-slate-200 bg-slate-50 px-4 py-3"
               >
                 <div className="flex items-center gap-3">
-                  <div className="grid h-12 w-12 place-items-center rounded-2xl bg-violet-100 text-violet-600">
+                  <div className="grid h-12 w-12 place-items-center rounded-2xl bg-violet-100 text-primary">
                     <Users className="h-5 w-5" />
                   </div>
                   <div>

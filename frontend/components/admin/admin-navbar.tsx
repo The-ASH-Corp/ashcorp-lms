@@ -34,7 +34,7 @@ export function AdminNavbar() {
     <header className="sticky top-0 z-40 flex h-16 w-full items-center justify-between border-b border-violet-100 bg-white/90 backdrop-blur-md px-4 lg:px-6">
       {/* Left Section */}
       <div className="flex items-center gap-3">
-        <SidebarTrigger className="-ml-1 text-gray-500 hover:text-violet-600 md:hidden" />
+        <SidebarTrigger className="-ml-1 text-gray-500 hover:text-primary md:hidden" />
 
         {/* Search Bar */}
         <div className="relative hidden sm:block">
@@ -50,14 +50,14 @@ export function AdminNavbar() {
       {/* Right Section */}
       <div className="flex items-center gap-2">
         {/* Icon Buttons */}
-        <button className="relative flex h-9 w-9 items-center justify-center rounded-lg text-gray-500 transition-colors hover:bg-violet-50 hover:text-violet-600">
+        <button className="relative flex h-9 w-9 items-center justify-center rounded-lg text-gray-500 transition-colors hover:bg-violet-50 hover:text-primary">
           <Bell className="h-[18px] w-[18px]" />
           <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-red-500 ring-2 ring-white" />
         </button>
-        <button className="flex h-9 w-9 items-center justify-center rounded-lg text-gray-500 transition-colors hover:bg-violet-50 hover:text-violet-600">
+        <button className="flex h-9 w-9 items-center justify-center rounded-lg text-gray-500 transition-colors hover:bg-violet-50 hover:text-primary">
           <Settings className="h-[18px] w-[18px]" />
         </button>
-        <button className="flex h-9 w-9 items-center justify-center rounded-lg text-gray-500 transition-colors hover:bg-violet-50 hover:text-violet-600">
+        <button className="flex h-9 w-9 items-center justify-center rounded-lg text-gray-500 transition-colors hover:bg-violet-50 hover:text-primary">
           <HelpCircle className="h-[18px] w-[18px]" />
         </button>
 

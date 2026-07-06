@@ -89,7 +89,7 @@ export default function MyCourses() {
               onClick={() => setActiveTab('all')}
               className={`px-4 py-2 rounded-lg font-medium transition-colors text-sm ${
                 activeTab === 'all'
-                  ? 'bg-violet-600 text-white'
+                  ? 'bg-primary text-white'
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
               }`}
             >
@@ -99,7 +99,7 @@ export default function MyCourses() {
               onClick={() => setActiveTab('in-progress')}
               className={`px-4 py-2 rounded-lg font-medium transition-colors text-sm ${
                 activeTab === 'in-progress'
-                  ? 'bg-violet-600 text-white'
+                  ? 'bg-primary text-white'
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
               }`}
             >
@@ -109,7 +109,7 @@ export default function MyCourses() {
               onClick={() => setActiveTab('completed')}
               className={`px-4 py-2 rounded-lg font-medium transition-colors text-sm ${
                 activeTab === 'completed'
-                  ? 'bg-violet-600 text-white'
+                  ? 'bg-primary text-white'
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
               }`}
             >

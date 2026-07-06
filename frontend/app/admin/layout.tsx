@@ -60,7 +60,7 @@ export default function AdminLayout({
                   <BreadcrumbItem>
                     <BreadcrumbLink
                       href="/admin"
-                      className="text-gray-500 hover:text-violet-600 transition-colors text-sm"
+                      className="text-gray-500 hover:text-primary transition-colors text-sm"
                     >
                       Home
                     </BreadcrumbLink>
@@ -82,7 +82,7 @@ export default function AdminLayout({
                           ) : (
                             <BreadcrumbLink
                               href={href}
-                              className="text-gray-500 hover:text-violet-600 transition-colors text-sm"
+                              className="text-gray-500 hover:text-primary transition-colors text-sm"
                             >
                               {formatSegment(segment)}
                             </BreadcrumbLink>

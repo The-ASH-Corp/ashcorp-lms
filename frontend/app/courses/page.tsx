@@ -33,7 +33,7 @@ const courses = [
     rating: 4,
     reviews: "12k Reviews",
     badge: "New",
-    badgeColor: "bg-violet-600",
+    badgeColor: "bg-primary",
   },
   {
     id: 2,
@@ -88,7 +88,7 @@ const courses = [
     rating: 4.5,
     reviews: "1.8k Reviews",
     badge: "Popular",
-    badgeColor: "bg-violet-600",
+    badgeColor: "bg-primary",
   },
 ];
 
@@ -141,7 +141,7 @@ export default function CoursesPage() {
                   />
                   <InputGroupAddon
                     align="inline-end"
-                    className="mr-1 flex h-[calc(100%-8px)] items-center justify-center rounded-lg bg-violet-600 px-4 cursor-pointer"
+                    className="mr-1 flex h-[calc(100%-8px)] items-center justify-center rounded-lg bg-primary px-4 cursor-pointer"
                   >
                     <SearchIcon className="h-5 w-5 text-white" />
                   </InputGroupAddon>
@@ -150,7 +150,7 @@ export default function CoursesPage() {
                   Sort By:
                 </span>
                 <div className="relative">
-                  <button className="flex items-center gap-2 px-3 sm:px-4 py-2 border border-gray-300 rounded-lg hover:border-violet-600 transition-colors bg-white text-gray-700 font-medium text-sm w-full sm:w-auto">
+                  <button className="flex items-center gap-2 px-3 sm:px-4 py-2 border border-gray-300 rounded-lg hover:border-primary transition-colors bg-white text-gray-700 font-medium text-sm w-full sm:w-auto">
                     {sortBy}
                     <ChevronDown size={18} />
                   </button>

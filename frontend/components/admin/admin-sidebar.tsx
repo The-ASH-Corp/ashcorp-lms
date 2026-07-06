@@ -167,7 +167,7 @@ export function AdminSidebar({
                       isActive={isActive}
                       className={`rounded-xl px-4 py-6 text-[13px] font-medium transition-all duration-200 ${
                         isActive
-                          ? "bg-violet-600! text-white! shadow-md shadow-violet-200"
+                          ? "bg-primary! text-white! shadow-md shadow-violet-200"
                           : "text-gray-600 hover:bg-violet-50 hover:text-violet-700"
                       }`}
                     >

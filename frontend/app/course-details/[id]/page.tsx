@@ -13,7 +13,7 @@ export default function CourseDetail() {
     <div className="min-h-screen bg-white">
       {/* Back Button */}
       <div className="max-w-fill mx-auto px-4 sm:px-6 lg:px-15 py-4 sm:py-6">
-        <button onClick={()=> router.back()} className="flex items-center gap-2 text-gray-600 hover:text-violet-600 transition-colors font-medium text-sm">
+        <button onClick={()=> router.back()} className="flex items-center gap-2 text-gray-600 hover:text-primary transition-colors font-medium text-sm">
           <ArrowLeft size={18} />
           Back to Courses
         </button>
@@ -66,7 +66,7 @@ export default function CourseDetail() {
                     onClick={() => setActiveTab(tab)}
                     className={`pb-4 text-sm sm:text-base font-medium transition-colors whitespace-nowrap ${
                       activeTab === tab
-                        ? 'text-violet-600 border-b-2 border-violet-600'
+                        ? 'text-primary border-b-2 border-primary'
                         : 'text-gray-600 hover:text-gray-900'
                     }`}
                   >
@@ -92,10 +92,10 @@ export default function CourseDetail() {
 
                 {/* Feature Cards */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="border border-gray-200 rounded-lg p-6 hover:border-violet-600 transition-colors">
+                  <div className="border border-gray-200 rounded-lg p-6 hover:border-primary transition-colors">
                     <div className="flex items-start gap-4">
                       <div className="w-12 h-12 rounded-lg bg-violet-100 flex items-center justify-center shrink-0">
-                        <Zap size={24} className="text-violet-600" />
+                        <Zap size={24} className="text-primary" />
                       </div>
                       <div>
                         <h3 className="font-semibold text-gray-900 mb-2">Vector Precision</h3>
@@ -104,10 +104,10 @@ export default function CourseDetail() {
                     </div>
                   </div>
 
-                  <div className="border border-gray-200 rounded-lg p-6 hover:border-violet-600 transition-colors">
+                  <div className="border border-gray-200 rounded-lg p-6 hover:border-primary transition-colors">
                     <div className="flex items-start gap-4">
                       <div className="w-12 h-12 rounded-lg bg-violet-100 flex items-center justify-center shrink-0">
-                        <Star size={24} className="text-violet-600" />
+                        <Star size={24} className="text-primary" />
                       </div>
                       <div>
                         <h3 className="font-semibold text-gray-900 mb-2">Color Theory</h3>
@@ -129,8 +129,8 @@ export default function CourseDetail() {
                       { icon: Headphones, label: '24/7 Support', desc: '' },
                       { icon: Zap, label: 'Updated Weekly', desc: '' }
                     ].map((feature, idx) => (
-                      <div key={idx} className="border border-gray-200 rounded-lg p-6 text-center hover:border-violet-600 hover:bg-violet-50 transition-colors">
-                        <feature.icon size={32} className="text-violet-600 mx-auto mb-3" />
+                      <div key={idx} className="border border-gray-200 rounded-lg p-6 text-center hover:border-primary hover:bg-violet-50 transition-colors">
+                        <feature.icon size={32} className="text-primary mx-auto mb-3" />
                         <p className="font-semibold text-gray-900">{feature.label}</p>
                       </div>
                     ))}
@@ -161,7 +161,7 @@ export default function CourseDetail() {
                     <p className="text-white text-2xl sm:text-3xl font-bold">LEARN</p>
                     <p className="text-white text-xl sm:text-2xl font-bold">ILLUSTRATOR</p>
                   </div>
-                  <div className="absolute top-4 right-4 w-12 h-12 bg-violet-600 rounded-lg flex items-center justify-center">
+                  <div className="absolute top-4 right-4 w-12 h-12 bg-primary rounded-lg flex items-center justify-center">
                     <span className="text-white font-bold text-lg">Ai</span>
                   </div>
                 </div>
@@ -179,7 +179,7 @@ export default function CourseDetail() {
                 </div>
 
                 {/* Enroll Button */}
-                <button className="w-full bg-violet-600 hover:bg-violet-700 text-white font-semibold py-3 rounded-lg transition-colors flex items-center justify-center gap-2">
+                <button className="w-full bg-primary hover:bg-violet-700 text-white font-semibold py-3 rounded-lg transition-colors flex items-center justify-center gap-2">
                   <Play size={18} />
                   Enroll Now
                 </button>
@@ -187,7 +187,7 @@ export default function CourseDetail() {
                 {/* Wishlist */}
                 <button
                   onClick={() => setIsWishlisted(!isWishlisted)}
-                  className="w-full border-2 border-gray-200 text-gray-700 hover:border-violet-600 hover:text-violet-600 font-semibold py-3 rounded-lg transition-colors flex items-center justify-center gap-2"
+                  className="w-full border-2 border-gray-200 text-gray-700 hover:border-primary hover:text-primary font-semibold py-3 rounded-lg transition-colors flex items-center justify-center gap-2"
                 >
                   <Heart size={18} className={isWishlisted ? 'fill-current' : ''} />
                   Add to Wishlist
@@ -204,7 +204,7 @@ export default function CourseDetail() {
                   ].map((item, idx) => (
                     <div key={idx} className="flex items-center gap-3">
                       <div className="w-5 h-5 rounded-full bg-violet-100 flex items-center justify-center shrink-0">
-                        <span className="text-violet-600 text-xs">✓</span>
+                        <span className="text-primary text-xs">✓</span>
                       </div>
                       <span className="text-sm text-gray-700">{item}</span>
                     </div>
@@ -220,7 +220,7 @@ export default function CourseDetail() {
               </div>
 
               {/* Social Share */}
-              <button className="w-full border border-gray-300 text-gray-700 hover:border-violet-600 hover:text-violet-600 font-semibold py-3 rounded-lg transition-colors flex items-center justify-center gap-2">
+              <button className="w-full border border-gray-300 text-gray-700 hover:border-primary hover:text-primary font-semibold py-3 rounded-lg transition-colors flex items-center justify-center gap-2">
                 <Share2 size={18} />
                 Share Course
               </button>

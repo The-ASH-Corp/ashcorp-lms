@@ -33,6 +33,7 @@ import {
   InputGroupInput,
 } from "@/components/ui/input-group";
 import Image from "next/image";
+import Link from "next/link";
 
 /* ─── Mock Students Data ─── */
 const students = [
@@ -103,10 +104,12 @@ export default function CoursesPage() {
             </h1>
           </div>
           <div className="flex items-center gap-3">
-            <Button className="rounded-xl bg-violet-600 text-white shadow-md shadow-violet-200 hover:bg-violet-700 h-10 px-5">
+            <Link href="/admin/course/createCourse">
+            <Button className="rounded-xl bg-primary text-white shadow-md shadow-violet-200 hover:bg-violet-700 h-10 px-5">
               <Plus className="h-4 w-4 mr-2" />
               Add Course
             </Button>
+            </Link>
           </div>
         </div>
 
@@ -222,12 +225,12 @@ export default function CoursesPage() {
                     {/* Actions */}
                     <TableCell className="flex justify-center">
                       <div className="flex items-center justify-end gap-1">
-                        <button className="flex h-8 w-8 items-center justify-center rounded-lg text-gray-400 transition-colors hover:bg-violet-50 hover:text-violet-600">
+                        <button className="flex h-8 w-8 items-center justify-center rounded-lg text-gray-400 transition-colors hover:bg-violet-50 hover:text-primary">
                           <Pencil className="h-4 w-4" />
                         </button>
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
-                            <button className="flex h-8 w-8 items-center justify-center rounded-lg text-gray-400 transition-colors hover:bg-violet-50 hover:text-violet-600">
+                            <button className="flex h-8 w-8 items-center justify-center rounded-lg text-gray-400 transition-colors hover:bg-violet-50 hover:text-primary">
                               <MoreVertical className="h-4 w-4" />
                             </button>
                           </DropdownMenuTrigger>
@@ -266,7 +269,7 @@ export default function CoursesPage() {
                       isActive={page === currentPage}
                       className={`h-8 w-8 rounded-lg text-sm ${
                         page === currentPage
-                          ? "bg-violet-600! text-white! border-violet-600! hover:bg-violet-700!"
+                          ? "bg-primary! text-white! border-primary! hover:bg-violet-700!"
                           : "border border-gray-200 hover:border-violet-300 hover:bg-violet-50"
                       }`}
                     >

@@ -1,14 +1,27 @@
 import { api } from "../../services/api";
 import { Course } from "./courseSlice";
 
+interface CourseResponse {
+  data: Course[];
+}
+
 export const courseApi = api.injectEndpoints({
   endpoints: (builder) => ({
     getAllCourse: builder.query<Course[], void>({
       query: () => "/course/all-course",
-      transformResponse:(response:any) => response.data as Course[],
+      transformResponse: (response: CourseResponse) => response.data,
       providesTags: ["Course"],
+    }),
+    createCourse: builder.mutation<void, FormData>({
+      query: (course) => ({
+        url: "/course/create",
+        method: "POST",
+        body: course,
+        formData: true,
+      }),
+      invalidatesTags: ["Course"],
     }),
   }),
 });
 
-export const { useGetAllCourseQuery } = courseApi;
+export const { useGetAllCourseQuery, useCreateCourseMutation } = courseApi;
