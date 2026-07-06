@@ -33,6 +33,7 @@ import {
   InputGroupInput,
 } from "@/components/ui/input-group";
 import Image from "next/image";
+import Link from "next/link";
 
 /* ─── Mock Students Data ─── */
 const students = [
@@ -103,10 +104,12 @@ export default function CoursesPage() {
             </h1>
           </div>
           <div className="flex items-center gap-3">
+            <Link href="/admin/course/createCourse">
             <Button className="rounded-xl bg-primary text-white shadow-md shadow-violet-200 hover:bg-violet-700 h-10 px-5">
               <Plus className="h-4 w-4 mr-2" />
               Add Course
             </Button>
+            </Link>
           </div>
         </div>
 

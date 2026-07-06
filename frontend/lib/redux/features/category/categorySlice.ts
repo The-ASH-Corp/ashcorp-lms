@@ -1,11 +1,21 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { Category } from "./categoryApi";
 
+interface CategoryState {
+  allCategories: Category[];
+  selectedCategory: Category | null;
+}
+
+const initialState: CategoryState = {
+    allCategories:[],
+    selectedCategory:null
+}
 export const categorySlice = createSlice({
     name:"category",
-    initialState:[],
+    initialState,
     reducers:{
-        allCategories: (state:any, action:any) => {
-            state.push(...action.payload);
+        allCategories: (state: CategoryState, action: PayloadAction<Category[]>) => {
+            state.allCategories.push(...action.payload);
         },
     }
 })

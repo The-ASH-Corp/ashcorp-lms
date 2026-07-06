@@ -1,6 +1,6 @@
 import { api } from "../../services/api";
 
-interface Instructor {
+export interface Instructor {
     _id: string;
     name: string;
     email: string;
