@@ -7,20 +7,14 @@ export class CreateCourseUseCase {
 
     async execute(courseData: CourseRequestDTO): Promise<Course> {
         const course = new Course(
-            "",
             courseData.title,
             courseData.description,
             courseData.price,
+            courseData.offerPrice,
             courseData.instructor,
             courseData.category,
-            courseData.level,
-            courseData.rating,
-            courseData.duration,
-            courseData.language,
             courseData.imageUrl,
             courseData.videoUrl,
-            courseData.tags,
-            courseData.chapters,
             new Date(),
             new Date(),
         );

@@ -135,13 +135,6 @@ export default function CreateCoursePage() {
     }));
   };
 
-  const normalizeTags = (value: string) =>
-    value
-      .split(",")
-      .map((tag) => tag.trim())
-      .filter(Boolean)
-      .join(", ");
-
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!thumbnailFile || !videoFile) {
@@ -158,6 +151,7 @@ export default function CreateCoursePage() {
     formPayload.append("title", formData.courseTitle);
     formPayload.append("description", formData.description);
     formPayload.append("price", formData.regularPrice || "0");
+    formPayload.append("offerPrice", formData.offerPrice || "0");
     formPayload.append("instructor", formData.instructorName);
     formPayload.append("category", formData.categoryName);
     formPayload.append(
@@ -273,7 +267,7 @@ export default function CreateCoursePage() {
             <div className="border border-gray-200 rounded-lg p-4 sm:p-6 lg:p-8">
               <h3 className="text-gray-900 font-semibold mb-1 flex items-center gap-2">
                 <span>Intro Video</span>
-                <span className="text-xs text-gray-500">MP4, MOV, AVI · Max 500MB</span>
+                <span className="text-xs text-gray-500">MP4, MOV, AVI · Max 2GB</span>
               </h3>
               <label
                 htmlFor="course-video"
@@ -433,7 +427,7 @@ export default function CreateCoursePage() {
               </div>
 
               <div className="space-y-6">
-                {index > 0 && (
+                {(
                   <div>
                     <label className="block text-gray-700 font-medium text-sm mb-2">
                       Section Title <span className="text-red-500">*</span>

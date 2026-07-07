@@ -18,6 +18,10 @@ const categorySchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    isPublished: {
+      type: Boolean,
+      default: false,
+    },
     status: {
       type: String,
       required: true,
