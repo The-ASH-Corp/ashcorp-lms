@@ -81,6 +81,7 @@ export default function CreateCategoryPage() {
       fd.append("color", formData.color);
       fd.append("isFeatured", formData.isFeatured.toString());
       fd.append("status", formData.status);
+      console.log(formData)
       await createCategory(fd).unwrap();
       toast.success("Category created successfully");
       router.replace("/admin/category");

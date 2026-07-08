@@ -3,7 +3,6 @@ import { createCategoryUseCase, getAllCategoriesUseCase } from "../di";
 import { CategoryRequestDTO } from "../application/dto/CategoryDTO";
 import { Category } from "../domain/entities/Category";
 import { AppError } from "../../../shared/error/AppError";
-import { getUploadPath } from "../../../shared/config/imageNameShortner";
 
 export const createCategoryController = async (
   req: Request,
@@ -12,20 +11,22 @@ export const createCategoryController = async (
 ): Promise<void> => {
   try {
     const body: CategoryRequestDTO = req.body;
-    const iconUrl = req.file?.path;
-
-    if (!iconUrl) {
+    
+    if (!req.file) {
       throw new AppError("Icon is required", 400);
     }
+
+    const iconUrl = `/uploads/images/${req.file.filename}`;
+  
     const category = new Category(
       body.categoryName,
       body.color,
-      getUploadPath(iconUrl),
+      iconUrl,
       body.isFeatured,
       false,
       body.status
     );
-
+    
     const createdCategory = await createCategoryUseCase.execute(category);
 
     res.status(201).json({

@@ -1,3 +1,4 @@
 export const getUploadPath = (filePath: string): string => {
-  return filePath.split("/backend/")[1];
+  
+  return filePath.split("backend")[1];
 };
