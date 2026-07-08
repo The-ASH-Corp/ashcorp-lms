@@ -2,16 +2,12 @@ export interface CourseRequestDTO {
   title: string;
   description: string;
   price: number;
+  offerPrice: number;
   instructor: string;
   category: string;
-  level: string;
-  rating: number;
-  duration: string;
-  language: string;
   imageUrl: string;
   videoUrl: string;
-  tags: string[];
-  chapters: string[];
+  chapters?: string[];
 }
 
 export interface CourseResponseDTO {
@@ -19,16 +15,14 @@ export interface CourseResponseDTO {
   title: string;
   description: string;
   price: number;
+  offerPrice: number;
   instructor: string;
   category: string;
-  level: string;
-  rating: number;
-  duration: string;
-  language: string;
   imageUrl: string;
   videoUrl: string;
-  tags: string[];
   chapters: string[];
+  isPublished: boolean;
+  status: string;
   createdAt: Date;
   updatedAt: Date;
 }

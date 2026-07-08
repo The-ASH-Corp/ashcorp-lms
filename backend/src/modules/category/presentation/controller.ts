@@ -23,7 +23,8 @@ export const createCategoryController = async (
       body.color,
       iconUrl,
       body.isFeatured,
-      body.status,
+      false,
+      body.status
     );
     
     const createdCategory = await createCategoryUseCase.execute(category);

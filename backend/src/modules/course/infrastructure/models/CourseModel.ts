@@ -13,27 +13,15 @@ const courseSchema = new mongoose.Schema({
      type: Number, 
      required: true 
     },
+    offerPrice: {
+     type: Number, 
+     required: true 
+    },
   instructor: {
      type: String, 
      required: true 
     },
   category: {
-     type: String, 
-     required: true 
-    },
-  level: {
-     type: String, 
-     required: true 
-    },
-  rating: {
-     type: Number, 
-     required: true 
-    },
-  duration: {
-     type: String, 
-     required: true 
-    },
-  language: {
      type: String, 
      required: true 
     },
@@ -45,13 +33,8 @@ const courseSchema = new mongoose.Schema({
      type: String, 
      required: true 
     },
-  tags: {
-     type: [String], 
-     required: true 
-    },
   chapters: {
      type: [String], 
-     required: true 
     },
   createdAt: { 
     type: Date, 

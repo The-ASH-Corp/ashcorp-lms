@@ -84,7 +84,7 @@ export default function RichTextEditor({
       Link.configure({
         openOnClick: false,
         HTMLAttributes: {
-          class: 'text-violet-600 underline cursor-pointer hover:text-violet-700',
+          class: 'text-primary underline cursor-pointer hover:text-violet-700',
         },
       }),
       Image.configure({
