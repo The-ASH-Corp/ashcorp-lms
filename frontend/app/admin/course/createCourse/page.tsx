@@ -32,8 +32,8 @@ export default function CreateCoursePage() {
 
   const [formData, setFormData] = useState({
     courseTitle: "",
-    categoryName: "",
-    instructorName: "",
+    category: "",
+    instructor: "",
     regularPrice: "0.00",
     offerPrice: "0.00",
     description: "",
@@ -62,17 +62,8 @@ export default function CreateCoursePage() {
     }
   }, [instructorsData, instructors.length, dispatch]);
 
-  useEffect(() => {
-    if (!formData.categoryName && categories.length > 0) {
-      setFormData((prev) => ({ ...prev, categoryName: categories[0].categoryName }));
-    }
-  }, [categories, formData.categoryName]);
-
-  useEffect(() => {
-    if (!formData.instructorName && instructors.length > 0) {
-      setFormData((prev) => ({ ...prev, instructorName: instructors[0].name }));
-    }
-  }, [instructors, formData.instructorName]);
+  const selectedCategory = formData.category || categories[0]?._id || "";
+  const selectedInstructor = formData.instructor || instructors[0]?._id || "";
 
   const handleInputChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
@@ -147,13 +138,23 @@ export default function CreateCoursePage() {
       return;
     }
 
+    if (!selectedCategory) {
+      toast.error("Please select a category.");
+      return;
+    }
+
+    if (!selectedInstructor) {
+      toast.error("Please select an instructor.");
+      return;
+    }
+
     const formPayload = new FormData();
     formPayload.append("title", formData.courseTitle);
     formPayload.append("description", formData.description);
     formPayload.append("price", formData.regularPrice || "0");
     formPayload.append("offerPrice", formData.offerPrice || "0");
-    formPayload.append("instructor", formData.instructorName);
-    formPayload.append("category", formData.categoryName);
+    formPayload.append("instructor", selectedInstructor);
+    formPayload.append("category", selectedCategory);
     formPayload.append(
       "chapters",
       JSON.stringify(
@@ -329,17 +330,17 @@ export default function CreateCoursePage() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                 <div>
                   <label className="block text-gray-700 font-medium text-sm mb-2">
-                    Category Name <span className="text-red-500">*</span>
+                    Category <span className="text-red-500">*</span>
                   </label>
                   <select
-                    name="categoryName"
-                    value={formData.categoryName}
+                    name="category"
+                    value={selectedCategory}
                     onChange={handleInputChange}
                     className="w-full px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-violet-600 focus:ring-1 focus:ring-violet-600 text-sm bg-white"
                   >
                     {categories.length > 0 ? (
                       categories.map((cat: Category) => (
-                        <option key={cat._id} value={cat.categoryName}>
+                        <option key={cat._id} value={cat._id}>
                           {cat.categoryName}
                         </option>
                       ))
@@ -352,17 +353,17 @@ export default function CreateCoursePage() {
                 </div>
                 <div>
                   <label className="block text-gray-700 font-medium text-sm mb-2">
-                    Instructor Name <span className="text-red-500">*</span>
+                    Instructor <span className="text-red-500">*</span>
                   </label>
                   <select
-                    name="instructorName"
-                    value={formData.instructorName}
+                    name="instructor"
+                    value={selectedInstructor}
                     onChange={handleInputChange}
                     className="w-full px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-violet-600 focus:ring-1 focus:ring-violet-600 text-sm bg-white"
                   >
                     {instructors.length > 0 ? (
                       instructors.map((ins: Instructor) => (
-                        <option key={ins._id} value={ins.name}>
+                        <option key={ins._id} value={ins._id}>
                           {ins.name}
                         </option>
                       ))

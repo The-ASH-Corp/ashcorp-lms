@@ -53,6 +53,7 @@ const statusStyles: Record<string, { dot: string; bg: string; text: string }> =
   };
 
 export default function CoursesPage() {
+  const [currentPage] = useState(1);
   const { data: courses, isLoading, isError } = useGetAllCourseQuery();
 
   if (isLoading) {
@@ -73,7 +74,6 @@ export default function CoursesPage() {
     );
   }
 
-  const [currentPage] = useState(1);
 
   return (
     <>
@@ -187,7 +187,7 @@ export default function CoursesPage() {
                     <TableCell>
                       <div className="flex items-center gap-3 justify-center">
                         <span className="text-sm font-semibold text-gray-900 w-10">
-                          {course.instructor}
+                          {course.instructor || "N/A"}
                         </span>
                       </div>
                     </TableCell>

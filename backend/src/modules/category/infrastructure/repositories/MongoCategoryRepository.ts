@@ -15,6 +15,11 @@ export class MongoCategoryRepository implements CategoryRepository {
         return category;
     }
 
+    async findById(id: string): Promise<Category | null> {
+        const category = await CategoryModel.findById(id);
+        return category;
+    }
+
     async getAllCategories(): Promise<CategoryResponseDTO[]> {
         const categories = await CategoryModel.find().sort({createdAt: -1});
         return categories;

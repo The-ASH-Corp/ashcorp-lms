@@ -1,8 +1,17 @@
 import { NextFunction, Request, Response } from "express";
 import { courseFindAllUseCase, createCourseUseCase } from "../di";
-import { CourseRequestDTO } from "../application/dto/CourseDTO";
+import {
+  CourseRequestDTO,
+} from "../application/dto/CourseDTO";
 import { AppError } from "../../../shared/error/AppError";
 import { getUploadPath } from "../../../shared/config/imageNameShortner";
+import { serializeCourse } from "../../../shared/config/serializeCourses";
+
+type UploadedFile = { path: string };
+type UploadedFileMap = {
+  thumbnail?: UploadedFile[];
+  introVideo?: UploadedFile[];
+};
 
 export const getAllCourseController = async (
   _req: Request,
@@ -11,10 +20,11 @@ export const getAllCourseController = async (
 ): Promise<void> => {
   try {
     const courses = await courseFindAllUseCase.execute();
+    const serializedCourses = await Promise.all(courses.map(serializeCourse));
 
     res.status(200).json({
       success: true,
-      data: courses,
+      data: serializedCourses,
     });
   } catch (error) {
     next(error);
@@ -28,8 +38,9 @@ export const createCourseController = async (
 ): Promise<void> => {
   try {
     const body = req.body as Record<string, unknown>;
-    const thumbnailPath = (req.files as any)?.thumbnail?.[0]?.path as string | undefined;
-    const videoPath = (req.files as any)?.introVideo?.[0]?.path as string | undefined;
+    const files = (req as Request & { files?: UploadedFileMap }).files;
+    const thumbnailPath = files?.thumbnail?.[0]?.path;
+    const videoPath = files?.introVideo?.[0]?.path;
 
     if (!thumbnailPath || !videoPath) {
       throw new AppError("Thumbnail and intro video are required", 400);
@@ -47,10 +58,11 @@ export const createCourseController = async (
     };
 
     const course = await createCourseUseCase.execute(courseData);
+    const serializedCourse = await serializeCourse(course);
 
     res.status(201).json({
       success: true,
-      data: course,
+      data: serializedCourse,
     });
   } catch (error) {
     next(error);

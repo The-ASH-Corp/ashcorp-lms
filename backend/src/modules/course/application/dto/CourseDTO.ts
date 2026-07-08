@@ -21,6 +21,8 @@ export interface CourseResponseDTO {
   imageUrl: string;
   videoUrl: string;
   chapters: string[];
+  isPublished: boolean;
+  status: string;
   createdAt: Date;
   updatedAt: Date;
 }
