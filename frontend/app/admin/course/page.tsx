@@ -54,7 +54,7 @@ const students = [
     price:"$120",
     instructor:"Elena Sterling",
     status: "Active" as const,
-  },
+  }, 
   {
     id: 3,
     title: "Artificial Intelligence",
