@@ -51,14 +51,21 @@ export default function CategoryPage() {
 
   const { data: categories, isLoading, isError } = useGetAllCategoriesQuery();
 
-  const getCategoryImageUrl = (iconUrl: string) => {
+  const getCategoryImageUrl = (iconUrl: string | undefined) => {
     if (!iconUrl) return "";
+
     if (/^https?:\/\//i.test(iconUrl)) return iconUrl;
+
     const baseUrl =
       process.env.NEXT_PUBLIC_IMAGE_URL?.replace(/\/+$/, "") ?? "";
-    const path = iconUrl.replace(/^\/+/, "");
+
+    const path = iconUrl
+      .replace(/\\/g, "/") // <-- replace \ with /
+      .replace(/^\/+/, "");
+
     return `${baseUrl}/${path}`;
   };
+
 
   if (isLoading) {
     return (
