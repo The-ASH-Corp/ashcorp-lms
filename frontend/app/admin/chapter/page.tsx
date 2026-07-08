@@ -30,6 +30,7 @@ import Image from "next/image";
 import { PropagateLoader } from "react-spinners";
 import { useGetAllCourseQuery } from "@/lib/redux/features/course/courseApi";
 import type { Course } from "@/lib/redux/features/course/courseSlice";
+import { useRouter } from "next/navigation";
 
 const statusStyles: Record<string, { dot: string; bg: string; text: string }> =
   {
@@ -48,6 +49,7 @@ const statusStyles: Record<string, { dot: string; bg: string; text: string }> =
 
 export default function ChapterPage() {
   const [currentPage] = useState(1);
+  const router = useRouter();
 
   const { data: courses, isLoading, isError } = useGetAllCourseQuery();
 
@@ -60,6 +62,10 @@ export default function ChapterPage() {
     return `${baseUrl}/${path}`;
   };
 
+
+  const handleViewChapter = (courseId: string) => {
+    router.push(`/admin/chapter/list/${courseId}`);
+  }
   if (isLoading) {
     return (
       <div className="flex justify-center items-center min-h-[80vh]">
@@ -169,7 +175,9 @@ export default function ChapterPage() {
 
                     {/* Actions */}
                     <TableCell className="flex justify-center">
-                      <Button className="bg-transparent text-primary border border-primary rounded-lg hover:bg-primary hover:text-white cursor-pointer">
+                      <Button className="bg-transparent text-primary border border-primary rounded-lg hover:bg-primary hover:text-white cursor-pointer"
+                      onClick={() => handleViewChapter(course.id)}
+                      >
                         View Chapter
                       </Button>
                     </TableCell>
