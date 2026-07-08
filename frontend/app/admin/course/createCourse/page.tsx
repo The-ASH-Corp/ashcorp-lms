@@ -32,8 +32,8 @@ export default function CreateCoursePage() {
 
   const [formData, setFormData] = useState({
     courseTitle: "",
-    categoryName: "",
-    instructorName: "",
+    category: "",
+    instructor: "",
     regularPrice: "0.00",
     offerPrice: "0.00",
     description: "",
@@ -62,17 +62,8 @@ export default function CreateCoursePage() {
     }
   }, [instructorsData, instructors.length, dispatch]);
 
-  useEffect(() => {
-    if (!formData.categoryName && categories.length > 0) {
-      setFormData((prev) => ({ ...prev, categoryName: categories[0].categoryName }));
-    }
-  }, [categories, formData.categoryName]);
-
-  useEffect(() => {
-    if (!formData.instructorName && instructors.length > 0) {
-      setFormData((prev) => ({ ...prev, instructorName: instructors[0].name }));
-    }
-  }, [instructors, formData.instructorName]);
+  const selectedCategory = formData.category || categories[0]?._id || "";
+  const selectedInstructor = formData.instructor || instructors[0]?._id || "";
 
   const handleInputChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
@@ -135,13 +126,6 @@ export default function CreateCoursePage() {
     }));
   };
 
-  const normalizeTags = (value: string) =>
-    value
-      .split(",")
-      .map((tag) => tag.trim())
-      .filter(Boolean)
-      .join(", ");
-
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!thumbnailFile || !videoFile) {
@@ -154,12 +138,23 @@ export default function CreateCoursePage() {
       return;
     }
 
+    if (!selectedCategory) {
+      toast.error("Please select a category.");
+      return;
+    }
+
+    if (!selectedInstructor) {
+      toast.error("Please select an instructor.");
+      return;
+    }
+
     const formPayload = new FormData();
     formPayload.append("title", formData.courseTitle);
     formPayload.append("description", formData.description);
     formPayload.append("price", formData.regularPrice || "0");
-    formPayload.append("instructor", formData.instructorName);
-    formPayload.append("category", formData.categoryName);
+    formPayload.append("offerPrice", formData.offerPrice || "0");
+    formPayload.append("instructor", selectedInstructor);
+    formPayload.append("category", selectedCategory);
     formPayload.append(
       "chapters",
       JSON.stringify(
@@ -228,7 +223,7 @@ export default function CreateCoursePage() {
               </h3>
               <label
                 htmlFor="course-thumbnail"
-                className="mt-4 border-2 border-dashed border-gray-300 rounded-lg p-6 sm:p-8 text-center hover:border-violet-600 transition-colors cursor-pointer bg-gray-50 min-h-48 flex flex-col items-center justify-center"
+                className="mt-4 border-2 border-dashed border-gray-300 rounded-lg p-6 sm:p-8 text-center hover:border-primary transition-colors cursor-pointer bg-gray-50 min-h-48 flex flex-col items-center justify-center"
               >
                 {thumbnailPreview ? (
                   <Image
@@ -273,11 +268,11 @@ export default function CreateCoursePage() {
             <div className="border border-gray-200 rounded-lg p-4 sm:p-6 lg:p-8">
               <h3 className="text-gray-900 font-semibold mb-1 flex items-center gap-2">
                 <span>Intro Video</span>
-                <span className="text-xs text-gray-500">MP4, MOV, AVI · Max 500MB</span>
+                <span className="text-xs text-gray-500">MP4, MOV, AVI · Max 2GB</span>
               </h3>
               <label
                 htmlFor="course-video"
-                className="mt-4 border-2 border-dashed border-gray-300 rounded-lg p-6 sm:p-8 text-center hover:border-violet-600 transition-colors cursor-pointer bg-gray-50 min-h-48 flex flex-col items-center justify-center"
+                className="mt-4 border-2 border-dashed border-gray-300 rounded-lg p-6 sm:p-8 text-center hover:border-primary transition-colors cursor-pointer bg-gray-50 min-h-48 flex flex-col items-center justify-center"
               >
                 <div className="w-16 h-16 rounded-full bg-gray-200 flex items-center justify-center mb-3">
                   <Play size={24} className="text-gray-500" fill="currentColor" />
@@ -299,11 +294,11 @@ export default function CreateCoursePage() {
                 <div className="mt-4 space-y-2">
                   <div className="h-2 rounded-full bg-violet-100 overflow-hidden">
                     <div
-                      className="h-full rounded-full bg-violet-600 transition-all"
+                      className="h-full rounded-full bg-primary transition-all"
                       style={{ width: `${uploadProgress}%` }}
                     />
                   </div>
-                  <p className="text-violet-600 text-xs font-medium">
+                  <p className="text-primary text-xs font-medium">
                     Upload progress: {uploadProgress}%
                   </p>
                 </div>
@@ -313,7 +308,7 @@ export default function CreateCoursePage() {
 
           <div className="border border-gray-200 rounded-lg p-4 sm:p-6 lg:p-8">
             <h3 className="text-gray-900 font-semibold mb-6 flex items-center gap-2">
-              <Info size={20} className="text-violet-600" />
+              <Info size={20} className="text-primary" />
               General Information
             </h3>
 
@@ -328,24 +323,24 @@ export default function CreateCoursePage() {
                   value={formData.courseTitle}
                   onChange={handleInputChange}
                   placeholder="e.g. Advanced Quantum Algorithms for Fintech"
-                  className="w-full h-12 px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-violet-600 focus:ring-1 focus:ring-violet-600 text-sm"
+                  className="w-full h-12 px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary text-sm"
                 />
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                 <div>
                   <label className="block text-gray-700 font-medium text-sm mb-2">
-                    Category Name <span className="text-red-500">*</span>
+                    Category <span className="text-red-500">*</span>
                   </label>
                   <select
-                    name="categoryName"
-                    value={formData.categoryName}
+                    name="category"
+                    value={selectedCategory}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-violet-600 focus:ring-1 focus:ring-violet-600 text-sm bg-white"
+                    className="w-full px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary text-sm bg-white"
                   >
                     {categories.length > 0 ? (
                       categories.map((cat: Category) => (
-                        <option key={cat._id} value={cat.categoryName}>
+                        <option key={cat._id} value={cat._id}>
                           {cat.categoryName}
                         </option>
                       ))
@@ -358,17 +353,17 @@ export default function CreateCoursePage() {
                 </div>
                 <div>
                   <label className="block text-gray-700 font-medium text-sm mb-2">
-                    Instructor Name <span className="text-red-500">*</span>
+                    Instructor <span className="text-red-500">*</span>
                   </label>
                   <select
-                    name="instructorName"
-                    value={formData.instructorName}
+                    name="instructor"
+                    value={selectedInstructor}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-violet-600 focus:ring-1 focus:ring-violet-600 text-sm bg-white"
+                    className="w-full px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary text-sm bg-white"
                   >
                     {instructors.length > 0 ? (
                       instructors.map((ins: Instructor) => (
-                        <option key={ins._id} value={ins.name}>
+                        <option key={ins._id} value={ins._id}>
                           {ins.name}
                         </option>
                       ))
@@ -392,7 +387,7 @@ export default function CreateCoursePage() {
                     value={formData.regularPrice}
                     onChange={handleInputChange}
                     placeholder="$ 0.00"
-                    className="w-full h-12 px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-violet-600 focus:ring-1 focus:ring-violet-600 text-sm"
+                    className="w-full h-12 px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary text-sm"
                   />
                 </div>
                 <div>
@@ -405,7 +400,7 @@ export default function CreateCoursePage() {
                     value={formData.offerPrice}
                     onChange={handleInputChange}
                     placeholder="$ 0.00"
-                    className="w-full h-12 px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-violet-600 focus:ring-1 focus:ring-violet-600 text-sm"
+                    className="w-full h-12 px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary text-sm"
                   />
                 </div>
               </div>
@@ -433,7 +428,7 @@ export default function CreateCoursePage() {
               </div>
 
               <div className="space-y-6">
-                {index > 0 && (
+                {(
                   <div>
                     <label className="block text-gray-700 font-medium text-sm mb-2">
                       Section Title <span className="text-red-500">*</span>
@@ -445,7 +440,7 @@ export default function CreateCoursePage() {
                         handleSectionTitleChange(section.id, e.target.value)
                       }
                       placeholder="e.g. Introduction to Neural Architectures"
-                      className="w-full h-12 px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-violet-600 focus:ring-1 focus:ring-violet-600 text-sm"
+                      className="w-full h-12 px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary text-sm"
                     />
                   </div>
                 )}
@@ -476,7 +471,7 @@ export default function CreateCoursePage() {
           <button
             type="button"
             onClick={addNewSection}
-            className="w-full border border-dashed border-gray-300 rounded-lg py-4 sm:py-6 text-violet-600 font-medium hover:border-violet-600 hover:bg-violet-50 transition-colors flex items-center justify-center gap-2 text-sm"
+            className="w-full border border-dashed border-gray-300 rounded-lg py-4 sm:py-6 text-primary font-medium hover:border-primary hover:bg-violet-50 transition-colors flex items-center justify-center gap-2 text-sm"
           >
             <Plus size={18} />
             Add New Section
@@ -485,7 +480,7 @@ export default function CreateCoursePage() {
           <div className="border border-gray-200 rounded-lg p-4 sm:p-6 lg:p-8 bg-gray-50">
             <div className="flex items-center justify-between">
               <div className="flex items-start gap-3 sm:gap-4">
-                <Eye size={20} className="text-violet-600 shrink-0 mt-1" />
+                <Eye size={20} className="text-primary shrink-0 mt-1" />
                 <div>
                   <h3 className="text-gray-900 font-semibold text-sm sm:text-base">
                     Publish Settings
@@ -515,7 +510,7 @@ export default function CreateCoursePage() {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="flex items-center justify-center gap-2 px-6 py-3 bg-violet-600 text-white rounded-lg hover:bg-violet-700 transition-colors font-medium flex-1 sm:flex-none disabled:cursor-not-allowed disabled:opacity-60"
+              className="flex items-center justify-center gap-2 px-6 py-3 bg-primary text-white rounded-lg hover:bg-violet-700 transition-colors font-medium flex-1 sm:flex-none disabled:cursor-not-allowed disabled:opacity-60"
             >
               <Plus size={18} />
               {isSubmitting ? "Uploading..." : "Create Course"}

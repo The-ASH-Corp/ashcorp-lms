@@ -204,24 +204,6 @@ export default function CertificatePage() {
             </div>
           </div>
         </div>
-
-        {/* Next Steps Section */}
-        {/* <div className="mt-16 lg:mt-20 bg-linear-to-br from-violet-50 to-purple-50 rounded-2xl p-8 sm:p-12 border border-violet-100">
-          <div className="max-w-2xl">
-            <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">Ready for the Next Peak?</h2>
-            <p className="text-gray-600 mb-8 text-sm sm:text-base leading-relaxed">
-              Your achievement in Full-Stack Development opens doors to our advanced specialization tracks. Continue your journey with 20% off your next certification.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4">
-              <button className="px-6 py-3 bg-violet-600 text-white rounded-lg hover:bg-violet-700 transition-colors font-medium text-sm">
-                Explore Advanced Tracks
-              </button>
-              <button className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:border-violet-600 hover:text-violet-600 transition-colors font-medium text-sm">
-                View Learning Roadmap
-              </button>
-            </div>
-          </div>
-        </div> */}
       </div>
     </div>
   );

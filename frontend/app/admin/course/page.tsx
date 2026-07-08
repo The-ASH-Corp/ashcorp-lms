@@ -26,54 +26,16 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Pencil, MoreVertical, Plus, Search, Check, X } from "lucide-react";
+import { Pencil, MoreVertical, Plus, Search } from "lucide-react";
 import {
   InputGroup,
   InputGroupAddon,
   InputGroupInput,
 } from "@/components/ui/input-group";
-import Image from "next/image";
 import Link from "next/link";
+import { useGetAllCourseQuery } from "@/lib/redux/features/course/courseApi";
+import { PropagateLoader } from "react-spinners";
 
-/* ─── Mock Students Data ─── */
-const students = [
-  {
-    id: 1,
-    title: "Web Development",
-    freeAndPublish: false,
-    course:"Web Development Course",
-    price:"$120",
-    instructor:"Elena Sterling",
-    status: "Active" as const,
-  },
-  {
-    id: 2,
-    title: "Data Science",
-    freeAndPublish: true,
-    course:"Data Science Course",
-    price:"$120",
-    instructor:"Elena Sterling",
-    status: "Active" as const,
-  },
-  {
-    id: 3,
-    title: "Artificial Intelligence",
-    freeAndPublish: true,
-    course:"Artificial Intelligence Course",
-    price:"$120",
-    instructor:"Elena Sterling",
-    status: "Active" as const,
-  },
-  {
-    id: 4,
-    title: "Amara Okafor",
-    freeAndPublish: true,
-    course:"Artificial Intelligence Course",
-    price:"$120",
-    instructor:"Elena Sterling",
-    status: "Active" as const,
-  },
-];
 
 const statusStyles: Record<string, { dot: string; bg: string; text: string }> =
   {
@@ -92,6 +54,26 @@ const statusStyles: Record<string, { dot: string; bg: string; text: string }> =
 
 export default function CoursesPage() {
   const [currentPage] = useState(1);
+  const { data: courses, isLoading, isError } = useGetAllCourseQuery();
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center min-h-[80vh]">
+        <PropagateLoader color="#7E23FE" loading={true} size={15} />
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="flex justify-center items-center min-h-[80vh]">
+        <h1 className="text-2xl font-bold text-gray-900">
+          Something went wrong
+        </h1>
+      </div>
+    );
+  }
+
 
   return (
     <>
@@ -105,10 +87,10 @@ export default function CoursesPage() {
           </div>
           <div className="flex items-center gap-3">
             <Link href="/admin/course/createCourse">
-            <Button className="rounded-xl bg-primary text-white shadow-md shadow-violet-200 hover:bg-violet-700 h-10 px-5">
-              <Plus className="h-4 w-4 mr-2" />
-              Add Course
-            </Button>
+              <Button className="rounded-xl bg-primary text-white shadow-md shadow-violet-200 hover:bg-violet-700 h-10 px-5">
+                <Plus className="h-4 w-4 mr-2" />
+                Add Course
+              </Button>
             </Link>
           </div>
         </div>
@@ -133,7 +115,7 @@ export default function CoursesPage() {
                   Id
                 </TableHead>
                 <TableHead className="text-xs font-semibold uppercase tracking-wider text-gray-500 text-center ">
-                 Free & Publish
+                  Free & Publish
                 </TableHead>
                 <TableHead className="text-xs font-semibold uppercase tracking-wider text-gray-500 text-center ">
                   Course
@@ -153,18 +135,18 @@ export default function CoursesPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {students.map((student) => {
-                const style = statusStyles[student.status];
+              {courses?.map((course, index) => {
+                const style = statusStyles[course?.status];
 
                 return (
                   <TableRow
-                    key={student.id}
+                    key={index}
                     className="hover:bg-violet-50/30 transition-colors border-b border-gray-50"
                   >
                     <TableCell>
                       <div className="flex items-center gap-3 justify-center">
                         <p className="text-sm font-semibold text-gray-900">
-                          {student.id}
+                          {index + 1}
                         </p>
                       </div>
                     </TableCell>
@@ -172,24 +154,24 @@ export default function CoursesPage() {
                     <TableCell>
                       <div className="flex items-center gap-3 min-w-[120px] justify-center">
                         <span className="text-sm font-semibold text-gray-900 w-10">
-                          {student.title}
+                          {course.title}
                         </span>
                       </div>
                     </TableCell>
 
                     <TableCell>
-                        <div className="flex items-center gap-3 justify-center">
-                            <span className="text-sm font-semibold text-gray-900 w-10">
-                                {student.freeAndPublish ? "Free" : "Publish"}
-                            </span>
-                        </div>
+                      <div className="flex items-center gap-3 justify-center">
+                        <span className="text-sm font-semibold text-gray-900 w-10">
+                          {course.isPublished ? "Free" : "Paid"}
+                        </span>
+                      </div>
                     </TableCell>
 
                     {/* Featured */}
                     <TableCell className="flex  justify-center">
                       <div className="flex items-center gap-3 justify-center overflow-clip w-20">
                         <span className="text-sm font-semibold text-gray-900 w-10">
-                          {student.course}
+                          {course.title}
                         </span>
                       </div>
                     </TableCell>
@@ -197,7 +179,7 @@ export default function CoursesPage() {
                     <TableCell>
                       <div className="flex items-center gap-3 justify-center">
                         <span className="text-sm font-semibold text-gray-900 w-10">
-                          {student.price}
+                          {course.price}
                         </span>
                       </div>
                     </TableCell>
@@ -205,7 +187,7 @@ export default function CoursesPage() {
                     <TableCell>
                       <div className="flex items-center gap-3 justify-center">
                         <span className="text-sm font-semibold text-gray-900 w-10">
-                          {student.instructor}
+                          {course.instructor || "N/A"}
                         </span>
                       </div>
                     </TableCell>
@@ -218,7 +200,7 @@ export default function CoursesPage() {
                         <span
                           className={`h-1.5 w-1.5 rounded-full ${style.dot}`}
                         />
-                        {student.status}
+                        {course.status}
                       </span>
                     </TableCell>
 

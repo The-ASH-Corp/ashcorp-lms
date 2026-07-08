@@ -22,6 +22,7 @@ export const createCategoryController = async (
       body.color,
       getUploadPath(iconUrl),
       body.isFeatured,
+      false,
       body.status
     );
 

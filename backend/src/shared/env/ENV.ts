@@ -17,4 +17,8 @@ export const ENV = {
   FRONTEND_URL: getEnv("FRONTEND_URL"),
   JWT_SECRET: getEnv("JWT_SECRET"),
   NODE_ENV: getEnv("NODE_ENV"),
+  AWS_REGION: getEnv("AWS_REGION"),
+  AWS_ACCESS_KEY: getEnv("AWS_ACCESS_KEY"),
+  AWS_SECRET_KEY: getEnv("AWS_SECRET_KEY"),
+  AWS_BUCKET_NAME: getEnv("AWS_BUCKET_NAME"),
 };
