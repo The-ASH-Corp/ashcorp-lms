@@ -22,6 +22,9 @@ export const getAllCourseController = async (
     const courses = await courseFindAllUseCase.execute();
     const serializedCourses = await Promise.all(courses.map(serializeCourse));
 
+    console.log(serializedCourses[0].imageUrl);
+    console.log(serializedCourses);
+
     res.status(200).json({
       success: true,
       data: serializedCourses,
@@ -39,7 +42,8 @@ export const createCourseController = async (
   try {
     const body = req.body as Record<string, unknown>;
     const files = (req as Request & { files?: UploadedFileMap }).files;
-    const thumbnailPath = files?.thumbnail?.[0]?.path;
+    const thumbnailPath = `/uploads/images/${files?.thumbnail?.[0]?.path}`; ;
+
     const videoPath = files?.introVideo?.[0]?.path;
 
     if (!thumbnailPath || !videoPath) {

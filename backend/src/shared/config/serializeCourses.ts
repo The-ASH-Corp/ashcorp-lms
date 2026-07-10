@@ -21,6 +21,8 @@ export const serializeCourse = async (course: any): Promise<CourseResponseDTO> =
     instructorLookup,
   ]);
 
+  console.log(rawCourse?.imageUrl);
+
   return {
     id: String(rawCourse?._id ?? rawCourse?.id ?? ""),
     title: String(rawCourse?.title ?? ""),
