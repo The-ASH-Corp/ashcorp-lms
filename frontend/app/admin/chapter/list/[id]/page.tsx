@@ -1,18 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import {
-  Search,
-  RotateCcw,
-  Edit2,
-  Trash2,
-  Plus,
-  ChevronLeft,
-  ChevronRight,
-  Star,
-} from "lucide-react";
-import { useRouter } from "next/navigation";
+import { Search, Edit2, Trash2, Plus } from "lucide-react";
+import { useRouter, useParams } from "next/navigation";
 import { Input } from "@/components/ui/input";
+import { useGetChaptersByCourseIdQuery } from "@/lib/redux/features/chapter/chapterApi";
 import {
   Pagination,
   PaginationContent,
@@ -23,34 +15,40 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 
-const chaptersData = [
-  {
-    id: 1,
-    number: "01",
-    title: "Adobe Illustrator Fundamentals",
-    subtitle: "Introduction to the interface and tools",
-    sequence: 9,
-    lessons: 3,
-  },
-];
+
 
 export default function ChaptersManagement() {
   const router = useRouter();
+  const params = useParams() as { id?: string };
+  const courseId = params?.id;
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
 
+  const { data: chapters, isLoading } = useGetChaptersByCourseIdQuery(
+    courseId ?? "",
+  );
+
+  type ExtendedChapter = {
+    _id: string;
+    title: string;
+    description?: string;
+    serialNumber?: number;
+    contents?: Array<unknown>;
+  };
+
+  const chapterList = (chapters ?? []) as unknown as ExtendedChapter[];
+
   const handleAddNewChapter = () => {
-    router.push(`/admin/chapter/createChapter/${chaptersData[0]?.id}`);
+    if (!courseId) return;
+    router.push(`/admin/chapter/createChapter/${courseId}`);
   };
 
   return (
     <div className="min-h-screen bg-white rounded-xl">
       <div className="px-4 sm:px-8 lg:px-12 py-6 sm:py-8 border-b border-gray-200">
         <p className="text-gray-600 text-sm sm:text-base">
-          Showing chapters for:{" "}
-          <span className="font-semibold">
-            {chaptersData[0]?.title || "Unknown Chapter"}
-          </span>
+          Showing chapters for: {" "}
+          <span className="font-semibold">{courseId ?? "Unknown Course"}</span>
         </p>
       </div>
       {/* Main Content */}
@@ -125,53 +123,63 @@ export default function ChaptersManagement() {
 
             {/* Table Body */}
             <tbody>
-              {chaptersData.map((chapter, index) => (
-                <tr
-                  key={chapter.id}
-                  className="border-b border-gray-200 hover:bg-gray-50 transition-colors"
-                >
-                  <td className="px-4 sm:px-6 py-4">
-                    <span className="text-sm font-semibold text-gray-900">
-                      {chapter.number}
-                    </span>
-                  </td>
-                  <td className="px-4 sm:px-6 py-4">
-                    <div className="flex items-start gap-3">
-                      <div className="flex items-center justify-center w-8 h-8 bg-violet-100 rounded text-primary flex-shrink-0 mt-0.5">
-                        <Edit2 size={16} />
-                      </div>
-                      <div className="min-w-0">
-                        <p className="text-sm font-semibold text-gray-900 truncate">
-                          {chapter.title}
-                        </p>
-                        <p className="text-xs text-gray-600 truncate">
-                          {chapter.subtitle}
-                        </p>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="px-4 sm:px-6 py-4 hidden md:table-cell">
-                    <span className="text-sm font-semibold text-gray-900">
-                      {chapter.sequence}
-                    </span>
-                  </td>
-                  <td className="px-4 sm:px-6 py-4">
-                    <span className="inline-block px-3 py-1 bg-gray-100 text-gray-700 text-xs font-medium rounded">
-                      {chapter.lessons} Lessons
-                    </span>
-                  </td>
-                  <td className="px-4 sm:px-6 py-4">
-                    <div className="flex items-center gap-2">
-                      <button className="p-2 hover:bg-gray-100 rounded transition-colors text-gray-600">
-                        <Edit2 size={16} />
-                      </button>
-                      <button className="p-2 hover:bg-red-50 rounded transition-colors text-red-600">
-                        <Trash2 size={16} />
-                      </button>
-                    </div>
+              {isLoading ? (
+                <tr>
+                  <td colSpan={5} className="px-4 py-6 text-center text-gray-500">
+                    Loading chapters...
                   </td>
                 </tr>
-              ))}
+              ) : !chapters || chapters.length === 0 ? (
+                <tr>
+                  <td colSpan={5} className="px-4 py-6 text-center text-gray-500">
+                    No chapters found for this course.
+                  </td>
+                </tr>
+              ) : (
+                chapterList.map((chapter, index) => (
+                  <tr
+                    key={chapter._id}
+                    className="border-b border-gray-200 hover:bg-gray-50 transition-colors"
+                  >
+                    <td className="px-4 sm:px-6 py-4">
+                      <span className="text-sm font-semibold text-gray-900">{index + 1}</span>
+                    </td>
+                    <td className="px-4 sm:px-6 py-4">
+                      <div className="flex items-start gap-3">
+                        <div className="flex items-center justify-center w-8 h-8 bg-violet-100 rounded text-primary shrink-0 mt-0.5">
+                          <Edit2 size={16} />
+                        </div>
+                        <div className="min-w-0">
+                          <p className="text-sm font-semibold text-gray-900 truncate">
+                            {chapter.title}
+                          </p>
+                          <p className="text-xs text-gray-600 truncate">
+                            {chapter.description}
+                          </p>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="px-4 sm:px-6 py-4 hidden md:table-cell">
+                      <span className="text-sm font-semibold text-gray-900">{chapter.serialNumber ?? "-"}</span>
+                    </td>
+                    <td className="px-4 sm:px-6 py-4">
+                      <span className="inline-block px-3 py-1 bg-gray-100 text-gray-700 text-xs font-medium rounded">
+                        {chapter.contents?.length ?? 0} Lessons
+                      </span>
+                    </td>
+                    <td className="px-4 sm:px-6 py-4">
+                      <div className="flex items-center gap-2">
+                        <button className="p-2 hover:bg-gray-100 rounded transition-colors text-gray-600">
+                          <Edit2 size={16} />
+                        </button>
+                        <button className="p-2 hover:bg-red-50 rounded transition-colors text-red-600">
+                          <Trash2 size={16} />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>
@@ -192,6 +200,7 @@ export default function ChaptersManagement() {
                   <PaginationLink
                     href="#"
                     isActive={page === currentPage}
+                    onClick={() => setCurrentPage(page)}
                     className={`h-8 w-8 rounded-lg text-sm ${
                       page === currentPage
                         ? "bg-primary! text-white! border-primary! hover:bg-violet-700!"
