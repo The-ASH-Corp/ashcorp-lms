@@ -2,7 +2,7 @@ export interface Contents {
   contentTitle: string;
   sequance: number;
   contentUrl: string;
-  duration?: number;
+  duration?: number | null;
 }
 
 export interface ChapterRequestDTO {
