@@ -1,15 +1,15 @@
 import { CreateCourseUseCase } from "./application/usecase/CreateCourseUseCase";
 import { GetAllCourseUseCase } from "./application/usecase/GetAllCourseUseCase";
-import { MongoCourseRepository } from "./infrastructure/repositories/MongoCourseRepository";
+import { MongoCourseRepository } from "./infrastructure/repositories/MongoCourseRepository"; 
 import { categoryRepository } from "../category/di";
 import { instructorRepository } from "../instructor/di";
 
 export const courseRepository = new MongoCourseRepository();
 
-// course find all usecase 
+// course find all useCase 
 export const courseFindAllUseCase = new GetAllCourseUseCase(courseRepository);
 
-// course create usecase 
+// course create useCase 
 export const createCourseUseCase = new CreateCourseUseCase(
   courseRepository,
   categoryRepository,

@@ -39,7 +39,8 @@ export const createCourseController = async (
   try {
     const body = req.body as Record<string, unknown>;
     const files = (req as Request & { files?: UploadedFileMap }).files;
-    const thumbnailPath = files?.thumbnail?.[0]?.path;
+    const thumbnailPath = `/uploads/images/${files?.thumbnail?.[0]?.path}`; ;
+
     const videoPath = files?.introVideo?.[0]?.path;
 
     if (!thumbnailPath || !videoPath) {

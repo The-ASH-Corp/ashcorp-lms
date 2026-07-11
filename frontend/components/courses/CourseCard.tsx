@@ -4,12 +4,12 @@ import Link from "next/link";
 
 interface CourseCardProps {
   course: {
-    id: number;
+    id: string;
     title: string;
     instructor: string;
     price?: number;
-    priceLabel?: string;
-    image: string;
+    offerPrice?: string;
+    imageUrl: string;
     rating: number;
     reviews: string;
     badge?: string;
@@ -18,6 +18,21 @@ interface CourseCardProps {
 }
 
 export default function CourseCard({ course }: CourseCardProps) {
+  console.log(course.imageUrl)
+  const getCategoryImageUrl = (iconUrl: string | undefined) => {
+    if (!iconUrl) return "";
+
+    if (/^https?:\/\//i.test(iconUrl)) return iconUrl;
+
+    const baseUrl =
+      process.env.NEXT_PUBLIC_IMAGE_URL?.replace(/\/+$/, "") ?? "";
+
+    const path = iconUrl
+      .replace(/\\/g, "/") // <-- replace \ with /
+      .replace(/^\/+/, "");
+
+    return `${baseUrl}/${path}`;
+  };
   const renderStars = (rating: number) => {
     return Array.from({ length: 5 }).map((_, i) => (
       <Star
@@ -37,7 +52,7 @@ export default function CourseCard({ course }: CourseCardProps) {
       {/* Image Container */}
       <div className="relative h-40 sm:h-48 lg:h-56 overflow-hidden bg-gray-100 shrink-0">
         <img
-          src={course.image}
+          src={getCategoryImageUrl(course.imageUrl)}
           alt={course.title}
           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
         />
@@ -71,9 +86,9 @@ export default function CourseCard({ course }: CourseCardProps) {
         {/* Price and Button */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mt-auto pt-3 sm:pt-4 border-t border-gray-100">
           <div>
-            {course.priceLabel ? (
+            {course.offerPrice ? (
               <span className="text-base sm:text-lg font-bold text-primary">
-                {course.priceLabel}
+                {course.offerPrice}
               </span>
             ) : (
               <span className="text-base sm:text-lg font-bold text-primary">
@@ -81,14 +96,13 @@ export default function CourseCard({ course }: CourseCardProps) {
               </span>
             )}
           </div>
-          
-            <Link
-              href={`/course-details/${course.id}`}
-              className="px-3 sm:px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:border-primary hover:text-primary transition-colors font-medium text-xs sm:text-sm whitespace-nowrap"
-            >
-              View Details
-            </Link>
-          
+
+          <Link
+            href={`/course-details/${course.id}`}
+            className="px-3 sm:px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:border-primary hover:text-primary transition-colors font-medium text-xs sm:text-sm whitespace-nowrap"
+          >
+            View Details
+          </Link>
         </div>
       </div>
     </div>
