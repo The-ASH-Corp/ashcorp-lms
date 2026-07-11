@@ -13,6 +13,7 @@ export class MongoUserRepository implements UserRepository{
             ...data,
             password: hashedPassword,
             role: "user",
+            status: "Active",
         });
         return user;
     }

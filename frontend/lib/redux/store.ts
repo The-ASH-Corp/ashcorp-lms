@@ -4,6 +4,7 @@ import { api } from "@/lib/redux/services/api";
 import { courseReducer } from "./features/course/courseSlice";
 import { categoryReducer } from "./features/category/categorySlice";
 import { instructorReducer } from "./features/instructor/instructorSlice";
+import { studentReducer } from "./features/student/studentSlice";
 
 export const store = configureStore({
   reducer: {
@@ -11,6 +12,7 @@ export const store = configureStore({
     course: courseReducer,
     category:categoryReducer,
     instructor:instructorReducer,
+    student: studentReducer,
     [api.reducerPath]: api.reducer,
   },
   middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(api.middleware),

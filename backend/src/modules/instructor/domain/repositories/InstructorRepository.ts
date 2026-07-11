@@ -12,4 +12,8 @@ export interface InstructorRepository {
   findAll(): Promise<Instructor[]>;
 
   findById(id: string): Promise<Instructor | null>;
+
+  deleteInstructor(id: string): Promise<void>;
+
+  updateStatus(id: string, status: string): Promise<Instructor>;
 }

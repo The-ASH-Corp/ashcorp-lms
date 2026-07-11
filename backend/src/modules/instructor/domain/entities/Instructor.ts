@@ -8,6 +8,7 @@ export class Instructor{
         public password: string,
         public isFeatured: boolean,
         public verifyByDefault: boolean,
-        public profileImage?: string
+        public profileImage?: string,
+        public status: string = "Active",
     ) {}
 }

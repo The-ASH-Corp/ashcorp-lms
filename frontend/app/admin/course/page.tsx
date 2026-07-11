@@ -20,21 +20,20 @@ import {
   PaginationPrevious,
   PaginationEllipsis,
 } from "@/components/ui/pagination";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Pencil, MoreVertical, Plus, Search } from "lucide-react";
+import { Pencil, Plus, Search, Trash2 } from "lucide-react";
 import {
   InputGroup,
   InputGroupAddon,
   InputGroupInput,
 } from "@/components/ui/input-group";
 import Link from "next/link";
-import { useGetAllCourseQuery } from "@/lib/redux/features/course/courseApi";
+import {
+  useDeleteCourseMutation,
+  useGetAllCourseQuery,
+} from "@/lib/redux/features/course/courseApi";
 import { PropagateLoader } from "react-spinners";
+import { toast } from "sonner";
+import { ConfirmActionDialog } from "@/components/shared/confirm-action-dialog";
 
 
 const statusStyles: Record<string, { dot: string; bg: string; text: string }> =
@@ -55,6 +54,17 @@ const statusStyles: Record<string, { dot: string; bg: string; text: string }> =
 export default function CoursesPage() {
   const [currentPage] = useState(1);
   const { data: courses, isLoading, isError } = useGetAllCourseQuery();
+  const [deleteCourse, { isLoading: isDeletingCourse }] =
+    useDeleteCourseMutation();
+
+  const handleDelete = async (id: string) => {
+    try {
+      await deleteCourse(id).unwrap();
+      toast.success("Course deleted successfully");
+    } catch (error: any) {
+      toast.error(error?.data?.message ?? "Failed to delete course");
+    }
+  };
 
   if (isLoading) {
     return (
@@ -210,21 +220,19 @@ export default function CoursesPage() {
                         <button className="flex h-8 w-8 items-center justify-center rounded-lg text-gray-400 transition-colors hover:bg-violet-50 hover:text-primary">
                           <Pencil className="h-4 w-4" />
                         </button>
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <button className="flex h-8 w-8 items-center justify-center rounded-lg text-gray-400 transition-colors hover:bg-violet-50 hover:text-primary">
-                              <MoreVertical className="h-4 w-4" />
+                        <ConfirmActionDialog
+                          title="Delete Course"
+                          description={`This will permanently delete ${course.title}.`}
+                          confirmLabel="Delete"
+                          loading={isDeletingCourse}
+                          loadingLabel="Deleting..."
+                          onConfirm={() => handleDelete(course.id)}
+                          trigger={
+                            <button className="flex h-8 w-8 items-center justify-center rounded-lg text-red-400 transition-colors hover:bg-red-50 hover:text-red-600">
+                              <Trash2 className="h-4 w-4" />
                             </button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end" className="w-40">
-                            <DropdownMenuItem>View Profile</DropdownMenuItem>
-                            <DropdownMenuItem>Send Email</DropdownMenuItem>
-                            <DropdownMenuItem>Edit Details</DropdownMenuItem>
-                            <DropdownMenuItem className="text-red-600">
-                              Remove Student
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
+                          }
+                        />
                       </div>
                     </TableCell>
                   </TableRow>

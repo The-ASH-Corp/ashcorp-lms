@@ -28,8 +28,13 @@ import {
 } from "@/components/ui/input-group";
 import Image from "next/image";
 import Link from "next/link";
-import { useGetAllCategoriesQuery } from "@/lib/redux/features/category/categoryApi";
+import {
+  useDeleteCategoryMutation,
+  useGetAllCategoriesQuery,
+} from "@/lib/redux/features/category/categoryApi";
 import { PropagateLoader } from "react-spinners";
+import { toast } from "sonner";
+import { ConfirmActionDialog } from "@/components/shared/confirm-action-dialog";
 
 const statusStyles: Record<string, { dot: string; bg: string; text: string }> =
   {
@@ -50,6 +55,8 @@ export default function CategoryPage() {
   const [currentPage] = useState(1);
 
   const { data: categories, isLoading, isError } = useGetAllCategoriesQuery();
+  const [deleteCategory, { isLoading: isDeletingCategory }] =
+    useDeleteCategoryMutation();
 
   const getCategoryImageUrl = (iconUrl: string | undefined) => {
     if (!iconUrl) return "";
@@ -64,6 +71,15 @@ export default function CategoryPage() {
       .replace(/^\/+/, "");
 
     return `${baseUrl}/${path}`;
+  };
+
+  const handleDelete = async (id: string) => {
+    try {
+      await deleteCategory(id).unwrap();
+      toast.success("Category deleted successfully");
+    } catch (error: any) {
+      toast.error(error?.data?.message ?? "Failed to delete category");
+    }
   };
 
 
@@ -121,7 +137,7 @@ export default function CategoryPage() {
           <Table>
             <TableHeader>
               <TableRow className="bg-gray-50/80 hover:bg-gray-50/80 border-b border-gray-100 ">
-                <TableHead className="text-xs font-semibold uppercase tracking-wider text-gray-500 ml-10 text-center ">
+                <TableHead className="text-xs font-semibold uppercase tracking-wider text-gray-500 text-center ">
                   #
                 </TableHead>
                 <TableHead className="text-xs font-semibold uppercase tracking-wider text-gray-500 text-center">
@@ -180,7 +196,7 @@ export default function CategoryPage() {
                     </TableCell>
 
                     {/* Featured */}
-                    <TableCell className="flex text-center justify-center">
+                    <TableCell className="text-center align-middle">
                       <div
                         className={
                           category.isFeatured
@@ -197,7 +213,7 @@ export default function CategoryPage() {
                     </TableCell>
 
                     {/* Status */}
-                    <TableCell className="text-center ">
+                    <TableCell className="text-center align-middle">
                       <span
                         className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium justify-center ${style.bg} ${style.text}`}
                       >
@@ -209,8 +225,8 @@ export default function CategoryPage() {
                     </TableCell>
 
                     {/* Actions */}
-                    <TableCell className="flex justify-center">
-                      <div className="flex items-center justify-end gap-1">
+                    <TableCell className="text-center align-middle">
+                      <div className="flex items-center justify-center gap-1">
                         <Button
                           className="flex h-8 w-8 items-center justify-center rounded-lg text-gray-400 transition-colors hover:bg-violet-500/10 hover:text-primary"
                           size="sm"
@@ -218,13 +234,24 @@ export default function CategoryPage() {
                         >
                           <Pencil className="h-4 w-4" />
                         </Button>
-                        <Button
-                          className="flex h-8 w-8 items-center justify-center rounded-lg text-red-400 transition-colors hover:bg-red-50 hover:text-red-600"
-                          size="sm"
-                          variant="ghost"
-                        >
-                          <Trash className="h-4 w-4" />
-                        </Button>
+                        <ConfirmActionDialog
+                          title="Delete Category"
+                          description={`This will permanently delete ${category.categoryName}.`}
+                          confirmLabel="Delete"
+                          loading={isDeletingCategory}
+                          loadingLabel="Deleting..."
+                          onConfirm={() => handleDelete(category._id)}
+                          trigger={
+                            <Button
+                              className="flex h-8 w-8 items-center justify-center rounded-lg text-red-400 transition-colors hover:bg-red-50 hover:text-red-600"
+                              size="sm"
+                              variant="ghost"
+                              type="button"
+                            >
+                              <Trash className="h-4 w-4" />
+                            </Button>
+                          }
+                        />
                       </div>
                     </TableCell>
                   </TableRow>

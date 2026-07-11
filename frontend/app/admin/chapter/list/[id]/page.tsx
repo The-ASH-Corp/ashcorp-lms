@@ -4,7 +4,10 @@ import { useState } from "react";
 import { Search, Edit2, Trash2, Plus } from "lucide-react";
 import { useRouter, useParams } from "next/navigation";
 import { Input } from "@/components/ui/input";
-import { useGetChaptersByCourseIdQuery } from "@/lib/redux/features/chapter/chapterApi";
+import {
+  useDeleteChapterMutation,
+  useGetChaptersByCourseIdQuery,
+} from "@/lib/redux/features/chapter/chapterApi";
 import {
   Pagination,
   PaginationContent,
@@ -14,6 +17,8 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import { toast } from "sonner";
+import { ConfirmActionDialog } from "@/components/shared/confirm-action-dialog";
 
 
 
@@ -27,6 +32,8 @@ export default function ChaptersManagement() {
   const { data: chapters, isLoading } = useGetChaptersByCourseIdQuery(
     courseId ?? "",
   );
+  const [deleteChapter, { isLoading: isDeletingChapter }] =
+    useDeleteChapterMutation();
 
   type ExtendedChapter = {
     _id: string;
@@ -41,6 +48,15 @@ export default function ChaptersManagement() {
   const handleAddNewChapter = () => {
     if (!courseId) return;
     router.push(`/admin/chapter/createChapter/${courseId}`);
+  };
+
+  const handleDeleteChapter = async (chapterId: string) => {
+    try {
+      await deleteChapter(chapterId).unwrap();
+      toast.success("Chapter deleted successfully");
+    } catch (error: any) {
+      toast.error(error?.data?.message ?? "Failed to delete chapter");
+    }
   };
 
   return (
@@ -93,27 +109,27 @@ export default function ChaptersManagement() {
             {/* Table Header */}
             <thead>
               <tr className="bg-gray-50 border-b border-gray-200">
-                <th className="px-4 sm:px-6 py-4 text-left">
+                <th className="px-4 sm:px-6 py-4 text-left align-middle">
                   <span className="text-xs font-semibold text-gray-600 uppercase tracking-wide">
                     #
                   </span>
                 </th>
-                <th className="px-4 sm:px-6 py-4 text-left">
+                <th className="px-4 sm:px-6 py-4 text-left align-middle">
                   <span className="text-xs font-semibold text-gray-600 uppercase tracking-wide">
                     Chapter Title
                   </span>
                 </th>
-                <th className="px-4 sm:px-6 py-4 text-left hidden md:table-cell">
+                <th className="px-4 sm:px-6 py-4 text-left align-middle hidden md:table-cell">
                   <span className="text-xs font-semibold text-gray-600 uppercase tracking-wide">
                     Sequence
                   </span>
                 </th>
-                <th className="px-4 sm:px-6 py-4 text-left">
+                <th className="px-4 sm:px-6 py-4 text-left align-middle">
                   <span className="text-xs font-semibold text-gray-600 uppercase tracking-wide">
                     Contents
                   </span>
                 </th>
-                <th className="px-4 sm:px-6 py-4 text-left">
+                <th className="px-4 sm:px-6 py-4 text-left align-middle">
                   <span className="text-xs font-semibold text-gray-600 uppercase tracking-wide">
                     Action
                   </span>
@@ -141,11 +157,11 @@ export default function ChaptersManagement() {
                     key={chapter._id}
                     className="border-b border-gray-200 hover:bg-gray-50 transition-colors"
                   >
-                    <td className="px-4 sm:px-6 py-4">
+                    <td className="px-4 sm:px-6 py-4 align-middle">
                       <span className="text-sm font-semibold text-gray-900">{index + 1}</span>
                     </td>
-                    <td className="px-4 sm:px-6 py-4">
-                      <div className="flex items-start gap-3">
+                    <td className="px-4 sm:px-6 py-4 align-middle">
+                      <div className="flex items-center gap-3">
                         <div className="flex items-center justify-center w-8 h-8 bg-violet-100 rounded text-primary shrink-0 mt-0.5">
                           <Edit2 size={16} />
                         </div>
@@ -159,22 +175,32 @@ export default function ChaptersManagement() {
                         </div>
                       </div>
                     </td>
-                    <td className="px-4 sm:px-6 py-4 hidden md:table-cell">
+                    <td className="px-4 sm:px-6 py-4 align-middle hidden md:table-cell">
                       <span className="text-sm font-semibold text-gray-900">{chapter.serialNumber ?? "-"}</span>
                     </td>
-                    <td className="px-4 sm:px-6 py-4">
+                    <td className="px-4 sm:px-6 py-4 align-middle">
                       <span className="inline-block px-3 py-1 bg-gray-100 text-gray-700 text-xs font-medium rounded">
                         {chapter.contents?.length ?? 0} Lessons
                       </span>
                     </td>
-                    <td className="px-4 sm:px-6 py-4">
-                      <div className="flex items-center gap-2">
+                    <td className="px-4 sm:px-6 py-4 align-middle">
+                      <div className="flex items-center justify-center gap-2">
                         <button className="p-2 hover:bg-gray-100 rounded transition-colors text-gray-600">
                           <Edit2 size={16} />
                         </button>
-                        <button className="p-2 hover:bg-red-50 rounded transition-colors text-red-600">
-                          <Trash2 size={16} />
-                        </button>
+                        <ConfirmActionDialog
+                          title="Delete Chapter"
+                          description={`This will permanently delete ${chapter.title}.`}
+                          confirmLabel="Delete"
+                          loading={isDeletingChapter}
+                          loadingLabel="Deleting..."
+                          onConfirm={() => handleDeleteChapter(chapter._id)}
+                          trigger={
+                            <button className="p-2 hover:bg-red-50 rounded transition-colors text-red-600">
+                              <Trash2 size={16} />
+                            </button>
+                          }
+                        />
                       </div>
                     </td>
                   </tr>
