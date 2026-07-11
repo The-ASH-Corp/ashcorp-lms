@@ -63,8 +63,10 @@ export default function ChapterPage() {
   };
 
 
-  const handleViewChapter = (courseId: string) => {
-    router.push(`/admin/chapter/list/${courseId}`);
+  const handleViewChapter = (courseId: string, courseTitle: string) => {
+    router.push(
+      `/admin/chapter/list/${courseId}?title=${encodeURIComponent(courseTitle)}`,
+    );
   }
   if (isLoading) {
     return (
@@ -176,7 +178,7 @@ export default function ChapterPage() {
                     {/* Actions */}
                     <TableCell className="flex justify-center">
                       <Button className="bg-transparent text-primary border border-primary rounded-lg hover:bg-primary hover:text-white cursor-pointer"
-                      onClick={() => handleViewChapter(course.id)}
+                      onClick={() => handleViewChapter(course.id, course.title)}
                       >
                         View Chapter
                       </Button>

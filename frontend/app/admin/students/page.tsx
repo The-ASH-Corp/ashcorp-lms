@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Ban, Plus, Trash2, Users } from "lucide-react";
 import { PropagateLoader } from "react-spinners";
@@ -24,6 +24,7 @@ import {
 } from "@/lib/redux/features/student/studentApi";
 import { toast } from "sonner";
 import { ConfirmActionDialog } from "@/components/shared/confirm-action-dialog";
+import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
 
 const statusStyles: Record<
   string,
@@ -60,6 +61,8 @@ const getStudentStatus = (student: Student) =>
   student.status || (student.role === "user" ? "Active" : "Unknown");
 
 export default function StudentsPage() {
+    const [currentPage] = useState(1);
+  
   const dispatch = useAppDispatch();
   const { data: students, isLoading, isError } = useGetAllStudentsQuery();
   const [deleteStudent, { isLoading: isDeletingStudent }] =
@@ -267,6 +270,54 @@ export default function StudentsPage() {
             )}
           </TableBody>
         </Table>
+
+
+        <div className="flex items-center justify-center border-t border-gray-100 px-5 py-4">
+            <Pagination className="w-auto mx-0">
+              <PaginationContent>
+                <PaginationItem>
+                  <PaginationPrevious
+                    href="#"
+                    text=""
+                    className="h-8 w-8 p-0 rounded-lg border border-gray-200 hover:border-violet-300 hover:bg-violet-50"
+                  />
+                </PaginationItem>
+                {[1, 2, 3].map((page) => (
+                  <PaginationItem key={page}>
+                    <PaginationLink
+                      href="#"
+                      isActive={page === currentPage}
+                      className={`h-8 w-8 rounded-lg text-sm ${
+                        page === currentPage
+                          ? "bg-primary! text-white! border-primary! hover:bg-violet-700!"
+                          : "border border-gray-200 hover:border-violet-300 hover:bg-violet-50"
+                      }`}
+                    >
+                      {page}
+                    </PaginationLink>
+                  </PaginationItem>
+                ))}
+                <PaginationItem>
+                  <PaginationEllipsis />
+                </PaginationItem>
+                <PaginationItem>
+                  <PaginationLink
+                    href="#"
+                    className="h-8 w-8 rounded-lg text-sm border border-gray-200 hover:border-violet-300 hover:bg-violet-50"
+                  >
+                    128
+                  </PaginationLink>
+                </PaginationItem>
+                <PaginationItem>
+                  <PaginationNext
+                    href="#"
+                    text=""
+                    className="h-8 w-8 p-0 rounded-lg border border-gray-200 hover:border-violet-300 hover:bg-violet-50"
+                  />
+                </PaginationItem>
+              </PaginationContent>
+            </Pagination>
+          </div>
       </Card>
     </div>
   );

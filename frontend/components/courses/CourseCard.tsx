@@ -1,17 +1,13 @@
 import { Star } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import type { Course } from "@/lib/redux/features/course/courseSlice";
 
 interface CourseCardProps {
-  course: {
-    id: string;
-    title: string;
-    instructor: string;
-    price?: number;
+  course: Course & {
     offerPrice?: string;
-    imageUrl: string;
-    rating: number;
-    reviews: string;
+    rating?: number;
+    reviews?: string;
     badge?: string;
     badgeColor?: string;
   };
@@ -79,8 +75,10 @@ export default function CourseCard({ course }: CourseCardProps) {
 
         {/* Rating */}
         <div className="flex items-center gap-2 mb-3 sm:mb-4">
-          <div className="flex gap-0.5">{renderStars(course.rating)}</div>
-          <span className="text-xs text-gray-600">({course.reviews})</span>
+          <div className="flex gap-0.5">{renderStars(course.rating ?? 0)}</div>
+          <span className="text-xs text-gray-600">
+            ({course.reviews ?? "0 Reviews"})
+          </span>
         </div>
 
         {/* Price and Button */}
