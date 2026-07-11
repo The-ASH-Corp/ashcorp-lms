@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Search, Edit2, Trash2, Plus } from "lucide-react";
-import { useRouter, useParams } from "next/navigation";
+import { useRouter, useParams, useSearchParams } from "next/navigation";
 import { Input } from "@/components/ui/input";
+import { useGetAllCourseQuery } from "@/lib/redux/features/course/courseApi";
 import {
   useDeleteChapterMutation,
   useGetChaptersByCourseIdQuery,
@@ -25,13 +26,18 @@ import { ConfirmActionDialog } from "@/components/shared/confirm-action-dialog";
 export default function ChaptersManagement() {
   const router = useRouter();
   const params = useParams() as { id?: string };
+  const searchParams = useSearchParams();
   const courseId = params?.id;
+  const courseTitleFromRoute = searchParams.get("title") ?? "";
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
 
   const { data: chapters, isLoading } = useGetChaptersByCourseIdQuery(
     courseId ?? "",
   );
+  const { data: courses } = useGetAllCourseQuery(undefined, {
+    skip: Boolean(courseTitleFromRoute),
+  });
   const [deleteChapter, { isLoading: isDeletingChapter }] =
     useDeleteChapterMutation();
 
@@ -44,6 +50,17 @@ export default function ChaptersManagement() {
   };
 
   const chapterList = (chapters ?? []) as unknown as ExtendedChapter[];
+  const courseTitle = useMemo(() => {
+    if (courseTitleFromRoute) {
+      return courseTitleFromRoute;
+    }
+
+    const resolvedCourse = courses?.find(
+      (course) => course.id === courseId || (course as { _id?: string })._id === courseId,
+    );
+
+    return resolvedCourse?.title ?? courseId ?? "Unknown Course";
+  }, [courseId, courseTitleFromRoute, courses]);
 
   const handleAddNewChapter = () => {
     if (!courseId) return;
@@ -64,7 +81,7 @@ export default function ChaptersManagement() {
       <div className="px-4 sm:px-8 lg:px-12 py-6 sm:py-8 border-b border-gray-200">
         <p className="text-gray-600 text-sm sm:text-base">
           Showing chapters for: {" "}
-          <span className="font-semibold">{courseId ?? "Unknown Course"}</span>
+          <span className="font-semibold">{courseTitle}</span>
         </p>
       </div>
       {/* Main Content */}
