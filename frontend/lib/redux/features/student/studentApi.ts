@@ -6,6 +6,7 @@ export interface Student {
   email: string;
   phone: number;
   role: string;
+  status: string;
   createdAt?: string;
   updatedAt?: string;
 }
@@ -30,6 +31,23 @@ export const studentApi = api.injectEndpoints({
       invalidatesTags: ["Student"],
     }),
 
+    deleteStudent: builder.mutation<void, string>({
+      query: (id) => ({
+        url: `/student/delete-student/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Student"],
+    }),
+
+    blockStudent: builder.mutation<Student, string>({
+      query: (id) => ({
+        url: `/student/block-student/${id}`,
+        method: "PATCH",
+      }),
+      transformResponse: (response: any) => response.data as Student,
+      invalidatesTags: ["Student"],
+    }),
+
     getAllStudents: builder.query<Student[], void>({
       query: () => "/student/get-all-students",
       transformResponse: (response: any) => response.data as Student[],
@@ -38,4 +56,9 @@ export const studentApi = api.injectEndpoints({
   }),
 });
 
-export const { useCreateStudentMutation, useGetAllStudentsQuery } = studentApi;
+export const {
+  useCreateStudentMutation,
+  useDeleteStudentMutation,
+  useBlockStudentMutation,
+  useGetAllStudentsQuery,
+} = studentApi;

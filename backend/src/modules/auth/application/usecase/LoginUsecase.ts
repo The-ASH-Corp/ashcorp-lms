@@ -30,6 +30,10 @@ export class LoginUsecase {
       throw new AppError("Invalid email or password", 401);
     }
 
+    if ("status" in authenticatedUser && authenticatedUser.status === "Inactive") {
+      throw new AppError("Account is blocked", 403);
+    }
+
     const userId = authenticatedUser._id;
 
     if (!userId) {

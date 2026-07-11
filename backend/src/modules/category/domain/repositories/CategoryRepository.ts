@@ -8,6 +8,8 @@ export interface CategoryRepository {
 
     findById(id: string): Promise<Category | null>;
 
+    deleteCategory(id: string): Promise<void>;
+
     getAllCategories():Promise<CategoryResponseDTO[]>;
     
 }

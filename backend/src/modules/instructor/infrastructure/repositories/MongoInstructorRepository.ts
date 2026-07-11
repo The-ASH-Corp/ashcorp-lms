@@ -23,4 +23,22 @@ export class MongoInstructorRepository implements InstructorRepository {
   async findById(id: string): Promise<Instructor | null> {
     return await InstructorModel.findById(id);
   }
+
+  async deleteInstructor(id: string): Promise<void> {
+    await InstructorModel.findByIdAndDelete(id);
+  }
+
+  async updateStatus(id: string, status: string): Promise<Instructor> {
+    const instructor = await InstructorModel.findByIdAndUpdate(
+      id,
+      { status },
+      { new: true },
+    );
+
+    if (!instructor) {
+      throw new Error("Instructor not found");
+    }
+
+    return instructor;
+  }
 }

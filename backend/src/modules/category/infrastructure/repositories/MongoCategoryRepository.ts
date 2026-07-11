@@ -20,6 +20,10 @@ export class MongoCategoryRepository implements CategoryRepository {
         return category;
     }
 
+    async deleteCategory(id: string): Promise<void> {
+        await CategoryModel.findByIdAndDelete(id);
+    }
+
     async getAllCategories(): Promise<CategoryResponseDTO[]> {
         const categories = await CategoryModel.find().sort({createdAt: -1});
         return categories;

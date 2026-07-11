@@ -1,5 +1,9 @@
 import { NextFunction, Request, Response } from "express";
-import { courseFindAllUseCase, createCourseUseCase } from "../di";
+import {
+  courseFindAllUseCase,
+  createCourseUseCase,
+  deleteCourseUseCase,
+} from "../di";
 import {
   CourseRequestDTO,
 } from "../application/dto/CourseDTO";
@@ -63,6 +67,24 @@ export const createCourseController = async (
     res.status(201).json({
       success: true,
       data: serializedCourse,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const deleteCourseController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
+  try {
+    const id = String(req.params.id);
+    await deleteCourseUseCase.execute(id);
+
+    res.status(200).json({
+      success: true,
+      message: "Course deleted successfully",
     });
   } catch (error) {
     next(error);

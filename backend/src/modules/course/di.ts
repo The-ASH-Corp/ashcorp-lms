@@ -1,4 +1,5 @@
 import { CreateCourseUseCase } from "./application/usecase/CreateCourseUseCase";
+import { DeleteCourseUseCase } from "./application/usecase/DeleteCourseUseCase";
 import { GetAllCourseUseCase } from "./application/usecase/GetAllCourseUseCase";
 import { MongoCourseRepository } from "./infrastructure/repositories/MongoCourseRepository";
 import { categoryRepository } from "../category/di";
@@ -15,3 +16,6 @@ export const createCourseUseCase = new CreateCourseUseCase(
   categoryRepository,
   instructorRepository,
 );
+
+// course delete usecase
+export const deleteCourseUseCase = new DeleteCourseUseCase(courseRepository);

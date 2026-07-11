@@ -1,5 +1,10 @@
 import { NextFunction, Request, Response } from "express";
-import { createInstructorUseCase, getAllInstructorsUseCase } from "../di";
+import {
+  blockInstructorUseCase,
+  createInstructorUseCase,
+  deleteInstructorUseCase,
+  getAllInstructorsUseCase,
+} from "../di";
 
 export const createInstructorController = async (
   req: Request,
@@ -23,7 +28,7 @@ export const createInstructorController = async (
 
 
 export const getAllInstructorsController = async (
-  req: Request,
+  _req: Request,
   res: Response,
   next: NextFunction,
 ): Promise<void> => {
@@ -34,6 +39,46 @@ export const getAllInstructorsController = async (
       status: 200,
       message: "Instructors fetched successfully",
       data: instructors,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const deleteInstructorController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
+  try {
+    const id = String(req.params.id);
+    await deleteInstructorUseCase.execute(id);
+
+    res.status(200).json({
+      success: true,
+      message: "Instructor deleted successfully",
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const blockInstructorController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
+  try {
+    const id = String(req.params.id);
+    const instructor = await blockInstructorUseCase.execute(id);
+
+    res.status(200).json({
+      success: true,
+      message:
+        instructor.status === "Inactive"
+          ? "Instructor blocked successfully"
+          : "Instructor unblocked successfully",
+      data: instructor,
     });
   } catch (err) {
     next(err);

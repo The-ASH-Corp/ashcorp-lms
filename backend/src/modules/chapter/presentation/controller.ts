@@ -1,5 +1,9 @@
 import { NextFunction, Request, Response } from "express";
-import { getChaptersByCourseIdUseCase, createChapterUseCase } from "../di";
+import {
+  getChaptersByCourseIdUseCase,
+  createChapterUseCase,
+  deleteChapterUseCase,
+} from "../di";
 
 export const getChapterByCourseController = async (
   req: Request,
@@ -7,13 +11,13 @@ export const getChapterByCourseController = async (
   next: NextFunction,
 ): Promise<void> => {
   try {
-    const {id}=req.params
-    const chapters=await getChaptersByCourseIdUseCase.execute(id as string)
+    const id = String(req.params.id);
+    const chapters = await getChaptersByCourseIdUseCase.execute(id);
 
     res.status(200).json({
-        status:200,
-        message:"Chapters fetched successfully",
-        data:chapters
+      status: 200,
+      message: "Chapters fetched successfully",
+      data: chapters,
     })
   } catch (error) {
     next(error);
@@ -36,3 +40,20 @@ export const createChapterController = async (
   }
 };
 
+export const deleteChapterController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
+  try {
+    const id = String(req.params.id);
+    await deleteChapterUseCase.execute(id);
+
+    res.status(200).json({
+      status: 200,
+      message: "Chapter deleted successfully",
+    });
+  } catch (error) {
+    next(error);
+  }
+};

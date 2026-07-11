@@ -7,6 +7,7 @@ export class User{
         public email:string,
         public password:string,
         public role:string,
+        public status:string = "Active",
         public _id?: mongoose.Types.ObjectId |string,
     ){}
 }

@@ -1,5 +1,9 @@
 import { NextFunction, Request, Response } from "express";
-import { createCategoryUseCase, getAllCategoriesUseCase } from "../di";
+import {
+  createCategoryUseCase,
+  deleteCategoryUseCase,
+  getAllCategoriesUseCase,
+} from "../di";
 import { CategoryRequestDTO } from "../application/dto/CategoryDTO";
 import { Category } from "../domain/entities/Category";
 import { AppError } from "../../../shared/error/AppError";
@@ -39,7 +43,7 @@ export const createCategoryController = async (
 };
 
 export const getAllCategoriesController = async (
-  req: Request,
+  _req: Request,
   res: Response,
   next: NextFunction,
 ): Promise<void> => {
@@ -48,6 +52,24 @@ export const getAllCategoriesController = async (
     res.status(200).json({
       success: true,
       data: categories,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const deleteCategoryController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
+  try {
+    const id = String(req.params.id);
+    await deleteCategoryUseCase.execute(id);
+
+    res.status(200).json({
+      success: true,
+      message: "Category deleted successfully",
     });
   } catch (error) {
     next(error);

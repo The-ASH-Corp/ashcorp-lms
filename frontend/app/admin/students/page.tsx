@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import Link from "next/link";
-import { Pencil, Plus, Trash2, Users } from "lucide-react";
+import { Ban, Plus, Trash2, Users } from "lucide-react";
 import { PropagateLoader } from "react-spinners";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -18,8 +18,12 @@ import { useAppDispatch } from "@/lib/redux/hooks";
 import { getAllStudents } from "@/lib/redux/features/student/studentSlice";
 import {
   type Student,
+  useBlockStudentMutation,
+  useDeleteStudentMutation,
   useGetAllStudentsQuery,
 } from "@/lib/redux/features/student/studentApi";
+import { toast } from "sonner";
+import { ConfirmActionDialog } from "@/components/shared/confirm-action-dialog";
 
 const statusStyles: Record<
   string,
@@ -53,11 +57,15 @@ const getInitials = (name: string) => {
 };
 
 const getStudentStatus = (student: Student) =>
-  student.role === "user" ? "Active" : student.role || "Unknown";
+  student.status || (student.role === "user" ? "Active" : "Unknown");
 
 export default function StudentsPage() {
   const dispatch = useAppDispatch();
   const { data: students, isLoading, isError } = useGetAllStudentsQuery();
+  const [deleteStudent, { isLoading: isDeletingStudent }] =
+    useDeleteStudentMutation();
+  const [blockStudent, { isLoading: isBlockingStudent }] =
+    useBlockStudentMutation();
   const studentList = students ?? [];
 
   useEffect(() => {
@@ -65,6 +73,28 @@ export default function StudentsPage() {
       dispatch(getAllStudents(students));
     }
   }, [students, dispatch]);
+
+  const handleDeleteStudent = async (id: string) => {
+    try {
+      await deleteStudent(id).unwrap();
+      toast.success("Student deleted successfully");
+    } catch (error: any) {
+      toast.error(error?.data?.message ?? "Failed to delete student");
+    }
+  };
+
+  const handleBlockStudent = async (id: string) => {
+    try {
+      const student = await blockStudent(id).unwrap();
+      toast.success(
+        student.status === "Inactive"
+          ? "Student blocked successfully"
+          : "Student unblocked successfully",
+      );
+    } catch (error: any) {
+      toast.error(error?.data?.message ?? "Failed to update student status");
+    }
+  };
 
   if (isLoading) {
     return (
@@ -197,18 +227,38 @@ export default function StudentsPage() {
                       <div className="flex items-center justify-center gap-2">
                         <button
                           type="button"
-                          className="flex h-8 w-8 items-center justify-center rounded-lg text-gray-400 transition-colors hover:bg-violet-50 hover:text-primary"
-                          title="Edit student"
+                          onClick={() => handleBlockStudent(student._id)}
+                          className={`flex h-8 w-8 items-center justify-center rounded-lg transition-colors ${
+                            student.status === "Inactive"
+                              ? "text-emerald-500 hover:bg-emerald-50 hover:text-emerald-600"
+                              : "text-amber-500 hover:bg-amber-50 hover:text-amber-600"
+                          }`}
+                          title={
+                            student.status === "Inactive"
+                              ? "Unblock student"
+                              : "Block student"
+                          }
                         >
-                          <Pencil className="h-4 w-4" />
+                          <Ban className="h-4 w-4" />
                         </button>
-                        <button
-                          type="button"
-                          className="flex h-8 w-8 items-center justify-center rounded-lg text-gray-400 transition-colors hover:bg-red-50 hover:text-red-600"
-                          title="Delete student"
+                        <ConfirmActionDialog
+                          title="Delete Student"
+                          description={`This will permanently delete ${student.name}.`}
+                          confirmLabel="Delete"
+                          loading={isDeletingStudent || isBlockingStudent}
+                          loadingLabel="Deleting..."
+                          onConfirm={() => handleDeleteStudent(student._id)}
+                          trigger={
+                            <button
+                              type="button"
+                              className="flex h-8 w-8 items-center justify-center rounded-lg text-red-400 transition-colors hover:bg-red-50 hover:text-red-600"
+                              title="Delete student"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </button>
+                          }
                         >
-                          <Trash2 className="h-4 w-4" />
-                        </button>
+                        </ConfirmActionDialog>
                       </div>
                     </TableCell>
                   </TableRow>
