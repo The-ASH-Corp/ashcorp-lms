@@ -19,7 +19,14 @@ export const chapterApi = api.injectEndpoints({
       ,
       providesTags:["Chapter"]
     }),
+    createChapter: builder.mutation<Chapter, Partial<any>>({
+      query: (body) => ({
+        url: "/chapters/create-chapter",
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["Chapter"],
+    }),
   }),
 });
-
-export const { useGetChaptersByCourseIdQuery } = chapterApi;
+export const { useGetChaptersByCourseIdQuery, useCreateChapterMutation } = chapterApi;

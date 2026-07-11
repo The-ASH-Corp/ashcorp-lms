@@ -1,8 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { ChevronDown, Plus, Info, Video, Network } from "lucide-react";
+import { ChevronDown, Plus } from "lucide-react";
 import { useGetAllCourseQuery } from "@/lib/redux/features/course/courseApi";
+import { useCreateChapterMutation } from "@/lib/redux/features/chapter/chapterApi";
+import { toast } from "sonner";
 
 interface ContentItem {
   id: number;
@@ -16,9 +18,7 @@ interface ContentItem {
 }
 
 export default function CreateChapter() {
-  const [courseTitle, setCourseTitle] = useState(
-    "Advance Adobe Illustrator Mastery Course",
-  );
+  const [selectedCourseId, setSelectedCourseId] = useState<string>("");
   const [chapterTitle, setChapterTitle] = useState("");
   const [serial, setSerial] = useState(1);
   const [contentItems, setContentItems] = useState<ContentItem[]>([
@@ -39,14 +39,14 @@ export default function CreateChapter() {
       id: contentItems.length + 1,
       title: "",
       sequence: contentItems.length + 1,
-      fileType: "VideoAsset",
+      fileType: "Upload Files",
       fileName: null,
       isFree: false,
     };
     setContentItems([...contentItems, newItem]);
   };
 
-  const updateContentItem = (id: number, field: string, value: any) => {
+  const updateContentItem = (id: number, field: string, value: string | number | boolean | null) => {
     setContentItems(
       contentItems.map((item) =>
         item.id === id ? { ...item, [field]: value } : item,
@@ -54,7 +54,52 @@ export default function CreateChapter() {
     );
   };
 
-  const { data: courses, isLoading, isError } = useGetAllCourseQuery();
+  const { data: courses } = useGetAllCourseQuery();
+  const [createChapter] = useCreateChapterMutation();
+
+  const handleSaveChapter = async () => {
+    // client-side validation
+    if (!selectedCourseId) return toast.error("Please select a course");
+    if (!chapterTitle.trim()) return toast.error("Please enter chapter title");
+
+    if (!Array.isArray(contentItems) || contentItems.length === 0)
+      return toast.error("Add at least one content item");
+
+    for (const [idx, c] of contentItems.entries()) {
+      if (!c.title || !c.title.trim())
+        return toast.error(`Content #${idx + 1}: title is required`);
+      if (!c.sequence || Number.isNaN(Number(c.sequence)))
+        return toast.error(`Content #${idx + 1}: sequence is invalid`);
+      if (c.fileType === "Upload Files") {
+        if (!c.fileName) return toast.error(`Content #${idx + 1}: choose a file`);
+      } else {
+        if (!c.fileUrl || !c.fileUrl.trim()) return toast.error(`Content #${idx + 1}: provide a cloud link`);
+      }
+    }
+
+    const payload = {
+      courseId: selectedCourseId,
+      title: chapterTitle,
+      description: "",
+      videoUrl: "",
+      serialNumber: serial,
+      contents: contentItems.map((c) => ({
+        contentTitle: c.title,
+        sequance: Number(c.sequence),
+        contentUrl: c.fileType === "Upload Files" ? (c.fileName ?? "") : (c.fileUrl ?? ""),
+      })),
+    };
+
+    try {
+      await createChapter(payload).unwrap();
+      toast.success("Chapter created");
+    } catch (err) {
+      console.error(err);
+      const e = err as { data?: { message?: string }; error?: string } | undefined;
+      const msg = e?.data?.message || e?.error || "Create failed";
+      toast.error(msg);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-white rounded-xl">
@@ -69,12 +114,12 @@ export default function CreateChapter() {
             </label>
             <div className="relative">
               <select
-                value={courseTitle}
-                onChange={(e) => setCourseTitle(e.target.value)}
+                value={selectedCourseId}
+                onChange={(e) => setSelectedCourseId(e.target.value)}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg bg-white text-gray-900 focus:outline-none focus:border-violet-600 focus:ring-1 focus:ring-violet-600 appearance-none cursor-pointer"
               >
                 {courses?.map((course) => (
-                  <option key={course.id} value={course.title}>
+                  <option key={course.id} value={course.id}>
                     {course.title}
                   </option>
                 ))}
@@ -287,6 +332,12 @@ export default function CreateChapter() {
             >
               <Plus size={18} />
               Add New Content Item
+            </button>
+            <button
+              onClick={handleSaveChapter}
+              className="ml-4 inline-flex items-center gap-2 bg-violet-600 text-white px-4 py-2 rounded text-sm"
+            >
+              Save Chapter
             </button>
           </div>
         </div>

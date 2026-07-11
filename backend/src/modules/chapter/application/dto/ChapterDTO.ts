@@ -2,6 +2,7 @@ export interface Contents {
   contentTitle: string;
   sequance: number;
   contentUrl: string;
+  duration?: number;
 }
 
 export interface ChapterRequestDTO {

@@ -14,20 +14,16 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { Button } from "@/components/ui/button";
 import { useAppDispatch } from "@/lib/redux/hooks";
 import { Logout } from "@/lib/redux/features/auth/authSlice";
 import { useLogoutMutation } from "@/lib/redux/features/auth/authApi";
 import {
   LayoutDashboard,
-  CreditCard,
   BookOpen,
   Image as ImageIcon,
   GraduationCap,
   Users,
-  Building2,
   Wallet,
-  FileBarChart,
   Settings,
   LogOut,
   ChevronDown,
@@ -41,28 +37,7 @@ const navItems = [
     url: "/admin",
     icon: LayoutDashboard,
   },
-  {
-    title: "Subscriptions",
-    url: "/admin",
-    icon: CreditCard,
-    children: [
-      {
-        title: "Plan Management",
-        url: "/admin/plans",
-        children: [
-          { title: "Plan List", url: "/admin/plans" },
-          {
-            title: "Create New Plan",
-            url: "/admin/plans/create",
-          },
-        ],
-      },
-      {
-        title: "Subscriber Management",
-        url: "/admin/subscribers",
-      },
-    ],
-  },
+  
   {
     title: "Course Management",
     url: "/admin",
@@ -73,11 +48,7 @@ const navItems = [
       { title: "Chapter", url: "/admin/chapter" },
     ],
   },
-  {
-    title: "Banners",
-    url: "/admin/banners",
-    icon: ImageIcon,
-  },
+ 
   {
     title: "Students",
     url: "/admin/students",
@@ -88,11 +59,7 @@ const navItems = [
     url: "/admin/instructors",
     icon: Users,
   },
-  {
-    title: "Companies",
-    url: "/admin/companies",
-    icon: Building2,
-  },
+ 
   {
     title: "Payments",
     url: "/admin/payments",

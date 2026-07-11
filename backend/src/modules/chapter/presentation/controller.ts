@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { getChaptersByCourseIdUseCase } from "../di";
+import { getChaptersByCourseIdUseCase, createChapterUseCase } from "../di";
 
 export const getChapterByCourseController = async (
   req: Request,
@@ -17,6 +17,22 @@ export const getChapterByCourseController = async (
     })
   } catch (error) {
     next(error);
+  }
+};
+
+export const createChapterController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
+  try {
+    const body = req.body;
+
+    const created = await createChapterUseCase.execute(body);
+
+    res.status(201).json({ status: 201, message: "Chapter created successfully", data: created });
+  } catch (error) {
+        next(error);
   }
 };
 

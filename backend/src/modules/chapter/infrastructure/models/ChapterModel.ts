@@ -11,16 +11,6 @@ const chapterSchema = new mongoose.Schema({
         required:true,
         trim:true,
     },
-    description:{
-        type:String,
-        required:true,
-        trim:true,
-    },
-    videoUrl:{
-        type:String,
-        required:true,
-        trim:true,
-    },
     serialNumber:{
         type:Number,
         required:true,
@@ -42,6 +32,10 @@ const chapterSchema = new mongoose.Schema({
                 contentUrl:{
                     type:String,
                     required:true,
+                    trim:true,
+                },
+                duration:{
+                    type:Number,
                     trim:true,
                 }
             }
