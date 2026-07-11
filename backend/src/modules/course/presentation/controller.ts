@@ -22,9 +22,6 @@ export const getAllCourseController = async (
     const courses = await courseFindAllUseCase.execute();
     const serializedCourses = await Promise.all(courses.map(serializeCourse));
 
-    console.log(serializedCourses[0].imageUrl);
-    console.log(serializedCourses);
-
     res.status(200).json({
       success: true,
       data: serializedCourses,
