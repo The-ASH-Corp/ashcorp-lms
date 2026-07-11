@@ -1,5 +1,6 @@
 'use client';
 
+import { useGetAllCategoriesQuery } from '@/lib/redux/features/category/categoryApi';
 import { useState } from 'react';
 
 const initialFilters = {
@@ -18,6 +19,10 @@ type FilterKey = keyof typeof initialFilters;
 
 export default function FilterSidebar() {
   const [filters, setFilters] = useState(initialFilters);
+
+  const { data: categories, isLoading, isError } = useGetAllCategoriesQuery();
+
+
 
   const handleFilterChange = (key: FilterKey) => {
     setFilters(prev => ({ ...prev, [key]: !prev[key] }));
@@ -39,19 +44,18 @@ export default function FilterSidebar() {
           Category
         </h3>
         <div className="space-y-2 lg:space-y-3">
-          {[
-            { key: 'flutter', label: 'Flutter Development' },
-            { key: 'marketing', label: 'Digital Marketing' },
-            { key: 'design', label: 'Graphic Design' }
-          ].map(item => (
-            <label key={item.key} className="flex items-center gap-3 cursor-pointer">
+          {categories?.map((item) => (
+            <label
+              key={item._id}
+              className="flex items-center gap-3 cursor-pointer"
+            >
               <input
                 type="checkbox"
-                checked={filters[item.key as keyof typeof filters]}
-                onChange={() => handleFilterChange(item.key as FilterKey)}
+                // checked={filters[item.key as keyof typeof filters]}
+                // onChange={() => handleFilterChange(item.key as FilterKey)}
                 className="w-4 h-4 rounded border-gray-300 text-primary focus:ring-primary cursor-pointer"
               />
-              <span className="text-gray-700 text-sm">{item.label}</span>
+              <span className="text-gray-700 text-sm">{item.categoryName}</span>
             </label>
           ))}
         </div>
@@ -64,11 +68,14 @@ export default function FilterSidebar() {
         </h3>
         <div className="space-y-2 lg:space-y-3">
           {[
-            { key: 'beginner', label: 'Beginner' },
-            { key: 'intermediate', label: 'Intermediate' },
-            { key: 'advanced', label: 'Advanced' }
-          ].map(item => (
-            <label key={item.key} className="flex items-center gap-3 cursor-pointer">
+            { key: "beginner", label: "Beginner" },
+            { key: "intermediate", label: "Intermediate" },
+            { key: "advanced", label: "Advanced" },
+          ].map((item) => (
+            <label
+              key={item.key}
+              className="flex items-center gap-3 cursor-pointer"
+            >
               <input
                 type="checkbox"
                 checked={filters[item.key as keyof typeof filters]}
@@ -88,16 +95,24 @@ export default function FilterSidebar() {
         </h3>
         <div className="space-y-2 lg:space-y-3">
           {[
-            { key: 'free', label: 'Free' },
-            { key: 'paid', label: 'Paid' }
-          ].map(item => (
-            <label key={item.key} className="flex items-center gap-3 cursor-pointer">
+            { key: "free", label: "Free" },
+            { key: "paid", label: "Paid" },
+          ].map((item) => (
+            <label
+              key={item.key}
+              className="flex items-center gap-3 cursor-pointer"
+            >
               <input
                 type="radio"
                 name="price"
                 checked={filters[item.key as keyof typeof filters]}
                 onChange={() => {
-                  setFilters(prev => ({ ...prev, free: false, paid: false, [item.key]: true }));
+                  setFilters((prev) => ({
+                    ...prev,
+                    free: false,
+                    paid: false,
+                    [item.key]: true,
+                  }));
                 }}
                 className="w-4 h-4 rounded-full border-gray-300 text-primary focus:ring-primary cursor-pointer"
               />
@@ -116,7 +131,7 @@ export default function FilterSidebar() {
           <input
             type="checkbox"
             checked={filters.rating}
-            onChange={() => handleFilterChange('rating')}
+            onChange={() => handleFilterChange("rating")}
             className="w-4 h-4 rounded border-gray-300 text-primary focus:ring-primary cursor-pointer"
           />
           <span className="text-gray-700 text-sm">★★★★★ 4+ Stars</span>
