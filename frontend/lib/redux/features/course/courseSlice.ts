@@ -1,23 +1,25 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 export interface Course {
-    id: string;
-    title: string;
-    description: string;
-    price: number;
-    instructor: string;
-    category: string;
-    imageUrl: string;
-    videoUrl: string;
-    chapters: string[];
-    isPublished: boolean;
-    status:string;
-    createdAt: string;
-    updatedAt: string;
+  id: string;
+  title: string;
+  description: string;
+  price: number;
+  offerPrice: number;
+  instructor: string;
+  category: string;
+  imageUrl: string;
+  videoUrl: string;
+  chapters: string[];
+  isPublished: boolean;
+  status: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 const initialState = {
-    course: [] as Course[],
+  course: [] as Course[],
+  singleCourse: {} as Course,
 };
 
 export const courseSlice = createSlice({

@@ -1,8 +1,6 @@
 import { NextFunction, Request, Response } from "express";
-import { courseFindAllUseCase, createCourseUseCase } from "../di";
-import {
-  CourseRequestDTO,
-} from "../application/dto/CourseDTO";
+import { courseFindAllUseCase, createCourseUseCase, getCourseByIdUseCase } from "../di";
+import { CourseRequestDTO } from "../application/dto/CourseDTO";
 import { AppError } from "../../../shared/error/AppError";
 import { getUploadPath } from "../../../shared/config/imageNameShortner";
 import { serializeCourse } from "../../../shared/config/serializeCourses";
@@ -39,7 +37,7 @@ export const createCourseController = async (
   try {
     const body = req.body as Record<string, unknown>;
     const files = (req as Request & { files?: UploadedFileMap }).files;
-    const thumbnailPath = `/uploads/images/${files?.thumbnail?.[0]?.path}`; ;
+    const thumbnailPath = `/uploads/images/${files?.thumbnail?.[0]?.path}`;
 
     const videoPath = files?.introVideo?.[0]?.path;
 
@@ -62,6 +60,31 @@ export const createCourseController = async (
     const serializedCourse = await serializeCourse(course);
 
     res.status(201).json({
+      success: true,
+      data: serializedCourse,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getCourseByIdController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const { id } = req.params;
+
+    const course = await getCourseByIdUseCase.execute(id);
+
+    if (!course) {
+      throw new AppError("Course not found", 404);
+    }
+
+    const serializedCourse = await serializeCourse(course);
+
+    res.status(200).json({
       success: true,
       data: serializedCourse,
     });
