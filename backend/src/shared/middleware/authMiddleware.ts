@@ -6,6 +6,7 @@ import mongoose from "mongoose";
 interface TokenPayload extends JwtPayload {
   userId?: string | mongoose.Types.ObjectId;
   id?: string | mongoose.Types.ObjectId;
+  role?: string;
 }
 
 export const authMiddleware = (
@@ -45,6 +46,7 @@ export const authMiddleware = (
     }
 
     req.userId = userId;
+    req.userRole = payload.role;
 
     return next();
   } catch {

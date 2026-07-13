@@ -16,4 +16,6 @@ router.post(
 router.get("/all-course", getAllCourseController);
 router.get("/:id", getCourseByIdController);
 
+router.delete("/delete-course/:id", deleteCourseController);
+
 export default router;

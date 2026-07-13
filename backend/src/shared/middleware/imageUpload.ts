@@ -1,28 +1,16 @@
 import { Request, RequestHandler } from "express";
-import multer from "multer";
+import multer, { FileFilterCallback } from "multer";
 import path from "path";
 import fs from "fs";
 import { AppError } from "../error/AppError";
-
-interface UploadedFile {
-  fieldname: string;
-  originalname: string;
-  encoding: string;
-  mimetype: string;
-  size: number;
-  destination: string;
-  filename: string;
-  path: string;
-  buffer?: Buffer;
-}
 
 const uploadDirectory = path.join(__dirname, "../../../uploads/images");
 fs.mkdirSync(uploadDirectory, { recursive: true });
 
 const imageFileFilter = (
   _req: Request,
-  file: UploadedFile,
-  cb: (error: Error | null, acceptFile: boolean) => void
+  file: Express.Multer.File,
+  cb: FileFilterCallback,
 ): void => {
   const allowedMimeTypes = ["image/jpeg", "image/png", "image/webp", "image/gif"];
 
@@ -36,14 +24,14 @@ const imageFileFilter = (
 const storage = multer.diskStorage({
   destination: (
     _req: Request,
-    _file: UploadedFile,
+    _file: Express.Multer.File,
     cb: (error: Error | null, destination: string) => void
   ): void => {
     cb(null, uploadDirectory);
   },
   filename: (
     _req: Request,
-    file: UploadedFile,
+    file: Express.Multer.File,
     cb: (error: Error | null, filename: string) => void
   ): void => {
     const extension = path.extname(file.originalname).toLowerCase();

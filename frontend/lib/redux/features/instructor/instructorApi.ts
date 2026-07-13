@@ -29,6 +29,23 @@ export const instructorApi = api.injectEndpoints({
             invalidatesTags: ["Instructor"],
         }),
 
+        deleteInstructor: builder.mutation<void, string>({
+            query: (id) => ({
+                url: `/instructor/delete-instructor/${id}`,
+                method: "DELETE",
+            }),
+            invalidatesTags: ["Instructor"],
+        }),
+
+        blockInstructor: builder.mutation<Instructor, string>({
+            query: (id) => ({
+                url: `/instructor/block-instructor/${id}`,
+                method: "PATCH",
+            }),
+            transformResponse: (response: any) => response.data as Instructor,
+            invalidatesTags: ["Instructor"],
+        }),
+
         getAllInstructors: builder.query<Instructor[], void>({
             query: () => "/instructor/get-all-instructors",
             transformResponse: (response: any) => response.data as Instructor[],
@@ -39,4 +56,9 @@ export const instructorApi = api.injectEndpoints({
     })
 })
 
-export const { useCreateInstructorMutation, useGetAllInstructorsQuery } = instructorApi;
+export const {
+  useCreateInstructorMutation,
+  useDeleteInstructorMutation,
+  useBlockInstructorMutation,
+  useGetAllInstructorsQuery,
+} = instructorApi;

@@ -1,4 +1,5 @@
 import { CreateCategoryUseCase } from "./application/usecase/CreateCategoryUseCase";
+import { DeleteCategoryUseCase } from "./application/usecase/DeleteCategoryUseCase";
 import { FindCategoryByNameUseCase } from "./application/usecase/FindCategoryByNameUseCase";
 import { MongoCategoryRepository } from "./infrastructure/repositories/MongoCategoryRepository";
 import { GetAllCategoriesUseCase } from "./application/usecase/GetAllCategoriesUseCase";
@@ -13,3 +14,6 @@ export const findCategoryByNameUseCase = new FindCategoryByNameUseCase(categoryR
 
 // find all categories UseCase
 export const getAllCategoriesUseCase = new GetAllCategoriesUseCase(categoryRepository);
+
+// delete category UseCase
+export const deleteCategoryUseCase = new DeleteCategoryUseCase(categoryRepository);

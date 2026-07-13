@@ -27,6 +27,18 @@ export const chapterApi = api.injectEndpoints({
       }),
       invalidatesTags: ["Chapter"],
     }),
+
+    deleteChapter: builder.mutation<void, string>({
+      query: (id) => ({
+        url: `/chapters/delete-chapter/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Chapter"],
+    }),
   }),
 });
-export const { useGetChaptersByCourseIdQuery, useCreateChapterMutation } = chapterApi;
+export const {
+  useGetChaptersByCourseIdQuery,
+  useCreateChapterMutation,
+  useDeleteChapterMutation,
+} = chapterApi;

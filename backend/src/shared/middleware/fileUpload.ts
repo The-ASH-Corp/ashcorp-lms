@@ -1,20 +1,8 @@
 import { Request, RequestHandler } from "express";
-import multer from "multer";
+import multer, { FileFilterCallback } from "multer";
 import path from "path";
 import fs from "fs";
 import { AppError } from "../error/AppError";
-
-interface UploadedFile {
-  fieldname: string;
-  originalname: string;
-  encoding: string;
-  mimetype: string;
-  size: number;
-  destination: string;
-  filename: string;
-  path: string;
-  buffer?: Buffer;
-}
 
 const uploadRoot = path.join(__dirname, "../../../uploads");
 const imageUploadDir = path.join(uploadRoot, "images");
@@ -26,7 +14,7 @@ fs.mkdirSync(videoUploadDir, { recursive: true });
 const storage = multer.diskStorage({
   destination: (
     _req: Request,
-    file: UploadedFile,
+    file: Express.Multer.File,
     cb: (error: Error | null, destination: string) => void,
   ): void => {
     if (file.fieldname === "introVideo") {
@@ -37,7 +25,7 @@ const storage = multer.diskStorage({
   },
   filename: (
     _req: Request,
-    file: UploadedFile,
+    file: Express.Multer.File,
     cb: (error: Error | null, filename: string) => void,
   ): void => {
     const extension = path.extname(file.originalname).toLowerCase();
@@ -48,8 +36,8 @@ const storage = multer.diskStorage({
 
 const fileFilter = (
   _req: Request,
-  file: UploadedFile,
-  cb: (error: Error | null, acceptFile: boolean) => void,
+  file: Express.Multer.File,
+  cb: FileFilterCallback,
 ): void => {
   const imageMimeTypes = [
     "image/jpeg",
@@ -87,11 +75,11 @@ const fileFilter = (
   if (file.fieldname == "introVideo") {
     console.log("File mimetype:", file.mimetype);
     if (!videoMimeTypes.includes(file.mimetype)) {
-      return cb(new AppError("Only video files are allowed for intro video", 400), false);
+      return cb(new AppError("Only video files are allowed for intro video", 400));
     }
   } else {
     if (!imageMimeTypes.includes(file.mimetype)) {
-      return cb(new AppError("Only image files are allowed", 400), false);
+      return cb(new AppError("Only image files are allowed", 400));
     }
   }
 

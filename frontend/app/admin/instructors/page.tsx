@@ -20,7 +20,7 @@ import {
   PaginationPrevious,
   PaginationEllipsis,
 } from "@/components/ui/pagination";
-import { Pencil, Plus, Search, Check, X, Trash } from "lucide-react";
+import { Ban, Plus, Search, Check, X, Trash } from "lucide-react";
 import {
   InputGroup,
   InputGroupAddon,
@@ -29,9 +29,15 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { PropagateLoader } from "react-spinners";
-import { useGetAllInstructorsQuery } from "@/lib/redux/features/instructor/instructorApi";
+import {
+  useBlockInstructorMutation,
+  useDeleteInstructorMutation,
+  useGetAllInstructorsQuery,
+} from "@/lib/redux/features/instructor/instructorApi";
 import { useAppDispatch } from "@/lib/redux/hooks";
 import { getAllInstructors } from "@/lib/redux/features/instructor/instructorSlice";
+import { toast } from "sonner";
+import { ConfirmActionDialog } from "@/components/shared/confirm-action-dialog";
 
 const statusStyles: Record<string, { dot: string; bg: string; text: string }> =
   {
@@ -54,12 +60,38 @@ export default function InstructorsPage() {
     
       const { data: instructors, isLoading, isError } = useGetAllInstructorsQuery();
       const dispatch = useAppDispatch();
+      const [deleteInstructor, { isLoading: isDeletingInstructor }] =
+        useDeleteInstructorMutation();
+      const [blockInstructor, { isLoading: isBlockingInstructor }] =
+        useBlockInstructorMutation();
 
       useEffect(() => {
         if (instructors) {
           dispatch(getAllInstructors(instructors));
         }
       }, [instructors, dispatch]);
+
+      const handleDeleteInstructor = async (id: string) => {
+        try {
+          await deleteInstructor(id).unwrap();
+          toast.success("Instructor deleted successfully");
+        } catch (error: any) {
+          toast.error(error?.data?.message ?? "Failed to delete instructor");
+        }
+      };
+
+      const handleBlockInstructor = async (id: string) => {
+        try {
+          const instructor = await blockInstructor(id).unwrap();
+          toast.success(
+            instructor.status === "Inactive"
+              ? "Instructor blocked successfully"
+              : "Instructor unblocked successfully",
+          );
+        } catch (error: any) {
+          toast.error(error?.data?.message ?? "Failed to update instructor status");
+        }
+      };
 
       const getInstructorImageUrl = (iconUrl: string) => {
         if (!iconUrl) return "";
@@ -125,7 +157,7 @@ export default function InstructorsPage() {
           <Table>
             <TableHeader>
               <TableRow className="bg-gray-50/80 hover:bg-gray-50/80 border-b border-gray-100 ">
-                <TableHead className="text-xs font-semibold uppercase tracking-wider text-gray-500 ml-10 text-center ">
+                <TableHead className="text-xs font-semibold uppercase tracking-wider text-gray-500 text-center ">
                   #
                 </TableHead>
                 <TableHead className="text-xs font-semibold uppercase tracking-wider text-gray-500 text-center">
@@ -204,7 +236,7 @@ export default function InstructorsPage() {
                         </div>
                     </TableCell>
                     {/* Featured */}
-                    <TableCell className="flex text-center justify-center">
+                    <TableCell className="text-center align-middle">
                       <div
                         className={
                           instructor.isFeatured
@@ -221,7 +253,7 @@ export default function InstructorsPage() {
                     </TableCell>
 
                     {/* Status */}
-                    <TableCell className="text-center ">
+                    <TableCell className="text-center align-middle">
                       <span
                         className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium justify-center ${style.bg} ${style.text}`}
                       >
@@ -233,22 +265,41 @@ export default function InstructorsPage() {
                     </TableCell>
 
                     {/* Actions */}
-                    <TableCell className="flex justify-center">
-                      <div className="flex items-center justify-end gap-1">
-                        <Button
-                          className="flex h-8 w-8 items-center justify-center rounded-lg text-gray-400 transition-colors hover:bg-violet-500/10 hover:text-primary"
-                          size="sm"
-                          variant="ghost"
+                    <TableCell className="text-center align-middle">
+                      <div className="flex items-center justify-center gap-1">
+                        <button
+                          type="button"
+                          onClick={() => handleBlockInstructor(instructor._id)}
+                          className={`flex h-8 w-8 items-center justify-center rounded-lg transition-colors ${
+                            instructor.status === "Inactive"
+                              ? "text-emerald-500 hover:bg-emerald-50 hover:text-emerald-600"
+                              : "text-amber-500 hover:bg-amber-50 hover:text-amber-600"
+                          }`}
+                          title={
+                            instructor.status === "Inactive"
+                              ? "Unblock instructor"
+                              : "Block instructor"
+                          }
                         >
-                          <Pencil className="h-4 w-4" />
-                        </Button>
-                        <Button
-                          className="flex h-8 w-8 items-center justify-center rounded-lg text-red-400 transition-colors hover:bg-red-50 hover:text-red-600"
-                          size="sm"
-                          variant="ghost"
-                        >
-                          <Trash className="h-4 w-4" />
-                        </Button>
+                          <Ban className="h-4 w-4" />
+                        </button>
+                        <ConfirmActionDialog
+                          title="Delete Instructor"
+                          description={`This will permanently delete ${instructor.name}.`}
+                          confirmLabel="Delete"
+                          loading={isDeletingInstructor || isBlockingInstructor}
+                          loadingLabel="Deleting..."
+                          onConfirm={() => handleDeleteInstructor(instructor._id)}
+                          trigger={
+                            <button
+                              type="button"
+                              className="flex h-8 w-8 items-center justify-center rounded-lg text-red-400 transition-colors hover:bg-red-50 hover:text-red-600"
+                              title="Delete instructor"
+                            >
+                              <Trash className="h-4 w-4" />
+                            </button>
+                          }
+                        />
                       </div>
                     </TableCell>
                   </TableRow>

@@ -1,6 +1,11 @@
 import { Router } from "express";
 import { imageUpload } from "../../../shared/middleware/imageUpload";
-import { createInstructorController, getAllInstructorsController } from "./controller";
+import {
+  blockInstructorController,
+  createInstructorController,
+  deleteInstructorController,
+  getAllInstructorsController,
+} from "./controller";
 
 
 
@@ -11,5 +16,9 @@ router.post('/create-instructor',imageUpload("profileImage"),createInstructorCon
 
 // get all instructors controller
 router.get('/get-all-instructors',getAllInstructorsController);
+
+router.delete('/delete-instructor/:id', deleteInstructorController);
+
+router.patch('/block-instructor/:id', blockInstructorController);
 
 export default router;

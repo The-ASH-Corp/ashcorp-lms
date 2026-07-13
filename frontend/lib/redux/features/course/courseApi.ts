@@ -33,6 +33,14 @@ export const courseApi = api.injectEndpoints({
       }),
       invalidatesTags: ["Course"],
     }),
+
+    deleteCourse: builder.mutation<void, string>({
+      query: (id) => ({
+        url: `/course/delete-course/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Course"],
+    }),
   }),
 });
 
