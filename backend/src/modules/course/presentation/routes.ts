@@ -1,9 +1,5 @@
 import { Router } from "express";
-import {
-  createCourseController,
-  deleteCourseController,
-  getAllCourseController,
-} from "./controller";
+import { createCourseController, getAllCourseController, getCourseByIdController } from "./controller";
 import { fileUpload } from "../../../shared/middleware/fileUpload";
 
 const router = Router();
@@ -18,6 +14,7 @@ router.post(
 );
 
 router.get("/all-course", getAllCourseController);
+router.get("/:id", getCourseByIdController);
 
 router.delete("/delete-course/:id", deleteCourseController);
 

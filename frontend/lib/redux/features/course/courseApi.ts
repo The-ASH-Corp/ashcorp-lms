@@ -5,6 +5,11 @@ interface CourseResponse {
   data: Course[];
 }
 
+interface singleCourseResponse {
+  data: Course;
+}
+
+
 export const courseApi = api.injectEndpoints({
   endpoints: (builder) => ({
     getAllCourse: builder.query<Course[], void>({
@@ -12,6 +17,13 @@ export const courseApi = api.injectEndpoints({
       transformResponse: (response: CourseResponse) => response.data,
       providesTags: ["Course"],
     }),
+
+    getCourse: builder.query<Course, string>({
+      query: (courseId) => `/course/${courseId}`,
+      transformResponse: (response: singleCourseResponse) => response.data,
+      providesTags: ["Course"],
+    }),
+
     createCourse: builder.mutation<void, FormData>({
       query: (course) => ({
         url: "/course/create",
@@ -32,8 +44,5 @@ export const courseApi = api.injectEndpoints({
   }),
 });
 
-export const {
-  useGetAllCourseQuery,
-  useCreateCourseMutation,
-  useDeleteCourseMutation,
-} = courseApi;
+export const { useGetAllCourseQuery, useCreateCourseMutation, useGetCourseQuery } =
+  courseApi;
