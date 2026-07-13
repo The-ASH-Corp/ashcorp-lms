@@ -136,10 +136,8 @@ export default function CouponPage() {
               <TableRow>
                 <TableHead className="pl-6 font-semibold text-gray-700 uppercase text-xs w-[120px]">Coupon ID</TableHead>
                 <TableHead className="font-semibold text-gray-700 uppercase text-xs">Code</TableHead>
-                <TableHead className="font-semibold text-gray-700 uppercase text-xs">Type</TableHead>
                 <TableHead className="font-semibold text-gray-700 uppercase text-xs">Discount</TableHead>
                 <TableHead className="font-semibold text-gray-700 uppercase text-xs">Validity Period</TableHead>
-                <TableHead className="font-semibold text-gray-700 uppercase text-xs">Usage</TableHead>
                 <TableHead className="font-semibold text-gray-700 uppercase text-xs">Status</TableHead>
                 <TableHead className="font-semibold text-gray-700 uppercase text-xs text-right pr-6">Actions</TableHead>
               </TableRow>
@@ -161,22 +159,10 @@ export default function CouponPage() {
                     <TableRow key={coupon.id} className="border-b border-border hover:bg-gray-50 transition-colors">
                       <TableCell className="pl-6 text-sm font-medium text-gray-900">{shortId}</TableCell>
                       <TableCell className="text-sm font-medium text-gray-900 uppercase">{coupon.code}</TableCell>
-                      <TableCell className="text-sm text-gray-600">Fixed Amount</TableCell>
                       <TableCell className="text-sm font-medium text-violet-600">₹{coupon.discount}</TableCell>
                       <TableCell className="text-sm text-gray-600">
                         {new Date(coupon.applicableFrom).toLocaleDateString()} - {new Date(coupon.validUntil).toLocaleDateString()}
                       </TableCell>
-                      {/* <TableCell className="text-sm text-gray-600">
-                        <div className="flex items-center">
-                          <span className="mr-2">{coupon.timesUsed}/{coupon.usageLimit}</span>
-                          <div className="w-20 h-2 bg-gray-200 rounded-full overflow-hidden">
-                            <div
-                              className={`h-2 rounded-full ${statusText === "Active" ? "bg-primary" : "bg-gray-400"}`}
-                              style={{ width: `${Math.min((coupon.timesUsed / coupon.usageLimit) * 100, 100)}%` }}
-                            />
-                          </div>
-                        </div>
-                      </TableCell> */}
                       <TableCell>
                         <Badge
                           variant="outline"
