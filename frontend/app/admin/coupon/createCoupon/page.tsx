@@ -1,70 +1,97 @@
 "use client"
-import type { ComponentType, SVGProps } from "react";
+
+import type {
+  ChangeEventHandler,
+  ComponentType,
+  HTMLInputTypeAttribute,
+  ReactNode,
+  SVGProps,
+} from "react";
 import { useState } from "react";
 import Link from "next/link";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import {
-  BarChart2,
   CalendarDays,
   Hash,
-  Ticket,
-  TrendingUp,
+  RefreshCcw,
   Wallet,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
 
 function CouponField({
   icon: Icon,
   label,
   placeholder,
+  type = "text",
+  value,
+  onChange,
+  action,
+  min,
 }: {
   icon: ComponentType<SVGProps<SVGSVGElement>>;
   label: string;
   placeholder: string;
+  type?: HTMLInputTypeAttribute;
+  value?: string;
+  onChange?: ChangeEventHandler<HTMLInputElement>;
+  action?: ReactNode;
+  min?: string;
 }) {
   return (
     <div className="flex-1">
       <label className="mb-2 block text-sm font-medium text-foreground">
         {label}
       </label>
-      <div className="flex items-center gap-2 rounded-lg border border-border bg-input px-4 py-3 text-sm text-muted-foreground">
-        <span
-          className="inline-flex h-4 w-4 shrink-0 items-center justify-center"
-          aria-hidden="true"
-        >
-          <Icon className="h-4 w-4" />
-        </span>
-        <span>{placeholder}</span>
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-stretch">
+        <div className="relative min-w-0 flex-1">
+          <Icon
+            className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
+            aria-hidden="true"
+          />
+          <Input
+            type={type}
+            placeholder={placeholder}
+            value={value}
+            onChange={onChange}
+            min={min}
+            className="h-12 rounded-lg border-border bg-input pl-10 pr-4 text-sm text-foreground placeholder:text-muted-foreground"
+          />
+        </div>
+        {action}
       </div>
     </div>
   );
 }
 
-function StatCard({
-  icon: Icon,
-  title,
-  value,
-}: {
-  icon: ComponentType<SVGProps<SVGSVGElement>>;
-  title: string;
-  value: string;
-}) {
-  return (
-    <div className="flex items-center gap-4 rounded-xl border border-border bg-card p-6">
-      <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-secondary">
-        <span className="inline-flex h-[22px] w-[22px] items-center justify-center text-primary">
-          <Icon className="h-[22px] w-[22px]" />
-        </span>
-      </div>
-      <div>
-        <p className="mb-1 text-sm text-muted-foreground">{title}</p>
-        <p className="text-3xl font-bold text-foreground">{value}</p>
-      </div>
-    </div>
-  );
-}
 
 export default function CreateCouponPage() {
   const [isActive, setIsActive] = useState(true);
+  const [couponCode, setCouponCode] = useState("");
+  const [applicableFrom, setApplicableFrom] = useState("");
+  const [validUntil, setValidUntil] = useState("");
+
+  const generateCouponCode = () => {
+    const suffixLength = 6 + Math.floor(Math.random() * 3);
+    const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    const digits = "0123456789";
+    const alphanumeric = `${letters}${digits}`;
+
+    const chars = Array.from({ length: suffixLength }, (_, index) => {
+      if (index === 0) {
+        return digits[Math.floor(Math.random() * digits.length)];
+      }
+
+      return alphanumeric[Math.floor(Math.random() * alphanumeric.length)];
+    });
+
+    for (let i = chars.length - 1; i > 0; i -= 1) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [chars[i], chars[j]] = [chars[j], chars[i]];
+    }
+
+    const code = `ASH${chars.join("")}`;
+    setCouponCode(code);
+  };
 
   return (
     <div className="w-full bg-background p-4 text-foreground sm:p-6 lg:p-10">
@@ -85,11 +112,25 @@ export default function CreateCouponPage() {
               icon={Hash}
               label="Coupon Code"
               placeholder="Enter coupon code"
+              value={couponCode}
+              onChange={(event) => setCouponCode(event.target.value.toUpperCase())}
+              action={
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={generateCouponCode}
+                  className="h-12 w-full shrink-0 rounded-lg border-primary bg-background px-4 text-sm font-medium text-foreground hover:bg-secondary/50 sm:w-auto"
+                >
+                  <RefreshCcw className="mr-2 h-4 w-4" />
+                  Generate
+                </Button>
+              }
             />
             <CouponField
               icon={Wallet}
               label="Discount (In Amount)"
               placeholder="Enter discount amount"
+              type="text"
             />
           </div>
 
@@ -97,12 +138,25 @@ export default function CreateCouponPage() {
             <CouponField
               icon={CalendarDays}
               label="Applicable From"
-              placeholder="mm/dd/yyyy"
+              placeholder="Select date"
+              type="date"
+              value={applicableFrom}
+              onChange={(event) => {
+                const nextDate = event.target.value;
+                setApplicableFrom(nextDate);
+                if (validUntil && nextDate && validUntil < nextDate) {
+                  setValidUntil(nextDate);
+                }
+              }}
             />
             <CouponField
               icon={CalendarDays}
               label="Valid Until"
-              placeholder="mm/dd/yyyy"
+              placeholder="Select date"
+              type="date"
+              value={validUntil}
+              onChange={(event) => setValidUntil(event.target.value)}
+              min={applicableFrom || undefined}
             />
           </div>
 
@@ -125,7 +179,7 @@ export default function CreateCouponPage() {
             <span className="text-sm font-medium text-foreground">Is Active</span>
             {isActive && (
               <span className="rounded bg-primary/50 px-2 py-0.5 text-xs font-medium tracking-wide text-primary-foreground">
-                LIVE STATUS
+                LIVE
               </span>
             )}
           </div>
