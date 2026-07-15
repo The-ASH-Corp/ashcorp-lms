@@ -6,10 +6,13 @@ import {
   deleteInstructorController,
   getAllInstructorsController,
 } from "./controller";
+import { authMiddleware } from "../../../shared/middleware/authMiddleware";
 
 
 
 const router = Router();
+
+router.use(authMiddleware);
 
 // create instructor controller
 router.post('/create-instructor',imageUpload("profileImage"),createInstructorController);

@@ -44,5 +44,5 @@ export const courseApi = api.injectEndpoints({
   }),
 });
 
-export const { useGetAllCourseQuery, useCreateCourseMutation, useGetCourseQuery } =
+export const { useGetAllCourseQuery, useCreateCourseMutation, useGetCourseQuery, useDeleteCourseMutation } =
   courseApi;

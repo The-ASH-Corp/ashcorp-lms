@@ -4,8 +4,11 @@ import {
   deleteChapterController,
   getChapterByCourseController,
 } from "./controller";
+import { authMiddleware } from "../../../shared/middleware/authMiddleware";
 
 const router = Router();
+
+router.use(authMiddleware);
 
 router.post("/create-chapter",createChapterController)
 

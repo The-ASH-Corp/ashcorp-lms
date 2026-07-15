@@ -3,6 +3,10 @@ import { RegisterUsecase } from "../auth/application/usecase/RegisterUsecase";
 import { GetAllStudentsUseCase } from "./application/usecase/GetAllStudentsUseCase";
 import { DeleteStudentUseCase } from "./application/usecase/DeleteStudentUseCase";
 import { BlockStudentUseCase } from "./application/usecase/BlockStudentUseCase";
+import { AddToWishlistUseCase } from "./application/usecase/AddToWishlistUseCase";
+import { RemoveFromWishlistUseCase } from "./application/usecase/RemoveFromWishlistUseCase";
+import { GetWishlistUseCase } from "./application/usecase/GetWishlistUseCase";
+import { courseRepository } from "../course/di";
 
 export const studentUserRepository = new MongoUserRepository();
 
@@ -17,3 +21,12 @@ export const deleteStudentUseCase = new DeleteStudentUseCase(studentUserReposito
 
 // block student usecase
 export const blockStudentUseCase = new BlockStudentUseCase(studentUserRepository);
+
+// add to wishlist usecase
+export const addToWishlistUseCase = new AddToWishlistUseCase(studentUserRepository);
+
+// remove from wishlist usecase
+export const removeFromWishlistUseCase = new RemoveFromWishlistUseCase(studentUserRepository);
+
+// get wishlist usecase
+export const getWishlistUseCase = new GetWishlistUseCase(studentUserRepository,courseRepository);

@@ -11,6 +11,21 @@ export interface Student {
   updatedAt?: string;
 }
 
+export interface WishlistCourse {
+  _id?: string;
+  title: string;
+  description: string;
+  price: number;
+  offerPrice: number;
+  instructor: string;
+  category: string;
+  imageUrl: string;
+  videoUrl: string;
+  chapters?: string[];
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface CreateStudentDTO {
   name: string;
   email: string;
@@ -53,6 +68,30 @@ export const studentApi = api.injectEndpoints({
       transformResponse: (response: any) => response.data as Student[],
       providesTags: ["Student"],
     }),
+
+    getWishlist: builder.query<WishlistCourse[], void>({
+      query: () => "/student/get-wishlist",
+      transformResponse: (response: any) => response.data as WishlistCourse[],
+      providesTags: ["Student"],
+    }),
+
+    addToWishlist: builder.mutation<any, { courseId: string }>({
+      query: ({ courseId }) => ({
+        url: "/student/add-to-wishlist",
+        method: "POST",
+        body: { courseId },
+      }),
+      invalidatesTags: ["Student"],
+    }),
+
+    removeFromWishlist: builder.mutation<any, { courseId: string }>({
+      query: ({ courseId }) => ({
+        url: "/student/remove-from-wishlist",
+        method: "POST",
+        body: { courseId },
+      }),
+      invalidatesTags: ["Student"],
+    }),
   }),
 });
 
@@ -61,4 +100,7 @@ export const {
   useDeleteStudentMutation,
   useBlockStudentMutation,
   useGetAllStudentsQuery,
+  useGetWishlistQuery,
+  useAddToWishlistMutation,
+  useRemoveFromWishlistMutation,
 } = studentApi;

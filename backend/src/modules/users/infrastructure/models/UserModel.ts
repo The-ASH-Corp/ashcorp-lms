@@ -28,6 +28,10 @@ const userSchema = new mongoose.Schema({
     enum: ["Active", "Inactive"],
     default: "Active",
   },
+  wishlist: {
+    type: [String],
+    default: [],
+  },
 });
 
 export const UserModel = mongoose.model("User", userSchema);

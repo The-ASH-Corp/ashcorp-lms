@@ -21,7 +21,7 @@ import { useAppSelector, useAppDispatch } from "@/lib/redux/hooks"
 import { Logout } from "@/lib/redux/features/auth/authSlice"
 import { useLogoutMutation } from "@/lib/redux/features/auth/authApi"
 import Link from "next/link"
-import { LayoutDashboard, User, BookOpen, History, CreditCard, LogOut } from "lucide-react"
+import { LayoutDashboard, User, BookOpen, History, CreditCard, LogOut, Heart } from "lucide-react"
 
 const navItems = [
   {
@@ -38,6 +38,11 @@ const navItems = [
     title: "My Courses",
     url: "/my-courses",
     icon: <BookOpen />,
+  },
+  {
+    title:"Wishlist",
+    url:"/wishlist",
+    icon: <Heart />
   },
   {
     title: "Payment History",

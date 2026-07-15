@@ -4,8 +4,8 @@ import Link from "next/link";
 import type { Course } from "@/lib/redux/features/course/courseSlice";
 
 interface CourseCardProps {
-  course: Course & {
-    offerPrice?: string;
+  course: Omit<Course, "offerPrice"> & {
+    offerPrice?: string | number;
     rating?: number;
     reviews?: string;
     badge?: string;
@@ -14,7 +14,6 @@ interface CourseCardProps {
 }
 
 export default function CourseCard({ course }: CourseCardProps) {
-  console.log(course.imageUrl)
   const getCategoryImageUrl = (iconUrl: string | undefined) => {
     if (!iconUrl) return "";
 

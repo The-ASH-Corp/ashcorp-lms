@@ -1,22 +1,34 @@
 'use client';
 
-import { use, useState } from 'react';
+import { useState } from 'react';
 import { useParams, useRouter } from "next/navigation";
 import { Star, Users, BookOpen, Play, Headphones, Clock, Award, Zap, Heart, Share2, ArrowLeft } from 'lucide-react';
 import Navbar from '@/components/landing/Navbar';
 import Footer from '@/components/landing/Footer';
 import { useGetCourseQuery } from '@/lib/redux/features/course/courseApi';
+import { useAppSelector } from '@/lib/redux/hooks';
+import { useGetWishlistQuery, useAddToWishlistMutation, useRemoveFromWishlistMutation } from '@/lib/redux/features/student/studentApi';
+import { toast } from 'sonner';
+import { PropagateLoader } from 'react-spinners';
 
 export default function CourseDetail() {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState('about');
-  const [isWishlisted, setIsWishlisted] = useState(false);
 
   const params = useParams() as { id?: string };
-
   const courseId = params?.id;
 
-  const { data: course, isLoading, isError } = useGetCourseQuery(courseId ?? "",);
+  const user = useAppSelector((state) => state.auth.user);
+  const { data: wishlist } = useGetWishlistQuery(undefined, { skip: !user });
+  const [addToWishlist, { isLoading: isAdding }] = useAddToWishlistMutation();
+  const [removeFromWishlist, { isLoading: isRemoving }] = useRemoveFromWishlistMutation();
+
+  const { data: course, isLoading, isError } = useGetCourseQuery(courseId ?? "");
+
+  const isWishlisted =
+    wishlist?.some((wishlistedCourse) => String(wishlistedCourse._id) === String(courseId)) ??
+    false;
+  const isToggling = isAdding || isRemoving;
 
   const price = Number(course?.price ?? 0);
   const offerPrice = Number(course?.offerPrice ?? 0);
@@ -24,8 +36,43 @@ export default function CourseDetail() {
   const discountPercentage =
     price > 0 ? Math.round(((price - offerPrice) / price) * 100) : 0;
 
-  console.log(course)
-  
+  const handleWishlistToggle = async () => {
+    if (!user) {
+      toast.error("Please login to manage your wishlist.");
+      router.push("/login");
+      return;
+    }
+
+    if (!courseId) return;
+
+    try {
+      if (isWishlisted) {
+        await removeFromWishlist({ courseId }).unwrap();
+        toast.success("Removed from wishlist!");
+      } else {
+        await addToWishlist({ courseId }).unwrap();
+        toast.success("Added to wishlist!");
+      }
+    } catch (err: any) {
+      toast.error(err?.data?.message || "Failed to update wishlist.");
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center min-h-[80vh]">
+        <PropagateLoader color="#7E23FE" loading={true} size={15} />
+      </div>
+    );
+  }
+
+  if(isError){
+    return (
+      <div className="flex justify-center items-center min-h-[80vh]">
+        <p className="text-red-500 text-lg">Failed to fetch course details</p>
+      </div>
+    )
+  }
 
   return (
     <div className="min-h-screen bg-white">
@@ -213,29 +260,6 @@ export default function CourseDetail() {
           {/* Right Sidebar */}
           <div className="lg:col-span-1">
             <div className="sticky top-4 space-y-6">
-              {/* Course Card */}
-              <div className="bg-linear-to-br from-gray-900 to-violet-900 rounded-xl overflow-hidden shadow-lg">
-                <div className="aspect-video bg-linear-to-br from-purple-600 to-pink-600 flex items-center justify-center relative overflow-hidden">
-                  <div className="absolute inset-0 opacity-20">
-                    <div className="absolute inset-0 bg-linear-to-r from-transparent to-white/20" />
-                  </div>
-                  <div className="relative z-10 text-center">
-                    <p className="text-white text-xs font-semibold mb-2">
-                      PREMIUM COURSE
-                    </p>
-                    <p className="text-white text-2xl sm:text-3xl font-bold">
-                      LEARN
-                    </p>
-                    <p className="text-white text-xl sm:text-2xl font-bold">
-                      ILLUSTRATOR
-                    </p>
-                  </div>
-                  <div className="absolute top-4 right-4 w-12 h-12 bg-primary rounded-lg flex items-center justify-center">
-                    <span className="text-white font-bold text-lg">Ai</span>
-                  </div>
-                </div>
-              </div>
-
               {/* Pricing */}
               <div className="bg-white border-2 border-gray-200 rounded-xl p-6 space-y-4">
                 <div>
@@ -261,14 +285,19 @@ export default function CourseDetail() {
 
                 {/* Wishlist */}
                 <button
-                  onClick={() => setIsWishlisted(!isWishlisted)}
-                  className="w-full border-2 border-gray-200 text-gray-700 hover:border-primary hover:text-primary font-semibold py-3 rounded-lg transition-colors flex items-center justify-center gap-2"
+                  onClick={handleWishlistToggle}
+                  disabled={isToggling}
+                  className={`w-full border-2 font-semibold py-3 rounded-lg transition-colors flex items-center justify-center gap-2 ${
+                    isWishlisted
+                      ? "border-red-200 text-red-600 bg-red-50 hover:bg-red-100 hover:border-red-300"
+                      : "border-gray-200 text-gray-700 hover:border-primary hover:text-primary hover:bg-violet-50"
+                  }`}
                 >
                   <Heart
                     size={18}
-                    className={isWishlisted ? "fill-current" : ""}
+                    className={isWishlisted ? "fill-red-500 text-red-500" : ""}
                   />
-                  Add to Wishlist
+                  {isWishlisted ? "Remove from Wishlist" : "Add to Wishlist"}
                 </button>
 
                 {/* What's Included */}
