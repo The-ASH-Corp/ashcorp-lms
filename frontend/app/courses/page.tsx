@@ -22,83 +22,13 @@ import {
 } from "@/components/ui/pagination";
 import { useGetAllCourseQuery } from "@/lib/redux/features/course/courseApi";
 
-const courses = [
-  {
-    id: 1,
-    title: "Mastering Flutter: From Basics to Advanced UI",
-    instructor: "Prof. Elena Vance",
-    price: 199.0,
-    image:
-      "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=500&h=400&fit=crop",
-    rating: 4,
-    reviews: "12k Reviews",
-    badge: "New",
-    badgeColor: "bg-primary",
-  },
-  {
-    id: 2,
-    title: "Advanced Performance Marketing & Growth",
-    instructor: "Marcus Sterling",
-    price: 149.0,
-    image:
-      "https://images.unsplash.com/photo-1552664730-d307ca884978?w=500&h=400&fit=crop",
-    rating: 5,
-    reviews: "850 Reviews",
-    badge: "Trending",
-    badgeColor: "bg-cyan-500",
-  },
-  {
-    id: 3,
-    title: "Minimalist Design Systems for Brands",
-    instructor: "Sarah Jenkins",
-    price: 299.0,
-    image:
-      "https://images.unsplash.com/photo-1561070791-2526d30994b5?w=500&h=400&fit=crop",
-    rating: 4.5,
-    reviews: "2.4k Reviews",
-  },
-  {
-    id: 4,
-    title: "UX Psychology & Interaction Design",
-    instructor: "David Kovar",
-    price: 0,
-    priceLabel: "Free",
-    image:
-      "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=500&h=400&fit=crop",
-    rating: 4,
-    reviews: "512 Reviews",
-  },
-  {
-    id: 5,
-    title: "Machine Learning for Creative Technologists",
-    instructor: "Dr. Julian Moore",
-    price: 449.0,
-    image:
-      "https://images.unsplash.com/photo-1552664730-d307ca884978?w=500&h=400&fit=crop",
-    rating: 5,
-    reviews: "3.1k Reviews",
-  },
-  {
-    id: 6,
-    title: "The Viral Framework: Social Strategy 2024",
-    instructor: "Sophia Ricci",
-    price: 89.0,
-    image:
-      "https://images.unsplash.com/photo-1561070791-2526d30994b5?w=500&h=400&fit=crop",
-    rating: 4.5,
-    reviews: "1.8k Reviews",
-    badge: "Popular",
-    badgeColor: "bg-primary",
-  },
-];
-
 export default function CoursesPage() {
   const [sortBy, setSortBy] = useState("Newest");
   const [currentPage, setCurrentPage] = useState(1);
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const {data: course,isLoading,isError} = useGetAllCourseQuery();
-  console.log(course);
+
   // if(isLoading){
   //   return <div>Loading...</div>
   // }
