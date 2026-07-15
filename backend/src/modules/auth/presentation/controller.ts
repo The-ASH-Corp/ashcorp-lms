@@ -75,12 +75,17 @@ export const getCurrentUserController = async (
       throw new AppError("User not found", 404);
     }
 
+    const purchasedCourses = "purchasedCourses" in currentUser ? currentUser.purchasedCourses || [] : [];
+    const certificates = "certificates" in currentUser ? currentUser.certificates || [] : [];
+
     res.status(200).json({
       id: currentUser._id?.toString(),
       name: currentUser.name,
       email: currentUser.email,
       phone: currentUser.phone,
       role: currentUser.role,
+      purchasedCourses,
+      certificates,
     });
   } catch (error: any) {
     next(error);

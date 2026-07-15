@@ -9,6 +9,8 @@ export class User{
         public role:string,
         public status:string = "Active",
         public wishlist:string[] = [],
+        public purchasedCourses:string[] = [],
+        public certificates:string[] = [],
         public _id?: mongoose.Types.ObjectId |string,
     ){}
 }
