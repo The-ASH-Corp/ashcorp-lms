@@ -8,6 +8,7 @@ export class User{
         public password:string,
         public role:string,
         public status:string = "Active",
+        public wishlist:string[] = [],
         public _id?: mongoose.Types.ObjectId |string,
     ){}
 }

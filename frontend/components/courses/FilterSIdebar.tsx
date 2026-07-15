@@ -62,7 +62,7 @@ export default function FilterSidebar() {
       </div>
 
       {/* Level Filter */}
-      <div className="mb-6 lg:mb-8 pb-6 lg:pb-8 border-b border-gray-200">
+      {/* <div className="mb-6 lg:mb-8 pb-6 lg:pb-8 border-b border-gray-200">
         <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wide mb-3 lg:mb-4">
           Level
         </h3>
@@ -86,7 +86,7 @@ export default function FilterSidebar() {
             </label>
           ))}
         </div>
-      </div>
+      </div> */}
 
       {/* Price Filter */}
       <div className="mb-6 lg:mb-8 pb-6 lg:pb-8 border-b border-gray-200">
