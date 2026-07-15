@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useParams, useRouter } from "next/navigation";
-import { Star, Users, BookOpen, Play, Headphones, Clock, Award, Zap, Heart, Share2, ArrowLeft } from 'lucide-react';
+import { Star, Users, BookOpen, Play, Headphones, Clock, Award, Zap, Heart, ArrowLeft } from 'lucide-react';
 import Navbar from '@/components/landing/Navbar';
 import Footer from '@/components/landing/Footer';
 import { useGetCourseQuery } from '@/lib/redux/features/course/courseApi';
@@ -10,6 +10,7 @@ import { useAppSelector } from '@/lib/redux/hooks';
 import { useGetWishlistQuery, useAddToWishlistMutation, useRemoveFromWishlistMutation } from '@/lib/redux/features/student/studentApi';
 import { toast } from 'sonner';
 import { PropagateLoader } from 'react-spinners';
+import { CourseShareDialog } from '@/components/shared/course-share-dialog';
 
 export default function CourseDetail() {
   const router = useRouter();
@@ -330,10 +331,10 @@ export default function CourseDetail() {
               </div>
 
               {/* Social Share */}
-              <button className="w-full border border-gray-300 text-gray-700 hover:border-primary hover:text-primary font-semibold py-3 rounded-lg transition-colors flex items-center justify-center gap-2">
-                <Share2 size={18} />
-                Share Course
-              </button>
+              <CourseShareDialog
+                courseId={courseId}
+                courseTitle={course?.title}
+              />
             </div>
           </div>
         </div>
