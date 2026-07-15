@@ -5,11 +5,9 @@ import {
   getAllCategoriesController,
 } from "./controller";
 import { imageUpload } from "../../../shared/middleware/imageUpload";
-import { authMiddleware } from "../../../shared/middleware/authMiddleware";
 
 const router = Router();
 
-router.use(authMiddleware);
 
 router.post("/create", imageUpload("icon"), createCategoryController);
 

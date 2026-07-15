@@ -84,12 +84,17 @@ export default function CourseCard({ course }: CourseCardProps) {
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mt-auto pt-3 sm:pt-4 border-t border-gray-100">
           <div>
             {course.offerPrice ? (
-              <span className="text-base sm:text-lg font-bold text-primary">
-                {course.offerPrice}
-              </span>
+              <div className="flex items-center gap-2">
+                <span className="text-base sm:text-lg font-bold text-primary">
+                  ₹{course.offerPrice}
+                </span>
+                <span className="text-sm sm:text-base line-through  text-gray-500">
+                  ₹{course.price?.toFixed(2)}
+                </span>
+              </div>
             ) : (
               <span className="text-base sm:text-lg font-bold text-primary">
-                ${course.price?.toFixed(2)}
+                ₹{course.price?.toFixed(2)}
               </span>
             )}
           </div>
