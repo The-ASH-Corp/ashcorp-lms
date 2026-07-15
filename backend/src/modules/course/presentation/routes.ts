@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createCourseController, getAllCourseController, getCourseByIdController } from "./controller";
+import { createCourseController, deleteCourseController, getAllCourseController, getCourseByIdController } from "./controller";
 import { fileUpload } from "../../../shared/middleware/fileUpload";
 
 const router = Router();

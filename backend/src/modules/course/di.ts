@@ -20,3 +20,6 @@ export const createCourseUseCase = new CreateCourseUseCase(
 
 // course find by id useCase
 export const getCourseByIdUseCase = new GetCourseByIdUseCase(courseRepository);
+
+// course delete usecase
+export const deleteCourseUseCase = new DeleteCourseUseCase(courseRepository);

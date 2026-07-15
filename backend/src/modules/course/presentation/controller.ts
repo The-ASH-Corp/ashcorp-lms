@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { courseFindAllUseCase, createCourseUseCase, getCourseByIdUseCase } from "../di";
+import { courseFindAllUseCase, createCourseUseCase, deleteCourseUseCase, getCourseByIdUseCase } from "../di";
 import { CourseRequestDTO } from "../application/dto/CourseDTO";
 import { AppError } from "../../../shared/error/AppError";
 import { getUploadPath } from "../../../shared/config/imageNameShortner";
@@ -87,6 +87,25 @@ export const getCourseByIdController = async (
     res.status(200).json({
       success: true,
       data: serializedCourse,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+
+export const deleteCourseController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
+  try {
+    const id = String(req.params.id);
+    await deleteCourseUseCase.execute(id);
+
+    res.status(200).json({
+      success: true,
+      message: "Course deleted successfully",
     });
   } catch (error) {
     next(error);
