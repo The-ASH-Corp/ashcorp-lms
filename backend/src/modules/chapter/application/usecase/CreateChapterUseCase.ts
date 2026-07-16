@@ -2,11 +2,19 @@ import { ChapterRequestDTO } from "../dto/ChapterDTO";
 import { Chapter } from "../../domain/entities/Chapter";
 import { ChapterRepository } from "../../domain/repositories/ChapterRepository";
 import { AppError } from "../../../../shared/error/AppError";
+import { CourseRepository } from "../../../course/domain/repositories/CourseRepository";
+import { uploadToS3 } from "../../../../shared/middleware/s3Uplosd";
 
 export class CreateChapterUseCase {
-  constructor(private readonly chapterRepository: ChapterRepository) {}
+  constructor(
+    private readonly chapterRepository: ChapterRepository,
+    private readonly courseRepository: CourseRepository,
+  ) {}
 
-  async execute(data: ChapterRequestDTO): Promise<Chapter> {
+  async execute(
+    data: ChapterRequestDTO & { contents?: any[] },
+    files: Express.Multer.File[] = [],
+  ): Promise<Chapter> {
 
     if (!data || typeof data !== "object") {
       throw new AppError("Invalid request body", 400);
@@ -30,7 +38,39 @@ export class CreateChapterUseCase {
       throw new AppError("contents must be a non-empty array", 400);
     }
 
-    for (const [i, c] of contents.entries()) {
+    const course = await this.courseRepository.getCourseById(courseId);
+
+    if (!course) {
+      throw new AppError("Course not found", 404);
+    }
+
+    let fileIndex = 0;
+    const resolvedContents = await Promise.all(
+      contents.map(async (content, index) => {
+        if (content.uploadType !== "file") {
+          return content;
+        }
+
+        const file = files[fileIndex];
+        fileIndex += 1;
+
+        if (!file) {
+          throw new AppError(
+            `File is required for contents[${index}].contentUrl`,
+            400,
+          );
+        }
+
+        const upload = await uploadToS3(file, [course.title, title]);
+
+        return {
+          ...content,
+          contentUrl: upload.url,
+        };
+      }),
+    );
+
+    for (const [i, c] of resolvedContents.entries()) {
       if (!c || typeof c.contentTitle !== "string" || !c.contentTitle.trim()) {
         throw new AppError(`contents[${i}].contentTitle is required`, 400);
       }
@@ -42,6 +82,9 @@ export class CreateChapterUseCase {
       }
     }
 
-    return await this.chapterRepository.createChapter(data);
+    return await this.chapterRepository.createChapter({
+      ...data,
+      contents: resolvedContents,
+    });
   }
 }

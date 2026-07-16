@@ -36,6 +36,14 @@ const courseSchema = new mongoose.Schema({
   chapters: {
      type: [String], 
     },
+  isPublished: {
+     type: Boolean,
+     default: false
+    },
+  status: {
+     type: String,
+     default: "Active"
+    },
   createdAt: { 
     type: Date, 
     default: Date.now 

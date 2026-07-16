@@ -1,11 +1,17 @@
 import { NextFunction, Request, Response } from "express";
-import { courseFindAllUseCase, createCourseUseCase, deleteCourseUseCase, getCourseByIdUseCase } from "../di";
+import {
+  courseFindAllUseCase,
+  createCourseUseCase,
+  deleteCourseUseCase,
+  getCourseByIdUseCase,
+  makeCourseFreeAndPublishedUseCase,
+} from "../di";
 import { CourseRequestDTO } from "../application/dto/CourseDTO";
 import { AppError } from "../../../shared/error/AppError";
-import { getUploadPath } from "../../../shared/config/imageNameShortner";
 import { serializeCourse } from "../../../shared/config/serializeCourses";
+import { uploadToS3 } from "../../../shared/middleware/s3Uplosd";
 
-type UploadedFile = { path: string };
+type UploadedFile = Express.Multer.File;
 type UploadedFileMap = {
   thumbnail?: UploadedFile[];
   introVideo?: UploadedFile[];
@@ -37,13 +43,17 @@ export const createCourseController = async (
   try {
     const body = req.body as Record<string, unknown>;
     const files = (req as Request & { files?: UploadedFileMap }).files;
-    const thumbnailPath = `/uploads/images/${files?.thumbnail?.[0]?.path}`;
+    const thumbnail = files?.thumbnail?.[0];
+    const introVideo = files?.introVideo?.[0];
 
-    const videoPath = files?.introVideo?.[0]?.path;
-
-    if (!thumbnailPath || !videoPath) {
+    if (!thumbnail || !introVideo) {
       throw new AppError("Thumbnail and intro video are required", 400);
     }
+
+    const [thumbnailUpload, introVideoUpload] = await Promise.all([
+      uploadToS3(thumbnail, [String(body.title ?? ""), "thumbnail"]),
+      uploadToS3(introVideo, [String(body.title ?? ""), "intro-video"]),
+    ]);
 
     const courseData: CourseRequestDTO = {
       title: String(body.title ?? ""),
@@ -52,8 +62,8 @@ export const createCourseController = async (
       offerPrice: Number(body.offerPrice ?? 0),
       instructor: String(body.instructor ?? ""),
       category: String(body.category ?? ""),
-      imageUrl: getUploadPath(thumbnailPath),
-      videoUrl: getUploadPath(videoPath),
+      imageUrl: thumbnailUpload.url,
+      videoUrl: introVideoUpload.url,
     };
 
     const course = await createCourseUseCase.execute(courseData);
@@ -72,9 +82,9 @@ export const getCourseByIdController = async (
   req: Request,
   res: Response,
   next: NextFunction,
-) => {
+): Promise<void> => {
   try {
-    const { id } = req.params;
+    const id = String(req.params.id);
 
     const course = await getCourseByIdUseCase.execute(id);
 
@@ -106,6 +116,26 @@ export const deleteCourseController = async (
     res.status(200).json({
       success: true,
       message: "Course deleted successfully",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const makeCourseFreeAndPublishedController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
+  try {
+    const id = String(req.params.id);
+    const course = await makeCourseFreeAndPublishedUseCase.execute(id);
+    const serializedCourse = await serializeCourse(course);
+
+    res.status(200).json({
+      success: true,
+      message: "Course changed to free and published successfully",
+      data: serializedCourse,
     });
   } catch (error) {
     next(error);

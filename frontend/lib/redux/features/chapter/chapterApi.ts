@@ -19,11 +19,12 @@ export const chapterApi = api.injectEndpoints({
       ,
       providesTags:["Chapter"]
     }),
-    createChapter: builder.mutation<Chapter, Partial<any>>({
+    createChapter: builder.mutation<Chapter, Partial<any> | FormData>({
       query: (body) => ({
         url: "/chapters/create-chapter",
         method: "POST",
         body,
+        formData: body instanceof FormData,
       }),
       invalidatesTags: ["Chapter"],
     }),

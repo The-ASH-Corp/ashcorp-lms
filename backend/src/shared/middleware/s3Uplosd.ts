@@ -13,15 +13,20 @@ export const s3 = new S3Client({
 
 export const uploadToS3 = async (
   file: Express.Multer.File,
-  folder: string,
+  folder: string | string[],
 ) => {
-  const extension = path.extname(file.originalname);
+  const extension = path.extname(file.originalname).toLowerCase();
+  const originalName = path.basename(file.originalname, extension);
+  const fileName = `${sanitizeS3PathSegment(originalName)}${extension}`;
+  const folderPath = Array.isArray(folder)
+    ? folder.map(sanitizeS3PathSegment).filter(Boolean).join("/")
+    : folder
+        .split("/")
+        .map(sanitizeS3PathSegment)
+        .filter(Boolean)
+        .join("/");
+  const key = `${folderPath}/${fileName}`;
 
-  const fileName = `${Date.now()}-${Math.random()
-    .toString(36)
-    .substring(2)}${extension}`;
-
-  const key = `${folder}/${fileName}`;
 
   await s3.send(
     new PutObjectCommand({
@@ -36,4 +41,12 @@ export const uploadToS3 = async (
     key,
     url: `https://${ENV.AWS_BUCKET_NAME}.s3.${ENV.AWS_REGION}.amazonaws.com/${key}`,
   };
+};
+
+export const sanitizeS3PathSegment = (value: string): string => {
+  return value
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9._-]+/g, "-")
+    .replace(/^-+|-+$/g, "");
 };

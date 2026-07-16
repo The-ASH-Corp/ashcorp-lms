@@ -30,6 +30,7 @@ import Link from "next/link";
 import {
   useDeleteCourseMutation,
   useGetAllCourseQuery,
+  useMakeCourseFreeAndPublishedMutation,
 } from "@/lib/redux/features/course/courseApi";
 import { PropagateLoader } from "react-spinners";
 import { toast } from "sonner";
@@ -56,6 +57,8 @@ export default function CoursesPage() {
   const { data: courses, isLoading, isError } = useGetAllCourseQuery();
   const [deleteCourse, { isLoading: isDeletingCourse }] =
     useDeleteCourseMutation();
+  const [makeCourseFreeAndPublished, { isLoading: isPublishingFreeCourse }] =
+    useMakeCourseFreeAndPublishedMutation();
 
   const handleDelete = async (id: string) => {
     try {
@@ -63,6 +66,15 @@ export default function CoursesPage() {
       toast.success("Course deleted successfully");
     } catch (error: any) {
       toast.error(error?.data?.message ?? "Failed to delete course");
+    }
+  };
+
+  const handleMakeFreeAndPublish = async (id: string) => {
+    try {
+      await makeCourseFreeAndPublished(id).unwrap();
+      toast.success("Course changed to free and published successfully");
+    } catch (error: any) {
+      toast.error(error?.data?.message ?? "Failed to update course");
     }
   };
 
@@ -171,9 +183,27 @@ export default function CoursesPage() {
 
                     <TableCell>
                       <div className="flex items-center gap-3 justify-center">
-                        <span className="text-sm font-semibold text-gray-900 w-10">
-                          {course.isPublished ? "Free" : "Paid"}
-                        </span>
+                        <ConfirmActionDialog
+                          title="Make Course Free"
+                          description={`This will change ${course.title} to a free published course.`}
+                          confirmLabel="Make Free"
+                          loading={isPublishingFreeCourse}
+                          loadingLabel="Updating..."
+                          onConfirm={() => handleMakeFreeAndPublish(course.id)}
+                          trigger={
+                            <button
+                              type="button"
+                              disabled={course.isPublished}
+                              className={`rounded-lg px-3 py-1 text-sm font-semibold transition-colors ${
+                                course.isPublished
+                                  ? "cursor-not-allowed bg-emerald-50 text-emerald-700"
+                                  : "bg-violet-50 text-primary hover:bg-violet-100"
+                              }`}
+                            >
+                              {course.isPublished ? "Free" : "Paid"}
+                            </button>
+                          }
+                        />
                       </div>
                     </TableCell>
 
