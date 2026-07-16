@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ChevronDown, Plus } from "lucide-react";
 import { useGetAllCourseQuery } from "@/lib/redux/features/course/courseApi";
 import { useCreateChapterMutation } from "@/lib/redux/features/chapter/chapterApi";
 import { toast } from "sonner";
+import { useParams } from "next/navigation";
 
 interface ContentItem {
   id: number;
@@ -19,6 +20,7 @@ interface ContentItem {
 }
 
 export default function CreateChapter() {
+  const params = useParams<{ id?: string }>();
   const [selectedCourseId, setSelectedCourseId] = useState<string>("");
   const [chapterTitle, setChapterTitle] = useState("");
   const [serial, setSerial] = useState(1);
@@ -64,6 +66,12 @@ export default function CreateChapter() {
   const { data: courses } = useGetAllCourseQuery();
   const [createChapter] = useCreateChapterMutation();
 
+  useEffect(() => {
+    if (params?.id) {
+      setSelectedCourseId(params.id);
+    }
+  }, [params?.id]);
+
   const handleSaveChapter = async () => {
     // client-side validation
     if (!selectedCourseId) return toast.error("Please select a course");
@@ -78,7 +86,7 @@ export default function CreateChapter() {
       if (!c.sequence || Number.isNaN(Number(c.sequence)))
         return toast.error(`Content #${idx + 1}: sequence is invalid`);
       if (c.fileType === "Upload Files") {
-        if (!c.fileName) return toast.error(`Content #${idx + 1}: choose a file`);
+        if (!c.file) return toast.error(`Content #${idx + 1}: choose a file`);
       } else {
         if (!c.fileUrl || !c.fileUrl.trim()) return toast.error(`Content #${idx + 1}: provide a cloud link`);
       }
@@ -289,6 +297,9 @@ export default function CreateChapter() {
                               if (f) {
                                 updateContentItem(item.id, "fileName", f.name);
                                 updateContentItem(item.id, "file", f);
+                              } else {
+                                updateContentItem(item.id, "fileName", null);
+                                updateContentItem(item.id, "file", null);
                               }
                             }}
                             className="hidden"
