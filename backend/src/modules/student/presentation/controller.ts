@@ -4,6 +4,7 @@ import {
   blockStudentUseCase,
   createStudentUseCase,
   deleteStudentUseCase,
+  enrollCourseUseCase,
   getAllStudentsUseCase,
   getWishlistUseCase,
   removeFromWishlistUseCase,
@@ -141,6 +142,26 @@ export const getWishlistController = async (
       success: true,
       message: "Wishlist fetched successfully",
       data: wishlist,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const enrollCourseController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
+  try {
+    const studentId = String(req.userId);
+    const { courseId } = req.body;
+    const student = await enrollCourseUseCase.execute(studentId, String(courseId));
+
+    res.status(200).json({
+      success: true,
+      message: "Course enrolled successfully",
+      data: student,
     });
   } catch (err) {
     next(err);

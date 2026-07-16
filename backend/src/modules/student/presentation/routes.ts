@@ -6,6 +6,7 @@ import {
   blockStudentController,
   createStudentController,
   deleteStudentController,
+  enrollCourseController,
   getAllStudentsController,
   getWishlistController,
   removeFromWishlistController,
@@ -36,5 +37,8 @@ router.post("/remove-from-wishlist", removeFromWishlistController);
 
 // get wishlist
 router.get("/get-wishlist", getWishlistController);
+
+// enroll course
+router.post("/enroll-course", enrollCourseController);
 
 export default router;

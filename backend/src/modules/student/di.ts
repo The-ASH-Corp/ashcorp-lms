@@ -6,6 +6,7 @@ import { BlockStudentUseCase } from "./application/usecase/BlockStudentUseCase";
 import { AddToWishlistUseCase } from "./application/usecase/AddToWishlistUseCase";
 import { RemoveFromWishlistUseCase } from "./application/usecase/RemoveFromWishlistUseCase";
 import { GetWishlistUseCase } from "./application/usecase/GetWishlistUseCase";
+import { EnrollCourseUseCase } from "./application/usecase/EnrollCourseUseCase";
 import { courseRepository } from "../course/di";
 
 export const studentUserRepository = new MongoUserRepository();
@@ -30,3 +31,9 @@ export const removeFromWishlistUseCase = new RemoveFromWishlistUseCase(studentUs
 
 // get wishlist usecase
 export const getWishlistUseCase = new GetWishlistUseCase(studentUserRepository,courseRepository);
+
+// enroll course usecase
+export const enrollCourseUseCase = new EnrollCourseUseCase(
+  studentUserRepository,
+  courseRepository,
+);
