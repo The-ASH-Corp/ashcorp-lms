@@ -80,6 +80,15 @@ export class CreateChapterUseCase {
       if (!c.contentUrl || typeof c.contentUrl !== "string") {
         throw new AppError(`contents[${i}].contentUrl is required`, 400);
       }
+      c.isFree = Boolean(c.isFree);
+      c.duration =
+        c.duration === undefined || c.duration === null || c.duration === ""
+          ? null
+          : Number(c.duration);
+
+      if (c.duration !== null && Number.isNaN(c.duration)) {
+        throw new AppError(`contents[${i}].duration must be a number`, 400);
+      }
     }
 
     return await this.chapterRepository.createChapter({

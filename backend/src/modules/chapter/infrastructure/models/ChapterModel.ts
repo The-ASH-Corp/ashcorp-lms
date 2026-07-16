@@ -34,6 +34,10 @@ const chapterSchema = new mongoose.Schema({
                     required:true,
                     trim:true,
                 },
+                isFree:{
+                    type:Boolean,
+                    default:false,
+                },
                 duration:{
                     type:Number,
                     trim:true,

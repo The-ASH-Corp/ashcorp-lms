@@ -3,9 +3,12 @@
 import { useEffect, useState } from "react";
 import { ChevronDown, Plus } from "lucide-react";
 import { useGetAllCourseQuery } from "@/lib/redux/features/course/courseApi";
-import { useCreateChapterMutation } from "@/lib/redux/features/chapter/chapterApi";
+import { useGetChaptersByCourseIdQuery } from "@/lib/redux/features/chapter/chapterApi";
 import { toast } from "sonner";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
+import { useAppSelector } from "@/lib/redux/hooks";
+
+const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || "";
 
 interface ContentItem {
   id: number;
@@ -21,9 +24,13 @@ interface ContentItem {
 
 export default function CreateChapter() {
   const params = useParams<{ id?: string }>();
+  const router = useRouter();
+  const token = useAppSelector((state) => state.auth.token);
   const [selectedCourseId, setSelectedCourseId] = useState<string>("");
   const [chapterTitle, setChapterTitle] = useState("");
   const [serial, setSerial] = useState(1);
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [contentItems, setContentItems] = useState<ContentItem[]>([
     {
       id: 1,
@@ -64,13 +71,26 @@ export default function CreateChapter() {
   };
 
   const { data: courses } = useGetAllCourseQuery();
-  const [createChapter] = useCreateChapterMutation();
+  const { data: chapters } = useGetChaptersByCourseIdQuery(selectedCourseId, {
+    skip: !selectedCourseId,
+  });
 
   useEffect(() => {
     if (params?.id) {
       setSelectedCourseId(params.id);
     }
   }, [params?.id]);
+
+  useEffect(() => {
+    if (!chapters?.length) {
+      setSerial(1);
+      return;
+    }
+
+    const nextSerial =
+      Math.max(...chapters.map((chapter) => Number(chapter.serialNumber) || 0)) + 1;
+    setSerial(nextSerial);
+  }, [chapters]);
 
   const handleSaveChapter = async () => {
     // client-side validation
@@ -98,6 +118,11 @@ export default function CreateChapter() {
       contentTitle: c.title,
       sequance: Number(c.sequence),
       contentUrl: c.fileType === "Upload Files" ? "" : (c.fileUrl ?? ""),
+      isFree: c.isFree,
+      duration:
+        c.duration === undefined || c.duration === null || c.duration === ""
+          ? null
+          : Number(c.duration),
       uploadType: c.fileType === "Upload Files" ? "file" : "link",
     }));
 
@@ -115,15 +140,51 @@ export default function CreateChapter() {
       }
     });
 
-    try {
-      await createChapter(formData).unwrap();
-      toast.success("Chapter created");
-    } catch (err) {
-      console.error(err);
-      const e = err as { data?: { message?: string }; error?: string } | undefined;
-      const msg = e?.data?.message || e?.error || "Create failed";
-      toast.error(msg);
+    const uploadUrl = apiBaseUrl
+      ? `${apiBaseUrl.replace(/\/+$/, "")}/chapters/create-chapter`
+      : "/api/chapters/create-chapter";
+
+    const xhr = new XMLHttpRequest();
+    xhr.open("POST", uploadUrl, true);
+    xhr.withCredentials = true;
+
+    if (token) {
+      xhr.setRequestHeader("authorization", `Bearer ${token}`);
     }
+
+    xhr.upload.onprogress = (event) => {
+      if (event.lengthComputable) {
+        setUploadProgress(Math.round((event.loaded / event.total) * 100));
+      }
+    };
+
+    xhr.onload = () => {
+      setIsSubmitting(false);
+      if (xhr.status >= 200 && xhr.status < 300) {
+        setUploadProgress(100);
+        toast.success("Chapter created");
+        router.back();
+        return;
+      }
+
+      let message = "Create failed";
+      try {
+        const response = JSON.parse(xhr.responseText);
+        message = response?.message || message;
+      } catch {
+        message = xhr.statusText || message;
+      }
+      toast.error(message);
+    };
+
+    xhr.onerror = () => {
+      setIsSubmitting(false);
+      toast.error("Upload failed. Please check your internet connection.");
+    };
+
+    setIsSubmitting(true);
+    setUploadProgress(0);
+    xhr.send(formData);
   };
 
   return (
@@ -312,9 +373,14 @@ export default function CreateChapter() {
                             {item.fileName ? "Change" : "Choose"}
                           </label>
                           {item.fileName && (
-                            <span className="text-sm text-gray-600 truncate max-w-xs">
-                              {item.fileName}
-                            </span>
+                            <div className="min-w-0">
+                              <p className="text-xs font-medium text-gray-500">
+                                Selected file
+                              </p>
+                              <p className="text-sm text-gray-700 truncate max-w-xs">
+                                {item.fileName}
+                              </p>
+                            </div>
                           )}
                         </div>
                       ) : (
@@ -365,11 +431,25 @@ export default function CreateChapter() {
             </button>
             <button
               onClick={handleSaveChapter}
-              className="ml-4 inline-flex items-center gap-2 bg-violet-600 text-white px-4 py-2 rounded text-sm"
+              disabled={isSubmitting}
+              className="ml-4 inline-flex items-center gap-2 bg-violet-600 text-white px-4 py-2 rounded text-sm disabled:cursor-not-allowed disabled:opacity-60"
             >
-              Save Chapter
+              {isSubmitting ? "Uploading..." : "Save Chapter"}
             </button>
           </div>
+          {isSubmitting && (
+            <div className="px-4 sm:px-6 pb-5 space-y-2">
+              <div className="h-2 rounded-full bg-violet-100 overflow-hidden">
+                <div
+                  className="h-full rounded-full bg-violet-600 transition-all"
+                  style={{ width: `${uploadProgress}%` }}
+                />
+              </div>
+              <p className="text-xs font-medium text-violet-700">
+                Upload progress: {uploadProgress}%
+              </p>
+            </div>
+          )}
         </div>
       </div>
     </div>

@@ -138,7 +138,7 @@ export default function ChaptersManagement() {
                 </th>
                 <th className="px-4 sm:px-6 py-4 text-left align-middle hidden md:table-cell">
                   <span className="text-xs font-semibold text-gray-600 uppercase tracking-wide">
-                    Sequence
+                    Serial
                   </span>
                 </th>
                 <th className="px-4 sm:px-6 py-4 text-left align-middle">
