@@ -37,7 +37,27 @@ export default function CourseDetail() {
   const discountPercentage =
     price > 0 ? Math.round(((price - offerPrice) / price) * 100) : 0;
 
+  const handleEnrollNow = async () => {
+    if (!user) {
+      toast.error("Please login to manage your wishlist.");
+      router.push("/login");
+      return;
+    }
+
+    const isPurchased = user.purchasedCourses?.some(
+      (id) => String(id) === String(courseId),
+    );
+
+    if (isPurchased) {
+      toast.success("You have already purchased this course.");
+      // router.push(`/courses/learn/${courseId}`); 
+      return;
+    }
+    console.log(user)
+  }  
+
   const handleWishlistToggle = async () => {
+    console.log(user)
     if (!user) {
       toast.error("Please login to manage your wishlist.");
       router.push("/login");
@@ -55,6 +75,7 @@ export default function CourseDetail() {
         toast.success("Added to wishlist!");
       }
     } catch (err: any) {
+      console.log()
       toast.error(err?.data?.message || "Failed to update wishlist.");
     }
   };
@@ -279,7 +300,7 @@ export default function CourseDetail() {
                 </div>
 
                 {/* Enroll Button */}
-                <button className="w-full bg-primary hover:bg-violet-700 text-white font-semibold py-3 rounded-lg transition-colors flex items-center justify-center gap-2">
+                <button onClick={handleEnrollNow}  className="w-full bg-primary hover:bg-violet-700 text-white font-semibold py-3 rounded-lg transition-colors flex items-center justify-center gap-2">
                   <Play size={18} />
                   Enroll Now
                 </button>
