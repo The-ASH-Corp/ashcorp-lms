@@ -5,6 +5,7 @@ import { MongoCourseRepository } from "./infrastructure/repositories/MongoCourse
 import { categoryRepository } from "../category/di";
 import { instructorRepository } from "../instructor/di";
 import { GetCourseByIdUseCase } from "./application/usecase/GetCourseByIdUseCase";
+import { MakeCourseFreeAndPublishedUseCase } from "./application/usecase/MakeCourseFreeAndPublishedUseCase";
 
 export const courseRepository = new MongoCourseRepository();
 
@@ -23,3 +24,7 @@ export const getCourseByIdUseCase = new GetCourseByIdUseCase(courseRepository);
 
 // course delete usecase
 export const deleteCourseUseCase = new DeleteCourseUseCase(courseRepository);
+
+// course make free and publish usecase
+export const makeCourseFreeAndPublishedUseCase =
+  new MakeCourseFreeAndPublishedUseCase(courseRepository);

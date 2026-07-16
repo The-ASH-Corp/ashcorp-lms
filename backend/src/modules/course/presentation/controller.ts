@@ -1,5 +1,11 @@
 import { NextFunction, Request, Response } from "express";
-import { courseFindAllUseCase, createCourseUseCase, deleteCourseUseCase, getCourseByIdUseCase } from "../di";
+import {
+  courseFindAllUseCase,
+  createCourseUseCase,
+  deleteCourseUseCase,
+  getCourseByIdUseCase,
+  makeCourseFreeAndPublishedUseCase,
+} from "../di";
 import { CourseRequestDTO } from "../application/dto/CourseDTO";
 import { AppError } from "../../../shared/error/AppError";
 import { getUploadPath } from "../../../shared/config/imageNameShortner";
@@ -72,9 +78,9 @@ export const getCourseByIdController = async (
   req: Request,
   res: Response,
   next: NextFunction,
-) => {
+): Promise<void> => {
   try {
-    const { id } = req.params;
+    const id = String(req.params.id);
 
     const course = await getCourseByIdUseCase.execute(id);
 
@@ -106,6 +112,26 @@ export const deleteCourseController = async (
     res.status(200).json({
       success: true,
       message: "Course deleted successfully",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const makeCourseFreeAndPublishedController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
+  try {
+    const id = String(req.params.id);
+    const course = await makeCourseFreeAndPublishedUseCase.execute(id);
+    const serializedCourse = await serializeCourse(course);
+
+    res.status(200).json({
+      success: true,
+      message: "Course changed to free and published successfully",
+      data: serializedCourse,
     });
   } catch (error) {
     next(error);

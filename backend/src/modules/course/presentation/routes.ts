@@ -1,5 +1,11 @@
 import { Router } from "express";
-import { createCourseController, deleteCourseController, getAllCourseController, getCourseByIdController } from "./controller";
+import {
+  createCourseController,
+  deleteCourseController,
+  getAllCourseController,
+  getCourseByIdController,
+  makeCourseFreeAndPublishedController,
+} from "./controller";
 import { fileUpload } from "../../../shared/middleware/fileUpload";
 
 const router = Router();
@@ -15,6 +21,8 @@ router.post(
 
 router.get("/all-course", getAllCourseController);
 router.get("/:id", getCourseByIdController);
+
+router.patch("/make-free-publish/:id", makeCourseFreeAndPublishedController);
 
 router.delete("/delete-course/:id", deleteCourseController);
 

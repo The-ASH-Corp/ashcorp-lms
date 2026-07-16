@@ -24,6 +24,21 @@ export class MongoCourseRepository implements CourseRepository {
     return course as Course;
   }
 
+  async makeCourseFreeAndPublished(id: string): Promise<Course> {
+    const course = await CourseModel.findByIdAndUpdate(
+      id,
+      {
+        price: 0,
+        offerPrice: 0,
+        isPublished: true,
+        updatedAt: new Date(),
+      },
+      { new: true },
+    );
+
+    return course as Course;
+  }
+
   async deleteCourse(id: string): Promise<void> {
     await CourseModel.findByIdAndDelete(id);
   }
