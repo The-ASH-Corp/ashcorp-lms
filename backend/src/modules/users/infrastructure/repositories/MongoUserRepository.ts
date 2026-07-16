@@ -45,4 +45,13 @@ export class MongoUserRepository implements UserRepository {
     const users = await UserModel.find();
     return users;
   }
+
+  async hasPurchasedCourse(courseId: string): Promise<boolean> {
+    const studentCount = await UserModel.countDocuments({
+      role: "user",
+      purchasedCourses: courseId,
+    });
+
+    return studentCount > 0;
+  }
 }

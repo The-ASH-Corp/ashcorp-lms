@@ -1,6 +1,7 @@
 import { Category, CategoryResponseDTO } from "../../domain/entities/Category";
 import { CategoryRepository } from "../../domain/repositories/CategoryRepository";
 import { CategoryModel } from "../models/CategoryModel";
+import { CourseModel } from "../../../course/infrastructure/models/CourseModel";
 
 export class MongoCategoryRepository implements CategoryRepository {
 
@@ -18,6 +19,11 @@ export class MongoCategoryRepository implements CategoryRepository {
     async findById(id: string): Promise<Category | null> {
         const category = await CategoryModel.findById(id);
         return category;
+    }
+
+    async hasCourses(id: string): Promise<boolean> {
+        const courseCount = await CourseModel.countDocuments({ category: id });
+        return courseCount > 0;
     }
 
     async deleteCategory(id: string): Promise<void> {
