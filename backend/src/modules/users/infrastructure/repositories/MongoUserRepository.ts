@@ -54,4 +54,11 @@ export class MongoUserRepository implements UserRepository {
 
     return studentCount > 0;
   }
+
+  async removeCourseFromWishlists(courseId: string): Promise<void> {
+    await UserModel.updateMany(
+      { wishlist: courseId },
+      { $pull: { wishlist: courseId } },
+    );
+  }
 }

@@ -4,6 +4,7 @@ interface Chapter {
   _id: string;
   title: string;
   courseId: string;
+  serialNumber: number;
   description: string;
   videoUrl: string;
   createdAt: string;
