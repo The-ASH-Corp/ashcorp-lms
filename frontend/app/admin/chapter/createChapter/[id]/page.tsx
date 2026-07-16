@@ -12,6 +12,7 @@ interface ContentItem {
   sequence: number;
   fileType: string;
   fileName: string | null;
+  file: File | null;
   isFree: boolean;
   fileUrl?: string | null;
   duration?: string | number | null;
@@ -28,6 +29,7 @@ export default function CreateChapter() {
       sequence: 1,
       fileType: "Upload Files",
       fileName: null,
+      file: null,
       isFree: false,
       fileUrl: null,
       duration: null,
@@ -41,12 +43,17 @@ export default function CreateChapter() {
       sequence: contentItems.length + 1,
       fileType: "Upload Files",
       fileName: null,
+      file: null,
       isFree: false,
     };
     setContentItems([...contentItems, newItem]);
   };
 
-  const updateContentItem = (id: number, field: string, value: string | number | boolean | null) => {
+  const updateContentItem = (
+    id: number,
+    field: string,
+    value: string | number | boolean | File | null,
+  ) => {
     setContentItems(
       contentItems.map((item) =>
         item.id === id ? { ...item, [field]: value } : item,
@@ -77,21 +84,31 @@ export default function CreateChapter() {
       }
     }
 
-    const payload = {
-      courseId: selectedCourseId,
-      title: chapterTitle,
-      description: "",
-      videoUrl: "",
-      serialNumber: serial,
-      contents: contentItems.map((c) => ({
-        contentTitle: c.title,
-        sequance: Number(c.sequence),
-        contentUrl: c.fileType === "Upload Files" ? (c.fileName ?? "") : (c.fileUrl ?? ""),
-      })),
-    };
+    const selectedCourse = courses?.find((course) => course.id === selectedCourseId);
+    const formData = new FormData();
+    const contents = contentItems.map((c) => ({
+      contentTitle: c.title,
+      sequance: Number(c.sequence),
+      contentUrl: c.fileType === "Upload Files" ? "" : (c.fileUrl ?? ""),
+      uploadType: c.fileType === "Upload Files" ? "file" : "link",
+    }));
+
+    formData.append("courseId", selectedCourseId);
+    formData.append("courseTitle", selectedCourse?.title ?? "");
+    formData.append("title", chapterTitle);
+    formData.append("description", "");
+    formData.append("videoUrl", "");
+    formData.append("serialNumber", String(serial));
+    formData.append("contents", JSON.stringify(contents));
+
+    contentItems.forEach((item) => {
+      if (item.fileType === "Upload Files" && item.file) {
+        formData.append("files", item.file);
+      }
+    });
 
     try {
-      await createChapter(payload).unwrap();
+      await createChapter(formData).unwrap();
       toast.success("Chapter created");
     } catch (err) {
       console.error(err);
@@ -269,8 +286,10 @@ export default function CreateChapter() {
                             accept="video/*,audio/*,image/*,application/pdf"
                             onChange={(e) => {
                               const f = e.target.files?.[0];
-                              if (f)
+                              if (f) {
                                 updateContentItem(item.id, "fileName", f.name);
+                                updateContentItem(item.id, "file", f);
+                              }
                             }}
                             className="hidden"
                           />

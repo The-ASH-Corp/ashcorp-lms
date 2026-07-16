@@ -1,38 +1,6 @@
 import { Request, RequestHandler } from "express";
 import multer, { FileFilterCallback } from "multer";
-import path from "path";
-import fs from "fs";
 import { AppError } from "../error/AppError";
-
-const uploadRoot = path.join(__dirname, "../../../uploads");
-const imageUploadDir = path.join(uploadRoot, "images");
-const videoUploadDir = path.join(uploadRoot, "videos");
-
-fs.mkdirSync(imageUploadDir, { recursive: true });
-fs.mkdirSync(videoUploadDir, { recursive: true });
-
-const storage = multer.diskStorage({
-  destination: (
-    _req: Request,
-    file: Express.Multer.File,
-    cb: (error: Error | null, destination: string) => void,
-  ): void => {
-    if (file.fieldname === "introVideo") {
-      cb(null, videoUploadDir);
-    } else {
-      cb(null, imageUploadDir);
-    }
-  },
-  filename: (
-    _req: Request,
-    file: Express.Multer.File,
-    cb: (error: Error | null, filename: string) => void,
-  ): void => {
-    const extension = path.extname(file.originalname).toLowerCase();
-    const safeName = `${Date.now()}-${Math.round(Math.random() * 1e9)}${extension}`;
-    cb(null, safeName);
-  },
-});
 
 const fileFilter = (
   _req: Request,
@@ -44,6 +12,15 @@ const fileFilter = (
     "image/png",
     "image/webp",
     "image/gif",
+  ];
+  const documentMimeTypes = ["application/pdf"];
+  const audioMimeTypes = [
+    "audio/mpeg",
+    "audio/mp4",
+    "audio/wav",
+    "audio/webm",
+    "audio/ogg",
+    "audio/aac",
   ];
   const videoMimeTypes = [
     "video/mp4",
@@ -72,10 +49,20 @@ const fileFilter = (
     "video/x-ms-asf",
   ];
 
-  if (file.fieldname == "introVideo") {
-    console.log("File mimetype:", file.mimetype);
+  if (file.fieldname === "introVideo") {
     if (!videoMimeTypes.includes(file.mimetype)) {
       return cb(new AppError("Only video files are allowed for intro video", 400));
+    }
+  } else if (file.fieldname === "files") {
+    const allowedAssetMimeTypes = [
+      ...imageMimeTypes,
+      ...videoMimeTypes,
+      ...audioMimeTypes,
+      ...documentMimeTypes,
+    ];
+
+    if (!allowedAssetMimeTypes.includes(file.mimetype)) {
+      return cb(new AppError("Only image, video, audio, or PDF files are allowed", 400));
     }
   } else {
     if (!imageMimeTypes.includes(file.mimetype)) {
@@ -87,7 +74,7 @@ const fileFilter = (
 };
 
 const upload = multer({
-  storage,
+  storage: multer.memoryStorage(),
   limits: {
     fileSize: 2048 * 1024 * 1024,
   },

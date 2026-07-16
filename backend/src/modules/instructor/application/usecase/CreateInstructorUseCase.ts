@@ -2,7 +2,6 @@ import { InstructorRepository } from "../../domain/repositories/InstructorReposi
 import { Instructor } from "../../domain/entities/Instructor";
 import { InstructorRequestDTO } from "../dto/InstructorDTO";
 import { AppError } from "../../../../shared/error/AppError";
-import { getUploadPath } from "../../../../shared/config/imageNameShortner";
 import bcrypt from "bcrypt";
 
 export class CreateInstructorUseCase {
@@ -47,7 +46,7 @@ export class CreateInstructorUseCase {
       hashed,
       body.isFeatured,
       body.verifyByDefault,
-      getUploadPath(image),
+      image,
     );
 
     return this.instructorRepository.createInstructor(instructor);

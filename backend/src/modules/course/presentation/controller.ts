@@ -8,10 +8,10 @@ import {
 } from "../di";
 import { CourseRequestDTO } from "../application/dto/CourseDTO";
 import { AppError } from "../../../shared/error/AppError";
-import { getUploadPath } from "../../../shared/config/imageNameShortner";
 import { serializeCourse } from "../../../shared/config/serializeCourses";
+import { uploadToS3 } from "../../../shared/middleware/s3Uplosd";
 
-type UploadedFile = { path: string };
+type UploadedFile = Express.Multer.File;
 type UploadedFileMap = {
   thumbnail?: UploadedFile[];
   introVideo?: UploadedFile[];
@@ -43,13 +43,17 @@ export const createCourseController = async (
   try {
     const body = req.body as Record<string, unknown>;
     const files = (req as Request & { files?: UploadedFileMap }).files;
-    const thumbnailPath = `/uploads/images/${files?.thumbnail?.[0]?.path}`;
+    const thumbnail = files?.thumbnail?.[0];
+    const introVideo = files?.introVideo?.[0];
 
-    const videoPath = files?.introVideo?.[0]?.path;
-
-    if (!thumbnailPath || !videoPath) {
+    if (!thumbnail || !introVideo) {
       throw new AppError("Thumbnail and intro video are required", 400);
     }
+
+    const [thumbnailUpload, introVideoUpload] = await Promise.all([
+      uploadToS3(thumbnail, [String(body.title ?? ""), "thumbnail"]),
+      uploadToS3(introVideo, [String(body.title ?? ""), "intro-video"]),
+    ]);
 
     const courseData: CourseRequestDTO = {
       title: String(body.title ?? ""),
@@ -58,8 +62,8 @@ export const createCourseController = async (
       offerPrice: Number(body.offerPrice ?? 0),
       instructor: String(body.instructor ?? ""),
       category: String(body.category ?? ""),
-      imageUrl: getUploadPath(thumbnailPath),
-      videoUrl: getUploadPath(videoPath),
+      imageUrl: thumbnailUpload.url,
+      videoUrl: introVideoUpload.url,
     };
 
     const course = await createCourseUseCase.execute(courseData);
