@@ -32,6 +32,14 @@ const userSchema = new mongoose.Schema({
     type: [String],
     default: [],
   },
+  purchasedCourses: {
+    type: [String],
+    default: [],
+  },
+  certificates: {
+    type: [String],
+    default: [],
+  },
 });
 
 export const UserModel = mongoose.model("User", userSchema);
