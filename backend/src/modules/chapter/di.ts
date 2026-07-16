@@ -2,10 +2,11 @@ import { GetChaptersByCourseIdUseCase } from "./application/usecase/GetChaptersB
 import { MongoChapterRepository } from "./infrastructure/repositories/MongoChapterRepository";
 import { CreateChapterUseCase } from "./application/usecase/CreateChapterUseCase";
 import { DeleteChapterUseCase } from "./application/usecase/DeleteChapterUseCase";
+import { courseRepository } from "../course/di";
 
 
 const chapterRepository = new MongoChapterRepository();
 
 export const getChaptersByCourseIdUseCase = new GetChaptersByCourseIdUseCase(chapterRepository)
-export const createChapterUseCase = new CreateChapterUseCase(chapterRepository)
+export const createChapterUseCase = new CreateChapterUseCase(chapterRepository, courseRepository)
 export const deleteChapterUseCase = new DeleteChapterUseCase(chapterRepository)

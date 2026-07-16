@@ -7,6 +7,7 @@ import {
 import { CategoryRequestDTO } from "../application/dto/CategoryDTO";
 import { Category } from "../domain/entities/Category";
 import { AppError } from "../../../shared/error/AppError";
+import { uploadToS3 } from "../../../shared/middleware/s3Uplosd";
 
 export const createCategoryController = async (
   req: Request,
@@ -20,7 +21,7 @@ export const createCategoryController = async (
       throw new AppError("Icon is required", 400);
     }
 
-    const iconUrl = `/uploads/images/${req.file.filename}`;
+    const { url: iconUrl } = await uploadToS3(req.file, "categories");
   
     const category = new Category(
       body.categoryName,

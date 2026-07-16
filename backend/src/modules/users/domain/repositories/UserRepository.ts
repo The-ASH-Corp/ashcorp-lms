@@ -15,4 +15,6 @@ export interface UserRepository{
 
     findAll():Promise<User[]>;
 
+    hasPurchasedCourse(courseId: string): Promise<boolean>;
+
 }

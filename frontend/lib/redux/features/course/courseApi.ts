@@ -41,8 +41,22 @@ export const courseApi = api.injectEndpoints({
       }),
       invalidatesTags: ["Course"],
     }),
+
+    makeCourseFreeAndPublished: builder.mutation<Course, string>({
+      query: (id) => ({
+        url: `/course/make-free-publish/${id}`,
+        method: "PATCH",
+      }),
+      transformResponse: (response: singleCourseResponse) => response.data,
+      invalidatesTags: ["Course"],
+    }),
   }),
 });
 
-export const { useGetAllCourseQuery, useCreateCourseMutation, useGetCourseQuery, useDeleteCourseMutation } =
-  courseApi;
+export const {
+  useGetAllCourseQuery,
+  useCreateCourseMutation,
+  useGetCourseQuery,
+  useDeleteCourseMutation,
+  useMakeCourseFreeAndPublishedMutation,
+} = courseApi;

@@ -11,6 +11,12 @@ export class DeleteCategoryUseCase {
       throw new AppError("Category not found", 404);
     }
 
+    const hasCourses = await this.categoryRepository.hasCourses(id);
+
+    if (hasCourses) {
+      throw new AppError("Cannot delete category because it has courses", 400);
+    }
+
     await this.categoryRepository.deleteCategory(id);
   }
 }

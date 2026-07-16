@@ -5,6 +5,10 @@ import {
   deleteChapterUseCase,
 } from "../di";
 
+type UploadedFileMap = {
+  files?: Express.Multer.File[];
+};
+
 export const getChapterByCourseController = async (
   req: Request,
   res: Response,
@@ -30,9 +34,16 @@ export const createChapterController = async (
   next: NextFunction,
 ): Promise<void> => {
   try {
-    const body = req.body;
+    const body = {
+      ...req.body,
+      contents:
+        typeof req.body.contents === "string"
+          ? JSON.parse(req.body.contents)
+          : req.body.contents,
+    };
+    const files = (req as Request & { files?: UploadedFileMap }).files?.files ?? [];
 
-    const created = await createChapterUseCase.execute(body);
+    const created = await createChapterUseCase.execute(body, files);
 
     res.status(201).json({ status: 201, message: "Chapter created successfully", data: created });
   } catch (error) {

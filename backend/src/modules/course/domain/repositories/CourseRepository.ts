@@ -9,5 +9,7 @@ export interface CourseRepository {
 
   updateCourse(id: string, data: any): Promise<Course>;
 
+  makeCourseFreeAndPublished(id: string): Promise<Course>;
+
   deleteCourse(id:string):Promise<void>;
 }

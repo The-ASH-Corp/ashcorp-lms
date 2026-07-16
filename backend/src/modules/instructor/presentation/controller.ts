@@ -5,6 +5,7 @@ import {
   deleteInstructorUseCase,
   getAllInstructorsUseCase,
 } from "../di";
+import { uploadToS3 } from "../../../shared/middleware/s3Uplosd";
 
 export const createInstructorController = async (
   req: Request,
@@ -12,7 +13,9 @@ export const createInstructorController = async (
   next: NextFunction,
 ): Promise<void> => {
   try {
-    const image = req.file?.path;
+    const image = req.file
+      ? (await uploadToS3(req.file, "instructors")).url
+      : undefined;
 
     const instructor = await createInstructorUseCase.execute(req.body,image);
 
