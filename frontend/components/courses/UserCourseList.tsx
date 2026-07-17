@@ -3,7 +3,7 @@ import Link from 'next/link';
 
 interface CourseCardProps {
   course: {
-    id: number;
+    id: string;
     title: string;
     instructor: string;
     category: string;
@@ -41,9 +41,12 @@ export default function UserCourseList({ course, viewType }: CourseCardProps) {
             </div>
             <span className="text-sm font-semibold text-gray-700">{course.progress}%</span>
           </div>
-          <button className="text-primary font-semibold text-sm hover:text-violet-700 flex items-center gap-2">
+          <Link
+            href={`/play?courseId=${course.id}`}
+            className="text-primary font-semibold text-sm hover:text-violet-700 flex items-center gap-2"
+          >
             Resume Lesson <ArrowRight size={16} />
-          </button>
+          </Link>
         </div>
         <div className="flex items-center justify-end gap-3 sm:flex-col">
           {course.hasCheckmark && (
@@ -113,9 +116,12 @@ export default function UserCourseList({ course, viewType }: CourseCardProps) {
         {/* Actions */}
         <div className="flex flex-col sm:flex-row gap-3">
           {course.status !== "completed" && (
-            <button className="flex-1 text-primary font-semibold text-sm hover:text-violet-700 flex items-center justify-center gap-2 py-2">
+            <Link
+              href={`/play?courseId=${course.id}`}
+              className="flex-1 text-primary font-semibold text-sm hover:text-violet-700 flex items-center justify-center gap-2 py-2"
+            >
               Resume Lesson <ArrowRight size={16} />
-            </button>
+            </Link>
           )}
 
           {course.status === "completed" && (

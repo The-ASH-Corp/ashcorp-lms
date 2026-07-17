@@ -6,12 +6,12 @@ export class MongoCourseRepository implements CourseRepository {
     
   async create(data: any): Promise<Course> {
     const course = await CourseModel.create(data);
-    return course;
+    return course as unknown as Course;
   }
 
   async getAllCourse(): Promise<Course[]> {
     const course = await CourseModel.find();
-    return course;
+    return course as unknown as Course[];
   }
 
   async getCourseById(id: string): Promise<Course> {
@@ -21,6 +21,15 @@ export class MongoCourseRepository implements CourseRepository {
 
   async updateCourse(id: string, data: any): Promise<Course> {
     const course = await CourseModel.findByIdAndUpdate(id, data, { new: true });
+    return course as Course;
+  }
+
+  async addEnrolledStudent(courseId: string, studentId: string): Promise<Course> {
+    const course = await CourseModel.findByIdAndUpdate(
+      courseId,
+      { $addToSet: { enrolledStudents: studentId } },
+      { new: true },
+    );
     return course as Course;
   }
 

@@ -37,6 +37,10 @@ const courseSchema = new mongoose.Schema(
     chapters: {
       type: [String],
     },
+    enrolledStudents: {
+      type: [String],
+      default: [],
+    },
     isPublished: {
       type: Boolean,
       default: false,

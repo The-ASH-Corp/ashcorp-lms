@@ -4,11 +4,13 @@ import { useState } from 'react';
 import { Grid3x3, List } from 'lucide-react';
 import UserCourseList from '@/components/courses/UserCourseList';
 import StatCard from '@/components/courses/StatCard';
+import { useGetMyCoursesQuery } from '@/lib/redux/features/student/studentApi';
+import { PropagateLoader } from 'react-spinners';
 
 type ViewType = 'grid' | 'list';
 
 type Course = {
-  id: number;
+  id: string;
   title: string;
   instructor: string;
   category: string;
@@ -18,42 +20,33 @@ type Course = {
   hasCheckmark: boolean;
 };
 
-const courses: Course[] = [
-  {
-    id: 1,
-    title: 'Mastering Flutter: From Basics to Advanced UI',
-    instructor: 'Prof. Julian Vole',
-    category: 'MOBILE DEV',
-    image: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=500&h=400&fit=crop',
-    progress: 65,
-    status: 'in-progress',
-    hasCheckmark: false
-  },
-  {
-    id: 2,
-    title: 'Architecting AI: Neural Networks in Production',
-    instructor: 'Dr. Sarah Chen',
-    category: 'DATA SCIENCE',
-    image: 'https://images.unsplash.com/photo-1552664730-d307ca884978?w=500&h=400&fit=crop',
-    progress: 28,
-    status: 'in-progress',
-    hasCheckmark: false
-  },
-  {
-    id: 3,
-    title: 'Product Strategy & The Modern Ecosystem',
-    instructor: 'Marcus Aurelius',
-    category: 'STRATEGY',
-    image: 'https://images.unsplash.com/photo-1561070791-2526d30994b5?w=500&h=400&fit=crop',
-    progress: 100,
-    status: 'completed',
-    hasCheckmark: true
-  }
-];
-
 export default function MyCourses() {
   const [viewType, setViewType] = useState<ViewType>('grid');
   const [activeTab, setActiveTab] = useState('all');
+  const { data: enrolledCourses = [], isLoading, isError } = useGetMyCoursesQuery();
+  const courses: Course[] = enrolledCourses.map((course) => {
+    const progress = Math.min(100, Math.max(0, Math.round(course.progress ?? 0)));
+
+    return {
+      id: course.id ?? course._id ?? "",
+      title: course.title,
+      instructor: course.instructor,
+      category: course.category,
+      image: course.imageUrl,
+      progress,
+      status: progress >= 100 ? "completed" : "in-progress",
+      hasCheckmark: progress >= 100,
+    };
+  });
+  const filteredCourses = courses.filter((course) => {
+    if (activeTab === "all") return true;
+    return course.status === activeTab;
+  });
+  const activeCourses = courses.filter((course) => course.status === "in-progress").length;
+  const completedCourses = courses.filter((course) => course.status === "completed").length;
+  const averageProgress = courses.length
+    ? Math.round(courses.reduce((total, course) => total + course.progress, 0) / courses.length)
+    : 0;
 
   return (
     <div className="min-h-screen bg-white">
@@ -63,22 +56,22 @@ export default function MyCourses() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-12">
           <StatCard
             label="ACTIVE COURSES"
-            number="03"
+            number={String(activeCourses).padStart(2, "0")}
             description="Enrolled"
-            detail="2 courses nearing deadline"
+            detail={`${courses.length} total enrolled courses`}
           />
           <StatCard
             label="COMPLETED"
-            number="12"
+            number={String(completedCourses).padStart(2, "0")}
             description="Total"
-            detail="4 certificates this month"
+            detail={`${averageProgress}% average video progress`}
           />
           <StatCard
-            label="LEARNING HOURS"
-            number="48"
-            unit="h"
-            description=""
-            detail="Top 5% of learners this week"
+            label="VIDEO PROGRESS"
+            number={String(averageProgress)}
+            unit="%"
+            description="Average"
+            detail="Based on watched video time"
           />
         </div>
 
@@ -143,8 +136,29 @@ export default function MyCourses() {
         </div>
 
         {/* Course Cards */}
+        {isLoading && (
+          <div className="flex min-h-64 items-center justify-center">
+            <PropagateLoader color="#7E23FE" loading={true} size={15} />
+          </div>
+        )}
+
+        {isError && (
+          <div className="rounded-lg border border-red-200 bg-red-50 p-6 text-center text-red-600">
+            Failed to load your enrolled courses.
+          </div>
+        )}
+
+        {!isLoading && !isError && filteredCourses.length === 0 && (
+          <div className="rounded-lg border border-gray-200 bg-gray-50 p-8 text-center">
+            <h3 className="text-lg font-semibold text-gray-900">No courses found</h3>
+            <p className="mt-2 text-sm text-gray-600">
+              Enrolled courses will appear here after you join a course.
+            </p>
+          </div>
+        )}
+
         <div className={`${viewType === 'grid' ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6' : 'space-y-4'} mb-16`}>
-          {courses.map(course => (
+          {filteredCourses.map(course => (
             <UserCourseList key={course.id} course={course} viewType={viewType} />
           ))}
         </div>
