@@ -33,6 +33,15 @@ export class MongoCourseRepository implements CourseRepository {
     return course as Course;
   }
 
+  async removeChapterFromCourse(courseId: string, chapterId: string): Promise<Course> {
+    const course = await CourseModel.findByIdAndUpdate(
+      courseId,
+      { $pull: { chapters: chapterId } },
+      { new: true },
+    );
+    return course as Course;
+  }
+
   async addEnrolledStudent(courseId: string, studentId: string): Promise<Course> {
     const course = await CourseModel.findByIdAndUpdate(
       courseId,
