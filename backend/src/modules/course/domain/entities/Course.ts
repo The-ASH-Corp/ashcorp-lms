@@ -14,5 +14,11 @@ export class Course {
     public chapters?: string[],
     public isPublished?: boolean,
     public status?: string,
+    public rating?:{
+        userId: string;
+        rating: number;
+        review: string;
+        createdAt: Date;
+      }[],
   ) {}
 }
