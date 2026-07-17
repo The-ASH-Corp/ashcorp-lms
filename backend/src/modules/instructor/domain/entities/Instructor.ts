@@ -10,5 +10,12 @@ export class Instructor{
         public verifyByDefault: boolean,
         public profileImage?: string,
         public status: string = "Active",
+        public rating?:{
+          userId: string;
+          rating: number;
+          review: string;
+          createdAt: Date;
+        }[],
+        
     ) {}
 }

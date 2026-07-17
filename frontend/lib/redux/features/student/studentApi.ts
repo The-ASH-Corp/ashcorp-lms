@@ -26,6 +26,13 @@ export interface WishlistCourse {
   updatedAt: string;
 }
 
+export interface EnrolledCourse extends WishlistCourse {
+  id: string;
+  progress: number;
+  isPublished: boolean;
+  status: string;
+}
+
 export interface CreateStudentDTO {
   name: string;
   email: string;
@@ -101,6 +108,30 @@ export const studentApi = api.injectEndpoints({
       }),
       invalidatesTags: ["Student", "User"],
     }),
+
+    getMyCourses: builder.query<EnrolledCourse[], void>({
+      query: () => "/student/my-courses",
+      transformResponse: (response: any) => response.data as EnrolledCourse[],
+      providesTags: ["Student"],
+    }),
+
+    updateCourseProgress: builder.mutation<any, { courseId: string; progress: number }>({
+      query: ({ courseId, progress }) => ({
+        url: "/student/course-progress",
+        method: "PATCH",
+        body: { courseId, progress },
+      }),
+      invalidatesTags: ["Student", "User"],
+    }),
+
+    updateProfile: builder.mutation<any, { name?: string; phone?: string }>({
+      query: (data) => ({
+        url: "/student/update-profile",
+        method: "PATCH",
+        body: data,
+      }),
+      invalidatesTags: ["Student", "User"],
+    }),
   }),
 });
 
@@ -113,4 +144,7 @@ export const {
   useAddToWishlistMutation,
   useRemoveFromWishlistMutation,
   useEnrollCourseMutation,
+  useGetMyCoursesQuery,
+  useUpdateCourseProgressMutation,
+  useUpdateProfileMutation,
 } = studentApi;

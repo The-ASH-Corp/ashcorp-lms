@@ -1,57 +1,73 @@
 import mongoose from "mongoose";
 
-const courseSchema = new mongoose.Schema({
-  title: { 
-    type: String, 
-    required: true 
-  },
-  description: {
-     type: String, 
-     required: true 
+const courseSchema = new mongoose.Schema(
+  {
+    title: {
+      type: String,
+      required: true,
     },
-  price: {
-     type: Number, 
-     required: true 
+    description: {
+      type: String,
+      required: true,
+    },
+    price: {
+      type: Number,
+      required: true,
     },
     offerPrice: {
-     type: Number, 
-     required: true 
+      type: Number,
+      required: true,
     },
-  instructor: {
-     type: String, 
-     required: true 
+    instructor: {
+      type: String,
+      required: true,
     },
-  category: {
-     type: String, 
-     required: true 
+    category: {
+      type: String,
+      required: true,
     },
-  imageUrl: {
-     type: String, 
-     required: true 
+    imageUrl: {
+      type: String,
+      required: true,
     },
-  videoUrl: {
-     type: String, 
-     required: true 
+    videoUrl: {
+      type: String,
+      required: true,
     },
-  chapters: {
-     type: [String], 
+    chapters: {
+      type: [String],
     },
-  isPublished: {
-     type: Boolean,
-     default: false
+    enrolledStudents: {
+      type: [String],
+      default: [],
     },
-  status: {
-     type: String,
-     default: "Active"
+    isPublished: {
+      type: Boolean,
+      default: false,
     },
-  createdAt: { 
-    type: Date, 
-    default: Date.now 
+    status: {
+      type: String,
+      default: "Active",
+    },
+    rating: [
+      {
+        userId: {
+          type: String,
+        },
+        rating: {
+          type: Number,
+        },
+        review: {
+          type: String,
+        },
+        createdAt: {
+          type: Date,
+          default: Date.now,
+        },
+      }
+    ],
   },
-  updatedAt: {
-     type: Date, 
-     default: Date.now 
-    },
-});
+  { timestamps: true },
+);
 
 export const CourseModel = mongoose.model("Course", courseSchema);

@@ -9,6 +9,8 @@ export interface CourseRepository {
 
   updateCourse(id: string, data: any): Promise<Course>;
 
+  addEnrolledStudent(courseId: string, studentId: string): Promise<Course>;
+
   makeCourseFreeAndPublished(id: string): Promise<Course>;
 
   deleteCourse(id:string):Promise<void>;

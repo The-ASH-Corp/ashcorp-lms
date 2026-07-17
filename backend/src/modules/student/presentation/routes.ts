@@ -8,8 +8,10 @@ import {
   deleteStudentController,
   enrollCourseController,
   getAllStudentsController,
+  getMyCoursesController,
   getWishlistController,
   removeFromWishlistController,
+  updateCourseProgressController,
 } from "./controller";
 import { authMiddleware } from "../../../shared/middleware/authMiddleware";
 
@@ -40,5 +42,11 @@ router.get("/get-wishlist", getWishlistController);
 
 // enroll course
 router.post("/enroll-course", enrollCourseController);
+
+// get enrolled courses
+router.get("/my-courses", getMyCoursesController);
+
+// update course progress
+router.patch("/course-progress", updateCourseProgressController);
 
 export default router;

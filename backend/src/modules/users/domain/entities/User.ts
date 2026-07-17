@@ -10,6 +10,7 @@ export class User{
         public status:string = "Active",
         public wishlist:string[] = [],
         public purchasedCourses:string[] = [],
+        public courseProgress: Record<string, number> | Map<string, number> = {},
         public certificates:string[] = [],
         public _id?: mongoose.Types.ObjectId |string,
     ){}

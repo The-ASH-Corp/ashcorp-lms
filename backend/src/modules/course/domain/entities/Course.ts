@@ -12,7 +12,14 @@ export class Course {
     public updatedAt: Date,
     public id?: string,
     public chapters?: string[],
+    public enrolledStudents?: string[],
     public isPublished?: boolean,
     public status?: string,
+    public rating?:{
+        userId: string;
+        rating: number;
+        review: string;
+        createdAt: Date;
+      }[],
   ) {}
 }

@@ -36,6 +36,11 @@ const userSchema = new mongoose.Schema({
     type: [String],
     default: [],
   },
+  courseProgress: {
+    type: Map,
+    of: Number,
+    default: {},
+  },
   certificates: {
     type: [String],
     default: [],
