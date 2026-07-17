@@ -7,6 +7,7 @@ export interface Course {
   price: number;
   offerPrice: number;
   instructor: string;
+  instructorTitle: string;
   category: string;
   imageUrl: string;
   videoUrl: string;

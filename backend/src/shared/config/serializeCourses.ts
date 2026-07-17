@@ -28,6 +28,7 @@ export const serializeCourse = async (course: any): Promise<CourseResponseDTO> =
     price: Number(rawCourse?.price ?? 0),
     offerPrice: Number(rawCourse?.offerPrice ?? 0),
     instructor: instructor?.name ?? instructorRef,
+    instructorTitle: instructor?.instructorTitle ?? "",
     category: category?.categoryName ?? categoryRef,
     imageUrl: String(rawCourse?.imageUrl ?? ""),
     videoUrl: String(rawCourse?.videoUrl ?? ""),

@@ -17,6 +17,7 @@ export interface CourseResponseDTO {
   price: number;
   offerPrice: number;
   instructor: string;
+  instructorTitle: string;
   category: string;
   imageUrl: string;
   videoUrl: string;

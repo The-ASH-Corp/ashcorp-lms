@@ -32,6 +32,8 @@ export default function CourseDetail() {
 
   const { data: course, isLoading, isError } = useGetCourseQuery(courseId ?? "");
 
+  console.log(course)
+
   const isWishlisted =
     wishlist?.some((wishlistedCourse) => String(wishlistedCourse._id) === String(courseId)) ??
     false;
@@ -159,7 +161,7 @@ export default function CourseDetail() {
                     {course?.instructor}
                   </p>
                   <p className="text-sm text-gray-600">
-                    Senior Graphic Designer
+                    {course?.instructorTitle}
                   </p>
                 </div>
               </div>
@@ -195,9 +197,9 @@ export default function CourseDetail() {
               <div className="space-y-8">
                 {/* Main Description */}
                 <div>
-                  <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">
+                  {/* <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">
                     {course?.title}
-                  </h2>
+                  </h2> */}
                   <div
                     className="prose max-w-none text-gray-700"
                     dangerouslySetInnerHTML={{
@@ -284,7 +286,7 @@ export default function CourseDetail() {
                     : activeTab === "trial"
                       ? "Free Trial"
                       : "Reviews"}{" "}
-                  content coming soon
+                  content coming soong
                 </p>
               </div>
             )}
@@ -317,7 +319,11 @@ export default function CourseDetail() {
                   className="w-full bg-primary hover:bg-violet-700 text-white font-semibold py-3 rounded-lg transition-colors flex items-center justify-center gap-2 disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   <Play size={18} />
-                  {isEnrolling ? "Enrolling..." : isPurchased ? "Play Course" : "Enroll Now"}
+                  {isEnrolling
+                    ? "Enrolling..."
+                    : isPurchased
+                      ? "Play Course"
+                      : "Enroll Now"}
                 </button>
 
                 {/* Wishlist */}
