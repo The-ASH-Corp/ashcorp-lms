@@ -12,6 +12,7 @@ import {
   updateCourseProgressUseCase,
 } from "../di";
 import { serializeCourse } from "../../../shared/config/serializeCourses";
+import { UserModel } from "../../users/infrastructure/models/UserModel";
 
 export const createStudentController = async (
   req: Request,
