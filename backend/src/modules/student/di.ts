@@ -7,6 +7,8 @@ import { AddToWishlistUseCase } from "./application/usecase/AddToWishlistUseCase
 import { RemoveFromWishlistUseCase } from "./application/usecase/RemoveFromWishlistUseCase";
 import { GetWishlistUseCase } from "./application/usecase/GetWishlistUseCase";
 import { EnrollCourseUseCase } from "./application/usecase/EnrollCourseUseCase";
+import { GetMyCoursesUseCase } from "./application/usecase/GetMyCoursesUseCase";
+import { UpdateCourseProgressUseCase } from "./application/usecase/UpdateCourseProgressUseCase";
 import { courseRepository } from "../course/di";
 
 export const studentUserRepository = new MongoUserRepository();
@@ -34,6 +36,18 @@ export const getWishlistUseCase = new GetWishlistUseCase(studentUserRepository,c
 
 // enroll course usecase
 export const enrollCourseUseCase = new EnrollCourseUseCase(
+  studentUserRepository,
+  courseRepository,
+);
+
+// get enrolled courses usecase
+export const getMyCoursesUseCase = new GetMyCoursesUseCase(
+  studentUserRepository,
+  courseRepository,
+);
+
+// update course progress usecase
+export const updateCourseProgressUseCase = new UpdateCourseProgressUseCase(
   studentUserRepository,
   courseRepository,
 );

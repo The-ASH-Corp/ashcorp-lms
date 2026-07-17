@@ -5,7 +5,7 @@ import { InstructorModel } from "../models/InstructorModel";
 
 export class MongoInstructorRepository implements InstructorRepository {
   async createInstructor(data: InstructorRequestDTO): Promise<Instructor> {
-    return await InstructorModel.create(data);
+    return (await InstructorModel.create(data)) as unknown as Instructor;
   }
 
   async findByEmail(email: string): Promise<Instructor | null> {
@@ -39,6 +39,6 @@ export class MongoInstructorRepository implements InstructorRepository {
       throw new Error("Instructor not found");
     }
 
-    return instructor;
+    return instructor as unknown as Instructor;
   }
 }

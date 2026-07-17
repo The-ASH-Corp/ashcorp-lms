@@ -6,9 +6,12 @@ import {
   deleteStudentUseCase,
   enrollCourseUseCase,
   getAllStudentsUseCase,
+  getMyCoursesUseCase,
   getWishlistUseCase,
   removeFromWishlistUseCase,
+  updateCourseProgressUseCase,
 } from "../di";
+import { serializeCourse } from "../../../shared/config/serializeCourses";
 
 export const createStudentController = async (
   req: Request,
@@ -161,6 +164,55 @@ export const enrollCourseController = async (
     res.status(200).json({
       success: true,
       message: "Course enrolled successfully",
+      data: student,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const getMyCoursesController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
+  try {
+    const studentId = String(req.userId);
+    const enrolledCourses = await getMyCoursesUseCase.execute(studentId);
+    const data = await Promise.all(
+      enrolledCourses.map(async (enrolledCourse) => ({
+        ...(await serializeCourse(enrolledCourse.course)),
+        progress: enrolledCourse.progress,
+      })),
+    );
+
+    res.status(200).json({
+      success: true,
+      message: "Enrolled courses fetched successfully",
+      data,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const updateCourseProgressController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
+  try {
+    const studentId = String(req.userId);
+    const { courseId, progress } = req.body;
+    const student = await updateCourseProgressUseCase.execute(
+      studentId,
+      String(courseId),
+      Number(progress),
+    );
+
+    res.status(200).json({
+      success: true,
+      message: "Course progress updated successfully",
       data: student,
     });
   } catch (err) {

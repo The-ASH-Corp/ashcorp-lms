@@ -24,15 +24,20 @@ export class EnrollCourseUseCase {
     }
 
     if (user.purchasedCourses.includes(courseId)) {
+      await this.courseRepository.addEnrolledStudent(courseId, studentId);
       return user;
     }
 
     const purchasedCourses = [...user.purchasedCourses, courseId];
     const wishlist = user.wishlist.filter((id) => id !== courseId);
 
-    return this.userRepository.update(studentId, {
+    const updatedUser = await this.userRepository.update(studentId, {
       purchasedCourses,
       wishlist,
     });
+
+    await this.courseRepository.addEnrolledStudent(courseId, studentId);
+
+    return updatedUser;
   }
 }

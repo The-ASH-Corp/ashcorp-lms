@@ -33,6 +33,9 @@ export const serializeCourse = async (course: any): Promise<CourseResponseDTO> =
     imageUrl: String(rawCourse?.imageUrl ?? ""),
     videoUrl: String(rawCourse?.videoUrl ?? ""),
     chapters: Array.isArray(rawCourse?.chapters) ? rawCourse.chapters : [],
+    enrolledStudents: Array.isArray(rawCourse?.enrolledStudents)
+      ? rawCourse.enrolledStudents.map((studentId: unknown) => String(studentId))
+      : [],
     isPublished: Boolean(rawCourse?.isPublished ?? false),
     status: String(rawCourse?.status ?? "Active"),
     createdAt: rawCourse?.createdAt

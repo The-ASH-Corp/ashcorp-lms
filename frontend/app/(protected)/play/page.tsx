@@ -1,7 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { Play, Share2, BookmarkPlus, CheckCircle2, Lock, Volume2, BookOpen } from 'lucide-react';
+import { useGetCourseQuery } from '@/lib/redux/features/course/courseApi';
+import { useUpdateCourseProgressMutation } from '@/lib/redux/features/student/studentApi';
 
 const lessons = [
   { id: '1.1', title: 'Course Welcome', duration: '04:20', completed: true },
@@ -15,7 +18,38 @@ const lessons = [
 
 export default function PlayPage() {
   const [currentTab, setCurrentTab] = useState('overview');
-  const [progress, setProgress] = useState(75);
+  const searchParams = useSearchParams();
+  const courseId = searchParams.get("courseId") ?? "";
+  const { data: course } = useGetCourseQuery(courseId, { skip: !courseId });
+  const [updateCourseProgress] = useUpdateCourseProgressMutation();
+  const [progress, setProgress] = useState(0);
+  const lastSyncedProgress = useRef(0);
+
+  const handleVideoProgress = async (event: React.SyntheticEvent<HTMLVideoElement>) => {
+    if (!courseId) return;
+
+    const video = event.currentTarget;
+    if (!Number.isFinite(video.duration) || video.duration <= 0) return;
+
+    const watchedProgress = Math.min(
+      100,
+      Math.max(0, Math.round((video.currentTime / video.duration) * 100)),
+    );
+
+    setProgress((currentProgress) => Math.max(currentProgress, watchedProgress));
+
+    if (
+      watchedProgress === 100 ||
+      watchedProgress - lastSyncedProgress.current >= 5
+    ) {
+      lastSyncedProgress.current = watchedProgress;
+      try {
+        await updateCourseProgress({ courseId, progress: watchedProgress }).unwrap();
+      } catch {
+        return;
+      }
+    }
+  };
 
   return (
     <div className="min-h-screen bg-white">
@@ -25,17 +59,24 @@ export default function PlayPage() {
           {/* Left Content - Video and Details */}
           <div className="lg:col-span-2">
             {/* Video Player */}
-            <div className="relative bg-linear-to-br from-violet-900 to-violet-950 rounded-xl overflow-hidden mb-6 aspect-video">
-              <div className="absolute inset-0 flex items-center justify-center">
-                <button className="w-16 h-16 bg-primary rounded-full flex items-center justify-center hover:bg-violet-700 transition-colors">
-                  <Play size={32} className="text-white fill-white ml-1" />
-                </button>
-              </div>
+            <div className="relative bg-gray-950 rounded-xl overflow-hidden mb-6 aspect-video">
+              {course?.videoUrl ? (
+                <video
+                  src={course.videoUrl}
+                  controls
+                  className="h-full w-full"
+                  onTimeUpdate={handleVideoProgress}
+                  onEnded={handleVideoProgress}
+                />
+              ) : (
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <button className="w-16 h-16 bg-primary rounded-full flex items-center justify-center hover:bg-violet-700 transition-colors">
+                    <Play size={32} className="text-white fill-white ml-1" />
+                  </button>
+                </div>
+              )}
               <div className="absolute bottom-0 left-0 right-0 h-1 bg-violet-200">
-                <div className="h-full bg-primary" style={{ width: '60%' }}></div>
-              </div>
-              <div className="absolute bottom-3 right-3 text-white text-xs font-medium bg-black/50 px-2 py-1 rounded">
-                22:45
+                <div className="h-full bg-primary" style={{ width: `${progress}%` }}></div>
               </div>
             </div>
 
@@ -59,15 +100,15 @@ export default function PlayPage() {
             {/* Lesson Title and Info */}
             <div className="mb-6">
               <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-3">
-                Module 4: Advanced Architecture Patterns
+                {course?.title ?? "Course Lesson"}
               </h1>
               <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-gray-600">
                 <div className="flex items-center gap-2">
                   <div className="w-8 h-8 bg-violet-200 rounded-full"></div>
-                  <span className="font-medium text-gray-900">Dr. Sarah Chen</span>
+                  <span className="font-medium text-gray-900">{course?.instructor ?? "Instructor"}</span>
                 </div>
                 <span className="text-sm">•</span>
-                <span className="text-gray-600">4.2k Students Enrolled</span>
+                <span className="text-gray-600">{course?.category ?? "Course"}</span>
               </div>
             </div>
 
@@ -87,7 +128,7 @@ export default function PlayPage() {
             <div className="mb-8">
               <h2 className="text-xl font-bold text-gray-900 mb-4">Lesson Description</h2>
               <p className="text-gray-600 leading-relaxed mb-6">
-                In this comprehensive session, we delve into the intricate world of advanced software architecture. Dr. Sarah Chen explores microservices orchestration, event-driven designs, and the tactical application of domain-driven design principles. Learn how to scale complex systems while maintaining high availability and developer productivity.
+                {course?.description ?? "Start playing the course video to update your learning progress."}
               </p>
             </div>
 
