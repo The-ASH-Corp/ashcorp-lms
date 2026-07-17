@@ -278,17 +278,36 @@ export default function CourseDetail() {
             )}
 
             {/* Placeholder for other tabs */}
-            {activeTab !== "about" && (
-              <div className="py-12 text-center text-gray-600">
-                <p>
-                  {activeTab === "lessons"
-                    ? "Lessons"
-                    : activeTab === "trial"
-                      ? "Free Trial"
-                      : "Reviews"}{" "}
-                  content coming soong
-                </p>
+            {activeTab === "lessons" && (
+              <div className="space-y-4">
+                {course?.chapters?.length ? (
+                  course.chapters.map((chapter: string, index: number) => (
+                    <div
+                      key={index}
+                      className="border border-gray-200 rounded-lg p-4 hover:border-primary hover:bg-violet-50 transition-colors"
+                    >
+                      <div className="flex items-center gap-3">
+                        <BookOpen className="text-primary" size={20} />
+                        <h3 className="text-lg font-medium text-gray-900">
+                          Chapter {index + 1}: {chapter}
+                        </h3>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <div className="text-center py-8 text-gray-500">
+                    No chapters available.
+                  </div>
+                )}
               </div>
+            )}
+
+            {activeTab === "trial" && (
+              <div className="text-center py-10">Free Trial</div>
+            )}
+
+            {activeTab === "reviews" && (
+              <div className="text-center py-10">Reviews</div>
             )}
           </div>
 
@@ -299,17 +318,23 @@ export default function CourseDetail() {
               <div className="bg-white border-2 border-gray-200 rounded-xl p-6 space-y-4">
                 <div>
                   <p className="text-gray-600 text-sm mb-1">Price</p>
-                  <div className="flex items-end gap-3">
+                  {course?.offerPrice ? (
+                    <div className="flex items-end gap-3">
+                      <span className="text-3xl sm:text-4xl font-bold text-gray-900">
+                        ₹{course?.offerPrice}
+                      </span>
+                      <span className="line-through text-gray-500">
+                        ₹{course?.price}
+                      </span>
+                      <span className="bg-red-100 text-red-700 text-xs font-bold px-2 py-1 rounded">
+                        {discountPercentage}% OFF
+                      </span>
+                    </div>
+                  ) : (
                     <span className="text-3xl sm:text-4xl font-bold text-gray-900">
-                      ₹{course?.offerPrice}
-                    </span>
-                    <span className="line-through text-gray-500">
                       ₹{course?.price}
                     </span>
-                    <span className="bg-red-100 text-red-700 text-xs font-bold px-2 py-1 rounded">
-                      {discountPercentage}% OFF
-                    </span>
-                  </div>
+                  )}
                 </div>
 
                 {/* Enroll Button */}
