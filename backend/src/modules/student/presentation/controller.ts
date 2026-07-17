@@ -9,6 +9,7 @@ import {
   getWishlistUseCase,
   removeFromWishlistUseCase,
 } from "../di";
+import { UserModel } from "../../users/infrastructure/models/UserModel";
 
 export const createStudentController = async (
   req: Request,
