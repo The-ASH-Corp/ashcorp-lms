@@ -1,5 +1,5 @@
 import { type CookieOptions, Request, Response, NextFunction } from "express";
-import { adminRepository, loginUsecase, registerUsecase, userRepository } from "../di";
+import { adminRepository, loginUsecase, registerUsecase, userRepository, changePasswordUseCase } from "../di";
 import { RegisterDTO } from "../application/dto/RegisterDTO";
 import { LoginDTO } from "../application/dto/LoginDTO";
 import { ENV } from "../../../shared/env/ENV";
@@ -101,6 +101,30 @@ export const logoutController = async (
     res.clearCookie("accessToken", accessTokenCookieOptions);
 
     res.status(200).json({ message: "Logout successful" });
+  } catch (error: any) {
+    next(error);
+  }
+};
+
+export const changePasswordController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
+  try {
+    const userId = String(req.userId);
+    const { currentPassword, newPassword, confirmPassword } = req.body;
+
+    await changePasswordUseCase.execute(userId, {
+      currentPassword,
+      newPassword,
+      confirmPassword,
+    });
+
+    res.status(200).json({
+      success: true,
+      message: "Password changed successfully",
+    });
   } catch (error: any) {
     next(error);
   }

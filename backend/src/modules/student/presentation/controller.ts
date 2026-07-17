@@ -10,6 +10,7 @@ import {
   getWishlistUseCase,
   removeFromWishlistUseCase,
   updateCourseProgressUseCase,
+  updateProfileUseCase,
 } from "../di";
 import { serializeCourse } from "../../../shared/config/serializeCourses";
 
@@ -214,6 +215,31 @@ export const updateCourseProgressController = async (
       success: true,
       message: "Course progress updated successfully",
       data: student,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const updateProfileController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
+  try {
+    const studentId = String(req.userId);
+    const { name, phone } = req.body;
+
+    const user = await updateProfileUseCase.execute(studentId, { name, phone });
+
+    res.status(200).json({
+      success: true,
+      message: "Profile updated successfully",
+      data: {
+        name: user.name,
+        phone: user.phone,
+        email: user.email,
+      },
     });
   } catch (err) {
     next(err);

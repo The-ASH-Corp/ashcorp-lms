@@ -29,6 +29,11 @@ export class MongoUserRepository implements UserRepository {
     return user;
   }
 
+  async findByIdWithPassword(id: string): Promise<User | null> {
+    const user = await UserModel.findById(id).select("+password");
+    return user;
+  }
+
   async update(id: string, data: Partial<User>): Promise<User> {
     const user = await UserModel.findByIdAndUpdate(id, data, { new: true });
     if (!user) {

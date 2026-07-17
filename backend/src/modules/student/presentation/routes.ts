@@ -12,6 +12,7 @@ import {
   getWishlistController,
   removeFromWishlistController,
   updateCourseProgressController,
+  updateProfileController,
 } from "./controller";
 import { authMiddleware } from "../../../shared/middleware/authMiddleware";
 
@@ -48,5 +49,8 @@ router.get("/my-courses", getMyCoursesController);
 
 // update course progress
 router.patch("/course-progress", updateCourseProgressController);
+
+// update profile
+router.patch("/update-profile", updateProfileController);
 
 export default router;
