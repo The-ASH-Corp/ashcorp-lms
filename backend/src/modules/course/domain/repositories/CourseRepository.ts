@@ -11,6 +11,8 @@ export interface CourseRepository {
 
   addChapterToCourse(courseId: string, chapterId: string): Promise<Course>;
 
+  removeChapterFromCourse(courseId: string, chapterId: string): Promise<Course>;
+
   addEnrolledStudent(courseId: string, studentId: string): Promise<Course>;
 
   makeCourseFreeAndPublished(id: string): Promise<Course>;

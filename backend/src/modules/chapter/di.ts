@@ -9,4 +9,4 @@ const chapterRepository = new MongoChapterRepository();
 
 export const getChaptersByCourseIdUseCase = new GetChaptersByCourseIdUseCase(chapterRepository)
 export const createChapterUseCase = new CreateChapterUseCase(chapterRepository, courseRepository)
-export const deleteChapterUseCase = new DeleteChapterUseCase(chapterRepository)
+export const deleteChapterUseCase = new DeleteChapterUseCase(chapterRepository, courseRepository)
