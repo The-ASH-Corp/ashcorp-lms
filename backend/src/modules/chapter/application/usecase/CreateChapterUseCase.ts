@@ -91,9 +91,13 @@ export class CreateChapterUseCase {
       }
     }
 
-    return await this.chapterRepository.createChapter({
+    const chapter = await this.chapterRepository.createChapter({
       ...data,
       contents: resolvedContents,
     });
+
+    await this.courseRepository.addChapterToCourse(courseId, String(chapter._id));
+
+    return chapter;
   }
 }
