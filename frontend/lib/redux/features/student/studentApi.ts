@@ -124,14 +124,7 @@ export const studentApi = api.injectEndpoints({
       invalidatesTags: ["Student", "User"],
     }),
 
-    updateProfile: builder.mutation<any, { name?: string; phone?: string }>({
-      query: (data) => ({
-        url: "/student/update-profile",
-        method: "PATCH",
-        body: data,
-      }),
-      invalidatesTags: ["Student", "User"],
-    }),
+    
   }),
 });
 
@@ -146,5 +139,4 @@ export const {
   useEnrollCourseMutation,
   useGetMyCoursesQuery,
   useUpdateCourseProgressMutation,
-  useUpdateProfileMutation,
 } = studentApi;

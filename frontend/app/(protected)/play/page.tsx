@@ -143,7 +143,7 @@ export default function PlayPage() {
 
             {/* Tabs */}
             <div className="flex gap-6 border-b border-gray-200 mb-6 overflow-x-auto">
-              {['overview', 'resources', 'notes', 'community'].map(tab => (
+              {['overview'].map(tab => (
                 <button
                   key={tab}
                   onClick={() => setCurrentTab(tab)}
@@ -174,16 +174,7 @@ export default function PlayPage() {
             </div>
 
             {/* Action Buttons */}
-            <div className="flex flex-col sm:flex-row gap-3 mb-8">
-              <button className="flex items-center justify-center gap-2 px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:border-primary hover:text-primary transition-colors font-medium">
-                <Share2 size={20} />
-                <span>Share</span>
-              </button>
-              <button className="flex items-center justify-center gap-2 px-6 py-3 bg-primary text-white rounded-lg hover:bg-violet-700 transition-colors font-medium">
-                <BookmarkPlus size={20} />
-                <span>Save Lesson</span>
-              </button>
-            </div>
+            
 
             {/* Lesson Description */}
             <div className="mb-8">
@@ -191,28 +182,6 @@ export default function PlayPage() {
               <p className="text-gray-600 leading-relaxed mb-6">
                 {course?.description ?? "Start playing the course video to update your learning progress."}
               </p>
-            </div>
-
-            {/* Features Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="bg-gray-50 rounded-lg p-6 border border-gray-200">
-                <div className="flex items-start gap-3 mb-3">
-                  <Volume2 className="text-primary mt-1" size={24} />
-                  <div>
-                    <h3 className="font-semibold text-gray-900">Prerequisites</h3>
-                    <p className="text-sm text-gray-600 mt-1">Solid understanding of SOLID principles and Module 3.</p>
-                  </div>
-                </div>
-              </div>
-              <div className="bg-gray-50 rounded-lg p-6 border border-gray-200">
-                <div className="flex items-start gap-3 mb-3">
-                  <BookOpen className="text-primary mt-1" size={24} />
-                  <div>
-                    <h3 className="font-semibold text-gray-900">Workshop Files</h3>
-                    <p className="text-sm text-gray-600 mt-1">Includes Docker Compose and K8s manifests.</p>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
 

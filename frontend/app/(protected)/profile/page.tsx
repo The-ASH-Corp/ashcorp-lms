@@ -1,22 +1,25 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 'use client';
 
 import { useState, useEffect } from 'react';
 import { Upload, Loader2 } from 'lucide-react';
 import { useGetCurrentUserQuery } from '@/lib/redux/features/auth/authApi';
-import { useUpdateProfileMutation } from '@/lib/redux/features/student/studentApi';
+import { useUpdateProfileMutation, useChangePasswordMutation } from '@/lib/redux/features/profile/profileApi';
 import { useAppSelector } from '@/lib/redux/hooks';
 import { PropagateLoader } from 'react-spinners';
 import { toast } from 'sonner';
 
 export default function AccountSettingsPage() {
-  // Fetch current user data
+  // --- Get current user ---
   const authUser = useAppSelector((state) => state.auth.user);
   const { data: currentUser, isLoading: isUserLoading, isError: isUserError } = useGetCurrentUserQuery(undefined, {
     skip: !authUser,
   });
   const user = currentUser ?? authUser;
 
-  const [updateProfile, { isLoading: isUpdateLoading }] = useUpdateProfileMutation();
+  // --- Mutations ---
+  const [updateProfile, { isLoading: isProfileUpdating }] = useUpdateProfileMutation();
+  const [changePassword, { isLoading: isPasswordUpdating }] = useChangePasswordMutation();
 
   const [formData, setFormData] = useState({
     name: '',
@@ -47,6 +50,7 @@ export default function AccountSettingsPage() {
     }));
   };
 
+  // --- Update profile ---
   const handleUpdateProfile = async () => {
     try {
       await updateProfile({
@@ -55,11 +59,41 @@ export default function AccountSettingsPage() {
       }).unwrap();
       toast.success('Profile updated successfully!');
     } catch (err: any) {
-      toast.error(err?.data?.message || 'Failed to update profile.');
+      const message = err?.data?.message || 'Failed to update profile.';
+      toast.error(message);
     }
   };
 
-  // ---------- Loading state ----------
+  // --- Change password ---
+  const handleChangePassword = async () => {
+    if (!formData.currentPassword || !formData.newPassword || !formData.confirmPassword) {
+      toast.info('Please fill in all password fields.');
+      return;
+    }
+    if (formData.newPassword !== formData.confirmPassword) {
+      toast.error('New passwords do not match.');
+      return;
+    }
+    try {
+      await changePassword({
+        currentPassword: formData.currentPassword,
+        newPassword: formData.newPassword,
+        confirmPassword: formData.confirmPassword,
+      }).unwrap();
+      toast.success('Password changed successfully!');
+      setFormData((prev) => ({
+        ...prev,
+        currentPassword: '',
+        newPassword: '',
+        confirmPassword: '',
+      }));
+    } catch (err: any) {
+      const message = err?.data?.message || 'Failed to change password.';
+      toast.error(message);
+    }
+  };
+
+  // ---------- Loading ----------
   if (isUserLoading) {
     return (
       <div className="flex min-h-64 items-center justify-center">
@@ -68,7 +102,7 @@ export default function AccountSettingsPage() {
     );
   }
 
-  // ---------- Error state ----------
+  // ---------- Error ----------
   if (isUserError || !user) {
     return (
       <div className="rounded-lg border border-red-200 bg-red-50 p-6 text-center text-red-600">
@@ -77,19 +111,19 @@ export default function AccountSettingsPage() {
     );
   }
 
-  // ---------- Success / normal rendering ----------
-  const isVerified = false; // adjust if you have a verified field
+  // ---------- Render ----------
+  const isVerified = false; // Adjust if you have a verification field
 
   return (
     <div className="min-h-screen bg-white">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
         {/* Profile Header */}
-        <div className="bg-gradient-to-br from-gray-50 to-white border border-gray-200 rounded-xl p-6 sm:p-8 lg:p-10 mb-8 lg:mb-12">
+        <div className="bg-linear-to-br from-gray-50 to-white border border-gray-200 rounded-xl p-6 sm:p-8 lg:p-10 mb-8 lg:mb-12">
           <div className="flex flex-col sm:flex-row items-center gap-8">
             {/* Avatar */}
             <div className="shrink-0">
               <div className="relative">
-                <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full border-4 border-primary bg-gradient-to-br from-violet-100 to-violet-50 flex items-center justify-center">
+                <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full border-4 border-primary bg-linear-to-br from-violet-100 to-violet-50 flex items-center justify-center">
                   <span className="text-3xl font-bold text-primary">
                     {user.name?.charAt(0)?.toUpperCase() || 'U'}
                   </span>
@@ -159,6 +193,7 @@ export default function AccountSettingsPage() {
               </div>
             </div>
 
+            {/* Email (read‑only) */}
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-2">
                 Email Address
@@ -229,17 +264,26 @@ export default function AccountSettingsPage() {
                 />
               </div>
             </div>
+
+            <button
+              onClick={handleChangePassword}
+              disabled={isPasswordUpdating}
+              className="w-full sm:w-auto px-6 py-3 bg-gray-900 hover:bg-gray-800 disabled:bg-gray-400 text-white rounded-lg font-semibold text-sm transition-colors flex items-center justify-center gap-2"
+            >
+              {isPasswordUpdating && <Loader2 size={16} className="animate-spin" />}
+              {isPasswordUpdating ? 'Updating...' : 'Change Password'}
+            </button>
           </div>
         </div>
 
         {/* Update Profile Button */}
         <button
           onClick={handleUpdateProfile}
-          disabled={isUpdateLoading}
+          disabled={isProfileUpdating}
           className="w-full px-6 py-3 sm:py-4 bg-primary hover:bg-violet-700 disabled:bg-violet-400 text-white rounded-lg font-semibold text-base transition-colors flex items-center justify-center gap-2"
         >
-          {isUpdateLoading && <Loader2 size={18} className="animate-spin" />}
-          {isUpdateLoading ? 'Updating...' : 'Update Profile'}
+          {isProfileUpdating && <Loader2 size={18} className="animate-spin" />}
+          {isProfileUpdating ? 'Updating...' : 'Update Profile'}
         </button>
       </div>
     </div>

@@ -9,7 +9,9 @@ import { GetWishlistUseCase } from "./application/usecase/GetWishlistUseCase";
 import { EnrollCourseUseCase } from "./application/usecase/EnrollCourseUseCase";
 import { GetMyCoursesUseCase } from "./application/usecase/GetMyCoursesUseCase";
 import { UpdateCourseProgressUseCase } from "./application/usecase/UpdateCourseProgressUseCase";
+import { UpdateProfileUseCase } from "./application/usecase/UpdateProfileUseCase";
 import { courseRepository } from "../course/di";
+import { adminRepository } from "../admins/di";
 
 export const studentUserRepository = new MongoUserRepository();
 
@@ -50,4 +52,9 @@ export const getMyCoursesUseCase = new GetMyCoursesUseCase(
 export const updateCourseProgressUseCase = new UpdateCourseProgressUseCase(
   studentUserRepository,
   courseRepository,
+);
+
+export const updateProfileUseCase = new UpdateProfileUseCase(
+  studentUserRepository,
+  adminRepository,
 );

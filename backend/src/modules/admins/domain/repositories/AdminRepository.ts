@@ -7,4 +7,8 @@ export interface AdminRepository {
     findByEmail(email: string): Promise<Admin | null>;
 
     findById(id: string): Promise<Admin | null>;
+
+    findByIdWithPassword(id: string): Promise<Admin | null>;
+
+    update(id: string, data: Partial<Admin>): Promise<Admin>;
 }
