@@ -8,6 +8,7 @@ import {
   getWishlistUseCase,
   removeFromWishlistUseCase,
 } from "../di";
+import { UserModel } from "../../users/infrastructure/models/UserModel";
 
 export const createStudentController = async (
   req: Request,
@@ -145,4 +146,13 @@ export const getWishlistController = async (
   } catch (err) {
     next(err);
   }
+};
+
+export const updateCourse = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
+  courseId = req.params.id;
+  
 };

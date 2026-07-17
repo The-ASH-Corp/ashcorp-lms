@@ -6,6 +6,7 @@ export interface AuthUser {
   email?: string;
   phone?: string;
   role?: string;
+  purchasedCourses?: string[];
 }
 
 export interface AuthState {
