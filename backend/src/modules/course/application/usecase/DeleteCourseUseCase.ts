@@ -21,6 +21,7 @@ export class DeleteCourseUseCase {
       throw new AppError("Cannot delete course because students are enrolled", 400);
     }
 
+    await this.userRepository.removeCourseFromWishlists(id);
     await this.courseRepository.deleteCourse(id);
   }
 }

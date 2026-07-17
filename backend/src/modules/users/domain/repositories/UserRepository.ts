@@ -17,4 +17,6 @@ export interface UserRepository{
 
     hasPurchasedCourse(courseId: string): Promise<boolean>;
 
+    removeCourseFromWishlists(courseId: string): Promise<void>;
+
 }

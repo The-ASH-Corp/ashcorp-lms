@@ -185,6 +185,7 @@ export default function CreateCoursePage() {
     xhr.onload = () => {
       setIsSubmitting(false);
       if (xhr.status >= 200 && xhr.status < 300) {
+        setUploadProgress(100);
         toast.success("Course created successfully.");
         router.replace("/admin/course");
       } else {
@@ -507,6 +508,19 @@ export default function CreateCoursePage() {
           </div>
 
           <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 pt-6 items-end justify-end">
+            {isSubmitting && (
+              <div className="w-full sm:max-w-xs space-y-2">
+                <div className="h-2 rounded-full bg-violet-100 overflow-hidden">
+                  <div
+                    className="h-full rounded-full bg-primary transition-all"
+                    style={{ width: `${uploadProgress}%` }}
+                  />
+                </div>
+                <p className="text-primary text-xs font-medium">
+                  Upload progress: {uploadProgress}%
+                </p>
+              </div>
+            )}
             <button
               type="submit"
               disabled={isSubmitting}

@@ -92,6 +92,15 @@ export const studentApi = api.injectEndpoints({
       }),
       invalidatesTags: ["Student"],
     }),
+
+    enrollCourse: builder.mutation<any, { courseId: string }>({
+      query: ({ courseId }) => ({
+        url: "/student/enroll-course",
+        method: "POST",
+        body: { courseId },
+      }),
+      invalidatesTags: ["Student", "User"],
+    }),
   }),
 });
 
@@ -103,4 +112,5 @@ export const {
   useGetWishlistQuery,
   useAddToWishlistMutation,
   useRemoveFromWishlistMutation,
+  useEnrollCourseMutation,
 } = studentApi;

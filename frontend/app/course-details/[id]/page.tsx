@@ -7,7 +7,8 @@ import Navbar from '@/components/landing/Navbar';
 import Footer from '@/components/landing/Footer';
 import { useGetCourseQuery } from '@/lib/redux/features/course/courseApi';
 import { useAppSelector } from '@/lib/redux/hooks';
-import { useGetWishlistQuery, useAddToWishlistMutation, useRemoveFromWishlistMutation } from '@/lib/redux/features/student/studentApi';
+import { useGetWishlistQuery, useAddToWishlistMutation, useRemoveFromWishlistMutation, useEnrollCourseMutation } from '@/lib/redux/features/student/studentApi';
+import { useGetCurrentUserQuery } from '@/lib/redux/features/auth/authApi';
 import { toast } from 'sonner';
 import { PropagateLoader } from 'react-spinners';
 import { CourseShareDialog } from '@/components/shared/course-share-dialog';
@@ -19,10 +20,15 @@ export default function CourseDetail() {
   const params = useParams() as { id?: string };
   const courseId = params?.id;
 
-  const user = useAppSelector((state) => state.auth.user);
+  const authUser = useAppSelector((state) => state.auth.user);
+  const { data: currentUser } = useGetCurrentUserQuery(undefined, {
+    skip: !authUser,
+  });
+  const user = currentUser ?? authUser;
   const { data: wishlist } = useGetWishlistQuery(undefined, { skip: !user });
   const [addToWishlist, { isLoading: isAdding }] = useAddToWishlistMutation();
   const [removeFromWishlist, { isLoading: isRemoving }] = useRemoveFromWishlistMutation();
+  const [enrollCourse, { isLoading: isEnrolling }] = useEnrollCourseMutation();
 
   const { data: course, isLoading, isError } = useGetCourseQuery(courseId ?? "");
 
@@ -36,28 +42,34 @@ export default function CourseDetail() {
 
   const discountPercentage =
     price > 0 ? Math.round(((price - offerPrice) / price) * 100) : 0;
+  const isPurchased = Boolean(
+    user?.purchasedCourses?.some((id) => String(id) === String(courseId)),
+  );
 
   const handleEnrollNow = async () => {
     if (!user) {
-      toast.error("Please login to manage your wishlist.");
+      toast.error("Please login to enroll this course.");
       router.push("/login");
       return;
     }
 
-    const isPurchased = user.purchasedCourses?.some(
-      (id) => String(id) === String(courseId),
-    );
+    if (!courseId) return;
 
     if (isPurchased) {
-      toast.success("You have already purchased this course.");
-      // router.push(`/courses/learn/${courseId}`); 
+      router.push(`/play?courseId=${courseId}`);
       return;
     }
-    console.log(user)
+
+    try {
+      await enrollCourse({ courseId }).unwrap();
+      toast.success("Course enrolled successfully.");
+      router.push(`/play?courseId=${courseId}`);
+    } catch (err: any) {
+      toast.error(err?.data?.message || "Failed to enroll course.");
+    }
   }  
 
   const handleWishlistToggle = async () => {
-    console.log(user)
     if (!user) {
       toast.error("Please login to manage your wishlist.");
       router.push("/login");
@@ -75,7 +87,6 @@ export default function CourseDetail() {
         toast.success("Added to wishlist!");
       }
     } catch (err: any) {
-      console.log()
       toast.error(err?.data?.message || "Failed to update wishlist.");
     }
   };
@@ -300,9 +311,13 @@ export default function CourseDetail() {
                 </div>
 
                 {/* Enroll Button */}
-                <button onClick={handleEnrollNow}  className="w-full bg-primary hover:bg-violet-700 text-white font-semibold py-3 rounded-lg transition-colors flex items-center justify-center gap-2">
+                <button
+                  onClick={handleEnrollNow}
+                  disabled={isEnrolling}
+                  className="w-full bg-primary hover:bg-violet-700 text-white font-semibold py-3 rounded-lg transition-colors flex items-center justify-center gap-2 disabled:cursor-not-allowed disabled:opacity-60"
+                >
                   <Play size={18} />
-                  Enroll Now
+                  {isEnrolling ? "Enrolling..." : isPurchased ? "Play Course" : "Enroll Now"}
                 </button>
 
                 {/* Wishlist */}
