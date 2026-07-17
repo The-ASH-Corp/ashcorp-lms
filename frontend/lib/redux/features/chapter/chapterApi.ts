@@ -1,18 +1,28 @@
 import { api } from "../../services/api";
 
-interface Chapter {
+export interface ChapterContent {
+  contentTitle: string;
+  sequance: number;
+  contentUrl: string;
+  isFree: boolean;
+  duration?: number;
+}
+
+export interface Chapter {
   _id: string;
   title: string;
   courseId: string;
   serialNumber: number;
   description: string;
   videoUrl: string;
+  contents?: ChapterContent[];
   createdAt: string;
   updatedAt: string;
 }
 
 export const chapterApi = api.injectEndpoints({
   endpoints: (builder) => ({
+
     getChaptersByCourseId: builder.query<Chapter[], string>({
       query: (courseId) => `/chapters/get-chapter-by-course/${courseId}`,
 
@@ -20,6 +30,7 @@ export const chapterApi = api.injectEndpoints({
       ,
       providesTags:["Chapter"]
     }),
+
     createChapter: builder.mutation<Chapter, Partial<any> | FormData>({
       query: (body) => ({
         url: "/chapters/create-chapter",
@@ -38,6 +49,7 @@ export const chapterApi = api.injectEndpoints({
       invalidatesTags: ["Chapter"],
     }),
   }),
+  
 });
 export const {
   useGetChaptersByCourseIdQuery,

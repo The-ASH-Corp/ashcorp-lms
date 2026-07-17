@@ -9,6 +9,8 @@ export interface UserRepository{
 
     findById(id: string): Promise<User | null>;
 
+    findByIdWithPassword(id: string): Promise<User | null>;
+
     update(id: string, data: Partial<User>): Promise<User>;
 
     delete(id: string): Promise<void>;

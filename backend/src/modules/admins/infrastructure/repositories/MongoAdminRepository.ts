@@ -19,4 +19,17 @@ export class MongoAdminRepository implements AdminRepository {
         const admin = await AdminModel.findById(id);
         return admin;
     }
+
+    async findByIdWithPassword(id: string): Promise<Admin | null> {
+        const admin = await AdminModel.findById(id).select("+password");
+        return admin;
+    }
+
+    async update(id: string, data: Partial<Admin>): Promise<Admin> {
+        const admin = await AdminModel.findByIdAndUpdate(id, data, { new: true });
+        if (!admin) {
+            throw new Error("Admin not found");
+        }
+        return admin;
+    }
 }
