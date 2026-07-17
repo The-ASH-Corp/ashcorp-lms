@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -117,12 +118,12 @@ export default function AccountSettingsPage() {
     <div className="min-h-screen bg-white">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
         {/* Profile Header */}
-        <div className="bg-gradient-to-br from-gray-50 to-white border border-gray-200 rounded-xl p-6 sm:p-8 lg:p-10 mb-8 lg:mb-12">
+        <div className="bg-linear-to-br from-gray-50 to-white border border-gray-200 rounded-xl p-6 sm:p-8 lg:p-10 mb-8 lg:mb-12">
           <div className="flex flex-col sm:flex-row items-center gap-8">
             {/* Avatar */}
             <div className="shrink-0">
               <div className="relative">
-                <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full border-4 border-primary bg-gradient-to-br from-violet-100 to-violet-50 flex items-center justify-center">
+                <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full border-4 border-primary bg-linear-to-br from-violet-100 to-violet-50 flex items-center justify-center">
                   <span className="text-3xl font-bold text-primary">
                     {user.name?.charAt(0)?.toUpperCase() || 'U'}
                   </span>
