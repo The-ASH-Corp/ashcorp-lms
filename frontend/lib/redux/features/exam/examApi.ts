@@ -22,6 +22,7 @@ export interface CreateExamRequest {
 
 export const examApi = api.injectEndpoints({
   endpoints: (builder) => ({
+
     createExam: builder.mutation<void, CreateExamRequest>({
       query: (exam) => ({
         url: "/exam/create-exam",
@@ -30,7 +31,24 @@ export const examApi = api.injectEndpoints({
       }),
       invalidatesTags: ["Exam"],
     }),
+
+    getExamByCourse: builder.query<void, string>({
+      query: (courseId) => ({
+        url: `/exam/get-exams-by-course/${courseId}`,
+        method: "GET",
+      }),
+      providesTags: ["Exam"],
+    }),
+
+    deleteExam: builder.mutation<void, string>({
+      query: (examId) => ({
+        url: `/exam/delete-exam/${examId}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Exam"],
+    }),
   }),
+  
 });
 
-export const { useCreateExamMutation } = examApi;
+export const { useCreateExamMutation, useGetExamByCourseQuery, useDeleteExamMutation } = examApi;

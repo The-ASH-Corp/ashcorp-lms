@@ -8,22 +8,19 @@ export class MongoExamRepository implements ExamRepository {
   }
 
   async findById(_id: string): Promise<Exam | null> {
-    throw new Error("Method not implemented.");
+    const exam = await ExamModel.findById(_id);
+    return exam;
   }
 
   async updateExam(_id: string, _data: Exam): Promise<Exam | null> {
     throw new Error("Method not implemented.");
   }
 
-  async deleteExam(_id: string): Promise<void> {
-    throw new Error("Method not implemented.");
+  async deleteExamById(examId: string): Promise<void> {
+    await ExamModel.findByIdAndDelete(examId);
   }
 
-  async toggleStatus(_id: string): Promise<Exam | null> {
-    throw new Error("Method not implemented.");
-  }
-
-  async getAllExams(): Promise<ExamResponseDTO[]> {
-    throw new Error("Method not implemented.");
+  async getExamByCourse(courseId: string): Promise<ExamResponseDTO[]> {
+    return await ExamModel.find({ courseId });
   }
 }
