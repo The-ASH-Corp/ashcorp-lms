@@ -159,7 +159,7 @@ export function AdminSidebar({
               }
 
               // Grouped item
-              const isOpen = !!open[item.title];
+              const isOpen = !open[item.title];
 
               return (
                 <SidebarMenuItem key={item.title} className="relative">
@@ -190,7 +190,6 @@ export function AdminSidebar({
                   {isOpen && (
                     <div className="mt-3 ml-8 flex flex-col gap-3">
                       {item.children.map((child: any, _idx: number) => {
-                        // if child has its own children (like Plan Management -> Plan List, Create)
                         if (child.children) {
                           const childActive = child.children.some((cc: any) =>
                             pathname.startsWith(cc.url),
