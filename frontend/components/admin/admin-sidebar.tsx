@@ -28,7 +28,8 @@ import {
   LogOut,
   ChevronDown,
   ChevronUp,
-  Ticket,
+  Ticket,BookOpenCheck
+
 } from "lucide-react";
 import Image from "next/image";
 
@@ -59,6 +60,11 @@ const navItems = [
     title: "Instructors",
     url: "/admin/instructors",
     icon: Users,
+  },
+  {
+    title:"Exam",
+    url:"/admin/exam",
+    icon:BookOpenCheck
   },
   {
     title: "Coupons",
