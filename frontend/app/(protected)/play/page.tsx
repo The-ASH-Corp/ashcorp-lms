@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useRef, useState } from 'react';
+import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { Play, Share2, BookmarkPlus, CheckCircle2, Volume2, BookOpen } from 'lucide-react';
 import { useGetCourseQuery } from '@/lib/redux/features/course/courseApi';
@@ -268,10 +269,23 @@ export default function PlayPage() {
                 )}
               </div>
 
-              {/* Get Certificate Button */}
-              <button className="w-full mt-6 bg-primary text-white font-medium py-3 rounded-lg hover:bg-violet-700 transition-colors">
-                Get Certificate
-              </button>
+              {/* Exam Button */}
+              {courseProgress >= 100 ? (
+                <Link
+                  href={`/exam/assessment/${courseId}`}
+                  className="block w-full mt-6 bg-primary text-center text-white font-medium py-3 rounded-lg hover:bg-violet-700 transition-colors"
+                >
+                  Go To Exam
+                </Link>
+              ) : (
+                <button
+                  type="button"
+                  disabled
+                  className="w-full mt-6 bg-gray-200 text-gray-500 font-medium py-3 rounded-lg cursor-not-allowed"
+                >
+                  Complete Course To Unlock Exam
+                </button>
+              )}
             </div>
           </div>
         </div>

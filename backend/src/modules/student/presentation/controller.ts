@@ -9,6 +9,8 @@ import {
   getMyCoursesUseCase,
   getWishlistUseCase,
   removeFromWishlistUseCase,
+  saveExamResponseUseCase,
+  studentUserRepository,
   updateCourseProgressUseCase,
   updateProfileUseCase,
 } from "../di";
@@ -240,6 +242,66 @@ export const updateProfileController = async (
         phone: user.phone,
         email: user.email,
       },
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const saveExamResponseController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
+  try {
+    const studentId = String(req.userId);
+    const attempt = await saveExamResponseUseCase.execute(studentId, req.body);
+
+    res.status(200).json({
+      success: true,
+      message: attempt.isPassed
+        ? "Exam passed. Certificate is now available."
+        : "Exam attempt saved. You can attend the exam again.",
+      data: attempt,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const getExamAttemptController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
+  try {
+    const studentId = String(req.userId);
+    const courseId = String(req.params.courseId);
+    const student = await studentUserRepository.findById(studentId);
+
+    if (!student) {
+      res.status(404).json({
+        success: false,
+        message: "Student not found",
+      });
+      return;
+    }
+
+    const attempts = student.examAttempts?.filter(
+      (attempt) => String(attempt.courseId) === courseId,
+    ) ?? [];
+    const passedAttempt = attempts.find((attempt) => attempt.isPassed) ?? null;
+    const latestAttempt = attempts
+      .slice()
+      .sort(
+        (first, second) =>
+          new Date(second.attemptedAt).getTime() - new Date(first.attemptedAt).getTime(),
+      )[0] ?? null;
+
+    res.status(200).json({
+      success: true,
+      message: "Exam attempt fetched successfully",
+      data: passedAttempt ?? latestAttempt,
     });
   } catch (err) {
     next(err);

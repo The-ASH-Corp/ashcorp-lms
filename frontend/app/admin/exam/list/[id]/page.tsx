@@ -206,7 +206,11 @@ export default function ExamListPage() {
                           confirmLabel="Delete"
                           loading={isDeletingExam}
                           loadingLabel="Deleting..."
-                          onConfirm={() => handleDeleteExam(exam._id)}
+                          onConfirm={() => {
+                            if (exam._id) {
+                              handleDeleteExam(exam._id);
+                            }
+                          }}
                           trigger={
                             <button className="p-2 hover:bg-red-50 rounded transition-colors text-red-600">
                               <Trash2 size={16} />

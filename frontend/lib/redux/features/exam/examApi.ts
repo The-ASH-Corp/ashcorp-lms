@@ -20,6 +20,49 @@ export interface CreateExamRequest {
   questions: Question[];
 }
 
+export interface Exam {
+  _id?: string;
+  id?: string;
+  courseId: string;
+  title: string;
+  duration: number;
+  marksPerQuestion: number;
+  passMarks: number;
+  questions: Question[];
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface CourseExam {
+  courseId: string;
+  exams: Exam[];
+}
+
+export interface SaveExamResponseRequest {
+  examId: string;
+  courseId: string;
+  answers: Record<number, number>;
+  status: "submitted" | "stopped";
+  reason?: string;
+}
+
+export interface ExamAttempt {
+  examId: string;
+  courseId: string;
+  answers: {
+    questionIndex: number;
+    selectedOptionIndex: number;
+    isCorrect: boolean;
+  }[];
+  score: number;
+  totalMarks: number;
+  passMarks: number;
+  isPassed: boolean;
+  status: "submitted" | "stopped";
+  reason?: string;
+  attemptedAt: string;
+}
+
 export const examApi = api.injectEndpoints({
   endpoints: (builder) => ({
 
@@ -32,11 +75,39 @@ export const examApi = api.injectEndpoints({
       invalidatesTags: ["Exam"],
     }),
 
-    getExamByCourse: builder.query<void, string>({
+    getExamByCourse: builder.query<{ success: boolean; data: Exam[] }, string>({
       query: (courseId) => ({
         url: `/exam/get-exams-by-course/${courseId}`,
         method: "GET",
       }),
+      providesTags: ["Exam"],
+    }),
+
+    getExamsForCourses: builder.query<CourseExam[], string[]>({
+      async queryFn(courseIds, _queryApi, _extraOptions, fetchWithBQ) {
+        const uniqueCourseIds = Array.from(new Set(courseIds.filter(Boolean)));
+
+        const results: CourseExam[] = [];
+
+        for (const courseId of uniqueCourseIds) {
+          const response = await fetchWithBQ(`/exam/get-exams-by-course/${courseId}`);
+
+          if (response.error) {
+            return { error: response.error };
+          }
+
+          const payload = response.data as { data?: Exam[] } | undefined;
+
+          results.push({
+            courseId,
+            exams: payload?.data ?? [],
+          });
+        }
+
+        return {
+          data: results,
+        };
+      },
       providesTags: ["Exam"],
     }),
 
@@ -47,8 +118,38 @@ export const examApi = api.injectEndpoints({
       }),
       invalidatesTags: ["Exam"],
     }),
+
+    saveExamResponse: builder.mutation<
+      { success: boolean; message: string; data: ExamAttempt },
+      SaveExamResponseRequest
+    >({
+      query: (attempt) => ({
+        url: "/student/exam-response",
+        method: "POST",
+        body: attempt,
+      }),
+      invalidatesTags: ["Exam", "User"],
+    }),
+
+    getExamAttempt: builder.query<
+      { success: boolean; message: string; data: ExamAttempt | null },
+      string
+    >({
+      query: (courseId) => ({
+        url: `/student/exam-attempt/${courseId}`,
+        method: "GET",
+      }),
+      providesTags: ["Exam", "User"],
+    }),
   }),
   
 });
 
-export const { useCreateExamMutation, useGetExamByCourseQuery, useDeleteExamMutation } = examApi;
+export const {
+  useCreateExamMutation,
+  useGetExamByCourseQuery,
+  useGetExamsForCoursesQuery,
+  useDeleteExamMutation,
+  useSaveExamResponseMutation,
+  useGetExamAttemptQuery,
+} = examApi;

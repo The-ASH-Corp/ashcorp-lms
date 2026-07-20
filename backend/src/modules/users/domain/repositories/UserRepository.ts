@@ -1,4 +1,4 @@
-import { User } from "../entities/User";
+import { ExamAttempt, User } from "../entities/User";
 import { RegisterDTO } from "../../../auth/application/dto/RegisterDTO";
 
 export interface UserRepository{
@@ -12,6 +12,8 @@ export interface UserRepository{
     findByIdWithPassword(id: string): Promise<User | null>;
 
     update(id: string, data: Partial<User>): Promise<User>;
+
+    saveExamAttempt(id: string, attempt: ExamAttempt): Promise<User>;
 
     delete(id: string): Promise<void>;
 

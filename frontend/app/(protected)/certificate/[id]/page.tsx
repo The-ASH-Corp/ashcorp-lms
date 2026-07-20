@@ -1,10 +1,45 @@
 'use client';
 
 import { Download, ImageIcon, Share2, ArrowLeft } from 'lucide-react';
-import { useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
+import { PropagateLoader } from 'react-spinners';
+import { useGetCurrentUserQuery } from '@/lib/redux/features/auth/authApi';
 
 export default function CertificatePage() {
   const route = useRouter()
+  const params = useParams() as { id?: string };
+  const courseId = params.id ?? "";
+  const { data: user, isLoading } = useGetCurrentUserQuery();
+  const canViewCertificate = user?.certificates?.includes(courseId);
+
+  if (isLoading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-white">
+        <PropagateLoader color="#7E23FE" loading={true} size={15} />
+      </div>
+    );
+  }
+
+  if (!canViewCertificate) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-white px-4">
+        <div className="max-w-md rounded-2xl border border-amber-200 bg-amber-50 px-6 py-8 text-center">
+          <h1 className="text-xl font-bold text-gray-900">Certificate locked</h1>
+          <p className="mt-2 text-sm leading-6 text-gray-700">
+            Pass the course exam to unlock this certificate.
+          </p>
+          <button
+            type="button"
+            onClick={() => route.push(`/exam/assessment/${courseId}`)}
+            className="mt-6 rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-white hover:bg-violet-700"
+          >
+            Attend Exam
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-white">
       {/* Back Button */}

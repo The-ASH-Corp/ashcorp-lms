@@ -122,7 +122,7 @@ export default function Exampage() {
                   Category
                 </TableHead>
                 <TableHead className="text-xs font-semibold uppercase tracking-wider text-gray-500 text-center ">
-                  Price
+                  Status
                 </TableHead>
                 <TableHead className="text-xs font-semibold uppercase tracking-wider text-gray-500 text-center ">
                   Actions

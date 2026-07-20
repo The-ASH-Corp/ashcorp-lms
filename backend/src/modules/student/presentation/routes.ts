@@ -8,9 +8,11 @@ import {
   deleteStudentController,
   enrollCourseController,
   getAllStudentsController,
+  getExamAttemptController,
   getMyCoursesController,
   getWishlistController,
   removeFromWishlistController,
+  saveExamResponseController,
   updateCourseProgressController,
   updateProfileController,
 } from "./controller";
@@ -52,5 +54,11 @@ router.patch("/course-progress", updateCourseProgressController);
 
 // update profile
 router.patch("/update-profile", updateProfileController);
+
+// save exam response
+router.post("/exam-response", saveExamResponseController);
+
+// get saved exam attempt for a course
+router.get("/exam-attempt/:courseId", getExamAttemptController);
 
 export default router;
