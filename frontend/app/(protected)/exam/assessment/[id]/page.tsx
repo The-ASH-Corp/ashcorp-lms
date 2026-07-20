@@ -1,17 +1,12 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import Link from "next/link";
 import { useParams } from "next/navigation";
 import {
-  AlertTriangle,
-  CheckCircle2,
   ChevronLeft,
   ChevronRight,
   Clock,
   HelpCircle,
-  ShieldAlert,
-  XCircle,
 } from "lucide-react";
 import { PropagateLoader } from "react-spinners";
 import {
@@ -21,6 +16,10 @@ import {
 } from "@/lib/redux/features/exam/examApi";
 import type { Exam } from "@/lib/redux/features/exam/examApi";
 import { useGetMyCoursesQuery } from "@/lib/redux/features/student/studentApi";
+import Examlocked from "@/components/exam/Examlocked";
+import NoQuestionPaper from "@/components/exam/NoQuestionPaper";
+import Rules from "@/components/exam/Rules";
+import SubmitOrStopped from "@/components/exam/SubmitOrStopped";
 
 type AttemptStatus = "rules" | "active" | "submitted" | "stopped";
 
@@ -67,7 +66,10 @@ function getRandomExam(exams: Exam[], courseId: string) {
   if (savedExam) return savedExam;
 
   const selectedExam = exams[Math.floor(Math.random() * exams.length)];
-  window.sessionStorage.setItem(`selected-exam-${courseId}`, getExamId(selectedExam));
+  window.sessionStorage.setItem(
+    `selected-exam-${courseId}`,
+    getExamId(selectedExam),
+  );
 
   return selectedExam;
 }
@@ -76,7 +78,8 @@ export default function ExamAssessment() {
   const params = useParams() as { id?: string };
   const courseId = params.id ?? "";
   const [status, setStatus] = useState<AttemptStatus>("rules");
-  const [disclaimerSeconds, setDisclaimerSeconds] = useState(DISCLAIMER_SECONDS);
+  const [disclaimerSeconds, setDisclaimerSeconds] =
+    useState(DISCLAIMER_SECONDS);
   const [selectedExam, setSelectedExam] = useState<Exam | null>(null);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState<Record<number, number>>({});
@@ -90,11 +93,10 @@ export default function ExamAssessment() {
     isError: isExamError,
   } = useGetExamByCourseQuery(courseId, { skip: !courseId });
   const [saveExamResponse] = useSaveExamResponseMutation();
-  const {
-    data: savedExamAttemptResponse,
-    isLoading: isSavedAttemptLoading,
-  } = useGetExamAttemptQuery(courseId, { skip: !courseId });
-  const { data: myCourses = [], isLoading: isCoursesLoading } = useGetMyCoursesQuery();
+  const { data: savedExamAttemptResponse, isLoading: isSavedAttemptLoading } =
+    useGetExamAttemptQuery(courseId, { skip: !courseId });
+  const { data: myCourses = [], isLoading: isCoursesLoading } =
+    useGetMyCoursesQuery();
 
   const exams = examResponse?.data ?? [];
   const enrolledCourse = myCourses.find((course) => course.id === courseId);
@@ -105,7 +107,10 @@ export default function ExamAssessment() {
   const totalMarks = questions.length * (selectedExam?.marksPerQuestion ?? 0);
 
   const calculatedResult = useCallback(
-    (nextStatus: "submitted" | "stopped", reason?: string): SavedAttempt | null => {
+    (
+      nextStatus: "submitted" | "stopped",
+      reason?: string,
+    ): SavedAttempt | null => {
       if (!selectedExam) return null;
 
       const score = questions.reduce((total, question, questionIndex) => {
@@ -129,7 +134,10 @@ export default function ExamAssessment() {
         savedAt: new Date().toISOString(),
       };
 
-      window.localStorage.setItem(getAttemptStorageKey(courseId), JSON.stringify(nextResult));
+      window.localStorage.setItem(
+        getAttemptStorageKey(courseId),
+        JSON.stringify(nextResult),
+      );
 
       return nextResult;
     },
@@ -166,13 +174,17 @@ export default function ExamAssessment() {
             savedAt: response.data.attemptedAt,
           };
 
-          window.localStorage.setItem(getAttemptStorageKey(courseId), JSON.stringify(savedResult));
+          window.localStorage.setItem(
+            getAttemptStorageKey(courseId),
+            JSON.stringify(savedResult),
+          );
           setResult(savedResult);
         })
         .catch(() => {
           setResult({
             ...nextResult,
-            reason: "Exam completed, but the result could not be saved. Please contact support.",
+            reason:
+              "Exam completed, but the result could not be saved. Please contact support.",
           });
         });
     },
@@ -182,7 +194,9 @@ export default function ExamAssessment() {
   useEffect(() => {
     if (!courseId) return;
 
-    const savedAttempt = window.localStorage.getItem(getAttemptStorageKey(courseId));
+    const savedAttempt = window.localStorage.getItem(
+      getAttemptStorageKey(courseId),
+    );
 
     if (!savedAttempt) return;
 
@@ -201,13 +215,16 @@ export default function ExamAssessment() {
 
     if (!courseId || !savedAttempt?.isPassed) return;
 
-    const answers = savedAttempt.answers.reduce<Record<number, number>>((nextAnswers, answer) => {
-      if (answer.selectedOptionIndex >= 0) {
-        nextAnswers[answer.questionIndex] = answer.selectedOptionIndex;
-      }
+    const answers = savedAttempt.answers.reduce<Record<number, number>>(
+      (nextAnswers, answer) => {
+        if (answer.selectedOptionIndex >= 0) {
+          nextAnswers[answer.questionIndex] = answer.selectedOptionIndex;
+        }
 
-      return nextAnswers;
-    }, {});
+        return nextAnswers;
+      },
+      {},
+    );
     const savedResult: SavedAttempt = {
       examId: savedAttempt.examId,
       courseId: savedAttempt.courseId,
@@ -221,14 +238,22 @@ export default function ExamAssessment() {
       savedAt: savedAttempt.attemptedAt,
     };
 
-    window.localStorage.setItem(getAttemptStorageKey(courseId), JSON.stringify(savedResult));
+    window.localStorage.setItem(
+      getAttemptStorageKey(courseId),
+      JSON.stringify(savedResult),
+    );
     setResult(savedResult);
     setStatus(savedAttempt.status);
     hasStoppedAttempt.current = true;
   }, [courseId, savedExamAttemptResponse]);
 
   useEffect(() => {
-    if (selectedExam || exams.length === 0 || status === "submitted" || status === "stopped") {
+    if (
+      selectedExam ||
+      exams.length === 0 ||
+      status === "submitted" ||
+      status === "stopped"
+    ) {
       return;
     }
 
@@ -283,7 +308,10 @@ export default function ExamAssessment() {
       if (document.hidden) stopForLeavingScreen();
     };
     const handleBeforeUnload = () => {
-      const nextResult = calculatedResult("stopped", "Exam stopped because the page was closed.");
+      const nextResult = calculatedResult(
+        "stopped",
+        "Exam stopped because the page was closed.",
+      );
 
       if (nextResult) {
         hasStoppedAttempt.current = true;
@@ -314,7 +342,9 @@ export default function ExamAssessment() {
   );
 
   const goToQuestion = (questionIndex: number) => {
-    setCurrentQuestionIndex(Math.min(questions.length - 1, Math.max(0, questionIndex)));
+    setCurrentQuestionIndex(
+      Math.min(questions.length - 1, Math.max(0, questionIndex)),
+    );
   };
 
   const retryExam = () => {
@@ -346,81 +376,19 @@ export default function ExamAssessment() {
 
   if (!isUnlocked) {
     return (
-      <div className="flex min-h-[calc(100vh-170px)] items-center justify-center bg-white px-4">
-        <div className="max-w-md rounded-2xl border border-amber-200 bg-amber-50 px-6 py-8 text-center">
-          <ShieldAlert className="mx-auto text-amber-600" size={36} />
-          <h1 className="mt-4 text-xl font-bold text-gray-900">Exam locked</h1>
-          <p className="mt-2 text-sm leading-6 text-gray-700">
-            Complete the course video progress before attending this exam.
-          </p>
-          <Link
-            href={`/play?courseId=${courseId}`}
-            className="mt-6 inline-flex rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-white hover:bg-violet-700"
-          >
-            Continue Course
-          </Link>
-        </div>
-      </div>
+      <Examlocked courseId={courseId} />
     );
   }
 
   if ((isExamError || exams.length === 0 || !selectedExam) && !result) {
     return (
-      <div className="flex min-h-[calc(100vh-170px)] items-center justify-center bg-white px-4">
-        <div className="max-w-md rounded-2xl border border-gray-200 bg-white px-6 py-8 text-center shadow-sm">
-          <AlertTriangle className="mx-auto text-primary" size={36} />
-          <h1 className="mt-4 text-xl font-bold text-gray-900">No exam found</h1>
-          <p className="mt-2 text-sm leading-6 text-gray-600">
-            There is no question paper available for this course right now.
-          </p>
-          <Link
-            href="/exam"
-            className="mt-6 inline-flex rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-white hover:bg-violet-700"
-          >
-            Back To Exams
-          </Link>
-        </div>
-      </div>
+      <NoQuestionPaper />
     );
   }
 
   if (status === "rules") {
     return (
-      <div className="flex min-h-[calc(100vh-170px)] items-center justify-center bg-white px-4">
-        <div className="w-full max-w-2xl rounded-2xl border border-gray-200 bg-white p-6 shadow-sm sm:p-8">
-          <div className="flex items-start gap-4">
-            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-violet-50 text-primary">
-              <ShieldAlert size={26} />
-            </div>
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.3em] text-gray-500">
-                Exam Rules
-              </p>
-              <h1 className="mt-2 text-2xl font-bold text-gray-900">
-                {selectedExam?.title}
-              </h1>
-              <p className="mt-2 text-sm leading-6 text-gray-600">
-                Your exam starts automatically in {disclaimerSeconds} second
-                {disclaimerSeconds === 1 ? "" : "s"}.
-              </p>
-            </div>
-          </div>
-
-          <div className="mt-6 grid gap-3 text-sm text-gray-700">
-            <div className="rounded-xl bg-gray-50 p-4">
-              Do not open a new tab, switch apps, refresh, or navigate away.
-            </div>
-            <div className="rounded-xl bg-gray-50 p-4">
-              If the screen changes, the exam stops immediately and your current
-              progress is saved.
-            </div>
-            <div className="rounded-xl bg-gray-50 p-4">
-              Submit only when you are finished. Your marks and pass/fail result
-              are shown after submission.
-            </div>
-          </div>
-        </div>
-      </div>
+     <Rules selectedExamTitle={selectedExam?.title} disclaimerSeconds={disclaimerSeconds} />
     );
   }
 
@@ -428,90 +396,21 @@ export default function ExamAssessment() {
     const displayResult = result ?? calculatedResult(status);
 
     return (
-      <div className="flex min-h-[calc(100vh-170px)] items-center justify-center bg-white px-4">
-        <div className="w-full max-w-xl rounded-2xl border border-gray-200 bg-white p-6 text-center shadow-sm sm:p-8">
-          {displayResult?.isPassed ? (
-            <CheckCircle2 className="mx-auto text-green-600" size={48} />
-          ) : (
-            <XCircle className="mx-auto text-red-600" size={48} />
-          )}
-          <p className="mt-4 text-xs font-semibold uppercase tracking-[0.3em] text-gray-500">
-            {status === "stopped" ? "Exam Stopped" : "Exam Completed"}
-          </p>
-          <h1 className="mt-2 text-3xl font-bold text-gray-900">
-            {displayResult?.isPassed ? "Passed" : "Failed"}
-          </h1>
-          {displayResult?.reason && (
-            <p className="mt-2 text-sm text-gray-600">{displayResult.reason}</p>
-          )}
-
-          <div className="mt-6 grid grid-cols-2 gap-3 text-left">
-            <div className="rounded-xl bg-gray-50 p-4">
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-gray-500">
-                Score
-              </p>
-              <p className="mt-2 text-2xl font-bold text-gray-900">
-                {displayResult?.score ?? 0}
-              </p>
-            </div>
-            <div className="rounded-xl bg-gray-50 p-4">
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-gray-500">
-                Total Marks
-              </p>
-              <p className="mt-2 text-2xl font-bold text-gray-900">
-                {displayResult?.totalMarks ?? totalMarks}
-              </p>
-            </div>
-            <div className="rounded-xl bg-gray-50 p-4">
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-gray-500">
-                Pass Marks
-              </p>
-              <p className="mt-2 text-2xl font-bold text-gray-900">
-                {displayResult?.passMarks ?? selectedExam?.passMarks ?? 0}
-              </p>
-            </div>
-            <div className="rounded-xl bg-gray-50 p-4">
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-gray-500">
-                Answered
-              </p>
-              <p className="mt-2 text-2xl font-bold text-gray-900">
-                {answeredCount}/{questions.length}
-              </p>
-            </div>
-          </div>
-
-          <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-center">
-            <Link
-              href="/exam"
-              className="rounded-xl border border-gray-200 px-5 py-3 text-sm font-semibold text-gray-700 hover:bg-gray-50"
-            >
-              Back To Exams
-            </Link>
-            {displayResult?.isPassed && (
-              <Link
-                href={`/certificate/${courseId}`}
-                className="rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-white hover:bg-violet-700"
-              >
-                Get Certificate
-              </Link>
-            )}
-            {!displayResult?.isPassed && (
-              <button
-                type="button"
-                onClick={retryExam}
-                className="rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-white hover:bg-violet-700"
-              >
-                Attend Again
-              </button>
-            )}
-          </div>
-        </div>
-      </div>
+      <SubmitOrStopped
+        displayResult={displayResult}
+        status={status}
+        answeredCount={answeredCount}
+        questions={questions}
+        totalMarks={totalMarks}
+        selectedExam={selectedExam}
+        retryExam={retryExam}
+        courseId={courseId}
+      />
     );
   }
 
   return (
-    <div className="flex min-h-[calc(100vh-170px)] lg:h-[calc(100vh-170px)] flex-col bg-white overflow-hidden rounded-2xl border border-gray-200">
+    <div className="flex min-h-[calc(100vh-170px)] lg:h-[calc(100vh-170px)] flex-col bg-white overflow-hidden rounded-2xl border border-violet-600">
       <div className="border-b border-gray-200 bg-white px-4 py-4 sm:px-6 lg:px-8 shrink-0">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <div>
@@ -676,7 +575,9 @@ export default function ExamAssessment() {
                 }}
                 className="inline-flex items-center gap-2 rounded-lg bg-primary px-5 py-2 font-medium text-white hover:bg-violet-700"
               >
-                {currentQuestionIndex === questions.length - 1 ? "Finish" : "Save & Next"}
+                {currentQuestionIndex === questions.length - 1
+                  ? "Finish"
+                  : "Save & Next"}
                 <ChevronRight size={18} />
               </button>
             </div>
