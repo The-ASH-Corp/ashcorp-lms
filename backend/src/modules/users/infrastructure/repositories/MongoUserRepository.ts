@@ -1,4 +1,4 @@
-import { User } from "../../domain/entities/User";
+import { ExamAttempt, User } from "../../domain/entities/User";
 import { UserRepository } from "../../domain/repositories/UserRepository";
 import { UserModel } from "../models/UserModel";
 import { RegisterDTO } from "../../../auth/application/dto/RegisterDTO";
@@ -36,6 +36,22 @@ export class MongoUserRepository implements UserRepository {
 
   async update(id: string, data: Partial<User>): Promise<User> {
     const user = await UserModel.findByIdAndUpdate(id, data, { new: true });
+    if (!user) {
+      throw new Error("User not found");
+    }
+    return user;
+  }
+
+  async saveExamAttempt(id: string, attempt: ExamAttempt): Promise<User> {
+    const update: Record<string, unknown> = {
+      $push: { examAttempts: attempt },
+    };
+
+    if (attempt.isPassed) {
+      update.$addToSet = { certificates: attempt.courseId };
+    }
+
+    const user = await UserModel.findByIdAndUpdate(id, update, { new: true });
     if (!user) {
       throw new Error("User not found");
     }

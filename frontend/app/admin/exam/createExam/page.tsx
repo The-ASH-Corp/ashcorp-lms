@@ -172,12 +172,6 @@ export default function CreateExam() {
               </Label>
              
               <Select
-                items={
-                  courses?.map((course: any) => ({
-                    value: course.id,
-                    label: course.title,
-                  }))
-                }
                 value={courseTitle}
                 onValueChange={(value) => setCourseTitle(value)}
               >

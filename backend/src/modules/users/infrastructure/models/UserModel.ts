@@ -1,5 +1,69 @@
 import mongoose from "mongoose";
 
+const examAnswerSchema = new mongoose.Schema(
+  {
+    questionIndex: {
+      type: Number,
+      required: true,
+    },
+    selectedOptionIndex: {
+      type: Number,
+      required: true,
+    },
+    isCorrect: {
+      type: Boolean,
+      required: true,
+    },
+  },
+  { _id: false },
+);
+
+const examAttemptSchema = new mongoose.Schema(
+  {
+    examId: {
+      type: String,
+      required: true,
+    },
+    courseId: {
+      type: String,
+      required: true,
+    },
+    answers: {
+      type: [examAnswerSchema],
+      default: [],
+    },
+    score: {
+      type: Number,
+      required: true,
+    },
+    totalMarks: {
+      type: Number,
+      required: true,
+    },
+    passMarks: {
+      type: Number,
+      required: true,
+    },
+    isPassed: {
+      type: Boolean,
+      required: true,
+    },
+    status: {
+      type: String,
+      enum: ["submitted", "stopped"],
+      required: true,
+    },
+    reason: {
+      type: String,
+    },
+    attemptedAt: {
+      type: Date,
+      default: Date.now,
+    },
+  },
+  { _id: false },
+);
+
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -43,6 +107,10 @@ const userSchema = new mongoose.Schema({
   },
   certificates: {
     type: [String],
+    default: [],
+  },
+  examAttempts: {
+    type: [examAttemptSchema],
     default: [],
   },
 });

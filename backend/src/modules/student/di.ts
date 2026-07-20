@@ -10,8 +10,10 @@ import { EnrollCourseUseCase } from "./application/usecase/EnrollCourseUseCase";
 import { GetMyCoursesUseCase } from "./application/usecase/GetMyCoursesUseCase";
 import { UpdateCourseProgressUseCase } from "./application/usecase/UpdateCourseProgressUseCase";
 import { UpdateProfileUseCase } from "./application/usecase/UpdateProfileUseCase";
+import { SaveExamResponseUseCase } from "./application/usecase/SaveExamResponseUseCase";
 import { courseRepository } from "../course/di";
 import { adminRepository } from "../admins/di";
+import { examRepository } from "../exam/di";
 
 export const studentUserRepository = new MongoUserRepository();
 
@@ -57,4 +59,9 @@ export const updateCourseProgressUseCase = new UpdateCourseProgressUseCase(
 export const updateProfileUseCase = new UpdateProfileUseCase(
   studentUserRepository,
   adminRepository,
+);
+
+export const saveExamResponseUseCase = new SaveExamResponseUseCase(
+  studentUserRepository,
+  examRepository,
 );
