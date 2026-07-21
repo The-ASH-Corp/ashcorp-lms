@@ -1,5 +1,10 @@
 import { NextFunction, Request, Response } from "express";
-import { createExamUseCase, deleteExamUseCase, getExamByCourseUseCase } from "../di";
+import {
+  createExamUseCase,
+  deleteExamUseCase,
+  getExamByCourseUseCase,
+  uploadCertificateUseCase,
+} from "../di";
 import { Exam } from "../domain/entities/Exam";
 
 export const createExamController = async (
@@ -63,6 +68,42 @@ export const deleteExamController = async (
     res.status(200).json({
       success: true,
       data: "Exam deleted successfully",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const uploadCertificateController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
+  try {
+    const filesObj = req.files as Record<string, Express.Multer.File[]> | undefined;
+    const file =
+      req.file ||
+      filesObj?.file?.[0] ||
+      filesObj?.certificate?.[0] ||
+      filesObj?.image?.[0];
+
+    const studentId = String(
+      req.body.studentId || req.query.studentId || req.params.studentId || "",
+    );
+    const courseId = String(
+      req.body.courseId || req.query.courseId || req.params.courseId || "",
+    );
+
+    const data = await uploadCertificateUseCase.execute({
+      studentId,
+      courseId,
+      file: file!,
+    });
+
+    res.status(200).json({
+      success: true,
+      message: "Certificate uploaded successfully",
+      data,
     });
   } catch (error) {
     next(error);

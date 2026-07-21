@@ -11,12 +11,19 @@ import examRoutes from "../modules/exam/presentation/routes";
 const router = Router();
 
 router.use("/auth",authRoutes);
+
 router.use("/course",courseRoutes);
+
 router.use("/category",categoryRoutes);
+
 router.use("/instructor",instructorRoutes);
+
 router.use("/chapters",chapterRoutes);
+
 router.use("/student",studentRoutes);
+
 router.use("/coupon", couponRoutes);
+
 router.use("/exam", examRoutes);
 
 export default router;

@@ -47,10 +47,6 @@ export class MongoUserRepository implements UserRepository {
       $push: { examAttempts: attempt },
     };
 
-    if (attempt.isPassed) {
-      update.$addToSet = { certificates: attempt.courseId };
-    }
-
     const user = await UserModel.findByIdAndUpdate(id, update, { new: true });
     if (!user) {
       throw new Error("User not found");

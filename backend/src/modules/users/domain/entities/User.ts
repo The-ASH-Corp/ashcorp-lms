@@ -19,6 +19,11 @@ export interface ExamAttempt {
     attemptedAt: Date;
 }
 
+export interface Certificate {
+  courseId: string;
+  link: string;
+}
+
 export class User{
     constructor(
         public name:string,
@@ -30,7 +35,7 @@ export class User{
         public wishlist:string[] = [],
         public purchasedCourses:string[] = [],
         public courseProgress: Record<string, number> | Map<string, number> = {},
-        public certificates:string[] = [],
+        public certificates: Certificate[] = [],
         public examAttempts: ExamAttempt[] = [],
         public _id?: mongoose.Types.ObjectId |string,
     ){}

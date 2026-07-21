@@ -141,8 +141,26 @@ export const examApi = api.injectEndpoints({
       }),
       providesTags: ["Exam", "User"],
     }),
+
+    uploadCertificate: builder.mutation<
+      { success: boolean; message: string; data: { courseId: string; link: string; key: string } },
+      { studentId: string; courseId: string; file: File }
+    >({
+      query: (data) => {
+        const formData = new FormData();
+        formData.append("studentId", data.studentId);
+        formData.append("courseId", data.courseId);
+        formData.append("file", data.file);
+
+        return {
+          url: "/exam/upload-certificate",
+          method: "POST",
+          body: formData,
+        };
+      },
+      invalidatesTags: ["User", "Student"],
+    }),
   }),
-  
 });
 
 export const {
@@ -152,4 +170,5 @@ export const {
   useDeleteExamMutation,
   useSaveExamResponseMutation,
   useGetExamAttemptQuery,
+  useUploadCertificateMutation,
 } = examApi;
