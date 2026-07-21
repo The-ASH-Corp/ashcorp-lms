@@ -17,6 +17,11 @@ export default function CertificatePage() {
     (certificate) => certificate.courseId === courseId
   );
 
+  // Find the exam attempt that matches this specific course
+  const examAttempt = Array.isArray(user?.examAttempts)
+    ? user.examAttempts.find((attempt) => String(attempt.courseId) === String(courseId))
+    : undefined;
+
   const canViewCertificate = !!certificate;
   const certificateLink = certificate?.link;
 
@@ -125,7 +130,7 @@ export default function CertificatePage() {
                     Final Score
                   </p>
                   <p className="text-gray-900 font-medium">
-                    {user?.examAttempts?.score}
+                    {examAttempt ? `${examAttempt.score} / ${examAttempt.totalMarks}` : "—"}
                   </p>
                 </div>
 
@@ -133,7 +138,11 @@ export default function CertificatePage() {
                   <p className="text-xs font-semibold text-gray-600 uppercase tracking-wide mb-2">
                     Issued Date
                   </p>
-                  <p className="text-gray-900 font-medium">{new Date(user?.examAttempts?.attemptedAt).toLocaleDateString()}</p>
+                  <p className="text-gray-900 font-medium">
+                    {examAttempt?.attemptedAt
+                      ? new Date(examAttempt.attemptedAt).toLocaleDateString()
+                      : "—"}
+                  </p>
                 </div>
               </div>
             </div>
