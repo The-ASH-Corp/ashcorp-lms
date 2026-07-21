@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
@@ -31,7 +31,9 @@ import { PropagateLoader } from "react-spinners";
 import type { Course } from "@/lib/redux/features/course/courseSlice";
 import { usePathname } from "next/navigation";
 import { useGetMyCoursesQuery, useGetStudentByIdQuery, type EnrolledCourse } from "@/lib/redux/features/student/studentApi";
+import { useUploadCertificateMutation } from "@/lib/redux/features/exam/examApi";
 import { Label } from "@/components/ui/label";
+import { toast } from "sonner";
 
 const statusStyles: Record<string, { dot: string; bg: string; text: string }> =
   {
@@ -53,10 +55,12 @@ export default function CompletedCourseList() {
   const studentId = id.split("/")[4];
   
   const [currentPage] = useState(1);
+  const [selectedCourseId, setSelectedCourseId] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
-  
   const { data: courses, isLoading, isError } = useGetMyCoursesQuery(studentId);
-  const {data: selectedUser} = useGetStudentByIdQuery(studentId);
+  const { data: selectedUser } = useGetStudentByIdQuery(studentId);
+  const [uploadCertificate, { isLoading: isUploading }] = useUploadCertificateMutation();
 
   const getCategoryImageUrl = (iconUrl: string) => {
     if (!iconUrl) return "";
@@ -67,7 +71,38 @@ export default function CompletedCourseList() {
     return `${baseUrl}/${path}`;
   };
 
- 
+  const handleCertificateUpload = (courseId: string) => {
+    setSelectedCourseId(courseId);
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !selectedCourseId) return;
+
+    const allowedTypes = ["application/pdf", "image/png", "image/jpeg", "image/jpg"];
+    if (!allowedTypes.includes(file.type)) {
+      toast.error("Only PDF, PNG, or JPEG files are allowed.");
+      e.target.value = "";
+      return;
+    }
+
+    const toastId = toast.loading("Uploading certificate...");
+
+    try {
+      const response = await uploadCertificate({
+        studentId,
+        courseId: selectedCourseId,
+        file,
+      }).unwrap();
+      toast.success(response?.message || "Certificate uploaded successfully!", { id: toastId });
+    } catch (error: any) {
+      toast.error(error?.data?.message || "Unable to upload the certificate!", { id: toastId });
+    } finally {
+      e.target.value = "";
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="flex justify-center items-center min-h-[80vh]">
@@ -87,6 +122,13 @@ export default function CompletedCourseList() {
   }
   return (
     <>
+      <input
+        type="file"
+        ref={fileInputRef}
+        accept=".pdf,.png,.jpg,.jpeg"
+        className="hidden"
+        onChange={handleFileChange}
+      />
       <div className="space-y-6">
         {/* ─── Page Header ─── */}
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -137,6 +179,11 @@ export default function CompletedCourseList() {
                   (attempt) => String(attempt.courseId) === String(courseId) && attempt.isPassed === true
                 );
                 const isCompleted = isProgressComplete && Boolean(isExamPassed);
+                const isCertificateUploaded = selectedUser?.certificates?.some(
+                  (cert: any) =>
+                    (typeof cert === "string" ? cert === courseId : cert?.courseId === courseId) &&
+                    Boolean(typeof cert === "string" ? cert : cert?.link)
+                );
 
                 return (
                   <TableRow
@@ -183,16 +230,20 @@ export default function CompletedCourseList() {
 
                     {/* Actions */}
                     <TableCell className="flex justify-center">
-                      {isCompleted ? (
+                      {isCertificateUploaded ? (
+                        <Label className="bg-emerald-50 text-emerald-700 px-3 py-1.5 rounded-lg font-semibold text-xs border border-emerald-200">
+                          Uploaded
+                        </Label>
+                      ) : isCompleted ? (
                         <Button
-                          className="bg-transparent text-primary border border-primary rounded-lg hover:bg-primary hover:text-white cursor-pointer"
+                          disabled={isUploading && selectedCourseId === courseId}
+                          className="bg-transparent text-primary border border-primary rounded-lg hover:bg-primary hover:text-white cursor-pointer disabled:opacity-50"
+                          onClick={() => handleCertificateUpload(courseId)}
                         >
-                          Upload
+                          {isUploading && selectedCourseId === courseId ? "Uploading..." : "Upload"}
                         </Button>
                       ) : (
-                        <Label
-                          className="bg-transparent text-primary rounded-lg "
-                        >
+                        <Label className="bg-transparent text-primary rounded-lg ">
                           Not Eligible
                         </Label>
                       )}

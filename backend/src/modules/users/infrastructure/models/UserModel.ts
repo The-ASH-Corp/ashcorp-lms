@@ -64,6 +64,20 @@ const examAttemptSchema = new mongoose.Schema(
   { _id: false },
 );
 
+const certificateSchema = new mongoose.Schema(
+  {
+    courseId: {
+      type: String,
+      required: true,
+    },
+    link: {
+      type: String,
+      required: true,
+    },
+  },
+  { _id: false },
+);
+
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -106,7 +120,7 @@ const userSchema = new mongoose.Schema({
     default: {},
   },
   certificates: {
-    type: [String],
+    type: [certificateSchema],
     default: [],
   },
   examAttempts: {

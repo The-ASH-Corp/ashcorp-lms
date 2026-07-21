@@ -11,6 +11,11 @@ export interface ExamAttempt {
   attemptedAt?: string;
 }
 
+export interface CertificateItem {
+  courseId: string;
+  link: string;
+}
+
 export interface Student {
   _id: string;
   name: string;
@@ -19,6 +24,7 @@ export interface Student {
   role: string;
   status: string;
   courseProgress?: Record<string, number>;
+  certificates?: (CertificateItem | string)[];
   examAttempts?: ExamAttempt[];
   createdAt?: string;
   updatedAt?: string;
