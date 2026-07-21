@@ -22,7 +22,8 @@ export class GetMyCoursesUseCase {
 
     const courseProgress = this.normalizeProgress(user.courseProgress);
     const courses = await Promise.all(
-      user.purchasedCourses.map(async (courseId) => {
+      user.purchasedCourses.map(async (purchase) => {
+        const courseId = purchase.courseId;
         const course = await this.courseRepository.getCourseById(courseId);
         return course
           ? {
