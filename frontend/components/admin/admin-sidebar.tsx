@@ -28,7 +28,8 @@ import {
   LogOut,
   ChevronDown,
   ChevronUp,
-  Ticket,BookOpenCheck
+  Ticket,BookOpenCheck,
+  NotebookText
 
 } from "lucide-react";
 import Image from "next/image";
@@ -65,6 +66,11 @@ const navItems = [
     title:"Exam",
     url:"/admin/exam",
     icon:BookOpenCheck
+  },
+  {
+    title:"Certificate",
+    url:"/admin/certificate",
+    icon:NotebookText
   },
   {
     title: "Coupons",

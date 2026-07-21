@@ -15,6 +15,7 @@ import {
   updateProfileUseCase,
 } from "../di";
 import { serializeCourse } from "../../../shared/config/serializeCourses";
+import { AppError } from "../../../shared/error/AppError";
 
 export const createStudentController = async (
   req: Request,
@@ -180,7 +181,12 @@ export const getMyCoursesController = async (
   next: NextFunction,
 ): Promise<void> => {
   try {
-    const studentId = String(req.userId);
+    const studentId = req.query.studentId
+      ? String(req.query.studentId)
+      : (req.userRole === "admin" && req.params?.studentId
+          ? String(req.params.studentId)
+          : String(req.userId));
+
     const enrolledCourses = await getMyCoursesUseCase.execute(studentId);
     const data = await Promise.all(
       enrolledCourses.map(async (enrolledCourse) => ({
@@ -302,6 +308,29 @@ export const getExamAttemptController = async (
       success: true,
       message: "Exam attempt fetched successfully",
       data: passedAttempt ?? latestAttempt,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const getStudentByIdController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
+  try {
+    const studentId = String(req.params.id);
+    const student = await studentUserRepository.findById(studentId);
+
+    if (!student) {
+     throw new AppError("Student not found", 404);
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Student fetched successfully",
+      data: student,
     });
   } catch (err) {
     next(err);
