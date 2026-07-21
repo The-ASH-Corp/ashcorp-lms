@@ -1,5 +1,16 @@
 import { api } from "../../services/api";
 
+export interface ExamAttempt {
+  examId?: string;
+  courseId?: string;
+  score?: number;
+  totalMarks?: number;
+  passMarks?: number;
+  isPassed?: boolean;
+  status?: string;
+  attemptedAt?: string;
+}
+
 export interface Student {
   _id: string;
   name: string;
@@ -7,6 +18,8 @@ export interface Student {
   phone: number;
   role: string;
   status: string;
+  courseProgress?: Record<string, number>;
+  examAttempts?: ExamAttempt[];
   createdAt?: string;
   updatedAt?: string;
 }
@@ -44,6 +57,7 @@ export interface CreateStudentDTO {
 
 export const studentApi = api.injectEndpoints({
   endpoints: (builder) => ({
+
     createStudent: builder.mutation<void, CreateStudentDTO>({
       query: (student) => ({
         url: "/student/create-student",
@@ -109,8 +123,8 @@ export const studentApi = api.injectEndpoints({
       invalidatesTags: ["Student", "User"],
     }),
 
-    getMyCourses: builder.query<EnrolledCourse[], void>({
-      query: () => "/student/my-courses",
+    getMyCourses: builder.query<EnrolledCourse[], string | void>({
+      query: (id) => (id ? `/student/my-courses?studentId=${id}` : "/student/my-courses"),
       transformResponse: (response: any) => response.data as EnrolledCourse[],
       providesTags: ["Student"],
     }),
@@ -124,6 +138,11 @@ export const studentApi = api.injectEndpoints({
       invalidatesTags: ["Student", "User"],
     }),
 
+    getStudentById: builder.query<Student, string>({
+      query: (id) => `/student/get-student-by-Id/${id}`,
+      transformResponse: (response: any) => response.data as Student,
+      providesTags: ["Student"],
+    }),
     
   }),
 });
@@ -139,4 +158,5 @@ export const {
   useEnrollCourseMutation,
   useGetMyCoursesQuery,
   useUpdateCourseProgressMutation,
+  useGetStudentByIdQuery,
 } = studentApi;

@@ -10,6 +10,7 @@ import {
   getAllStudentsController,
   getExamAttemptController,
   getMyCoursesController,
+  getStudentByIdController,
   getWishlistController,
   removeFromWishlistController,
   saveExamResponseController,
@@ -60,5 +61,8 @@ router.post("/exam-response", saveExamResponseController);
 
 // get saved exam attempt for a course
 router.get("/exam-attempt/:courseId", getExamAttemptController);
+
+// get user by id 
+router.get("/get-student-by-Id/:id", getStudentByIdController);
 
 export default router;

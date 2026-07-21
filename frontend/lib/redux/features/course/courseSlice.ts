@@ -7,7 +7,6 @@ export interface Course {
   price: number;
   offerPrice: number;
   instructor: string;
-  instructorTitle: string;
   category: string;
   imageUrl: string;
   videoUrl: string;
@@ -16,6 +15,8 @@ export interface Course {
   status: string;
   createdAt: string;
   updatedAt: string;
+  instructorTitle?: string;
+  courseProgress?: Record<string, number>;
 }
 
 const initialState = {
