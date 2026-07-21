@@ -7,7 +7,7 @@ import Navbar from '@/components/landing/Navbar';
 import Footer from '@/components/landing/Footer';
 import { useGetCourseQuery } from '@/lib/redux/features/course/courseApi';
 import { useAppSelector } from '@/lib/redux/hooks';
-import { useGetWishlistQuery, useAddToWishlistMutation, useRemoveFromWishlistMutation, useEnrollCourseMutation } from '@/lib/redux/features/student/studentApi';
+import { useGetWishlistQuery, useAddToWishlistMutation, useRemoveFromWishlistMutation, useEnrollCourseMutation, useCreateOrderMutation, useVerifyPaymentMutation } from '@/lib/redux/features/student/studentApi';
 import { useGetCurrentUserQuery } from '@/lib/redux/features/auth/authApi';
 import { toast } from 'sonner';
 import { PropagateLoader } from 'react-spinners';
@@ -28,7 +28,10 @@ export default function CourseDetail() {
   const { data: wishlist } = useGetWishlistQuery(undefined, { skip: !user });
   const [addToWishlist, { isLoading: isAdding }] = useAddToWishlistMutation();
   const [removeFromWishlist, { isLoading: isRemoving }] = useRemoveFromWishlistMutation();
-  const [enrollCourse, { isLoading: isEnrolling }] = useEnrollCourseMutation();
+  const [enrollCourse] = useEnrollCourseMutation();
+  const [createOrder] = useCreateOrderMutation();
+  const [verifyPayment] = useVerifyPaymentMutation();
+  const [isEnrolling, setIsEnrolling] = useState(false);
 
   const { data: course, isLoading, isError } = useGetCourseQuery(courseId ?? "");
 
@@ -45,7 +48,9 @@ export default function CourseDetail() {
   const discountPercentage =
     price > 0 ? Math.round(((price - offerPrice) / price) * 100) : 0;
   const isPurchased = Boolean(
-    user?.purchasedCourses?.some((id) => String(id) === String(courseId)),
+    user?.purchasedCourses?.some((p) =>
+      typeof p === "string" ? p === courseId : p.courseId === courseId
+    ),
   );
 
   const handleEnrollNow = async () => {
@@ -62,14 +67,78 @@ export default function CourseDetail() {
       return;
     }
 
-    try {
-      await enrollCourse({ courseId }).unwrap();
-      toast.success("Course enrolled successfully.");
-      router.push(`/play?courseId=${courseId}`);
-    } catch (err: any) {
-      toast.error(err?.data?.message || "Failed to enroll course.");
+    const price = Number(course?.offerPrice ?? course?.price ?? 0);
+
+    // Free course: enroll directly
+    if (price === 0) {
+      try {
+        setIsEnrolling(true);
+        await enrollCourse({ courseId }).unwrap();
+        toast.success("Course enrolled successfully.");
+        router.push(`/play?courseId=${courseId}`);
+      } catch (err: any) {
+        toast.error(err?.data?.message || "Failed to enroll course.");
+      } finally {
+        setIsEnrolling(false);
+      }
+      return;
     }
-  }  
+
+    // Paid course: Razorpay checkout
+    try {
+      setIsEnrolling(true);
+      const orderRes = await createOrder({ courseId }).unwrap();
+      const { orderId, amount, currency, keyId } = orderRes.data;
+
+      const options = {
+        key: keyId,
+        amount,
+        currency,
+        name: "Ash Academy",
+        description: course?.title ?? "Course Enrollment",
+        order_id: orderId,
+        handler: async (response: any) => {
+          try {
+            await verifyPayment({
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_signature: response.razorpay_signature,
+              courseId,
+            }).unwrap();
+            toast.success("Payment successful! Course enrolled.");
+            router.push(`/play?courseId=${courseId}`);
+          } catch {
+            toast.error("Payment verification failed. Contact support.");
+          } finally {
+            setIsEnrolling(false);
+          }
+        },
+        prefill: {
+          name: user?.name ?? "",
+          email: user?.email ?? "",
+        },
+        theme: { color: "#7E23FE" },
+        modal: {
+          ondismiss: () => {
+            setIsEnrolling(false);
+            toast.error("Payment cancelled.");
+          },
+        },
+      };
+
+      const Razorpay = (window as any).Razorpay;
+      if (!Razorpay) {
+        toast.error("Razorpay SDK not loaded. Please refresh the page.");
+        setIsEnrolling(false);
+        return;
+      }
+      const rzp = new Razorpay(options);
+      rzp.open();
+    } catch (err: any) {
+      toast.error(err?.data?.message || "Failed to initiate payment.");
+      setIsEnrolling(false);
+    }
+  };
 
   const handleWishlistToggle = async () => {
     if (!user) {

@@ -66,7 +66,7 @@ export class MongoUserRepository implements UserRepository {
   async hasPurchasedCourse(courseId: string): Promise<boolean> {
     const studentCount = await UserModel.countDocuments({
       role: "user",
-      purchasedCourses: courseId,
+      "purchasedCourses.courseId": courseId,
     });
 
     return studentCount > 0;

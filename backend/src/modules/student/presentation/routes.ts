@@ -4,6 +4,7 @@ import { registerSchema } from "../../auth/presentation/validators";
 import {
   addToWishlistController,
   blockStudentController,
+  createOrderController,
   createStudentController,
   deleteStudentController,
   enrollCourseController,
@@ -16,6 +17,7 @@ import {
   saveExamResponseController,
   updateCourseProgressController,
   updateProfileController,
+  verifyPaymentController,
 } from "./controller";
 import { authMiddleware } from "../../../shared/middleware/authMiddleware";
 
@@ -64,5 +66,11 @@ router.get("/exam-attempt/:courseId", getExamAttemptController);
 
 // get user by id 
 router.get("/get-student-by-Id/:id", getStudentByIdController);
+
+// razorpay: create order
+router.post("/create-order", createOrderController);
+
+// razorpay: verify payment & enroll
+router.post("/verify-payment", verifyPaymentController);
 
 export default router;

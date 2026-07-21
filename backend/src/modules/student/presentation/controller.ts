@@ -16,6 +16,9 @@ import {
 } from "../di";
 import { serializeCourse } from "../../../shared/config/serializeCourses";
 import { AppError } from "../../../shared/error/AppError";
+import { razorpay } from "../../../shared/razorpay/razorpay";
+import crypto from "crypto";
+import { courseRepository } from "../../course/di";
 
 export const createStudentController = async (
   req: Request,
@@ -330,6 +333,88 @@ export const getStudentByIdController = async (
     res.status(200).json({
       success: true,
       message: "Student fetched successfully",
+      data: student,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// ─── Razorpay: Create Order ──────────────────────────────────────────────────
+export const createOrderController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
+  try {
+    const { courseId } = req.body;
+
+    if (!courseId) throw new AppError("courseId is required", 400);
+
+    const course = await courseRepository.getCourseById(courseId);
+    if (!course) throw new AppError("Course not found", 404);
+
+    const amount = Math.round(Number(course.offerPrice ?? course.price) * 100); 
+    if (!amount || amount <= 0) throw new AppError("Invalid course price", 400);
+
+    const order = await razorpay.orders.create({
+      amount,
+      currency: "INR",
+      receipt: `receipt_${courseId}_${Date.now()}`.substring(0, 40),
+      notes: { courseId, studentId: String(req.userId) },
+    });
+
+    res.status(200).json({
+      success: true,
+      message: "Order created",
+      data: {
+        orderId: order.id,
+        amount: order.amount,
+        currency: order.currency,
+        keyId: process.env.RAZORPAY_KEY_ID,
+      },
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// ─── Razorpay: Verify Payment & Enroll ──────────────────────────────────────
+export const verifyPaymentController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
+  try {
+    const { razorpay_order_id, razorpay_payment_id, razorpay_signature, courseId } = req.body;
+
+    if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature || !courseId) {
+      throw new AppError("Missing payment verification fields", 400);
+    }
+
+    const expectedSignature = crypto
+      .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET!)
+      .update(`${razorpay_order_id}|${razorpay_payment_id}`)
+      .digest("hex");
+
+    if (expectedSignature !== razorpay_signature) {
+      throw new AppError("Payment verification failed", 400);
+    }
+
+    // Fetch payment details from Razorpay to get method and amount
+    const paymentDetails = await razorpay.payments.fetch(razorpay_payment_id);
+
+    const studentId = String(req.userId);
+    const student = await enrollCourseUseCase.execute(studentId, String(courseId), {
+      paymentId: razorpay_payment_id,
+      methodOfPayment: String(paymentDetails.method ?? "razorpay"),
+      paymentTime: new Date(Number(paymentDetails.created_at) * 1000),
+      amount: Number(paymentDetails.amount) / 100, // convert paise → INR
+    });
+
+    res.status(200).json({
+      success: true,
+      message: "Payment verified and course enrolled successfully",
       data: student,
     });
   } catch (err) {

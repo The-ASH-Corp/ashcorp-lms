@@ -16,6 +16,14 @@ export interface CertificateItem {
   link: string;
 }
 
+export interface PurchasedCourseItem {
+  courseId: string;
+  paymentId: string;
+  methodOfPayment: string;
+  paymentTime: string;
+  amount: number;
+}
+
 export interface Student {
   _id: string;
   name: string;
@@ -23,6 +31,7 @@ export interface Student {
   phone: number;
   role: string;
   status: string;
+  purchasedCourses?: PurchasedCourseItem[];
   courseProgress?: Record<string, number>;
   certificates?: (CertificateItem | string)[];
   examAttempts?: ExamAttempt[];
@@ -149,7 +158,30 @@ export const studentApi = api.injectEndpoints({
       transformResponse: (response: any) => response.data as Student,
       providesTags: ["Student"],
     }),
-    
+
+    createOrder: builder.mutation<
+      { success: boolean; data: { orderId: string; amount: number; currency: string; keyId: string } },
+      { courseId: string }
+    >({
+      query: (body) => ({
+        url: "/student/create-order",
+        method: "POST",
+        body,
+      }),
+    }),
+
+    verifyPayment: builder.mutation<
+      { success: boolean; message: string },
+      { razorpay_order_id: string; razorpay_payment_id: string; razorpay_signature: string; courseId: string }
+    >({
+      query: (body) => ({
+        url: "/student/verify-payment",
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["Student", "User"],
+    }),
+
   }),
 });
 
@@ -165,4 +197,6 @@ export const {
   useGetMyCoursesQuery,
   useUpdateCourseProgressMutation,
   useGetStudentByIdQuery,
+  useCreateOrderMutation,
+  useVerifyPaymentMutation,
 } = studentApi;

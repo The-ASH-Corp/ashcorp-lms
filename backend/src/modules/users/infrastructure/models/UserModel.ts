@@ -78,6 +78,17 @@ const certificateSchema = new mongoose.Schema(
   { _id: false },
 );
 
+const purchasedCourseSchema = new mongoose.Schema(
+  {
+    courseId: { type: String, required: true },
+    paymentId: { type: String, required: true },
+    methodOfPayment: { type: String, default: "razorpay" },
+    paymentTime: { type: Date, default: Date.now },
+    amount: { type: Number, required: true },
+  },
+  { _id: false },
+);
+
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -111,7 +122,7 @@ const userSchema = new mongoose.Schema({
     default: [],
   },
   purchasedCourses: {
-    type: [String],
+    type: [purchasedCourseSchema],
     default: [],
   },
   courseProgress: {

@@ -19,6 +19,14 @@ export interface ExamAttempt {
     attemptedAt: Date;
 }
 
+export interface PurchasedCourse {
+  courseId: string;
+  paymentId: string;
+  methodOfPayment: string;
+  paymentTime: Date;
+  amount: number;
+}
+
 export interface Certificate {
   courseId: string;
   link: string;
@@ -33,7 +41,7 @@ export class User{
         public role:string,
         public status:string = "Active",
         public wishlist:string[] = [],
-        public purchasedCourses:string[] = [],
+        public purchasedCourses: PurchasedCourse[] = [],
         public courseProgress: Record<string, number> | Map<string, number> = {},
         public certificates: Certificate[] = [],
         public examAttempts: ExamAttempt[] = [],

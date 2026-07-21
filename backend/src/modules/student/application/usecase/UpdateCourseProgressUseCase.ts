@@ -23,7 +23,7 @@ export class UpdateCourseProgressUseCase {
       throw new AppError("Course not found", 404);
     }
 
-    if (!user.purchasedCourses.includes(courseId)) {
+    if (!user.purchasedCourses.some((p) => p.courseId === courseId)) {
       throw new AppError("Enroll this course before updating progress", 403);
     }
 
