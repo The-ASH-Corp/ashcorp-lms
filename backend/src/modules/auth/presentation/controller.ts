@@ -77,6 +77,7 @@ export const getCurrentUserController = async (
 
     const purchasedCourses = "purchasedCourses" in currentUser ? currentUser.purchasedCourses || [] : [];
     const certificates = "certificates" in currentUser ? currentUser.certificates || [] : [];
+    const examAttempts = "examAttempts" in currentUser ? currentUser.examAttempts[currentUser.examAttempts.length -1] || [] : [];
 
     res.status(200).json({
       id: currentUser._id?.toString(),
@@ -86,6 +87,7 @@ export const getCurrentUserController = async (
       role: currentUser.role,
       purchasedCourses,
       certificates,
+      examAttempts,
     });
   } catch (error: any) {
     next(error);

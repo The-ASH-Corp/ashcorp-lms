@@ -1,5 +1,9 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
-
+import { ExamAttempt } from "../student/studentApi";
+export interface Certificate {
+  courseId: string;
+  link: string;
+}
 export interface AuthUser {
   id?: string | number;
   name?: string;
@@ -7,7 +11,8 @@ export interface AuthUser {
   phone?: string;
   role?: string;
   purchasedCourses?: string[];
-  certificates?: string[];
+  certificates?: Certificate[];
+  examAttempts?:ExamAttempt[]
 }
 
 export interface AuthState {
