@@ -3,7 +3,6 @@ import { CourseRepository } from "../../domain/repositories/CourseRepository";
 import { CourseModel } from "../models/CourseModel";
 
 export class MongoCourseRepository implements CourseRepository {
-    
   async create(data: any): Promise<Course> {
     const course = await CourseModel.create(data);
     return course as unknown as Course;
@@ -15,7 +14,7 @@ export class MongoCourseRepository implements CourseRepository {
   }
 
   async getCourseById(id: string): Promise<Course> {
-    const course = await CourseModel.findById(id);
+    const course = await CourseModel.findById(id).populate("chapters");
     return course as Course;
   }
 
@@ -24,7 +23,10 @@ export class MongoCourseRepository implements CourseRepository {
     return course as Course;
   }
 
-  async addChapterToCourse(courseId: string, chapterId: string): Promise<Course> {
+  async addChapterToCourse(
+    courseId: string,
+    chapterId: string,
+  ): Promise<Course> {
     const course = await CourseModel.findByIdAndUpdate(
       courseId,
       { $addToSet: { chapters: chapterId } },
@@ -42,7 +44,10 @@ export class MongoCourseRepository implements CourseRepository {
     return course as Course;
   }
 
-  async addEnrolledStudent(courseId: string, studentId: string): Promise<Course> {
+  async addEnrolledStudent(
+    courseId: string,
+    studentId: string,
+  ): Promise<Course> {
     const course = await CourseModel.findByIdAndUpdate(
       courseId,
       { $addToSet: { enrolledStudents: studentId } },
@@ -70,4 +75,35 @@ export class MongoCourseRepository implements CourseRepository {
     await CourseModel.findByIdAndDelete(id);
   }
 
+  async addReview(
+    courseId: string,
+    userId: string,
+    rating: number,
+    review: string,
+  ): Promise<Course> {
+    const course = await CourseModel.findById(courseId);
+
+    if (!course) {
+      throw new Error("Course not found");
+    }
+
+    const alreadyReviewed = course.rating.find(
+      (item) => item.userId === userId,
+    );
+
+    if (alreadyReviewed) {
+      throw new Error("You have already reviewed this course");
+    }
+
+    course.rating.push({
+      userId,
+      rating,
+      review,
+      createdAt: new Date(),
+    });
+
+    await course.save();
+
+    return course as unknown as Course;
+  }
 }

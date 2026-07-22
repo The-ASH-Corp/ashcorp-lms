@@ -34,9 +34,12 @@ const courseSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    chapters: {
-      type: [String],
-    },
+    chapters: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Chapter",
+      },
+    ],
     enrolledStudents: {
       type: [String],
       default: [],
@@ -64,7 +67,7 @@ const courseSchema = new mongoose.Schema(
           type: Date,
           default: Date.now,
         },
-      }
+      },
     ],
   },
   { timestamps: true },

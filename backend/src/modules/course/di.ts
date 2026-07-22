@@ -7,6 +7,7 @@ import { instructorRepository } from "../instructor/di";
 import { userRepository } from "../auth/di";
 import { GetCourseByIdUseCase } from "./application/usecase/GetCourseByIdUseCase";
 import { MakeCourseFreeAndPublishedUseCase } from "./application/usecase/MakeCourseFreeAndPublishedUseCase";
+import { AddReviewUseCase } from "./application/usecase/AddReviewUseCase";
 
 export const courseRepository = new MongoCourseRepository();
 
@@ -23,12 +24,15 @@ export const createCourseUseCase = new CreateCourseUseCase(
 // course find by id useCase
 export const getCourseByIdUseCase = new GetCourseByIdUseCase(courseRepository);
 
-// course delete usecase
+// course delete useCase
 export const deleteCourseUseCase = new DeleteCourseUseCase(
   courseRepository,
   userRepository,
 );
 
-// course make free and publish usecase
+// course make free and publish useCase
 export const makeCourseFreeAndPublishedUseCase =
   new MakeCourseFreeAndPublishedUseCase(courseRepository);
+
+// add review useCase
+export const addReviewUseCase = new AddReviewUseCase(courseRepository);  
