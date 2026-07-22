@@ -20,22 +20,28 @@ import {
   verifyPaymentController,
 } from "./controller";
 import { authMiddleware } from "../../../shared/middleware/authMiddleware";
+import { requireRole } from "../../../shared/middleware/requireRole";
 
 const router = Router();
 
 router.use(authMiddleware);
 
 // Create a new student (reuses auth register validation)
-router.post("/create-student", validate(registerSchema), createStudentController);
+router.post(
+  "/create-student",
+  requireRole("admin"),
+  validate(registerSchema),
+  createStudentController,
+);
 
 // Get all students
-router.get("/get-all-students", getAllStudentsController);
+router.get("/get-all-students", requireRole("admin"), getAllStudentsController);
 
 // delete student
-router.delete("/delete-student/:id", deleteStudentController);
+router.delete("/delete-student/:id", requireRole("admin"), deleteStudentController);
 
 // block student
-router.patch("/block-student/:id", blockStudentController);
+router.patch("/block-student/:id", requireRole("admin"), blockStudentController);
 
 // add to wishlist
 router.post("/add-to-wishlist",addToWishlistController);
@@ -65,7 +71,7 @@ router.post("/exam-response", saveExamResponseController);
 router.get("/exam-attempt/:courseId", getExamAttemptController);
 
 // get user by id 
-router.get("/get-student-by-Id/:id", getStudentByIdController);
+router.get("/get-student-by-Id/:id", requireRole("admin"), getStudentByIdController);
 
 // razorpay: create order
 router.post("/create-order", createOrderController);

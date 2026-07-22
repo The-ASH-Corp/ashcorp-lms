@@ -11,14 +11,13 @@ import { authMiddleware } from "../../../shared/middleware/authMiddleware";
 import { requireRole } from "../../../shared/middleware/requireRole";
 
 const router = Router();
+const adminOnly = [authMiddleware, requireRole("admin")];
 
-router.use(authMiddleware, requireRole("admin"));
-
-router.post("/create", createCouponController);
-router.get("/all-coupons", getAllCouponsController);
-router.get("/:id", getCouponByIdController);
-router.patch("/:id", updateCouponController);
-router.patch("/toggle-status/:id", toggleCouponStatusController);
-router.delete("/delete-coupon/:id", deleteCouponController);
+router.post("/create", ...adminOnly, createCouponController);
+router.get("/all-coupons", ...adminOnly, getAllCouponsController);
+router.get("/:id", ...adminOnly, getCouponByIdController);
+router.patch("/:id", ...adminOnly, updateCouponController);
+router.patch("/toggle-status/:id", ...adminOnly, toggleCouponStatusController);
+router.delete("/delete-coupon/:id", ...adminOnly, deleteCouponController);
 
 export default router;
