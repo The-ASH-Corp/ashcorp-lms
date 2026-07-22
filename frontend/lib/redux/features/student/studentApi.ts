@@ -172,7 +172,7 @@ export const studentApi = api.injectEndpoints({
 
     verifyPayment: builder.mutation<
       { success: boolean; message: string },
-      { razorpay_order_id: string; razorpay_payment_id: string; razorpay_signature: string; courseId: string }
+      { razorpay_order_id: string; razorpay_payment_id: string; razorpay_signature: string }
     >({
       query: (body) => ({
         url: "/student/verify-payment",

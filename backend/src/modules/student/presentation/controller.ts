@@ -13,11 +13,11 @@ import {
   studentUserRepository,
   updateCourseProgressUseCase,
   updateProfileUseCase,
+  verifyPaymentUseCase,
 } from "../di";
 import { serializeCourse } from "../../../shared/config/serializeCourses";
 import { AppError } from "../../../shared/error/AppError";
 import { razorpay } from "../../../shared/razorpay/razorpay";
-import crypto from "crypto";
 import { courseRepository } from "../../course/di";
 
 export const createStudentController = async (
@@ -386,31 +386,8 @@ export const verifyPaymentController = async (
   next: NextFunction,
 ): Promise<void> => {
   try {
-    const { razorpay_order_id, razorpay_payment_id, razorpay_signature, courseId } = req.body;
-
-    if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature || !courseId) {
-      throw new AppError("Missing payment verification fields", 400);
-    }
-
-    const expectedSignature = crypto
-      .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET!)
-      .update(`${razorpay_order_id}|${razorpay_payment_id}`)
-      .digest("hex");
-
-    if (expectedSignature !== razorpay_signature) {
-      throw new AppError("Payment verification failed", 400);
-    }
-
-    // Fetch payment details from Razorpay to get method and amount
-    const paymentDetails = await razorpay.payments.fetch(razorpay_payment_id);
-
     const studentId = String(req.userId);
-    const student = await enrollCourseUseCase.execute(studentId, String(courseId), {
-      paymentId: razorpay_payment_id,
-      methodOfPayment: String(paymentDetails.method ?? "razorpay"),
-      paymentTime: new Date(Number(paymentDetails.created_at) * 1000),
-      amount: Number(paymentDetails.amount) / 100, // convert paise → INR
-    });
+    const student = await verifyPaymentUseCase.execute(studentId, req.body);
 
     res.status(200).json({
       success: true,
