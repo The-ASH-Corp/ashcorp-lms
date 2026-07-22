@@ -11,9 +11,11 @@ import { GetMyCoursesUseCase } from "./application/usecase/GetMyCoursesUseCase";
 import { UpdateCourseProgressUseCase } from "./application/usecase/UpdateCourseProgressUseCase";
 import { UpdateProfileUseCase } from "./application/usecase/UpdateProfileUseCase";
 import { SaveExamResponseUseCase } from "./application/usecase/SaveExamResponseUseCase";
+import { VerifyPaymentUseCase } from "./application/usecase/VerifyPaymentUseCase";
 import { courseRepository } from "../course/di";
 import { adminRepository } from "../admins/di";
 import { examRepository } from "../exam/di";
+import { razorpay } from "../../shared/razorpay/razorpay";
 
 export const studentUserRepository = new MongoUserRepository();
 
@@ -64,4 +66,10 @@ export const updateProfileUseCase = new UpdateProfileUseCase(
 export const saveExamResponseUseCase = new SaveExamResponseUseCase(
   studentUserRepository,
   examRepository,
+);
+
+export const verifyPaymentUseCase = new VerifyPaymentUseCase(
+  enrollCourseUseCase,
+  courseRepository,
+  razorpay,
 );

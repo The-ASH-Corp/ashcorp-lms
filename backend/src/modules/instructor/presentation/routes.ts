@@ -7,21 +7,26 @@ import {
   getAllInstructorsController,
 } from "./controller";
 import { authMiddleware } from "../../../shared/middleware/authMiddleware";
+import { requireRole } from "../../../shared/middleware/requireRole";
 
 
 
 const router = Router();
-
-router.use(authMiddleware);
+const adminOnly = [authMiddleware, requireRole("admin")];
 
 // create instructor controller
-router.post('/create-instructor',imageUpload("profileImage"),createInstructorController);
+router.post(
+  '/create-instructor',
+  ...adminOnly,
+  imageUpload("profileImage"),
+  createInstructorController,
+);
 
 // get all instructors controller
 router.get('/get-all-instructors',getAllInstructorsController);
 
-router.delete('/delete-instructor/:id', deleteInstructorController);
+router.delete('/delete-instructor/:id', ...adminOnly, deleteInstructorController);
 
-router.patch('/block-instructor/:id', blockInstructorController);
+router.patch('/block-instructor/:id', ...adminOnly, blockInstructorController);
 
 export default router;
