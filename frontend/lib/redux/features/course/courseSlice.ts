@@ -1,5 +1,28 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+
+interface Chapter {
+  _id: string;
+  title: string;
+  serialNumber: number;
+  courseId: string;
+  contents: string[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface AddReviewRequest {
+  courseId: string;
+  rating: number;
+  review: string;
+}
+interface CourseRating {
+  userId: string;
+  userName: string;
+  rating: number;
+  review: string;
+  createdAt: Date;
+}
 export interface Course {
   id: string;
   title: string;
@@ -10,9 +33,10 @@ export interface Course {
   category: string;
   imageUrl: string;
   videoUrl: string;
-  chapters: string[];
+  chapters: Chapter[];
   isPublished: boolean;
   status: string;
+  rating: CourseRating[];
   createdAt: string;
   updatedAt: string;
   instructorTitle?: string;

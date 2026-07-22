@@ -4,9 +4,11 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { Play, Share2, BookmarkPlus, CheckCircle2, Volume2, BookOpen } from 'lucide-react';
-import { useGetCourseQuery } from '@/lib/redux/features/course/courseApi';
+import { useAddReviewMutation, useGetCourseQuery } from '@/lib/redux/features/course/courseApi';
 import { useGetChaptersByCourseIdQuery } from '@/lib/redux/features/chapter/chapterApi';
 import { useGetMyCoursesQuery, useUpdateCourseProgressMutation } from '@/lib/redux/features/student/studentApi';
+import { Star } from "lucide-react";
+import { toast } from 'sonner';
 
 const formatDuration = (duration?: number) => {
   if (!duration || duration <= 0) return "Video";
@@ -30,6 +32,7 @@ export default function PlayPage() {
   const [selectedLessonId, setSelectedLessonId] = useState<string | null>(null);
   const lastSyncedProgress = useRef(0);
   const enrolledCourseProgress = myCourses.find((item) => item.id === courseId)?.progress ?? 0;
+  
 
   const sortedChapters = useMemo(
     () => [...chapters].sort((firstChapter, secondChapter) => (firstChapter.serialNumber ?? 0) - (secondChapter.serialNumber ?? 0)),
@@ -59,6 +62,7 @@ export default function PlayPage() {
   const selectedLesson = lessons.find((lesson) => lesson.id === selectedLessonId) ?? null;
   const selectedLessonPosition = selectedLesson ? lessons.findIndex((lesson) => lesson.id === selectedLesson.id) + 1 : 0;
   const activeVideoUrl = selectedLesson?.contentUrl || course?.videoUrl;
+
 
   useEffect(() => {
     const normalizedProgress = Math.min(100, Math.max(0, Math.round(enrolledCourseProgress)));
@@ -112,6 +116,44 @@ export default function PlayPage() {
     }
   };
 
+  const [addReview, { isLoading }] = useAddReviewMutation();
+
+  const [rating, setRating] = useState(0);
+  const [hoverRating, setHoverRating] = useState(0);
+  const [review, setReview] = useState("");
+
+  const handleSubmitReview = async () => {
+    if (!courseId) return;
+
+    if (rating === 0) {
+      toast.error("Please select a rating");
+      return;
+    }
+
+    if (!review.trim()) {
+      toast.error("Please write a review");
+      return;
+    }
+
+    try {
+      await addReview({
+        courseId,
+        rating,
+        review,
+      }).unwrap();
+
+      toast.success("Review submitted successfully!");
+
+      // Reset form
+      setRating(0);
+      setHoverRating(0);
+      setReview("");
+    } catch (error: any) {
+      console.log(error);
+      toast.error(error?.data?.message || "Something went wrong"); 
+    }
+  };
+
   return (
     <div className="min-h-screen bg-white">
       {/* Main Content */}
@@ -138,20 +180,23 @@ export default function PlayPage() {
                 </div>
               )}
               <div className="absolute bottom-0 left-0 right-0 h-1 bg-violet-200">
-                <div className="h-full bg-primary" style={{ width: `${currentVideoProgress}%` }}></div>
+                <div
+                  className="h-full bg-primary"
+                  style={{ width: `${currentVideoProgress}%` }}
+                ></div>
               </div>
             </div>
 
             {/* Tabs */}
             <div className="flex gap-6 border-b border-gray-200 mb-6 overflow-x-auto">
-              {['overview'].map(tab => (
+              {["overview"].map((tab) => (
                 <button
                   key={tab}
                   onClick={() => setCurrentTab(tab)}
                   className={`pb-3 px-2 font-medium text-sm sm:text-base transition-colors whitespace-nowrap ${
                     currentTab === tab
-                      ? 'text-primary border-b-2 border-primary'
-                      : 'text-gray-600 hover:text-gray-900'
+                      ? "text-primary border-b-2 border-primary"
+                      : "text-gray-600 hover:text-gray-900"
                   }`}
                 >
                   {tab.charAt(0).toUpperCase() + tab.slice(1)}
@@ -162,37 +207,55 @@ export default function PlayPage() {
             {/* Lesson Title and Info */}
             <div className="mb-6">
               <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-3">
-                {selectedLesson?.contentTitle ?? course?.title ?? "Course Lesson"}
+                {selectedLesson?.contentTitle ??
+                  course?.title ??
+                  "Course Lesson"}
               </h1>
               <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-gray-600">
                 <div className="flex items-center gap-2">
                   <div className="w-8 h-8 bg-violet-200 rounded-full"></div>
-                  <span className="font-medium text-gray-900">{course?.instructor ?? "Instructor"}</span>
+                  <span className="font-medium text-gray-900">
+                    {course?.instructor ?? "Instructor"}
+                  </span>
                 </div>
                 <span className="text-sm">•</span>
-                <span className="text-gray-600">{course?.category ?? "Course"}</span>
+                <span className="text-gray-600">
+                  {course?.category ?? "Course"}
+                </span>
               </div>
             </div>
 
             {/* Action Buttons */}
-            
 
             {/* Lesson Description */}
             <div className="mb-8">
-              <h2 className="text-xl font-bold text-gray-900 mb-4">Lesson Description</h2>
-              <p className="text-gray-600 leading-relaxed mb-6">
-                {course?.description ?? "Start playing the course video to update your learning progress."}
-              </p>
+              <h2 className="text-xl font-bold text-gray-900 mb-4">
+                Lesson Description
+              </h2>
+              <div
+                className="prose max-w-none text-gray-700"
+                dangerouslySetInnerHTML={{
+                  __html: course?.description || "",
+                }}
+              />
+              {/* <p className="text-gray-600 leading-relaxed mb-6">
+                {course?.description ??
+                  "Start playing the course video to update your learning progress."}
+              </p> */}
             </div>
           </div>
 
           {/* Right Sidebar - Progress */}
-          <div className="lg:col-span-1">
+          <div className="lg:col-span-1 flex flex-col gap-4">
             {/* Course Progress Card */}
-            <div className="bg-linear-to-br from-violet-50 to-gray-50 rounded-xl p-6 border border-violet-200 mb-6 sticky top-6">
+            <div className="bg-linear-to-br from-violet-50 to-gray-50 rounded-xl p-6 border border-violet-200 mb-6 ">
               <div className="flex justify-between items-start mb-4">
-                <h3 className="text-lg font-bold text-gray-900">Course Progress</h3>
-                <span className="text-2xl font-bold text-primary">{courseProgress}%</span>
+                <h3 className="text-lg font-bold text-gray-900">
+                  Course Progress
+                </h3>
+                <span className="text-2xl font-bold text-primary">
+                  {courseProgress}%
+                </span>
               </div>
 
               {/* Progress Bar */}
@@ -219,7 +282,9 @@ export default function PlayPage() {
                   </div>
                 ) : (
                   sortedChapters.map((chapter) => {
-                    const chapterLessons = lessons.filter((lesson) => lesson.chapterId === chapter._id);
+                    const chapterLessons = lessons.filter(
+                      (lesson) => lesson.chapterId === chapter._id,
+                    );
 
                     if (chapterLessons.length === 0) return null;
 
@@ -230,9 +295,13 @@ export default function PlayPage() {
                         </h4>
                         <div className="space-y-2 ml-2">
                           {chapterLessons.map((lesson) => {
-                            const lessonPosition = lessons.findIndex((item) => item.id === lesson.id) + 1;
+                            const lessonPosition =
+                              lessons.findIndex(
+                                (item) => item.id === lesson.id,
+                              ) + 1;
                             const isPlaying = lesson.id === selectedLessonId;
-                            const isCompleted = lessonPosition <= completedLessons;
+                            const isCompleted =
+                              lessonPosition <= completedLessons;
 
                             return (
                               <button
@@ -241,23 +310,38 @@ export default function PlayPage() {
                                 onClick={() => setSelectedLessonId(lesson.id)}
                                 className={`flex w-full items-start gap-2 rounded p-2 text-left transition-colors ${
                                   isPlaying
-                                    ? 'bg-violet-100 border border-violet-300'
-                                    : 'hover:bg-white'
+                                    ? "bg-violet-100 border border-violet-300"
+                                    : "hover:bg-white"
                                 }`}
                               >
                                 {isCompleted ? (
-                                  <CheckCircle2 size={18} className="text-primary shrink-0 mt-0.5" />
+                                  <CheckCircle2
+                                    size={18}
+                                    className="text-primary shrink-0 mt-0.5"
+                                  />
                                 ) : isPlaying ? (
-                                  <Play size={18} className="text-primary shrink-0 mt-0.5" />
+                                  <Play
+                                    size={18}
+                                    className="text-primary shrink-0 mt-0.5"
+                                  />
                                 ) : (
                                   <div className="w-4.5 h-4.5 rounded-full border-2 border-gray-300 shrink-0 mt-0.5" />
                                 )}
                                 <div className="min-w-0">
-                                  <p className={`text-sm font-medium ${isPlaying ? 'text-primary' : 'text-gray-900'}`}>
-                                    {chapter.serialNumber}.{lesson.sequance} {lesson.contentTitle}
+                                  <p
+                                    className={`text-sm font-medium ${isPlaying ? "text-primary" : "text-gray-900"}`}
+                                  >
+                                    {chapter.serialNumber}.{lesson.sequance}{" "}
+                                    {lesson.contentTitle}
                                   </p>
-                                  <p className="text-xs text-gray-500">{formatDuration(lesson.duration)}</p>
-                                  {isPlaying && <p className="text-xs text-primary font-medium">Playing</p>}
+                                  <p className="text-xs text-gray-500">
+                                    {formatDuration(lesson.duration)}
+                                  </p>
+                                  {isPlaying && (
+                                    <p className="text-xs text-primary font-medium">
+                                      Playing
+                                    </p>
+                                  )}
                                 </div>
                               </button>
                             );
@@ -286,6 +370,64 @@ export default function PlayPage() {
                   Complete Course To Unlock Exam
                 </button>
               )}
+            </div>
+            <div className="bg-linear-to-br from-violet-50 to-gray-50 rounded-xl p-6 border border-violet-200">
+              <h3 className="text-lg font-bold text-gray-900 mb-4">
+                Leave a Review
+              </h3>
+
+              {/* Rating */}
+              <div className="mb-5">
+                <p className="text-sm font-medium text-gray-700 mb-2">
+                  Your Rating
+                </p>
+
+                <div className="flex gap-1">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <button
+                      key={star}
+                      type="button"
+                      onClick={() => setRating(star)}
+                      onMouseEnter={() => setHoverRating(star)}
+                      onMouseLeave={() => setHoverRating(0)}
+                    >
+                      <Star
+                        size={28}
+                        className={`transition-colors ${
+                          star <= (hoverRating || rating)
+                            ? "fill-yellow-400 text-yellow-400"
+                            : "text-gray-300"
+                        }`}
+                      />
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Review */}
+              <div className="mb-5">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Your Review
+                </label>
+
+                <textarea
+                  rows={5}
+                  value={review}
+                  onChange={(e) => setReview(e.target.value)}
+                  placeholder="Share your learning experience..."
+                  className="w-full rounded-lg border border-gray-300 bg-white p-3 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 resize-none"
+                />
+              </div>
+
+              {/* Submit */}
+              <button
+                type="button"
+                disabled={isLoading}
+                onClick={handleSubmitReview}
+                className="w-full rounded-lg bg-primary py-3 text-white font-medium hover:bg-violet-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isLoading ? "Submitting..." : "Submit Review"}
+              </button>
             </div>
           </div>
         </div>

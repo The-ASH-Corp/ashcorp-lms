@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import { CourseResponseDTO } from "../../modules/course/application/dto/CourseDTO";
 import { categoryRepository } from "../../modules/category/di";
 import { instructorRepository } from "../../modules/instructor/di";
+import { userRepository } from "../../modules/auth/di";
 
 export const serializeCourse = async (course: any): Promise<CourseResponseDTO> => {
   const rawCourse =
@@ -21,6 +22,22 @@ export const serializeCourse = async (course: any): Promise<CourseResponseDTO> =
     instructorLookup,
   ]);
 
+  const ratings = await Promise.all(
+    (rawCourse.rating || []).map(async (item: any) => {
+      const user = mongoose.isValidObjectId(item.userId)
+        ? await userRepository.findById(item.userId)
+        : null;
+
+      return {
+        userId: item.userId,
+        userName: user?.name ?? "Unknown User",
+        rating: item.rating,
+        review: item.review,
+        createdAt: item.createdAt,
+      };
+    }),
+  );
+
   return {
     id: String(rawCourse?._id ?? rawCourse?.id ?? ""),
     title: String(rawCourse?.title ?? ""),
@@ -34,10 +51,13 @@ export const serializeCourse = async (course: any): Promise<CourseResponseDTO> =
     videoUrl: String(rawCourse?.videoUrl ?? ""),
     chapters: Array.isArray(rawCourse?.chapters) ? rawCourse.chapters : [],
     enrolledStudents: Array.isArray(rawCourse?.enrolledStudents)
-      ? rawCourse.enrolledStudents.map((studentId: unknown) => String(studentId))
+      ? rawCourse.enrolledStudents.map((studentId: unknown) =>
+          String(studentId),
+        )
       : [],
     isPublished: Boolean(rawCourse?.isPublished ?? false),
     status: String(rawCourse?.status ?? "Active"),
+    rating: ratings,
     createdAt: rawCourse?.createdAt
       ? new Date(rawCourse.createdAt)
       : new Date(),

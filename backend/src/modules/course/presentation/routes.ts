@@ -1,5 +1,6 @@
 import { Router } from "express";
 import {
+  addReviewController,
   createCourseController,
   deleteCourseController,
   getAllCourseController,
@@ -24,6 +25,7 @@ router.post(
 );
 
 router.get("/all-course", getAllCourseController);
+
 router.get("/:id", getCourseByIdController);
 
 router.patch(
@@ -33,5 +35,7 @@ router.patch(
 );
 
 router.delete("/delete-course/:id", ...adminOnly, deleteCourseController);
+
+router.post("/:courseId/review", authMiddleware, addReviewController); 
 
 export default router;

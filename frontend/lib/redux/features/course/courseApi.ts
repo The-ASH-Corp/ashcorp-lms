@@ -1,5 +1,5 @@
 import { api } from "../../services/api";
-import { Course } from "./courseSlice";
+import { AddReviewRequest, Course, CourseRating } from "./courseSlice";
 
 interface CourseResponse {
   data: Course[];
@@ -50,6 +50,18 @@ export const courseApi = api.injectEndpoints({
       transformResponse: (response: singleCourseResponse) => response.data,
       invalidatesTags: ["Course"],
     }),
+
+    addReview: builder.mutation<Course, AddReviewRequest>({
+      query: ({ courseId, rating, review }) => ({
+        url: `/course/${courseId}/review`,
+        method: "POST",
+        body: {
+          rating,
+          review,
+        },
+      }),
+      invalidatesTags: ["Course"],
+    }),
   }),
 });
 
@@ -59,4 +71,5 @@ export const {
   useGetCourseQuery,
   useDeleteCourseMutation,
   useMakeCourseFreeAndPublishedMutation,
+  useAddReviewMutation,
 } = courseApi;

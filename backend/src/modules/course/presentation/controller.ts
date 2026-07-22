@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import {
+  addReviewUseCase,
   courseFindAllUseCase,
   createCourseUseCase,
   deleteCourseUseCase,
@@ -10,6 +11,7 @@ import { CourseRequestDTO } from "../application/dto/CourseDTO";
 import { AppError } from "../../../shared/error/AppError";
 import { serializeCourse } from "../../../shared/config/serializeCourses";
 import { uploadToS3 } from "../../../shared/middleware/s3Uplosd";
+
 
 type UploadedFile = Express.Multer.File;
 type UploadedFileMap = {
@@ -136,6 +138,37 @@ export const makeCourseFreeAndPublishedController = async (
       success: true,
       message: "Course changed to free and published successfully",
       data: serializedCourse,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const addReviewController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
+  try {
+    const courseId = String(req.params.courseId);
+
+    if (!req.userId) {
+      throw new AppError("Unauthorized", 401);
+    }
+
+    const { rating, review } = req.body;
+
+    const course = await addReviewUseCase.execute(
+      courseId,
+      String(req.userId),
+      rating,
+      review,
+    );
+
+    res.status(200).json({
+      success: true,
+      message: "Review added successfully",
+      data: course,
     });
   } catch (error) {
     next(error);

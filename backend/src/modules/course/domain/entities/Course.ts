@@ -11,7 +11,14 @@ export class Course {
     public createdAt: Date,
     public updatedAt: Date,
     public id?: string,
-    public chapters?: string[],
+    public chapters?:{
+       courseId?: string;
+        title?: string;
+        description?: string;
+        videoUrl?: string;
+        serialNumber?: number;
+        contents?: string[];
+    }[],
     public enrolledStudents?: string[],
     public isPublished?: boolean,
     public status?: string,
