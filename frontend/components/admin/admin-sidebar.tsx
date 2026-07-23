@@ -73,6 +73,11 @@ const navItems = [
     icon:NotebookText
   },
   {
+title:"Graduates",
+url:"/admin/graduates",
+icon:GraduationCap
+  },
+  {
     title: "Coupons",
     url: "/admin/coupon",
     icon: Ticket,

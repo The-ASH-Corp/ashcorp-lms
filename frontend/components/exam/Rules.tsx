@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { ShieldAlert } from "lucide-react";
 
-export default function Rules({ selectedExamTitle,disclaimerSeconds }: { selectedExamTitle: string; disclaimerSeconds: number }) {
+export default function Rules({ selectedExamTitle,disclaimerSeconds }: { selectedExamTitle: string|undefined; disclaimerSeconds: number }) {
   return (
     <div className="flex min-h-[calc(100vh-170px)] items-center justify-center bg-white px-4">
       <div className="relative w-full max-w-2xl overflow-hidden rounded-2xl p-[2px]">

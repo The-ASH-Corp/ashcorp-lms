@@ -4,7 +4,7 @@ import Hero from "@/components/landing/Hero";
 import ExploreCategories from "@/components/landing/ExploreCategories";
 import TrendingWorkshops from "@/components/landing/TrendingWorkshops";
 import Stats from "@/components/landing/Stats";
-import Partners from "@/components/landing/Partners";
+import Partners from "@/components/landing/Graduates";
 import Testimonials from "@/components/landing/Testimonials";
 import Footer from "@/components/landing/Footer";
 

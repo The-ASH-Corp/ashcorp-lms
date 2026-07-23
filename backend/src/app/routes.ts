@@ -7,6 +7,7 @@ import chapterRoutes from "../modules/chapter/presentation/routes";
 import studentRoutes from "../modules/student/presentation/routes";
 import couponRoutes from "../modules/coupon/presentation/routes";
 import examRoutes from "../modules/exam/presentation/routes";
+import graduateRouter from "../modules/graduates/presentation/routes";
 
 const router = Router();
 
@@ -25,5 +26,7 @@ router.use("/student",studentRoutes);
 router.use("/coupon", couponRoutes);
 
 router.use("/exam", examRoutes);
+
+router.use("/graduate",graduateRouter);
 
 export default router;

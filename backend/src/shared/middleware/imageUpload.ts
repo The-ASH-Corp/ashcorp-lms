@@ -7,7 +7,7 @@ const imageFileFilter = (
   file: Express.Multer.File,
   cb: FileFilterCallback,
 ): void => {
-  const allowedMimeTypes = ["image/jpeg", "image/png", "image/webp", "image/gif"];
+  const allowedMimeTypes = ["image/jpeg", "image/png", "image/webp", "image/gif", "image/svg+xml"];
 
   if (!allowedMimeTypes.includes(file.mimetype)) {
     return cb(new AppError("Only image files are allowed", 400));
@@ -19,7 +19,7 @@ const imageFileFilter = (
 const upload = multer({
   storage: multer.memoryStorage(),
   limits: {
-    fileSize: 5 * 1024 * 1024,
+    fileSize: 10 * 1024 * 1024,
   },
   fileFilter: imageFileFilter,
 });
@@ -27,6 +27,24 @@ const upload = multer({
 export const imageUpload = (fieldName = "image"): RequestHandler => {
   return (req, res, next) => {
     upload.single(fieldName)(req, res, (error: unknown) => {
+      if (error) {
+        if (error instanceof multer.MulterError) {
+          return next(new AppError(error.message, 400));
+        }
+        return next(error);
+      }
+
+      next();
+    });
+  };
+};
+
+export const graduateImagesUpload = (): RequestHandler => {
+  return (req, res, next) => {
+    upload.fields([
+      { name: "image", maxCount: 1 },
+      { name: "companyLogo", maxCount: 1 },
+    ])(req, res, (error: unknown) => {
       if (error) {
         if (error instanceof multer.MulterError) {
           return next(new AppError(error.message, 400));

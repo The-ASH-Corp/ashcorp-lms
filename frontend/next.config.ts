@@ -9,6 +9,10 @@ const nextConfig: NextConfig = {
         hostname: "images.unsplash.com",
       },
       {
+        protocol:"https",
+        hostname:"ashacademylmscontent.s3.eu-north-1.amazonaws.com"
+      },
+      {
         protocol: "https",
         hostname: "ashacademylms.com",
       },
