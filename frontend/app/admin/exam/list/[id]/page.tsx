@@ -16,7 +16,8 @@ import {
 } from "@/components/ui/pagination";
 import { toast } from "sonner";
 import { ConfirmActionDialog } from "@/components/shared/confirm-action-dialog";
-import { useDeleteExamMutation, useGetExamByCourseQuery } from "@/lib/redux/features/exam/examApi";
+import { useDeleteExamMutation, useGetExamByCourseQuery, type Exam } from "@/lib/redux/features/exam/examApi";
+import type { Course } from "@/lib/redux/features/course/courseSlice";
 
 export default function ExamListPage() {
   const router = useRouter();
@@ -46,9 +47,9 @@ export default function ExamListPage() {
       return courseTitleFromRoute;
     }
 
-    const resolvedCourse = courses?.find(
+    const resolvedCourse = (courses as Array<Course & { _id?: string }>)?.find(
       (course) =>
-        course.id === courseId || (course as { _id?: string })._id === courseId,
+        course.id === courseId || course._id === courseId,
     );
 
     return resolvedCourse?.title ?? courseId ?? "Unknown Course";
@@ -59,12 +60,23 @@ export default function ExamListPage() {
     router.push(`/admin/exam/createExam`);
   };
 
+  const handleEditExam = (exam: Exam) => {
+    if (!exam._id && !exam.id) return;
+    router.push(`/admin/exam/edit/${exam._id ?? exam.id}?courseId=${encodeURIComponent(courseId ?? "")}`);
+  };
+
   const handleDeleteExam = async (examId: string) => {
     try {
       await deleteExam(examId).unwrap();
       toast.success("Exam deleted successfully");
-    } catch (error: any) {
-      toast.error(error?.data?.message ?? "Failed to delete exam");
+    } catch (error: unknown) {
+      const message =
+        typeof error === "object" && error !== null && "data" in error &&
+        typeof (error as { data?: { message?: string } }).data?.message === "string"
+          ? (error as { data?: { message?: string } }).data?.message
+          : "Failed to delete exam";
+
+      toast.error(message);
     }
   };
 
@@ -197,7 +209,10 @@ export default function ExamListPage() {
                     </td>
                     <td className="px-4 sm:px-6 py-4 align-middle">
                       <div className="flex items-center justify-center gap-2">
-                        <button className="p-2 hover:bg-gray-100 rounded transition-colors text-gray-600">
+                        <button
+                          onClick={() => handleEditExam(exam)}
+                          className="p-2 hover:bg-gray-100 rounded transition-colors text-gray-600"
+                        >
                           <Edit2 size={16} />
                         </button>
                         <ConfirmActionDialog

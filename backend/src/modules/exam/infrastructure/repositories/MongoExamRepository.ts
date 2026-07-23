@@ -12,8 +12,8 @@ export class MongoExamRepository implements ExamRepository {
     return exam;
   }
 
-  async updateExam(_id: string, _data: Exam): Promise<Exam | null> {
-    throw new Error("Method not implemented.");
+  async updateExam(id: string, data: Exam): Promise<Exam | null> {
+    return await ExamModel.findByIdAndUpdate(id, data, { new: true });
   }
 
   async deleteExamById(examId: string): Promise<void> {

@@ -119,6 +119,15 @@ export const examApi = api.injectEndpoints({
       invalidatesTags: ["Exam"],
     }),
 
+    updateExam: builder.mutation<Exam, { examId: string; exam: CreateExamRequest }>({
+      query: ({ examId, exam }) => ({
+        url: `/exam/update-exam/${examId}`,
+        method: "PATCH",
+        body: exam,
+      }),
+      invalidatesTags: ["Exam"],
+    }),
+
     saveExamResponse: builder.mutation<
       { success: boolean; message: string; data: ExamAttempt },
       SaveExamResponseRequest
@@ -168,6 +177,7 @@ export const {
   useGetExamByCourseQuery,
   useGetExamsForCoursesQuery,
   useDeleteExamMutation,
+  useUpdateExamMutation,
   useSaveExamResponseMutation,
   useGetExamAttemptQuery,
   useUploadCertificateMutation,
