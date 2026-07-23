@@ -349,15 +349,15 @@ export default function CourseDetail() {
             {activeTab === "lessons" && (
               <div className="space-y-4">
                 {course?.chapters?.length ? (
-                  course.chapters.map((chapter: string, index: number) => (
+                  course.chapters.map((chapter, index: number) => (
                     <div
-                      key={index}
+                      key={chapter?._id}
                       className="border border-gray-200 rounded-lg p-4 hover:border-primary hover:bg-violet-50 transition-colors"
                     >
                       <div className="flex items-center gap-3">
                         <BookOpen className="text-primary" size={20} />
                         <h3 className="text-lg font-medium text-gray-900">
-                          Chapter {index + 1}: {chapter}
+                          Chapter {index + 1}: {chapter?.title}
                         </h3>
                       </div>
                     </div>
@@ -371,11 +371,73 @@ export default function CourseDetail() {
             )}
 
             {activeTab === "trial" && (
-              <div className="text-center py-10">Free Trial</div>
+              <div className="space-y-6">
+                <h2 className="text-2xl font-bold text-gray-900">Free Trial</h2>
+
+                {course?.videoUrl ? (
+                  <div className="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm">
+                    <video
+                      key={course?.videoUrl}
+                      src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${course?.videoUrl}`}
+                      controls
+                      className="h-full w-full"
+                    />
+
+                    <div className="p-4">
+                      <h3 className="text-lg font-semibold text-gray-900">
+                        {course.title}
+                      </h3>
+                      {/* <p className="text-sm text-gray-600 mt-1">
+                        Watch this free preview before enrolling.
+                      </p> */}
+                    </div>
+                  </div>
+                ) : (
+                  <div className="text-center py-8 text-gray-500">
+                    No trial video available.
+                  </div>
+                )}
+              </div>
             )}
 
             {activeTab === "reviews" && (
-              <div className="text-center py-10">Reviews</div>
+              <div className="space-y-4">
+                {course?.rating?.length ? (
+                  course.rating.map((review, index: number) => (
+                    <div
+                      key={index}
+                      className="border border-gray-200 rounded-lg p-5 shadow-sm"
+                    >
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <h3 className="font-semibold text-gray-900">
+                            {review.userName}
+                          </h3>
+                          <p className="text-sm text-gray-500">
+                            {new Date(review.createdAt).toLocaleDateString()}
+                          </p>
+                        </div>
+
+                        <div className="flex items-center gap-1">
+                          {[...Array(review.rating)].map((_, i) => (
+                            <Star
+                              key={i}
+                              size={16}
+                              className="fill-yellow-400 text-yellow-400"
+                            />
+                          ))}
+                        </div>
+                      </div>
+
+                      <p className="mt-3 text-gray-700">{review.review}</p>
+                    </div>
+                  ))
+                ) : (
+                  <div className="text-center py-8 text-gray-500">
+                    No reviews yet.
+                  </div>
+                )}
+              </div>
             )}
           </div>
 

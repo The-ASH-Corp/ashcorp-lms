@@ -10,6 +10,14 @@ export interface CourseRequestDTO {
   chapters?: string[];
 }
 
+interface CourseRatingDTO {
+  userId: string;
+  userName: string;
+  rating: number;
+  review: string;
+  createdAt: Date;
+}
+
 export interface CourseResponseDTO {
   id: string;
   title: string;
@@ -25,6 +33,7 @@ export interface CourseResponseDTO {
   enrolledStudents?: string[];
   isPublished: boolean;
   status: string;
+  rating: CourseRatingDTO[];
   createdAt: Date;
   updatedAt: Date;
 }

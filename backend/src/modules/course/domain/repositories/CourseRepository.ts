@@ -17,5 +17,11 @@ export interface CourseRepository {
 
   makeCourseFreeAndPublished(id: string): Promise<Course>;
 
-  deleteCourse(id:string):Promise<void>;
+  deleteCourse(id: string): Promise<void>;
+  addReview(
+    courseId: string,
+    userId: string,
+    rating: number,
+    review: string,
+  ): Promise<Course>;
 }
