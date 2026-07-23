@@ -25,6 +25,7 @@ export default function GraduateCard({
         alt={name}
         fill
         className="object-cover "
+        unoptimized
       />
       <div className="absolute inset-0 bg-gradient-to-r from-violet-600 via-violet-600 to-transparent opacity-30"></div>
 
@@ -47,6 +48,7 @@ export default function GraduateCard({
               width={48}
               height={48}
               className=" object-cover rounded-lg"
+              unoptimized
             />
           </div>
 
