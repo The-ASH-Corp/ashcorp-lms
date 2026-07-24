@@ -144,13 +144,13 @@ export default function CoursesPage() {
                   #
                 </TableHead>
                 <TableHead className="text-xs font-semibold uppercase tracking-wider text-gray-500 text-center">
-                  Id
+                  Course Name
                 </TableHead>
                 <TableHead className="text-xs font-semibold uppercase tracking-wider text-gray-500 text-center ">
                   Free & Publish
                 </TableHead>
                 <TableHead className="text-xs font-semibold uppercase tracking-wider text-gray-500 text-center ">
-                  Course
+                  Category
                 </TableHead>
                 <TableHead className="text-xs font-semibold uppercase tracking-wider text-gray-500 text-center ">
                   Price
@@ -185,7 +185,7 @@ export default function CoursesPage() {
 
                     <TableCell>
                       <div className="flex items-center gap-3 min-w-[120px] justify-center">
-                        <span className="text-sm font-semibold text-gray-900 w-10">
+                        <span className="text-sm font-semibold text-gray-900">
                           {course.title}
                         </span>
                       </div>
@@ -220,8 +220,8 @@ export default function CoursesPage() {
                     {/* Featured */}
                     <TableCell className="flex  justify-center">
                       <div className="flex items-center gap-3 justify-center overflow-clip w-20">
-                        <span className="text-sm font-semibold text-gray-900 w-10">
-                          {course.title}
+                        <span className="text-sm font-semibold text-gray-900">
+                          {course.category || "N/A"}
                         </span>
                       </div>
                     </TableCell>

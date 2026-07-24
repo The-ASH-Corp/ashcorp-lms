@@ -17,6 +17,55 @@ import {
   useUpdateCourseMutation,
 } from "@/lib/redux/features/course/courseApi";
 
+const normalizeComparable = (value: string) =>
+  value
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, " ")
+    .replace(/[^a-z0-9 ]/gi, "");
+
+const extractRefValue = (value: unknown, fallbackNameKey: string) => {
+  if (typeof value === "string") return value;
+  if (value && typeof value === "object") {
+    const typedValue = value as { _id?: string; id?: string; [key: string]: unknown };
+    if (typeof typedValue._id === "string") return typedValue._id;
+    if (typeof typedValue.id === "string") return typedValue.id;
+    const fallback = typedValue[fallbackNameKey];
+    if (typeof fallback === "string") return fallback;
+  }
+  return "";
+};
+
+const normalizeCategoryValue = (value: unknown, categories: Category[]) => {
+  const raw = extractRefValue(value, "categoryName");
+  const trimmed = raw.trim();
+  if (!trimmed) return "";
+
+  const byId = categories.find((category) => category._id === trimmed);
+  if (byId) return byId._id;
+
+  const normalizedInput = normalizeComparable(trimmed);
+  const byName = categories.find(
+    (category) => normalizeComparable(category.categoryName) === normalizedInput,
+  );
+  return byName?._id ?? "";
+};
+
+const normalizeInstructorValue = (value: unknown, instructors: Instructor[]) => {
+  const raw = extractRefValue(value, "name");
+  const trimmed = raw.trim();
+  if (!trimmed) return "";
+
+  const byId = instructors.find((instructor) => instructor._id === trimmed);
+  if (byId) return byId._id;
+
+  const normalizedInput = normalizeComparable(trimmed);
+  const byName = instructors.find(
+    (instructor) => normalizeComparable(instructor.name) === normalizedInput,
+  );
+  return byName?._id ?? "";
+};
+
 export default function EditCoursePage() {
   const dispatch = useAppDispatch();
   const params = useParams<{ id?: string }>();
@@ -74,14 +123,15 @@ export default function EditCoursePage() {
 
     const nextFormData = {
       courseTitle: courseData.title ?? "",
-      category: courseData.category ?? "",
-      instructor: courseData.instructor ?? "",
+      category: extractRefValue(courseData.category, "categoryName"),
+      instructor: extractRefValue(courseData.instructor, "name"),
       regularPrice: String(courseData.price ?? 0),
       offerPrice: String(courseData.offerPrice ?? 0),
       description: courseData.description ?? "",
       isPublished: Boolean(courseData.isPublished),
     };
 
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setFormData(nextFormData);
     setThumbnailPreview(courseData.imageUrl ?? null);
     setVideoName(courseData.videoUrl ?? null);
@@ -92,8 +142,11 @@ export default function EditCoursePage() {
     );
   }, [courseData]);
 
-  const selectedCategory = formData.category || categories[0]?._id || "";
-  const selectedInstructor = formData.instructor || instructors[0]?._id || "";
+  const normalizedCategoryId = normalizeCategoryValue(formData.category, categories);
+  const normalizedInstructorId = normalizeInstructorValue(formData.instructor, instructors);
+
+  const selectedCategory = normalizedCategoryId;
+  const selectedInstructor = normalizedInstructorId || instructors[0]?._id || "";
 
   const handleInputChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
@@ -277,7 +330,12 @@ export default function EditCoursePage() {
                 <div>
                   <label className="block text-gray-700 font-medium text-sm mb-2">Category <span className="text-red-500">*</span></label>
                   <select name="category" value={selectedCategory} onChange={handleInputChange} className="w-full px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary text-sm bg-white">
-                    {categories.length > 0 ? categories.map((cat: Category) => <option key={cat._id} value={cat._id}>{cat.categoryName}</option>) : <option value="" disabled>No Categories Available</option>}
+                    {categories.length > 0 ? (
+                      <>
+                        <option value="" disabled>Select Category</option>
+                        {categories.map((cat: Category) => <option key={cat._id} value={cat._id}>{cat.categoryName}</option>)}
+                      </>
+                    ) : <option value="" disabled>No Categories Available</option>}
                   </select>
                 </div>
                 <div>
