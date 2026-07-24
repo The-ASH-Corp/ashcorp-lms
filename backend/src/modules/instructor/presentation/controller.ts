@@ -4,6 +4,8 @@ import {
   createInstructorUseCase,
   deleteInstructorUseCase,
   getAllInstructorsUseCase,
+  getInstructorByIdUseCase,
+  updateInstructorUseCase,
 } from "../di";
 import { uploadToS3 } from "../../../shared/middleware/s3Uplosd";
 
@@ -42,6 +44,46 @@ export const getAllInstructorsController = async (
       status: 200,
       message: "Instructors fetched successfully",
       data: instructors,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const getInstructorByIdController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
+  try {
+    const instructor = await getInstructorByIdUseCase.execute(String(req.params.id));
+
+    res.status(200).json({
+      success: true,
+      message: "Instructor fetched successfully",
+      data: instructor,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const updateInstructorController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
+  try {
+    const image = req.file
+      ? (await uploadToS3(req.file, "instructors")).url
+      : undefined;
+
+    const instructor = await updateInstructorUseCase.execute(String(req.params.id), req.body, image);
+
+    res.status(200).json({
+      success: true,
+      message: "Instructor updated successfully",
+      data: instructor,
     });
   } catch (err) {
     next(err);

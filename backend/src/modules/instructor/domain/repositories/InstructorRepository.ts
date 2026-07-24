@@ -16,4 +16,6 @@ export interface InstructorRepository {
   deleteInstructor(id: string): Promise<void>;
 
   updateStatus(id: string, status: string): Promise<Instructor>;
+
+  updateInstructor(id: string, data: InstructorRequestDTO, image?: string): Promise<Instructor>;
 }
