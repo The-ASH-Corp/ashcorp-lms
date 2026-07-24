@@ -34,8 +34,19 @@ export const courseApi = api.injectEndpoints({
       providesTags: ["Course"],
     }),
 
-    getPaginatedCourses: builder.query<PaginatedCourseResponse, { page: number; limit: number }>({
-      query: ({ page, limit }) => `/course/all-course?page=${page}&limit=${limit}`,
+    getPaginatedCourses: builder.query<PaginatedCourseResponse, { page: number; limit: number; search?: string }>({
+      query: ({ page, limit, search }) => {
+        const params = new URLSearchParams({
+          page: String(page),
+          limit: String(limit),
+        });
+
+        if (search?.trim()) {
+          params.set("search", search.trim());
+        }
+
+        return `/course/all-course?${params.toString()}`;
+      },
       transformResponse: (response: PaginatedCourseResponse) => response,
       providesTags: ["Course"],
     }),

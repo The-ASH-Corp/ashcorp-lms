@@ -28,9 +28,10 @@ export const getAllCourseController = async (
   try {
     const page = Number(req.query.page ?? 0);
     const limit = Number(req.query.limit ?? 0);
+    const searchTerm = typeof req.query.search === "string" ? req.query.search : undefined;
 
     if (page > 0 && limit > 0) {
-      const result = await courseFindAllUseCase.execute({ page, limit });
+      const result = await courseFindAllUseCase.execute({ page, limit, searchTerm });
 
       if (!Array.isArray(result)) {
         const serializedCourses = await Promise.all(result.courses.map(serializeCourse));

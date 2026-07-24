@@ -5,7 +5,7 @@ export interface CourseRepository {
 
   getAllCourse(): Promise<Course[]>;
 
-  getPaginatedCourses(page: number, limit: number): Promise<{
+  getPaginatedCourses(page: number, limit: number, searchTerm?: string): Promise<{
     courses: Course[];
     totalCourses: number;
   }>;
