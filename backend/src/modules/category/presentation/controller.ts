@@ -25,11 +25,12 @@ export const createCategoryController = async (
   
     const category = new Category(
       body.categoryName,
+      body.description,
       body.color,
       iconUrl,
       body.isFeatured,
       false,
-      body.status
+      body.status,
     );
     
     const createdCategory = await createCategoryUseCase.execute(category);

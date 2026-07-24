@@ -19,6 +19,7 @@ interface CategoryFormData {
   categoryName: string;
   icon: File | null;
   color: string;
+  description: string;
   isFeatured: boolean;
   status: string;
 }
@@ -26,6 +27,7 @@ interface CategoryFormData {
 export default function CreateCategoryPage() {
   const [formData, setFormData] = useState<CategoryFormData>({
     categoryName: "Your Title Here",
+    description: "Your Description Here",
     icon: null,
     color: "#7C3AED",
     isFeatured: false,
@@ -40,6 +42,13 @@ export default function CreateCategoryPage() {
     setFormData({
       ...formData,
       categoryName: e.target.value || "Your Title Here",
+    });
+  };
+
+  const handleDescriptionChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setFormData({
+      ...formData,
+      description: e.target.value || "Your Description Here",
     });
   };
 
@@ -72,9 +81,11 @@ export default function CreateCategoryPage() {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    console.log(formData)
     try {
       const fd = new FormData();
       fd.append("categoryName", formData.categoryName);
+      fd.append("description", formData.description);
       if (formData.icon) {
         fd.append("icon", formData.icon);
       }
@@ -116,6 +127,25 @@ export default function CreateCategoryPage() {
                   }
                   onChange={handleTitleChange}
                   className="w-full px-4 py-3 border !h-12 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary bg-gray-50 text-gray-900 placeholder-gray-400"
+                />
+              </div>
+
+              {/* description */}
+
+              <div>
+                <label className="block text-sm font-semibold text-gray-900 uppercase tracking-wide mb-3">
+                  Category Description
+                </label>
+                <Input
+                  type="text"
+                  placeholder="Enter Description title..."
+                  value={
+                    formData.description === "Your Description Here"
+                      ? ""
+                      : formData.description
+                  }
+                  onChange={handleDescriptionChange}
+                  className="w-full px-4 py-3 border h-12 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary bg-gray-50 text-gray-900 placeholder-gray-400"
                 />
               </div>
 
@@ -213,7 +243,8 @@ export default function CreateCategoryPage() {
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button variant="outline" size="sm" className="h-8 px-3">
-                        {formData.status} <ChevronDown className="w-3.5 h-3.5 mr-1" />
+                        {formData.status}{" "}
+                        <ChevronDown className="w-3.5 h-3.5 mr-1" />
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
