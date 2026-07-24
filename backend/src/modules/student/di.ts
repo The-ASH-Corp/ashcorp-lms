@@ -12,6 +12,7 @@ import { UpdateCourseProgressUseCase } from "./application/usecase/UpdateCourseP
 import { UpdateProfileUseCase } from "./application/usecase/UpdateProfileUseCase";
 import { SaveExamResponseUseCase } from "./application/usecase/SaveExamResponseUseCase";
 import { VerifyPaymentUseCase } from "./application/usecase/VerifyPaymentUseCase";
+import { UpdateStudentUseCase } from "./application/usecase/UpdateStudentUseCase";
 import { courseRepository } from "../course/di";
 import { adminRepository } from "../admins/di";
 import { examRepository } from "../exam/di";
@@ -62,6 +63,8 @@ export const updateProfileUseCase = new UpdateProfileUseCase(
   studentUserRepository,
   adminRepository,
 );
+
+export const updateStudentUseCase = new UpdateStudentUseCase(studentUserRepository);
 
 export const saveExamResponseUseCase = new SaveExamResponseUseCase(
   studentUserRepository,

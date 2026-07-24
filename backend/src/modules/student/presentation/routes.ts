@@ -17,6 +17,7 @@ import {
   saveExamResponseController,
   updateCourseProgressController,
   updateProfileController,
+  updateStudentController,
   verifyPaymentController,
 } from "./controller";
 import { authMiddleware } from "../../../shared/middleware/authMiddleware";
@@ -72,6 +73,9 @@ router.get("/exam-attempt/:courseId", getExamAttemptController);
 
 // get user by id 
 router.get("/get-student-by-Id/:id", requireRole("admin"), getStudentByIdController);
+
+// update student by admin
+router.patch("/update-student/:id", requireRole("admin"), updateStudentController);
 
 // razorpay: create order
 router.post("/create-order", createOrderController);
