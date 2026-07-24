@@ -15,5 +15,10 @@ export interface CategoryRepository {
     deleteCategory(id: string): Promise<void>;
 
     getAllCategories():Promise<CategoryResponseDTO[]>;
+
+    getPaginatedCategories(page: number, limit: number, searchTerm?: string): Promise<{
+        categories: CategoryResponseDTO[];
+        totalCategories: number;
+    }>;
     
 }

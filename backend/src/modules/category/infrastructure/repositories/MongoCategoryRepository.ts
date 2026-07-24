@@ -44,4 +44,24 @@ export class MongoCategoryRepository implements CategoryRepository {
         const categories = await CategoryModel.find().sort({createdAt: -1});
         return categories;
     }
+
+    async getPaginatedCategories(page: number, limit: number, searchTerm?: string): Promise<{ categories: CategoryResponseDTO[]; totalCategories: number }> {
+        const safePage = Math.max(1, Math.floor(page));
+        const safeLimit = Math.max(1, Math.floor(limit));
+        const skip = (safePage - 1) * safeLimit;
+        const trimmedSearchTerm = searchTerm?.trim();
+        const searchFilter = trimmedSearchTerm
+            ? { categoryName: { $regex: trimmedSearchTerm, $options: "i" } }
+            : {};
+
+        const [categories, totalCategories] = await Promise.all([
+            CategoryModel.find(searchFilter).sort({ createdAt: -1 }).skip(skip).limit(safeLimit),
+            CategoryModel.countDocuments(searchFilter),
+        ]);
+
+        return {
+            categories,
+            totalCategories,
+        };
+    }
 }

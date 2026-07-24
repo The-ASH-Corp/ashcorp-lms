@@ -280,7 +280,7 @@ export default function CoursesPage() {
                     const showEllipsis = previousPage && page - previousPage > 1;
 
                     return (
-                      <PaginationItem key={page}>
+                      <PaginationItem key={page} >
                         {showEllipsis ? (
                           <PaginationEllipsis />
                         ) : (
@@ -298,7 +298,7 @@ export default function CoursesPage() {
                       </PaginationItem>
                     );
                   })}
-                  <PaginationItem>
+                  <PaginationItem >
                     <PaginationNext
                       href="#"
                       onClick={(event) => {
