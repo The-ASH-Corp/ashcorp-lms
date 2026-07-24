@@ -21,6 +21,16 @@ export class MongoCategoryRepository implements CategoryRepository {
         return category;
     }
 
+    async updateCategory(id: string, data: Record<string, unknown>): Promise<Category> {
+        const category = await CategoryModel.findByIdAndUpdate(id, data, { new: true });
+
+        if (!category) {
+            throw new Error("Category not found");
+        }
+
+        return category;
+    }
+
     async hasCourses(id: string): Promise<boolean> {
         const courseCount = await CourseModel.countDocuments({ category: id });
         return courseCount > 0;

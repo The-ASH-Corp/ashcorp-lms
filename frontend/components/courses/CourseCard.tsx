@@ -1,6 +1,7 @@
 import { Star } from "lucide-react";
 import Link from "next/link";
 import type { Course } from "@/lib/redux/features/course/courseSlice";
+import Image from "next/image";
 
 interface CourseCardCourse extends Omit<Course, "offerPrice" | "rating"> {
   offerPrice?: string | number;
@@ -47,7 +48,7 @@ export default function CourseCard({ course }: CourseCardProps) {
     <div className="group bg-white border border-gray-200 rounded-lg sm:rounded-xl overflow-hidden hover:shadow-lg transition-shadow h-full flex flex-col">
       {/* Image Container */}
       <div className="relative h-40 sm:h-48 lg:h-56 overflow-hidden bg-gray-100 shrink-0">
-        <img
+        <Image
           src={getCategoryImageUrl(course.imageUrl)}
           alt={course.title}
           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"

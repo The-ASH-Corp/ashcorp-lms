@@ -31,6 +31,7 @@ import Link from "next/link";
 import {
   useDeleteCategoryMutation,
   useGetAllCategoriesQuery,
+  type Category,
 } from "@/lib/redux/features/category/categoryApi";
 import { PropagateLoader } from "react-spinners";
 import { toast } from "sonner";
@@ -77,8 +78,13 @@ export default function CategoryPage() {
     try {
       await deleteCategory(id).unwrap();
       toast.success("Category deleted successfully");
-    } catch (error: any) {
-      toast.error(error?.data?.message ?? "Failed to delete category");
+    } catch (error: unknown) {
+      const message =
+        typeof error === "object" && error !== null && "data" in error &&
+        typeof (error as { data?: { message?: string } }).data?.message === "string"
+          ? (error as { data?: { message?: string } }).data?.message
+          : "Failed to delete category";
+      toast.error(message);
     }
   };
 
@@ -158,7 +164,7 @@ export default function CategoryPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {categories?.map((category: any, index: number) => {
+              {categories?.map((category: Category, index: number) => {
                 const style = statusStyles[category.status];
 
                 return (
@@ -227,13 +233,16 @@ export default function CategoryPage() {
                     {/* Actions */}
                     <TableCell className="text-center align-middle">
                       <div className="flex items-center justify-center gap-1">
-                        <Button
-                          className="flex h-8 w-8 items-center justify-center rounded-lg text-gray-400 transition-colors hover:bg-violet-500/10 hover:text-primary"
-                          size="sm"
-                          variant="ghost"
-                        >
-                          <Pencil className="h-4 w-4" />
-                        </Button>
+                        <Link href={`/admin/category/edit/${category._id}`}>
+                          <Button
+                            className="flex h-8 w-8 items-center justify-center rounded-lg text-gray-400 transition-colors hover:bg-violet-500/10 hover:text-primary"
+                            size="sm"
+                            variant="ghost"
+                            type="button"
+                          >
+                            <Pencil className="h-4 w-4" />
+                          </Button>
+                        </Link>
                         <ConfirmActionDialog
                           title="Delete Category"
                           description={`This will permanently delete ${category.categoryName}.`}
