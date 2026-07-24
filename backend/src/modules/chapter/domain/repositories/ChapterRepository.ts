@@ -10,4 +10,6 @@ export interface ChapterRepository{
     findById(id: string): Promise<Chapter | null>
 
     deleteChapter(id: string): Promise<void>
+
+    updateChapter(id: string, data: Partial<ChapterRequestDTO>): Promise<Chapter | null>
 }

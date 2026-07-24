@@ -20,23 +20,40 @@ export interface Chapter {
   updatedAt: string;
 }
 
+export interface UpdateChapterPayload {
+  courseId?: string;
+  title?: string;
+  description?: string;
+  videoUrl?: string;
+  serialNumber?: number;
+  contents?: ChapterContent[];
+}
+
 export const chapterApi = api.injectEndpoints({
   endpoints: (builder) => ({
 
     getChaptersByCourseId: builder.query<Chapter[], string>({
       query: (courseId) => `/chapters/get-chapter-by-course/${courseId}`,
-
-      transformResponse:(respose:any)=>respose.data as Chapter[]
-      ,
-      providesTags:["Chapter"]
+      transformResponse: (response: unknown) => (response as { data: Chapter[] }).data,
+      providesTags: ["Chapter"],
     }),
 
-    createChapter: builder.mutation<Chapter, Partial<any> | FormData>({
+    createChapter: builder.mutation<Chapter, Partial<Record<string, unknown>> | FormData>({
       query: (body) => ({
         url: "/chapters/create-chapter",
         method: "POST",
         body,
         formData: body instanceof FormData,
+      }),
+      invalidatesTags: ["Chapter"],
+    }),
+
+    updateChapter: builder.mutation<Chapter, { id: string; chapter: UpdateChapterPayload | FormData }>({
+      query: ({ id, chapter }) => ({
+        url: `/chapters/update-chapter/${id}`,
+        method: "PATCH",
+        body: chapter,
+        formData: chapter instanceof FormData,
       }),
       invalidatesTags: ["Chapter"],
     }),
@@ -54,5 +71,6 @@ export const chapterApi = api.injectEndpoints({
 export const {
   useGetChaptersByCourseIdQuery,
   useCreateChapterMutation,
+  useUpdateChapterMutation,
   useDeleteChapterMutation,
 } = chapterApi;

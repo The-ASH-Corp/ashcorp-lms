@@ -3,6 +3,7 @@ import {
   createChapterController,
   deleteChapterController,
   getChapterByCourseController,
+  updateChapterController,
 } from "./controller";
 import { authMiddleware } from "../../../shared/middleware/authMiddleware";
 import { requireRole } from "../../../shared/middleware/requireRole";
@@ -22,5 +23,11 @@ router.get("/get-chapter-by-course/:id",getChapterByCourseController)
 
 router.delete("/delete-chapter/:id", ...adminOnly, deleteChapterController)
 
+router.patch(
+  "/update-chapter/:id",
+  ...adminOnly,
+  fileUpload([{ name: "files", maxCount: 50 }]),
+  updateChapterController,
+)
 
 export default router

@@ -67,12 +67,22 @@ export default function ChaptersManagement() {
     router.push(`/admin/chapter/createChapter/${courseId}`);
   };
 
+  const handleEditChapter = (chapterId: string) => {
+    if (!courseId) return;
+    router.push(`/admin/chapter/edit/${chapterId}?courseId=${courseId}&title=${encodeURIComponent(courseTitle)}`);
+  };
+
   const handleDeleteChapter = async (chapterId: string) => {
     try {
       await deleteChapter(chapterId).unwrap();
       toast.success("Chapter deleted successfully");
-    } catch (error: any) {
-      toast.error(error?.data?.message ?? "Failed to delete chapter");
+    } catch (error: unknown) {
+      const message =
+        typeof error === "object" && error !== null && "data" in error &&
+        typeof (error as { data?: { message?: string } }).data?.message === "string"
+          ? (error as { data?: { message?: string } }).data?.message
+          : "Failed to delete chapter";
+      toast.error(message);
     }
   };
 
@@ -202,7 +212,11 @@ export default function ChaptersManagement() {
                     </td>
                     <td className="px-4 sm:px-6 py-4 align-middle">
                       <div className="flex items-center justify-center gap-2">
-                        <button className="p-2 hover:bg-gray-100 rounded transition-colors text-gray-600">
+                        <button
+                          className="p-2 hover:bg-gray-100 rounded transition-colors text-gray-600"
+                          onClick={() => handleEditChapter(chapter._id)}
+                          type="button"
+                        >
                           <Edit2 size={16} />
                         </button>
                         <ConfirmActionDialog
