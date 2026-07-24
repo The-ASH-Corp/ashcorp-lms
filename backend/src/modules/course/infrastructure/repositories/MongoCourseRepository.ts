@@ -13,6 +13,22 @@ export class MongoCourseRepository implements CourseRepository {
     return course as unknown as Course[];
   }
 
+  async getPaginatedCourses(page: number, limit: number): Promise<{ courses: Course[]; totalCourses: number; }> {
+    const safePage = Math.max(1, Math.floor(page));
+    const safeLimit = Math.max(1, Math.floor(limit));
+    const skip = (safePage - 1) * safeLimit;
+
+    const [courses, totalCourses] = await Promise.all([
+      CourseModel.find().skip(skip).limit(safeLimit),
+      CourseModel.countDocuments(),
+    ]);
+
+    return {
+      courses: courses as unknown as Course[],
+      totalCourses,
+    };
+  }
+
   async getCourseById(id: string): Promise<Course> {
     const course = await CourseModel.findById(id).populate("chapters");
     return course as Course;

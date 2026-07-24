@@ -9,6 +9,16 @@ interface singleCourseResponse {
   data: Course;
 }
 
+interface PaginatedCourseResponse {
+  data: Course[];
+  pagination: {
+    totalCourses: number;
+    totalPages: number;
+    currentPage: number;
+    limit: number;
+  };
+}
+
 
 export const courseApi = api.injectEndpoints({
   endpoints: (builder) => ({
@@ -21,6 +31,12 @@ export const courseApi = api.injectEndpoints({
     getCourse: builder.query<Course, string>({
       query: (courseId) => `/course/${courseId}`,
       transformResponse: (response: singleCourseResponse) => response.data,
+      providesTags: ["Course"],
+    }),
+
+    getPaginatedCourses: builder.query<PaginatedCourseResponse, { page: number; limit: number }>({
+      query: ({ page, limit }) => `/course/all-course?page=${page}&limit=${limit}`,
+      transformResponse: (response: PaginatedCourseResponse) => response,
       providesTags: ["Course"],
     }),
 
@@ -77,6 +93,7 @@ export const courseApi = api.injectEndpoints({
 
 export const {
   useGetAllCourseQuery,
+  useGetPaginatedCoursesQuery,
   useCreateCourseMutation,
   useGetCourseQuery,
   useUpdateCourseMutation,

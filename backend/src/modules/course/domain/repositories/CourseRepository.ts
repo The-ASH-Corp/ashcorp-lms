@@ -5,6 +5,11 @@ export interface CourseRepository {
 
   getAllCourse(): Promise<Course[]>;
 
+  getPaginatedCourses(page: number, limit: number): Promise<{
+    courses: Course[];
+    totalCourses: number;
+  }>;
+
   getCourseById(id: string): Promise<Course>;
 
   updateCourse(id: string, data: any): Promise<Course>;

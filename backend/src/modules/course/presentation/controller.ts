@@ -21,12 +21,36 @@ type UploadedFileMap = {
 };
 
 export const getAllCourseController = async (
-  _req: Request,
+  req: Request,
   res: Response,
   next: NextFunction,
 ): Promise<void> => {
   try {
-    const courses = await courseFindAllUseCase.execute();
+    const page = Number(req.query.page ?? 0);
+    const limit = Number(req.query.limit ?? 0);
+
+    if (page > 0 && limit > 0) {
+      const result = await courseFindAllUseCase.execute({ page, limit });
+
+      if (!Array.isArray(result)) {
+        const serializedCourses = await Promise.all(result.courses.map(serializeCourse));
+
+        res.status(200).json({
+          success: true,
+          data: serializedCourses,
+          pagination: {
+            totalCourses: result.totalCourses,
+            totalPages: Math.max(1, Math.ceil(result.totalCourses / limit)),
+            currentPage: page,
+            limit,
+          },
+        });
+        return;
+      }
+    }
+
+    const coursesResult = await courseFindAllUseCase.execute();
+    const courses = Array.isArray(coursesResult) ? coursesResult : coursesResult.courses;
     const serializedCourses = await Promise.all(courses.map(serializeCourse));
 
     res.status(200).json({
