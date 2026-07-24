@@ -41,11 +41,39 @@ export const createStudentController = async (
 };
 
 export const getAllStudentsController = async (
-  _req: Request,
+  req: Request,
   res: Response,
   next: NextFunction,
 ): Promise<void> => {
   try {
+    const page = Number(req.query.page ?? 0);
+    const limit = Number(req.query.limit ?? 0);
+    const searchTerm =
+      typeof req.query.search === "string" ? req.query.search : undefined;
+
+    if (Number.isFinite(page) && Number.isFinite(limit) && page > 0 && limit > 0) {
+      const result = await getAllStudentsUseCase.execute({
+        page,
+        limit,
+        searchTerm,
+      });
+
+      if (result && !Array.isArray(result)) {
+        res.status(200).json({
+          status: 200,
+          message: "Students fetched successfully",
+          data: result.students,
+          pagination: {
+            totalStudents: result.totalStudents,
+            totalPages: Math.max(1, Math.ceil(result.totalStudents / limit)),
+            currentPage: page,
+            limit,
+          },
+        });
+        return;
+      }
+    }
+
     const students = await getAllStudentsUseCase.execute();
 
     res.status(200).json({

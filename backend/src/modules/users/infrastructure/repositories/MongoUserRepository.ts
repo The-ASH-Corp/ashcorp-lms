@@ -63,6 +63,53 @@ export class MongoUserRepository implements UserRepository {
     return users;
   }
 
+  async getPaginatedStudents(
+    page: number,
+    limit: number,
+    searchTerm?: string,
+  ): Promise<{ students: User[]; totalStudents: number }> {
+    const safePage = Math.max(1, Math.floor(page));
+    const safeLimit = Math.max(1, Math.floor(limit));
+    const skip = (safePage - 1) * safeLimit;
+    const trimmedSearchTerm = searchTerm?.trim();
+
+    let searchFilter: Record<string, unknown> = { role: "user" };
+
+    if (trimmedSearchTerm) {
+      const escapedSearchTerm = trimmedSearchTerm.replace(
+        /[.*+?^${}()|[\]\\]/g,
+        "\\$&",
+      );
+      const orConditions: Array<Record<string, unknown>> = [
+        { name: { $regex: escapedSearchTerm, $options: "i" } },
+        { email: { $regex: escapedSearchTerm, $options: "i" } },
+      ];
+
+      const searchNum = Number(trimmedSearchTerm);
+      if (!Number.isNaN(searchNum)) {
+        orConditions.push({ phone: searchNum });
+      }
+
+      searchFilter = {
+        role: "user",
+        $or: orConditions,
+      };
+    }
+
+    const [students, totalStudents] = await Promise.all([
+      UserModel.find(searchFilter)
+        .sort({ _id: -1 })
+        .skip(skip)
+        .limit(safeLimit),
+      UserModel.countDocuments(searchFilter),
+    ]);
+
+    return {
+      students,
+      totalStudents,
+    };
+  }
+
   async hasPurchasedCourse(courseId: string): Promise<boolean> {
     const studentCount = await UserModel.countDocuments({
       role: "user",

@@ -20,7 +20,7 @@ import {
   type Student,
   useBlockStudentMutation,
   useDeleteStudentMutation,
-  useGetAllStudentsQuery,
+  useGetPaginatedStudentsQuery,
 } from "@/lib/redux/features/student/studentApi";
 import { toast } from "sonner";
 import { ConfirmActionDialog } from "@/components/shared/confirm-action-dialog";
@@ -61,23 +61,59 @@ const getInitials = (name: string) => {
 const getStudentStatus = (student: Student) =>
   student.status || (student.role === "user" ? "Active" : "Unknown");
 
+const getPageNumbers = (currentPage: number, totalPages: number) => {
+  if (totalPages <= 7) {
+    return Array.from({ length: totalPages }, (_, index) => index + 1);
+  }
+
+  if (currentPage <= 4) {
+    return [1, 2, 3, 4, 5, "...", totalPages];
+  }
+
+  if (currentPage >= totalPages - 3) {
+    return [1, "...", totalPages - 4, totalPages - 3, totalPages - 2, totalPages - 1, totalPages];
+  }
+
+  return [1, "...", currentPage - 1, currentPage, currentPage + 1, "...", totalPages];
+};
+
 export default function StudentsPage() {
-    const [currentPage] = useState(1);
-  
+  const PAGE_SIZE = 10;
+  const [currentPage, setCurrentPage] = useState(1);
+
   const dispatch = useAppDispatch();
   const router = useRouter();
-  const { data: students, isLoading, isError } = useGetAllStudentsQuery();
+  const { data: paginatedStudents, isLoading, isError } = useGetPaginatedStudentsQuery({
+    page: currentPage,
+    limit: PAGE_SIZE,
+  });
   const [deleteStudent, { isLoading: isDeletingStudent }] =
     useDeleteStudentMutation();
   const [blockStudent, { isLoading: isBlockingStudent }] =
     useBlockStudentMutation();
-  const studentList = students ?? [];
+
+  const studentList = paginatedStudents?.data ?? [];
+  const totalStudents = paginatedStudents?.pagination?.totalStudents ?? studentList.length;
+  const totalPages = Math.max(1, paginatedStudents?.pagination?.totalPages ?? 1);
+  const pageNumbers = getPageNumbers(currentPage, totalPages);
 
   useEffect(() => {
-    if (students) {
-      dispatch(getAllStudents(students));
+    dispatch(getAllStudents(studentList));
+  }, [studentList, dispatch]);
+
+  useEffect(() => {
+    if (currentPage > totalPages) {
+      setCurrentPage(1);
     }
-  }, [students, dispatch]);
+  }, [currentPage, totalPages]);
+
+  const handlePageChange = (page: number) => {
+    if (page < 1 || page > totalPages || page === currentPage) {
+      return;
+    }
+
+    setCurrentPage(page);
+  };
 
   const handleEditStudent = (id: string) => {
     router.push(`/admin/students/edit/${id}`);
@@ -141,10 +177,7 @@ export default function StudentsPage() {
             Students Management
           </h1>
           <p className="mt-1 text-sm text-gray-500">
-            <span className="font-semibold text-gray-700">
-              {studentList.length}
-            </span>{" "}
-            students currently loaded from the database.
+            Showing <span className="font-semibold text-gray-700">{studentList.length}</span> of <span className="font-semibold text-gray-700">{totalStudents}</span> students.
           </p>
         </div>
 
@@ -201,7 +234,7 @@ export default function StudentsPage() {
                     className="border-b border-gray-50 transition-colors hover:bg-violet-50/30"
                   >
                     <TableCell className="text-center font-semibold text-gray-900">
-                      {index + 1}
+                      {index + 1 + (currentPage - 1) * PAGE_SIZE}
                     </TableCell>
 
                     <TableCell>
@@ -296,52 +329,67 @@ export default function StudentsPage() {
         </Table>
 
 
-        <div className="flex items-center justify-center border-t border-gray-100 px-5 py-4">
-            <Pagination className="w-auto mx-0">
+        {totalPages > 1 ? (
+          <div className="flex items-center justify-center border-t border-gray-100 px-5 py-4">
+            <Pagination className="mx-0 w-auto">
               <PaginationContent>
                 <PaginationItem>
                   <PaginationPrevious
                     href="#"
                     text=""
-                    className="h-8 w-8 p-0 rounded-lg border border-gray-200 hover:border-violet-300 hover:bg-violet-50"
+                    onClick={(event) => {
+                      event.preventDefault();
+                      handlePageChange(currentPage - 1);
+                    }}
+                    className={`h-8 w-8 rounded-lg border border-gray-200 p-0 hover:border-violet-300 hover:bg-violet-50 ${currentPage === 1 ? "pointer-events-none opacity-50" : ""}`}
                   />
                 </PaginationItem>
-                {[1, 2, 3].map((page) => (
-                  <PaginationItem key={page}>
-                    <PaginationLink
-                      href="#"
-                      isActive={page === currentPage}
-                      className={`h-8 w-8 rounded-lg text-sm ${
-                        page === currentPage
-                          ? "bg-primary! text-white! border-primary! hover:bg-violet-700!"
-                          : "border border-gray-200 hover:border-violet-300 hover:bg-violet-50"
-                      }`}
-                    >
-                      {page}
-                    </PaginationLink>
-                  </PaginationItem>
-                ))}
-                <PaginationItem>
-                  <PaginationEllipsis />
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationLink
-                    href="#"
-                    className="h-8 w-8 rounded-lg text-sm border border-gray-200 hover:border-violet-300 hover:bg-violet-50"
-                  >
-                    128
-                  </PaginationLink>
-                </PaginationItem>
+                {pageNumbers.map((page, index) => {
+                  if (page === "...") {
+                    return (
+                      <PaginationItem key={`ellipsis-${index}`}>
+                        <PaginationEllipsis />
+                      </PaginationItem>
+                    );
+                  }
+
+                  const pageNumber = Number(page);
+
+                  return (
+                    <PaginationItem key={pageNumber}>
+                      <PaginationLink
+                        href="#"
+                        isActive={pageNumber === currentPage}
+                        onClick={(event) => {
+                          event.preventDefault();
+                          handlePageChange(pageNumber);
+                        }}
+                        className={`h-8 w-8 rounded-lg text-sm ${
+                          pageNumber === currentPage
+                            ? "border-primary bg-primary! text-white! hover:bg-violet-700!"
+                            : "border border-gray-200 hover:border-violet-300 hover:bg-violet-50"
+                        }`}
+                      >
+                        {pageNumber}
+                      </PaginationLink>
+                    </PaginationItem>
+                  );
+                })}
                 <PaginationItem>
                   <PaginationNext
                     href="#"
                     text=""
-                    className="h-8 w-8 p-0 rounded-lg border border-gray-200 hover:border-violet-300 hover:bg-violet-50"
+                    onClick={(event) => {
+                      event.preventDefault();
+                      handlePageChange(currentPage + 1);
+                    }}
+                    className={`h-8 w-8 rounded-lg border border-gray-200 p-0 hover:border-violet-300 hover:bg-violet-50 ${currentPage === totalPages ? "pointer-events-none opacity-50" : ""}`}
                   />
                 </PaginationItem>
               </PaginationContent>
             </Pagination>
           </div>
+        ) : null}
       </Card>
     </div>
   );

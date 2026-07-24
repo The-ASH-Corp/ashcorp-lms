@@ -19,6 +19,8 @@ export interface UserRepository{
 
     findAll():Promise<User[]>;
 
+    getPaginatedStudents(page: number, limit: number, searchTerm?: string): Promise<{ students: User[]; totalStudents: number }>;
+
     hasPurchasedCourse(courseId: string): Promise<boolean>;
 
     removeCourseFromWishlists(courseId: string): Promise<void>;

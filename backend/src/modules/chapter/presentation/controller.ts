@@ -17,6 +17,29 @@ export const getChapterByCourseController = async (
 ): Promise<void> => {
   try {
     const id = String(req.params.id);
+    const page = Number(req.query.page ?? 0);
+    const limit = Number(req.query.limit ?? 0);
+    const searchTerm = typeof req.query.search === "string" ? req.query.search : undefined;
+
+    if (page > 0 && limit > 0) {
+      const result = await getChaptersByCourseIdUseCase.execute(id, { page, limit, searchTerm });
+
+      if (result && !Array.isArray(result)) {
+        res.status(200).json({
+          status: 200,
+          message: "Chapters fetched successfully",
+          data: result.chapters,
+          pagination: {
+            totalChapters: result.totalChapters,
+            totalPages: Math.max(1, Math.ceil(result.totalChapters / limit)),
+            currentPage: page,
+            limit,
+          },
+        });
+        return;
+      }
+    }
+
     const chapters = await getChaptersByCourseIdUseCase.execute(id);
 
     res.status(200).json({
