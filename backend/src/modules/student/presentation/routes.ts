@@ -9,6 +9,7 @@ import {
   deleteStudentController,
   enrollCourseController,
   getAllStudentsController,
+  getAdminPaymentsController,
   getExamAttemptController,
   getMyCoursesController,
   getStudentByIdController,
@@ -17,6 +18,7 @@ import {
   saveExamResponseController,
   updateCourseProgressController,
   updateProfileController,
+  updateStudentController,
   verifyPaymentController,
 } from "./controller";
 import { authMiddleware } from "../../../shared/middleware/authMiddleware";
@@ -36,6 +38,9 @@ router.post(
 
 // Get all students
 router.get("/get-all-students", requireRole("admin"), getAllStudentsController);
+
+// Get payments for admin
+router.get("/payments", requireRole("admin"), getAdminPaymentsController);
 
 // delete student
 router.delete("/delete-student/:id", requireRole("admin"), deleteStudentController);
@@ -72,6 +77,9 @@ router.get("/exam-attempt/:courseId", getExamAttemptController);
 
 // get user by id 
 router.get("/get-student-by-Id/:id", requireRole("admin"), getStudentByIdController);
+
+// update student by admin
+router.patch("/update-student/:id", requireRole("admin"), updateStudentController);
 
 // razorpay: create order
 router.post("/create-order", createOrderController);

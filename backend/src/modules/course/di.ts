@@ -8,6 +8,7 @@ import { userRepository } from "../auth/di";
 import { GetCourseByIdUseCase } from "./application/usecase/GetCourseByIdUseCase";
 import { MakeCourseFreeAndPublishedUseCase } from "./application/usecase/MakeCourseFreeAndPublishedUseCase";
 import { AddReviewUseCase } from "./application/usecase/AddReviewUseCase";
+import { UpdateCourseUseCase } from "./application/usecase/UpdateCourseUseCase";
 
 export const courseRepository = new MongoCourseRepository();
 
@@ -35,4 +36,11 @@ export const makeCourseFreeAndPublishedUseCase =
   new MakeCourseFreeAndPublishedUseCase(courseRepository);
 
 // add review useCase
-export const addReviewUseCase = new AddReviewUseCase(courseRepository);  
+export const addReviewUseCase = new AddReviewUseCase(courseRepository);
+
+// course update useCase
+export const updateCourseUseCase = new UpdateCourseUseCase(
+  courseRepository,
+  categoryRepository,
+  instructorRepository,
+);

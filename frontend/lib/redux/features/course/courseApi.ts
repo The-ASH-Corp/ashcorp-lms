@@ -1,5 +1,5 @@
 import { api } from "../../services/api";
-import { AddReviewRequest, Course, CourseRating } from "./courseSlice";
+import { AddReviewRequest, Course } from "./courseSlice";
 
 interface CourseResponse {
   data: Course[];
@@ -7,6 +7,16 @@ interface CourseResponse {
 
 interface singleCourseResponse {
   data: Course;
+}
+
+interface PaginatedCourseResponse {
+  data: Course[];
+  pagination: {
+    totalCourses: number;
+    totalPages: number;
+    currentPage: number;
+    limit: number;
+  };
 }
 
 
@@ -24,11 +34,38 @@ export const courseApi = api.injectEndpoints({
       providesTags: ["Course"],
     }),
 
+    getPaginatedCourses: builder.query<PaginatedCourseResponse, { page: number; limit: number; search?: string }>({
+      query: ({ page, limit, search }) => {
+        const params = new URLSearchParams({
+          page: String(page),
+          limit: String(limit),
+        });
+
+        if (search?.trim()) {
+          params.set("search", search.trim());
+        }
+
+        return `/course/all-course?${params.toString()}`;
+      },
+      transformResponse: (response: PaginatedCourseResponse) => response,
+      providesTags: ["Course"],
+    }),
+
     createCourse: builder.mutation<void, FormData>({
       query: (course) => ({
         url: "/course/create",
         method: "POST",
         body: course,
+        formData: true,
+      }),
+      invalidatesTags: ["Course"],
+    }),
+
+    updateCourse: builder.mutation<Course, { id: string; formData: FormData }>({
+      query: ({ id, formData }) => ({
+        url: `/course/update-course/${id}`,
+        method: "PATCH",
+        body: formData,
         formData: true,
       }),
       invalidatesTags: ["Course"],
@@ -67,8 +104,10 @@ export const courseApi = api.injectEndpoints({
 
 export const {
   useGetAllCourseQuery,
+  useGetPaginatedCoursesQuery,
   useCreateCourseMutation,
   useGetCourseQuery,
+  useUpdateCourseMutation,
   useDeleteCourseMutation,
   useMakeCourseFreeAndPublishedMutation,
   useAddReviewMutation,

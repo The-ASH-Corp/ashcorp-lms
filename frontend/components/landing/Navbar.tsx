@@ -16,9 +16,10 @@ import {
 import { NativeSelect, NativeSelectOption } from "../ui/native-select";
 import { useLogoutMutation } from "@/lib/redux/features/auth/authApi";
 import { usePathname } from "next/navigation";
-import { getDashboardPath } from "@/lib/auth/navigation";
+import { useGetAllCategoriesQuery } from "@/lib/redux/features/category/categoryApi";
 
 export default function Navbar() {
+  const {data:categories}=useGetAllCategoriesQuery()
   const pathname = usePathname();
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.auth.user);
@@ -57,22 +58,11 @@ export default function Navbar() {
             <NativeSelect className="w-32 border-0 bg-transparent text-gray-600">
               <NativeSelectOption value="">Categories</NativeSelectOption>
 
-              <NativeSelectOption value="Digital Illustration">
-                Digital Illustration
-              </NativeSelectOption>
-              
-
-              <NativeSelectOption value="Creative UI">
-                Creative UI
-              </NativeSelectOption>
-
-              <NativeSelectOption value="Motion Design">
-                Motion Design
-              </NativeSelectOption>
-
-              <NativeSelectOption value="Creative Writing">
-                Creative Writing
-              </NativeSelectOption>
+              {categories?.map((category) => (
+                <NativeSelectOption key={category._id} value={category.categoryName}>
+                  {category.categoryName}
+                </NativeSelectOption>
+              ))}
             </NativeSelect>
             <Link href="/courses" className={navLinkClass("/courses")}>
               Courses

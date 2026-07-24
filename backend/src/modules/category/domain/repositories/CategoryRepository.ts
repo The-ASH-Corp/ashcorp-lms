@@ -8,10 +8,17 @@ export interface CategoryRepository {
 
     findById(id: string): Promise<Category | null>;
 
+    updateCategory(id: string, data: Record<string, unknown>): Promise<Category>;
+
     hasCourses(id: string): Promise<boolean>;
 
     deleteCategory(id: string): Promise<void>;
 
     getAllCategories():Promise<CategoryResponseDTO[]>;
+
+    getPaginatedCategories(page: number, limit: number, searchTerm?: string): Promise<{
+        categories: CategoryResponseDTO[];
+        totalCategories: number;
+    }>;
     
 }

@@ -6,6 +6,7 @@ import {
   deleteStudentUseCase,
   enrollCourseUseCase,
   getAllStudentsUseCase,
+  getAdminPaymentsUseCase,
   getMyCoursesUseCase,
   getWishlistUseCase,
   removeFromWishlistUseCase,
@@ -13,6 +14,7 @@ import {
   studentUserRepository,
   updateCourseProgressUseCase,
   updateProfileUseCase,
+  updateStudentUseCase,
   verifyPaymentUseCase,
 } from "../di";
 import { serializeCourse } from "../../../shared/config/serializeCourses";
@@ -39,17 +41,63 @@ export const createStudentController = async (
 };
 
 export const getAllStudentsController = async (
-  _req: Request,
+  req: Request,
   res: Response,
   next: NextFunction,
 ): Promise<void> => {
   try {
+    const page = Number(req.query.page ?? 0);
+    const limit = Number(req.query.limit ?? 0);
+    const searchTerm =
+      typeof req.query.search === "string" ? req.query.search : undefined;
+
+    if (Number.isFinite(page) && Number.isFinite(limit) && page > 0 && limit > 0) {
+      const result = await getAllStudentsUseCase.execute({
+        page,
+        limit,
+        searchTerm,
+      });
+
+      if (result && !Array.isArray(result)) {
+        res.status(200).json({
+          status: 200,
+          message: "Students fetched successfully",
+          data: result.students,
+          pagination: {
+            totalStudents: result.totalStudents,
+            totalPages: Math.max(1, Math.ceil(result.totalStudents / limit)),
+            currentPage: page,
+            limit,
+          },
+        });
+        return;
+      }
+    }
+
     const students = await getAllStudentsUseCase.execute();
 
     res.status(200).json({
       status: 200,
       message: "Students fetched successfully",
       data: students,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const getAdminPaymentsController = async (
+  _req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
+  try {
+    const payments = await getAdminPaymentsUseCase.execute();
+
+    res.status(200).json({
+      success: true,
+      message: "Payments fetched successfully",
+      data: payments,
     });
   } catch (err) {
     next(err);
@@ -251,6 +299,25 @@ export const updateProfileController = async (
         phone: user.phone,
         email: user.email,
       },
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const updateStudentController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
+  try {
+    const studentId = String(req.params.id);
+    const student = await updateStudentUseCase.execute(studentId, req.body);
+
+    res.status(200).json({
+      success: true,
+      message: "Student updated successfully",
+      data: student,
     });
   } catch (err) {
     next(err);

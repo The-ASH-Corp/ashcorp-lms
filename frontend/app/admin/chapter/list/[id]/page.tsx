@@ -1,13 +1,13 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { Search, Edit2, Trash2, Plus } from "lucide-react";
+import { Search, Edit2, Trash2, Plus, X } from "lucide-react";
 import { useRouter, useParams, useSearchParams } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { useGetAllCourseQuery } from "@/lib/redux/features/course/courseApi";
 import {
   useDeleteChapterMutation,
-  useGetChaptersByCourseIdQuery,
+  useGetPaginatedChaptersByCourseIdQuery,
 } from "@/lib/redux/features/chapter/chapterApi";
 import {
   Pagination,
@@ -21,6 +21,7 @@ import {
 import { toast } from "sonner";
 import { ConfirmActionDialog } from "@/components/shared/confirm-action-dialog";
 
+const CHAPTERS_PER_PAGE = 10;
 
 
 export default function ChaptersManagement() {
@@ -29,11 +30,18 @@ export default function ChaptersManagement() {
   const searchParams = useSearchParams();
   const courseId = params?.id;
   const courseTitleFromRoute = searchParams.get("title") ?? "";
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchInput, setSearchInput] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
 
-  const { data: chapters, isLoading } = useGetChaptersByCourseIdQuery(
-    courseId ?? "",
+  const { data: paginatedData, isLoading } = useGetPaginatedChaptersByCourseIdQuery(
+    {
+      courseId: courseId ?? "",
+      page: currentPage,
+      limit: CHAPTERS_PER_PAGE,
+      search: searchTerm,
+    },
+    { skip: !courseId },
   );
   const { data: courses } = useGetAllCourseQuery(undefined, {
     skip: Boolean(courseTitleFromRoute),
@@ -46,10 +54,46 @@ export default function ChaptersManagement() {
     title: string;
     description?: string;
     serialNumber?: number;
-    contents?: Array<unknown>;
+    contents?: Array<{ contentTitle?: string; sequance?: number }>;
   };
 
-  const chapterList = (chapters ?? []) as unknown as ExtendedChapter[];
+  const chapters = (paginatedData?.data ?? []) as unknown as ExtendedChapter[];
+  const totalChapters = paginatedData?.pagination.totalChapters ?? 0;
+  const totalPages = paginatedData?.pagination.totalPages ?? 1;
+
+  const resolvedCurrentPage = useMemo(
+    () => Math.min(Math.max(1, currentPage), totalPages),
+    [currentPage, totalPages],
+  );
+
+  const paginationItems = useMemo<Array<number | "ellipsis">>(() => {
+    if (totalPages <= 7) {
+      return Array.from({ length: totalPages }, (_, index) => index + 1);
+    }
+
+    const pages = new Set<number>([1, totalPages]);
+
+    for (let offset = -1; offset <= 1; offset += 1) {
+      const page = resolvedCurrentPage + offset;
+      if (page > 1 && page < totalPages) {
+        pages.add(page);
+      }
+    }
+
+    const sortedPages = Array.from(pages).sort((left, right) => left - right);
+    const items: Array<number | "ellipsis"> = [];
+
+    sortedPages.forEach((page, index) => {
+      const previousPage = sortedPages[index - 1];
+      if (typeof previousPage === "number" && page - previousPage > 1) {
+        items.push("ellipsis");
+      }
+
+      items.push(page);
+    });
+
+    return items;
+  }, [resolvedCurrentPage, totalPages]);
   const courseTitle = useMemo(() => {
     if (courseTitleFromRoute) {
       return courseTitleFromRoute;
@@ -67,12 +111,41 @@ export default function ChaptersManagement() {
     router.push(`/admin/chapter/createChapter/${courseId}`);
   };
 
+  const handleEditChapter = (chapterId: string) => {
+    if (!courseId) return;
+    router.push(`/admin/chapter/edit/${chapterId}?courseId=${courseId}&title=${encodeURIComponent(courseTitle)}`);
+  };
+
+  const applySearch = () => {
+    setCurrentPage(1);
+    setSearchTerm(searchInput.trim());
+  };
+
+  const clearSearch = () => {
+    setSearchInput("");
+    setSearchTerm("");
+    setCurrentPage(1);
+  };
+
+  const handleSearchSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    applySearch();
+  };
+
   const handleDeleteChapter = async (chapterId: string) => {
     try {
       await deleteChapter(chapterId).unwrap();
+      if (chapters.length === 1 && currentPage > 1) {
+        setCurrentPage((page) => Math.max(1, page - 1));
+      }
       toast.success("Chapter deleted successfully");
-    } catch (error: any) {
-      toast.error(error?.data?.message ?? "Failed to delete chapter");
+    } catch (error: unknown) {
+      const message =
+        typeof error === "object" && error !== null && "data" in error &&
+        typeof (error as { data?: { message?: string } }).data?.message === "string"
+          ? (error as { data?: { message?: string } }).data?.message
+          : "Failed to delete chapter";
+      toast.error(message);
     }
   };
 
@@ -90,7 +163,7 @@ export default function ChaptersManagement() {
         <div className="flex flex-col sm:flex-row gap-4 mb-8">
           {/* Search Bar */}
           <div className="flex-1">
-            <div className="relative">
+            <form className="relative" onSubmit={handleSearchSubmit}>
               <Search
                 className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
                 size={20}
@@ -98,11 +171,28 @@ export default function ChaptersManagement() {
               <Input
                 type="text"
                 placeholder="Search chapters..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-[70%] h-12 pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary bg-white text-gray-900"
+                value={searchInput}
+                onChange={(e) => setSearchInput(e.target.value)}
+                className="w-[70%] h-12 pl-10 pr-24 py-3 border border-gray-200 rounded-lg focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary bg-white text-gray-900"
               />
-            </div>
+              <div className="absolute right-[30%] top-1/2 flex -translate-y-1/2 items-center gap-1 pr-2">
+                <button
+                  type="submit"
+                  className="flex h-8 w-8 items-center justify-center rounded-md text-gray-500 hover:bg-violet-50 hover:text-primary"
+                >
+                  <Search size={16} />
+                </button>
+                {(searchInput || searchTerm) && (
+                  <button
+                    type="button"
+                    className="flex h-8 w-8 items-center justify-center rounded-md text-gray-500 hover:bg-gray-100"
+                    onClick={clearSearch}
+                  >
+                    <X size={16} />
+                  </button>
+                )}
+              </div>
+            </form>
           </div>
 
           {/* Info and New Chapter Button */}
@@ -162,20 +252,22 @@ export default function ChaptersManagement() {
                     Loading chapters...
                   </td>
                 </tr>
-              ) : !chapters || chapters.length === 0 ? (
+              ) : chapters.length === 0 ? (
                 <tr>
                   <td colSpan={5} className="px-4 py-6 text-center text-gray-500">
-                    No chapters found for this course.
+                    {searchTerm ? "No chapters match your search." : "No chapters found for this course."}
                   </td>
                 </tr>
               ) : (
-                chapterList.map((chapter, index) => (
+                chapters.map((chapter, index) => (
                   <tr
                     key={chapter._id}
                     className="border-b border-gray-200 hover:bg-gray-50 transition-colors"
                   >
                     <td className="px-4 sm:px-6 py-4 align-middle">
-                      <span className="text-sm font-semibold text-gray-900">{index + 1}</span>
+                      <span className="text-sm font-semibold text-gray-900">
+                        {(resolvedCurrentPage - 1) * CHAPTERS_PER_PAGE + index + 1}
+                      </span>
                     </td>
                     <td className="px-4 sm:px-6 py-4 align-middle">
                       <div className="flex items-center gap-3">
@@ -202,7 +294,11 @@ export default function ChaptersManagement() {
                     </td>
                     <td className="px-4 sm:px-6 py-4 align-middle">
                       <div className="flex items-center justify-center gap-2">
-                        <button className="p-2 hover:bg-gray-100 rounded transition-colors text-gray-600">
+                        <button
+                          className="p-2 hover:bg-gray-100 rounded transition-colors text-gray-600"
+                          onClick={() => handleEditChapter(chapter._id)}
+                          type="button"
+                        >
                           <Edit2 size={16} />
                         </button>
                         <ConfirmActionDialog
@@ -236,40 +332,44 @@ export default function ChaptersManagement() {
                   href="#"
                   text=""
                   className="h-8 w-8 p-0 rounded-lg border border-gray-200 hover:border-violet-300 hover:bg-violet-50"
+                  onClick={(event) => {
+                    event.preventDefault();
+                    setCurrentPage((page) => Math.max(1, page - 1));
+                  }}
                 />
               </PaginationItem>
-              {[1, 2, 3].map((page) => (
-                <PaginationItem key={page}>
-                  <PaginationLink
-                    href="#"
-                    isActive={page === currentPage}
-                    onClick={() => setCurrentPage(page)}
-                    className={`h-8 w-8 rounded-lg text-sm ${
-                      page === currentPage
-                        ? "bg-primary! text-white! border-primary! hover:bg-violet-700!"
-                        : "border border-gray-200 hover:border-violet-300 hover:bg-violet-50"
-                    }`}
-                  >
-                    {page}
-                  </PaginationLink>
+              {paginationItems.map((item, index) => (
+                <PaginationItem key={`${item}-${index}`}>
+                  {item === "ellipsis" ? (
+                    <PaginationEllipsis />
+                  ) : (
+                    <PaginationLink
+                      href="#"
+                      isActive={item === resolvedCurrentPage}
+                      onClick={(event) => {
+                        event.preventDefault();
+                        setCurrentPage(item);
+                      }}
+                      className={`h-8 w-8 rounded-lg text-sm ${
+                        item === resolvedCurrentPage
+                          ? "bg-primary! text-white! border-primary! hover:bg-violet-700!"
+                          : "border border-gray-200 hover:border-violet-300 hover:bg-violet-50"
+                      }`}
+                    >
+                      {item}
+                    </PaginationLink>
+                  )}
                 </PaginationItem>
               ))}
-              <PaginationItem>
-                <PaginationEllipsis />
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationLink
-                  href="#"
-                  className="h-8 w-8 rounded-lg text-sm border border-gray-200 hover:border-violet-300 hover:bg-violet-50"
-                >
-                  128
-                </PaginationLink>
-              </PaginationItem>
               <PaginationItem>
                 <PaginationNext
                   href="#"
                   text=""
                   className="h-8 w-8 p-0 rounded-lg border border-gray-200 hover:border-violet-300 hover:bg-violet-50"
+                  onClick={(event) => {
+                    event.preventDefault();
+                    setCurrentPage((page) => Math.min(totalPages, page + 1));
+                  }}
                 />
               </PaginationItem>
             </PaginationContent>

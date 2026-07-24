@@ -7,7 +7,14 @@ export interface ChapterRepository{
 
     getChaptersByCourseId(courseId:string):Promise<Chapter[]|null>
 
+    getPaginatedChaptersByCourseId(courseId: string, page: number, limit: number, searchTerm?: string): Promise<{
+        chapters: Chapter[];
+        totalChapters: number;
+    }>
+
     findById(id: string): Promise<Chapter | null>
 
     deleteChapter(id: string): Promise<void>
+
+    updateChapter(id: string, data: Partial<ChapterRequestDTO>): Promise<Chapter | null>
 }
