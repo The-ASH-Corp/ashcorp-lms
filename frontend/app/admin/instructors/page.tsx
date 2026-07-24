@@ -20,7 +20,7 @@ import {
   PaginationPrevious,
   PaginationEllipsis,
 } from "@/components/ui/pagination";
-import { Ban, Plus, Search, Check, X, Trash } from "lucide-react";
+import { Ban, Plus, Search, Check, X, Trash, Pencil } from "lucide-react";
 import {
   InputGroup,
   InputGroupAddon,
@@ -38,6 +38,7 @@ import { useAppDispatch } from "@/lib/redux/hooks";
 import { getAllInstructors } from "@/lib/redux/features/instructor/instructorSlice";
 import { toast } from "sonner";
 import { ConfirmActionDialog } from "@/components/shared/confirm-action-dialog";
+import { useRouter } from "next/navigation";
 
 const statusStyles: Record<string, { dot: string; bg: string; text: string }> =
   {
@@ -57,6 +58,7 @@ const statusStyles: Record<string, { dot: string; bg: string; text: string }> =
 export default function InstructorsPage() {
 
     const [currentPage] = useState(1);
+    const router = useRouter();
     
       const { data: instructors, isLoading, isError } = useGetAllInstructorsQuery();
       const dispatch = useAppDispatch();
@@ -75,9 +77,19 @@ export default function InstructorsPage() {
         try {
           await deleteInstructor(id).unwrap();
           toast.success("Instructor deleted successfully");
-        } catch (error: any) {
-          toast.error(error?.data?.message ?? "Failed to delete instructor");
+        } catch (error: unknown) {
+          const message =
+            typeof error === "object" && error !== null && "data" in error &&
+            typeof (error as { data?: { message?: string } }).data?.message === "string"
+              ? (error as { data?: { message?: string } }).data?.message
+              : "Failed to delete instructor";
+
+          toast.error(message);
         }
+      };
+
+      const handleEditInstructor = (id: string) => {
+        router.push(`/admin/instructors/edit/${id}`);
       };
 
       const handleBlockInstructor = async (id: string) => {
@@ -88,8 +100,14 @@ export default function InstructorsPage() {
               ? "Instructor blocked successfully"
               : "Instructor unblocked successfully",
           );
-        } catch (error: any) {
-          toast.error(error?.data?.message ?? "Failed to update instructor status");
+        } catch (error: unknown) {
+          const message =
+            typeof error === "object" && error !== null && "data" in error &&
+            typeof (error as { data?: { message?: string } }).data?.message === "string"
+              ? (error as { data?: { message?: string } }).data?.message
+              : "Failed to update instructor status";
+
+          toast.error(message);
         }
       };
 
@@ -184,7 +202,7 @@ export default function InstructorsPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {instructors?.map((instructor: any, index: number) => {
+              {instructors?.map((instructor: { _id: string; status: string; profileImage: string; name: string; email: string; instructorTitle: string; isFeatured: boolean }, index: number) => {
                 const style = statusStyles[instructor.status];
 
                 return (
@@ -214,7 +232,7 @@ export default function InstructorsPage() {
                     </TableCell>
 
                     <TableCell>
-                      <div className="flex items-center gap-3 min-w-[120px] justify-center">
+                      <div className="flex items-center gap-3 min-w-30 justify-center">
                         <span className="text-sm font-semibold text-gray-900 w-10">
                           {instructor.name}
                         </span>
@@ -222,14 +240,14 @@ export default function InstructorsPage() {
                     </TableCell>
 
                     <TableCell>
-                        <div className="flex items-center gap-3 min-w-[120px] justify-center">
+                        <div className="flex items-center gap-3 min-w-30 justify-center">
                             <span className="text-sm font-semibold text-gray-900 w-10">
                                 {instructor.email}
                             </span>
                         </div>
                     </TableCell>
                     <TableCell>
-                        <div className="flex items-center gap-3 min-w-[120px] justify-center">
+                        <div className="flex items-center gap-3 min-w-30 justify-center">
                             <span className="text-sm font-semibold text-gray-900 w-10">
                                 {instructor.instructorTitle}
                             </span>
@@ -267,6 +285,14 @@ export default function InstructorsPage() {
                     {/* Actions */}
                     <TableCell className="text-center align-middle">
                       <div className="flex items-center justify-center gap-1">
+                        <button
+                          type="button"
+                          onClick={() => handleEditInstructor(instructor._id)}
+                          className="flex h-8 w-8 items-center justify-center rounded-lg text-violet-500 transition-colors hover:bg-violet-50 hover:text-violet-600"
+                          title="Edit instructor"
+                        >
+                          <Pencil className="h-4 w-4" />
+                        </button>
                         <button
                           type="button"
                           onClick={() => handleBlockInstructor(instructor._id)}

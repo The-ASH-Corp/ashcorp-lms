@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { NativeSelect } from "@/components/ui/native-select";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -27,6 +27,7 @@ import {
 } from "@/lib/redux/features/coupon/couponApi";
 import { toast } from "sonner";
 import { getApiErrorMessage } from "@/lib/utils";
+import { ConfirmActionDialog } from "@/components/shared/confirm-action-dialog";
 
 export default function CouponPage() {
   const router = useRouter();
@@ -34,7 +35,7 @@ export default function CouponPage() {
   const [filterStatus, setFilterStatus] = useState("all");
 
   const { data: coupons = [], isLoading, error } = useGetAllCouponsQuery();
-  const [deleteCoupon] = useDeleteCouponMutation();
+  const [deleteCoupon, { isLoading: isDeletingCoupon }] = useDeleteCouponMutation();
   const [toggleCouponStatus] = useToggleCouponStatusMutation();
 
   const filteredCoupons = useMemo(() => {
@@ -51,13 +52,11 @@ export default function CouponPage() {
   }, [coupons, searchTerm, filterStatus]);
 
   const handleDelete = async (id: string) => {
-    if (confirm("Are you sure you want to delete this coupon?")) {
-      try {
-        await deleteCoupon(id).unwrap();
-        toast.success("Coupon deleted successfully");
-      } catch (err) {
-        toast.error(getApiErrorMessage(err));
-      }
+    try {
+      await deleteCoupon(id).unwrap();
+      toast.success("Coupon deleted successfully");
+    } catch (err) {
+      toast.error(getApiErrorMessage(err));
     }
   };
 
@@ -189,15 +188,24 @@ export default function CouponPage() {
                           >
                             <Pencil className="h-4 w-4" />
                           </Button>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => handleDelete(coupon.id)}
-                            className="hover:bg-gray-100 text-red-600 hover:text-red-800"
-                            title="Delete coupon"
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
+                          <ConfirmActionDialog
+                            title="Delete Coupon"
+                            description={`This will permanently delete the coupon ${coupon.code}.`}
+                            confirmLabel="Delete"
+                            loading={isDeletingCoupon}
+                            loadingLabel="Deleting..."
+                            onConfirm={() => handleDelete(coupon.id)}
+                            trigger={
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                className="hover:bg-gray-100 text-red-600 hover:text-red-800"
+                                title="Delete coupon"
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
+                            }
+                          />
                         </div>
                       </TableCell>
                     </TableRow>

@@ -41,4 +41,21 @@ export class MongoInstructorRepository implements InstructorRepository {
 
     return instructor as unknown as Instructor;
   }
+
+  async updateInstructor(id: string, data: InstructorRequestDTO, image?: string): Promise<Instructor> {
+    const instructor = await InstructorModel.findByIdAndUpdate(
+      id,
+      {
+        ...data,
+        ...(image ? { profileImage: image } : {}),
+      },
+      { new: true },
+    );
+
+    if (!instructor) {
+      throw new Error("Instructor not found");
+    }
+
+    return instructor as unknown as Instructor;
+  }
 }

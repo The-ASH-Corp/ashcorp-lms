@@ -4,6 +4,8 @@ import { FindInstructorByMobileNumberUseCase } from "./application/usecase/FindI
 import { DeleteInstructorUseCase } from "./application/usecase/DeleteInstructorUseCase";
 import { GetAllInstructorsUseCase } from "./application/usecase/GetAllInstructorsUseCase";
 import { BlockInstructorUseCase } from "./application/usecase/BlockInstructorUseCase";
+import { GetInstructorByIdUseCase } from "./application/usecase/GetInstructorByIdUseCase";
+import { UpdateInstructorUseCase } from "./application/usecase/UpdateInstructorUseCase";
 import { MongoInstructorRepository } from "./infrastructure/repositories/MongoInstructorRepository";
 
 export const instructorRepository = new MongoInstructorRepository();
@@ -25,3 +27,9 @@ export const deleteInstructorUseCase = new DeleteInstructorUseCase(instructorRep
 
 // block instructor usecase
 export const blockInstructorUseCase = new BlockInstructorUseCase(instructorRepository);
+
+// get instructor by id usecase
+export const getInstructorByIdUseCase = new GetInstructorByIdUseCase(instructorRepository);
+
+// update instructor usecase
+export const updateInstructorUseCase = new UpdateInstructorUseCase(instructorRepository);

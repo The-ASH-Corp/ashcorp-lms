@@ -3,6 +3,7 @@ import {
   createExamUseCase,
   deleteExamUseCase,
   getExamByCourseUseCase,
+  updateExamUseCase,
   uploadCertificateUseCase,
 } from "../di";
 import { Exam } from "../domain/entities/Exam";
@@ -68,6 +69,35 @@ export const deleteExamController = async (
     res.status(200).json({
       success: true,
       data: "Exam deleted successfully",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const updateExamController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
+  try {
+    const { examId } = req.params;
+    const { courseId, title, duration, marksPerQuestion, passMarks, questions } = req.body;
+
+    const exam = new Exam(
+      courseId,
+      title,
+      Number(duration),
+      Number(marksPerQuestion),
+      Number(passMarks),
+      questions,
+    );
+
+    const updatedExam = await updateExamUseCase.execute(examId as string, exam);
+
+    res.status(200).json({
+      success: true,
+      data: updatedExam,
     });
   } catch (error) {
     next(error);

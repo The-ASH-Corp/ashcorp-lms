@@ -29,6 +29,16 @@ export const instructorApi = api.injectEndpoints({
             invalidatesTags: ["Instructor"],
         }),
 
+        updateInstructor: builder.mutation<Instructor, { id: string; instructor: FormData }>({
+            query: ({ id, instructor }) => ({
+                url: `/instructor/update-instructor/${id}`,
+                method: "PATCH",
+                body: instructor,
+                formData: true,
+            }),
+            invalidatesTags: ["Instructor"],
+        }),
+
         deleteInstructor: builder.mutation<void, string>({
             query: (id) => ({
                 url: `/instructor/delete-instructor/${id}`,
@@ -42,13 +52,18 @@ export const instructorApi = api.injectEndpoints({
                 url: `/instructor/block-instructor/${id}`,
                 method: "PATCH",
             }),
-            transformResponse: (response: any) => response.data as Instructor,
+            transformResponse: (response: { data?: Instructor }) => response.data as Instructor,
             invalidatesTags: ["Instructor"],
         }),
 
         getAllInstructors: builder.query<Instructor[], void>({
             query: () => "/instructor/get-all-instructors",
-            transformResponse: (response: any) => response.data as Instructor[],
+            transformResponse: (response: { data?: Instructor[] }) => response.data as Instructor[],
+            providesTags: ["Instructor"],
+        }),
+
+        getInstructorById: builder.query<{ success: boolean; data: Instructor }, string>({
+            query: (id) => `/instructor/get-instructor/${id}`,
             providesTags: ["Instructor"],
         }),
 
@@ -58,7 +73,9 @@ export const instructorApi = api.injectEndpoints({
 
 export const {
   useCreateInstructorMutation,
+  useUpdateInstructorMutation,
   useDeleteInstructorMutation,
   useBlockInstructorMutation,
   useGetAllInstructorsQuery,
+  useGetInstructorByIdQuery,
 } = instructorApi;
