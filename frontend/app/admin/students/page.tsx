@@ -329,7 +329,7 @@ export default function StudentsPage() {
         </Table>
 
 
-        {totalPages > 1 ? (
+        { (
           <div className="flex items-center justify-center border-t border-gray-100 px-5 py-4">
             <Pagination className="mx-0 w-auto">
               <PaginationContent>
@@ -389,7 +389,7 @@ export default function StudentsPage() {
               </PaginationContent>
             </Pagination>
           </div>
-        ) : null}
+        )}
       </Card>
     </div>
   );

@@ -15,6 +15,15 @@ export interface Instructor {
     status: string;
 }
 
+export interface PaginatedInstructorResponse {
+    data: Instructor[];
+    pagination: {
+        totalInstructors: number;
+        totalPages: number;
+        currentPage: number;
+        limit: number;
+    };
+}
 
 export const instructorApi = api.injectEndpoints({
     endpoints: (builder) => ({
@@ -62,6 +71,23 @@ export const instructorApi = api.injectEndpoints({
             providesTags: ["Instructor"],
         }),
 
+        getPaginatedInstructors: builder.query<PaginatedInstructorResponse, { page: number; limit: number; search?: string }>({
+            query: ({ page, limit, search }) => {
+                const params = new URLSearchParams({
+                    page: String(page),
+                    limit: String(limit),
+                });
+
+                if (search?.trim()) {
+                    params.set("search", search.trim());
+                }
+
+                return `/instructor/get-all-instructors?${params.toString()}`;
+            },
+            transformResponse: (response: PaginatedInstructorResponse) => response,
+            providesTags: ["Instructor"],
+        }),
+
         getInstructorById: builder.query<{ success: boolean; data: Instructor }, string>({
             query: (id) => `/instructor/get-instructor/${id}`,
             providesTags: ["Instructor"],
@@ -77,5 +103,6 @@ export const {
   useDeleteInstructorMutation,
   useBlockInstructorMutation,
   useGetAllInstructorsQuery,
+  useGetPaginatedInstructorsQuery,
   useGetInstructorByIdQuery,
 } = instructorApi;
