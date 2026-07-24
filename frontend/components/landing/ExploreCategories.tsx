@@ -12,6 +12,8 @@ export default function ExploreCategories() {
   const [showAll, setShowAll] = useState(false);
   
   const { data: categories, isLoading, isError } = useGetAllCategoriesQuery();
+
+  console.log(categories);
   
   const displayedCategories = showAll ? categories : categories?.slice(0, );
 

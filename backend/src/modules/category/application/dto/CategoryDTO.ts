@@ -1,5 +1,6 @@
 export interface CategoryRequestDTO {
   categoryName: string;
+  description: string;
   color: string;
   iconUrl: string;
   isFeatured: boolean;
@@ -10,6 +11,7 @@ export interface CategoryRequestDTO {
 export interface CategoryResponseDTO {
   id: string;
   categoryName: string;
+  details: string;
   color: string;
   iconUrl: string;
   createdAt: Date;

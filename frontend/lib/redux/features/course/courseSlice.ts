@@ -27,6 +27,7 @@ export interface Course {
   id: string;
   title: string;
   description: string;
+  enrolledStudents: string[];
   price: number;
   offerPrice: number;
   instructor: string;
