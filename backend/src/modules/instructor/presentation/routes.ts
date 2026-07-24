@@ -26,7 +26,9 @@ router.post(
 
 // get all instructors controller
 router.get('/get-all-instructors',getAllInstructorsController);
+
 router.get('/get-instructor/:id', getInstructorByIdController);
+
 router.patch('/update-instructor/:id', ...adminOnly, imageUpload("profileImage"), updateInstructorController);
 
 router.delete('/delete-instructor/:id', ...adminOnly, deleteInstructorController);

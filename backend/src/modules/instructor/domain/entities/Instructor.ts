@@ -16,6 +16,7 @@ export class Instructor{
           review: string;
           createdAt: Date;
         }[],
+        public _id?: string,
         
     ) {}
 }
