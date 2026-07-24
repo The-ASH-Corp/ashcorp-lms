@@ -6,6 +6,7 @@ import {
   getAllCourseController,
   getCourseByIdController,
   makeCourseFreeAndPublishedController,
+  updateCourseController,
 } from "./controller";
 import { fileUpload } from "../../../shared/middleware/fileUpload";
 import { authMiddleware } from "../../../shared/middleware/authMiddleware";
@@ -32,6 +33,16 @@ router.patch(
   "/make-free-publish/:id",
   ...adminOnly,
   makeCourseFreeAndPublishedController,
+);
+
+router.patch(
+  "/update-course/:id",
+  ...adminOnly,
+  fileUpload([
+    { name: "thumbnail", maxCount: 1 },
+    { name: "introVideo", maxCount: 1 },
+  ]),
+  updateCourseController,
 );
 
 router.delete("/delete-course/:id", ...adminOnly, deleteCourseController);

@@ -1,5 +1,5 @@
 import { api } from "../../services/api";
-import { AddReviewRequest, Course, CourseRating } from "./courseSlice";
+import { AddReviewRequest, Course } from "./courseSlice";
 
 interface CourseResponse {
   data: Course[];
@@ -29,6 +29,16 @@ export const courseApi = api.injectEndpoints({
         url: "/course/create",
         method: "POST",
         body: course,
+        formData: true,
+      }),
+      invalidatesTags: ["Course"],
+    }),
+
+    updateCourse: builder.mutation<Course, { id: string; formData: FormData }>({
+      query: ({ id, formData }) => ({
+        url: `/course/update-course/${id}`,
+        method: "PATCH",
+        body: formData,
         formData: true,
       }),
       invalidatesTags: ["Course"],
@@ -69,6 +79,7 @@ export const {
   useGetAllCourseQuery,
   useCreateCourseMutation,
   useGetCourseQuery,
+  useUpdateCourseMutation,
   useDeleteCourseMutation,
   useMakeCourseFreeAndPublishedMutation,
   useAddReviewMutation,

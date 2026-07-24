@@ -23,8 +23,18 @@ export const categoryApi = api.injectEndpoints({
 
     getAllCategories: builder.query<Category[], void>({
       query: () => "/category/all-categories",
-      transformResponse:(response:any) => response.data as Category[],
+      transformResponse: (response: { data: Category[] }) => response.data,
       providesTags: ["Category"],
+    }),
+
+    updateCategory: builder.mutation<void, { id: string; formData: FormData }>({
+      query: ({ id, formData }) => ({
+        url: `/category/update-category/${id}`,
+        method: "PATCH",
+        body: formData,
+        formData: true,
+      }),
+      invalidatesTags: ["Category"],
     }),
 
     deleteCategory: builder.mutation<void, string>({
@@ -40,5 +50,6 @@ export const categoryApi = api.injectEndpoints({
 export const {
   useCreateCategoryMutation,
   useGetAllCategoriesQuery,
+  useUpdateCategoryMutation,
   useDeleteCategoryMutation,
 } = categoryApi;

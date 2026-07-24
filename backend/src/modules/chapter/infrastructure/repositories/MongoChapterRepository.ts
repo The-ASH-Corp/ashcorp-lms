@@ -22,4 +22,9 @@ export class MongoChapterRepository implements ChapterRepository {
   async deleteChapter(id: string): Promise<void> {
     await ChapterModel.findByIdAndDelete(id);
   }
+
+  async updateChapter(id: string, data: Partial<ChapterRequestDTO>): Promise<Chapter | null> {
+    const chapter = await ChapterModel.findByIdAndUpdate(id, data, { new: true });
+    return chapter ? (chapter.toObject() as unknown as Chapter) : null;
+  }
 }

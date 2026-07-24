@@ -2,10 +2,10 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Ban, Plus, Trash2, Users } from "lucide-react";
+import { Ban, Pencil, Plus, Trash2 } from "lucide-react";
 import { PropagateLoader } from "react-spinners";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import {
   Table,
   TableBody,
@@ -25,6 +25,7 @@ import {
 import { toast } from "sonner";
 import { ConfirmActionDialog } from "@/components/shared/confirm-action-dialog";
 import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
+import { useRouter } from "next/navigation";
 
 const statusStyles: Record<
   string,
@@ -64,6 +65,7 @@ export default function StudentsPage() {
     const [currentPage] = useState(1);
   
   const dispatch = useAppDispatch();
+  const router = useRouter();
   const { data: students, isLoading, isError } = useGetAllStudentsQuery();
   const [deleteStudent, { isLoading: isDeletingStudent }] =
     useDeleteStudentMutation();
@@ -77,12 +79,21 @@ export default function StudentsPage() {
     }
   }, [students, dispatch]);
 
+  const handleEditStudent = (id: string) => {
+    router.push(`/admin/students/edit/${id}`);
+  };
+
   const handleDeleteStudent = async (id: string) => {
     try {
       await deleteStudent(id).unwrap();
       toast.success("Student deleted successfully");
-    } catch (error: any) {
-      toast.error(error?.data?.message ?? "Failed to delete student");
+    } catch (error: unknown) {
+      const message =
+        typeof error === "object" && error !== null && "data" in error &&
+        typeof (error as { data?: { message?: string } }).data?.message === "string"
+          ? (error as { data?: { message?: string } }).data?.message
+          : "Failed to delete student";
+      toast.error(message);
     }
   };
 
@@ -94,8 +105,13 @@ export default function StudentsPage() {
           ? "Student blocked successfully"
           : "Student unblocked successfully",
       );
-    } catch (error: any) {
-      toast.error(error?.data?.message ?? "Failed to update student status");
+    } catch (error: unknown) {
+      const message =
+        typeof error === "object" && error !== null && "data" in error &&
+        typeof (error as { data?: { message?: string } }).data?.message === "string"
+          ? (error as { data?: { message?: string } }).data?.message
+          : "Failed to update student status";
+      toast.error(message);
     }
   };
 
@@ -228,6 +244,14 @@ export default function StudentsPage() {
 
                     <TableCell>
                       <div className="flex items-center justify-center gap-2">
+                        <button
+                          type="button"
+                          onClick={() => handleEditStudent(student._id)}
+                          className="flex h-8 w-8 items-center justify-center rounded-lg text-violet-500 transition-colors hover:bg-violet-50 hover:text-violet-600"
+                          title="Edit student"
+                        >
+                          <Pencil className="h-4 w-4" />
+                        </button>
                         <button
                           type="button"
                           onClick={() => handleBlockStudent(student._id)}

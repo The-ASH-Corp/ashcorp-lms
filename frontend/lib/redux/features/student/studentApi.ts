@@ -39,6 +39,18 @@ export interface Student {
   updatedAt?: string;
 }
 
+export interface AdminPaymentRecord {
+  studentId: string;
+  studentName: string;
+  studentEmail: string;
+  courseId: string;
+  courseTitle: string;
+  paymentId: string;
+  methodOfPayment: string;
+  paymentTime: string | null;
+  amount: number;
+}
+
 export interface WishlistCourse {
   _id?: string;
   title: string;
@@ -70,6 +82,14 @@ export interface CreateStudentDTO {
   verifyByDefault?: boolean;
 }
 
+export interface UpdateStudentDTO {
+  name?: string;
+  email?: string;
+  phone?: string;
+  password?: string;
+  confirmPassword?: string;
+}
+
 export const studentApi = api.injectEndpoints({
   endpoints: (builder) => ({
 
@@ -77,6 +97,15 @@ export const studentApi = api.injectEndpoints({
       query: (student) => ({
         url: "/student/create-student",
         method: "POST",
+        body: student,
+      }),
+      invalidatesTags: ["Student"],
+    }),
+
+    updateStudent: builder.mutation<Student, { id: string; student: UpdateStudentDTO }>({
+      query: ({ id, student }) => ({
+        url: `/student/update-student/${id}`,
+        method: "PATCH",
         body: student,
       }),
       invalidatesTags: ["Student"],
@@ -95,23 +124,29 @@ export const studentApi = api.injectEndpoints({
         url: `/student/block-student/${id}`,
         method: "PATCH",
       }),
-      transformResponse: (response: any) => response.data as Student,
+      transformResponse: (response: unknown) => (response as { data: Student }).data,
       invalidatesTags: ["Student"],
     }),
 
     getAllStudents: builder.query<Student[], void>({
       query: () => "/student/get-all-students",
-      transformResponse: (response: any) => response.data as Student[],
+      transformResponse: (response: unknown) => (response as { data: Student[] }).data,
+      providesTags: ["Student"],
+    }),
+
+    getAdminPayments: builder.query<AdminPaymentRecord[], void>({
+      query: () => "/student/payments",
+      transformResponse: (response: unknown) => (response as { data: AdminPaymentRecord[] }).data,
       providesTags: ["Student"],
     }),
 
     getWishlist: builder.query<WishlistCourse[], void>({
       query: () => "/student/get-wishlist",
-      transformResponse: (response: any) => response.data as WishlistCourse[],
+      transformResponse: (response: unknown) => (response as { data: WishlistCourse[] }).data,
       providesTags: ["Student"],
     }),
 
-    addToWishlist: builder.mutation<any, { courseId: string }>({
+    addToWishlist: builder.mutation<unknown, { courseId: string }>({
       query: ({ courseId }) => ({
         url: "/student/add-to-wishlist",
         method: "POST",
@@ -120,7 +155,7 @@ export const studentApi = api.injectEndpoints({
       invalidatesTags: ["Student"],
     }),
 
-    removeFromWishlist: builder.mutation<any, { courseId: string }>({
+    removeFromWishlist: builder.mutation<unknown, { courseId: string }>({
       query: ({ courseId }) => ({
         url: "/student/remove-from-wishlist",
         method: "POST",
@@ -129,7 +164,7 @@ export const studentApi = api.injectEndpoints({
       invalidatesTags: ["Student"],
     }),
 
-    enrollCourse: builder.mutation<any, { courseId: string }>({
+    enrollCourse: builder.mutation<unknown, { courseId: string }>({
       query: ({ courseId }) => ({
         url: "/student/enroll-course",
         method: "POST",
@@ -140,11 +175,11 @@ export const studentApi = api.injectEndpoints({
 
     getMyCourses: builder.query<EnrolledCourse[], string | void>({
       query: (id) => (id ? `/student/my-courses?studentId=${id}` : "/student/my-courses"),
-      transformResponse: (response: any) => response.data as EnrolledCourse[],
+      transformResponse: (response: unknown) => (response as { data: EnrolledCourse[] }).data,
       providesTags: ["Student"],
     }),
 
-    updateCourseProgress: builder.mutation<any, { courseId: string; progress: number }>({
+    updateCourseProgress: builder.mutation<unknown, { courseId: string; progress: number }>({
       query: ({ courseId, progress }) => ({
         url: "/student/course-progress",
         method: "PATCH",
@@ -155,7 +190,7 @@ export const studentApi = api.injectEndpoints({
 
     getStudentById: builder.query<Student, string>({
       query: (id) => `/student/get-student-by-Id/${id}`,
-      transformResponse: (response: any) => response.data as Student,
+      transformResponse: (response: unknown) => (response as { data: Student }).data,
       providesTags: ["Student"],
     }),
 
@@ -187,9 +222,11 @@ export const studentApi = api.injectEndpoints({
 
 export const {
   useCreateStudentMutation,
+  useUpdateStudentMutation,
   useDeleteStudentMutation,
   useBlockStudentMutation,
   useGetAllStudentsQuery,
+  useGetAdminPaymentsQuery,
   useGetWishlistQuery,
   useAddToWishlistMutation,
   useRemoveFromWishlistMutation,
