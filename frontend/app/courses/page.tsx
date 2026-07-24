@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
-import { ChevronDown, Menu, SearchIcon, X } from "lucide-react";
-import FilterSidebar from "@/components/courses/FilterSIdebar";
+import { useMemo, useState } from "react";
+import { Menu, SearchIcon, X } from "lucide-react";
+import FilterSidebar from "@/components/courses/FilterSidebar";
 import CourseCard from "@/components/courses/CourseCard";
 import Navbar from "@/components/landing/Navbar";
 import Footer from "@/components/landing/Footer";
@@ -20,21 +20,106 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import { useGetAllCategoriesQuery } from "@/lib/redux/features/category/categoryApi";
+import { useGetAllInstructorsQuery } from "@/lib/redux/features/instructor/instructorApi";
 import { useGetAllCourseQuery } from "@/lib/redux/features/course/courseApi";
+import type { Course } from "@/lib/redux/features/course/courseSlice";
+
+type SortKey = "Newest" | "Oldest" | "Price: Low to High" | "Price: High to Low" | "Top Rated";
+
+const getCourseRating = (course: Course) => {
+  const rating = course.rating?.[0]?.rating ?? 0;
+  return Number.isFinite(rating) ? rating : 0;
+};
+
+const normalizeText = (value: string) => value.toLowerCase().trim();
 
 export default function CoursesPage() {
-  const [sortBy, setSortBy] = useState("Newest");
-  const [currentPage, setCurrentPage] = useState(1);
+  const [sortBy, setSortBy] = useState<SortKey>("Newest");
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [selectedInstructors, setSelectedInstructors] = useState<string[]>([]);
+  const [selectedPrice, setSelectedPrice] = useState<"all" | "free" | "paid">("all");
+  const [ratingOnly, setRatingOnly] = useState(false);
 
-  const {data: course,isLoading,isError} = useGetAllCourseQuery();
+  const { data: courses = [] } = useGetAllCourseQuery();
+  const { data: categories = [] } = useGetAllCategoriesQuery();
+  const { data: instructors = [] } = useGetAllInstructorsQuery();
 
-  // if(isLoading){
-  //   return <div>Loading...</div>
-  // }
-  // if(isError){
-  //   return <div>Error...</div>
-  // }
+  const filteredCourses = useMemo(() => {
+    const query = normalizeText(searchQuery);
+
+    return [...courses]
+      .filter((course) => {
+        const categoryName = normalizeText(course.category || "");
+        const instructorName = normalizeText(course.instructor || "");
+        const title = normalizeText(course.title || "");
+        const matchesSearch =
+          !query ||
+          title.includes(query) ||
+          categoryName.includes(query) ||
+          instructorName.includes(query);
+        const matchesCategory =
+          selectedCategories.length === 0 || selectedCategories.includes(course.category);
+        const matchesInstructor =
+          selectedInstructors.length === 0 || selectedInstructors.includes(course.instructor);
+        const isFreeCourse = Number(course.offerPrice ?? course.price ?? 0) === 0;
+        const matchesPrice =
+          selectedPrice === "all" ||
+          (selectedPrice === "free" && isFreeCourse) ||
+          (selectedPrice === "paid" && !isFreeCourse);
+        const matchesRating = !ratingOnly || getCourseRating(course) >= 4;
+
+        return matchesSearch && matchesCategory && matchesInstructor && matchesPrice && matchesRating;
+      })
+      .sort((left, right) => {
+        switch (sortBy) {
+          case "Newest":
+            return new Date(right.createdAt).getTime() - new Date(left.createdAt).getTime();
+          case "Oldest":
+            return new Date(left.createdAt).getTime() - new Date(right.createdAt).getTime();
+          case "Price: Low to High":
+            return Number(left.offerPrice ?? left.price ?? 0) - Number(right.offerPrice ?? right.price ?? 0);
+          case "Price: High to Low":
+            return Number(right.offerPrice ?? right.price ?? 0) - Number(left.offerPrice ?? left.price ?? 0);
+          case "Top Rated":
+            return getCourseRating(right) - getCourseRating(left);
+          default:
+            return 0;
+        }
+      });
+  }, [courses, ratingOnly, selectedCategories, selectedInstructors, selectedPrice, searchQuery, sortBy]);
+
+  const sortOptions: SortKey[] = [
+    "Newest",
+    "Oldest",
+    "Price: Low to High",
+    "Price: High to Low",
+    "Top Rated",
+  ];
+
+  const toggleCategory = (value: string) => {
+    setSelectedCategories((current) =>
+      current.includes(value) ? current.filter((item) => item !== value) : [...current, value],
+    );
+  };
+
+  const toggleInstructor = (value: string) => {
+    setSelectedInstructors((current) =>
+      current.includes(value) ? current.filter((item) => item !== value) : [...current, value],
+    );
+  };
+
+  const clearAllFilters = () => {
+    setSearchQuery("");
+    setSelectedCategories([]);
+    setSelectedInstructors([]);
+    setSelectedPrice("all");
+    setRatingOnly(false);
+    setSortBy("Newest");
+  };
+
   return (
     <>
       <Navbar />
@@ -54,7 +139,19 @@ export default function CoursesPage() {
           <div
             className={`${sidebarOpen ? "block" : "hidden"} lg:block lg:w-56 lg:shrink-0 lg:sticky lg:top-24 lg:self-start lg:max-h-[calc(100vh-7rem)] lg:overflow-y-auto`}
           >
-            <FilterSidebar />
+            <FilterSidebar
+              categories={categories}
+              instructors={instructors}
+              selectedCategories={selectedCategories}
+              selectedInstructors={selectedInstructors}
+              selectedPrice={selectedPrice}
+              ratingOnly={ratingOnly}
+              onToggleCategory={toggleCategory}
+              onToggleInstructor={toggleInstructor}
+              onPriceChange={setSelectedPrice}
+              onRatingChange={setRatingOnly}
+              onClearAll={clearAllFilters}
+            />
           </div>
 
           {/* Course Grid */}
@@ -62,13 +159,15 @@ export default function CoursesPage() {
             {/* Header Controls */}
             <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-8 lg:mb-10 bg-white shadow-sm rounded-lg p-4">
               <p className="text-gray-600 font-medium text-sm sm:text-base">
-                Showing 24 Courses
+                Showing {filteredCourses.length} Courses
               </p>
               <div className="flex flex-col sm:flex-row sm:items-center gap-3">
                 <InputGroup>
                   <InputGroupInput
                     id="inline-start-input"
                     placeholder="Search..."
+                    value={searchQuery}
+                    onChange={(event) => setSearchQuery(event.target.value)}
                   />
                   <InputGroupAddon
                     align="inline-end"
@@ -81,17 +180,24 @@ export default function CoursesPage() {
                   Sort By:
                 </span>
                 <div className="relative">
-                  <button className="flex items-center gap-2 px-3 sm:px-4 py-2 border border-gray-300 rounded-lg hover:border-primary transition-colors bg-white text-gray-700 font-medium text-sm w-full sm:w-auto">
-                    {sortBy}
-                    <ChevronDown size={18} />
-                  </button>
+                  <select
+                    value={sortBy}
+                    onChange={(event) => setSortBy(event.target.value as SortKey)}
+                    className="flex items-center gap-2 px-3 sm:px-4 py-2 border border-gray-300 rounded-lg hover:border-primary transition-colors bg-white text-gray-700 font-medium text-sm w-full sm:w-auto"
+                  >
+                    {sortOptions.map((option) => (
+                      <option key={option} value={option}>
+                        {option}
+                      </option>
+                    ))}
+                  </select>
                 </div>
               </div>
             </div>
 
             {/* Course Cards Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 mb-10 lg:mb-12">
-              {course?.map((course) => (
+              {filteredCourses.map((course) => (
                 <CourseCard
                   key={course.id}
                   course={{
