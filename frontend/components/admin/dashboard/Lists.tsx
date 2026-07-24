@@ -5,6 +5,7 @@ import { useGetAllCourseQuery } from "@/lib/redux/features/course/courseApi"
 import { useGetAllInstructorsQuery } from "@/lib/redux/features/instructor/instructorApi"
 import { useGetAdminPaymentsQuery } from "@/lib/redux/features/student/studentApi"
 import { GraduationCap, Users } from "lucide-react"
+import Image from "next/image"
 import { useMemo } from "react"
 
 export default function Lists() {
@@ -32,7 +33,7 @@ export default function Lists() {
   }, [payments])
 
   const topInstructors = useMemo(() => {
-    const instructorStats = new Map<string, { name: string; total: number; rating: string }>()
+    const instructorStats = new Map<string, { name: string; total: number; rating: string; profileImage?: string }>()
 
     courses.forEach((course) => {
       const instructorName = course.instructor || "Unassigned"
@@ -40,6 +41,7 @@ export default function Lists() {
         name: instructorName,
         total: 0,
         rating: "0.0",
+        profileImage: undefined,
       }
 
       current.total += 1
@@ -50,6 +52,7 @@ export default function Lists() {
       const current = instructorStats.get(instructor.name)
       if (current) {
         current.rating = instructor.rating ?? "0.0"
+        current.profileImage = instructor.profileImage
       }
     })
 
@@ -113,8 +116,14 @@ export default function Lists() {
                 className="flex items-center justify-between rounded-3xl border border-slate-200 bg-slate-50 px-4 py-3"
               >
                 <div className="flex items-center gap-3">
-                  <div className="grid h-12 w-12 place-items-center rounded-2xl bg-slate-100 text-slate-700">
-                    <GraduationCap className="h-5 w-5" />
+                  <div className="grid h-12 w-12 place-items-center  bg-slate-100 text-slate-700">
+                    <Image
+                    src={instructor.profileImage || "/default-profile.png"}
+                    alt={instructor.name}
+                    width={40}
+                    height={40}
+                    style={{ objectFit: "contain" }}
+                    />
                   </div>
                   <div>
                     <p className="font-medium text-slate-900">{instructor.name}</p>
