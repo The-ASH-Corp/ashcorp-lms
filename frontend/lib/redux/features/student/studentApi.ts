@@ -39,6 +39,16 @@ export interface Student {
   updatedAt?: string;
 }
 
+export interface PaginatedStudentResponse {
+  data: Student[];
+  pagination: {
+    totalStudents: number;
+    totalPages: number;
+    currentPage: number;
+    limit: number;
+  };
+}
+
 export interface AdminPaymentRecord {
   studentId: string;
   studentName: string;
@@ -134,6 +144,23 @@ export const studentApi = api.injectEndpoints({
       providesTags: ["Student"],
     }),
 
+    getPaginatedStudents: builder.query<PaginatedStudentResponse, { page: number; limit: number; search?: string }>({
+      query: ({ page, limit, search }) => {
+        const params = new URLSearchParams({
+          page: String(page),
+          limit: String(limit),
+        });
+
+        if (search?.trim()) {
+          params.set("search", search.trim());
+        }
+
+        return `/student/get-all-students?${params.toString()}`;
+      },
+      transformResponse: (response: PaginatedStudentResponse) => response,
+      providesTags: ["Student"],
+    }),
+
     getAdminPayments: builder.query<AdminPaymentRecord[], void>({
       query: () => "/student/payments",
       transformResponse: (response: unknown) => (response as { data: AdminPaymentRecord[] }).data,
@@ -226,6 +253,7 @@ export const {
   useDeleteStudentMutation,
   useBlockStudentMutation,
   useGetAllStudentsQuery,
+  useGetPaginatedStudentsQuery,
   useGetAdminPaymentsQuery,
   useGetWishlistQuery,
   useAddToWishlistMutation,
