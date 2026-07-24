@@ -1,16 +1,17 @@
 import { Star } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
 import type { Course } from "@/lib/redux/features/course/courseSlice";
 
+interface CourseCardCourse extends Omit<Course, "offerPrice" | "rating"> {
+  offerPrice?: string | number;
+  rating?: number;
+  reviews?: string;
+  badge?: string;
+  badgeColor?: string;
+}
+
 interface CourseCardProps {
-  course: Omit<Course, "offerPrice"> & {
-    offerPrice?: string | number;
-    rating?: number;
-    reviews?: string;
-    badge?: string;
-    badgeColor?: string;
-  };
+  course: CourseCardCourse;
 }
 
 export default function CourseCard({ course }: CourseCardProps) {

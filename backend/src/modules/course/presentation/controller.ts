@@ -6,6 +6,7 @@ import {
   deleteCourseUseCase,
   getCourseByIdUseCase,
   makeCourseFreeAndPublishedUseCase,
+  updateCourseUseCase,
 } from "../di";
 import { CourseRequestDTO } from "../application/dto/CourseDTO";
 import { AppError } from "../../../shared/error/AppError";
@@ -105,6 +106,55 @@ export const getCourseByIdController = async (
   }
 };
 
+
+export const updateCourseController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
+  try {
+    const id = String(req.params.id);
+    const body = req.body as Record<string, unknown>;
+    const files = (req as Request & { files?: UploadedFileMap }).files;
+    const thumbnail = files?.thumbnail?.[0];
+    const introVideo = files?.introVideo?.[0];
+
+    let imageUrl: string | undefined;
+    let videoUrl: string | undefined;
+
+    if (thumbnail || introVideo) {
+      const uploads = await Promise.all([
+        thumbnail ? uploadToS3(thumbnail, [String(body.title ?? ""), "thumbnail"]) : Promise.resolve(null),
+        introVideo ? uploadToS3(introVideo, [String(body.title ?? ""), "intro-video"]) : Promise.resolve(null),
+      ]);
+
+      imageUrl = uploads[0]?.url;
+      videoUrl = uploads[1]?.url;
+    }
+
+    const course = await updateCourseUseCase.execute(id, {
+      title: typeof body.title === "string" ? body.title : undefined,
+      description: typeof body.description === "string" ? body.description : undefined,
+      price: typeof body.price === "string" ? Number(body.price) : undefined,
+      offerPrice: typeof body.offerPrice === "string" ? Number(body.offerPrice) : undefined,
+      instructor: typeof body.instructor === "string" ? body.instructor : undefined,
+      category: typeof body.category === "string" ? body.category : undefined,
+      imageUrl,
+      videoUrl,
+      isPublished: typeof body.isPublished === "string" ? body.isPublished === "true" : undefined,
+    });
+
+    const serializedCourse = await serializeCourse(course);
+
+    res.status(200).json({
+      success: true,
+      message: "Course updated successfully",
+      data: serializedCourse,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 
 export const deleteCourseController = async (
   req: Request,

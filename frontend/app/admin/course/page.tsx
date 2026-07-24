@@ -64,8 +64,13 @@ export default function CoursesPage() {
     try {
       await deleteCourse(id).unwrap();
       toast.success("Course deleted successfully");
-    } catch (error: any) {
-      toast.error(error?.data?.message ?? "Failed to delete course");
+    } catch (error: unknown) {
+      const message =
+        typeof error === "object" && error !== null && "data" in error &&
+        typeof (error as { data?: { message?: string } }).data?.message === "string"
+          ? (error as { data?: { message?: string } }).data?.message
+          : "Failed to delete course";
+      toast.error(message);
     }
   };
 
@@ -73,8 +78,13 @@ export default function CoursesPage() {
     try {
       await makeCourseFreeAndPublished(id).unwrap();
       toast.success("Course changed to free and published successfully");
-    } catch (error: any) {
-      toast.error(error?.data?.message ?? "Failed to update course");
+    } catch (error: unknown) {
+      const message =
+        typeof error === "object" && error !== null && "data" in error &&
+        typeof (error as { data?: { message?: string } }).data?.message === "string"
+          ? (error as { data?: { message?: string } }).data?.message
+          : "Failed to update course";
+      toast.error(message);
     }
   };
 
@@ -247,9 +257,11 @@ export default function CoursesPage() {
                     {/* Actions */}
                     <TableCell className="flex justify-center">
                       <div className="flex items-center justify-end gap-1">
-                        <button className="flex h-8 w-8 items-center justify-center rounded-lg text-gray-400 transition-colors hover:bg-violet-50 hover:text-primary">
-                          <Pencil className="h-4 w-4" />
-                        </button>
+                        <Link href={`/admin/course/edit/${course.id}`}>
+                          <button type="button" className="flex h-8 w-8 items-center justify-center rounded-lg text-gray-400 transition-colors hover:bg-violet-50 hover:text-primary">
+                            <Pencil className="h-4 w-4" />
+                          </button>
+                        </Link>
                         <ConfirmActionDialog
                           title="Delete Course"
                           description={`This will permanently delete ${course.title}.`}
