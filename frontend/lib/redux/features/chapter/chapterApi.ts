@@ -29,12 +29,39 @@ export interface UpdateChapterPayload {
   contents?: ChapterContent[];
 }
 
+interface PaginatedChapterResponse {
+  data: Chapter[];
+  pagination: {
+    totalChapters: number;
+    totalPages: number;
+    currentPage: number;
+    limit: number;
+  };
+}
+
 export const chapterApi = api.injectEndpoints({
   endpoints: (builder) => ({
 
     getChaptersByCourseId: builder.query<Chapter[], string>({
       query: (courseId) => `/chapters/get-chapter-by-course/${courseId}`,
       transformResponse: (response: unknown) => (response as { data: Chapter[] }).data,
+      providesTags: ["Chapter"],
+    }),
+
+    getPaginatedChaptersByCourseId: builder.query<PaginatedChapterResponse, { courseId: string; page: number; limit: number; search?: string }>({
+      query: ({ courseId, page, limit, search }) => {
+        const params = new URLSearchParams({
+          page: String(page),
+          limit: String(limit),
+        });
+
+        if (search?.trim()) {
+          params.set("search", search.trim());
+        }
+
+        return `/chapters/get-chapter-by-course/${courseId}?${params.toString()}`;
+      },
+      transformResponse: (response: PaginatedChapterResponse) => response,
       providesTags: ["Chapter"],
     }),
 
@@ -70,6 +97,7 @@ export const chapterApi = api.injectEndpoints({
 });
 export const {
   useGetChaptersByCourseIdQuery,
+  useGetPaginatedChaptersByCourseIdQuery,
   useCreateChapterMutation,
   useUpdateChapterMutation,
   useDeleteChapterMutation,

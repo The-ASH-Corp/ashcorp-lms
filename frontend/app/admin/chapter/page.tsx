@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
@@ -20,7 +20,7 @@ import {
   PaginationPrevious,
   PaginationEllipsis,
 } from "@/components/ui/pagination";
-import { Search } from "lucide-react";
+import { Search, X } from "lucide-react";
 import {
   InputGroup,
   InputGroupAddon,
@@ -28,7 +28,7 @@ import {
 } from "@/components/ui/input-group";
 import Image from "next/image";
 import { PropagateLoader } from "react-spinners";
-import { useGetAllCourseQuery } from "@/lib/redux/features/course/courseApi";
+import { useGetPaginatedCoursesQuery } from "@/lib/redux/features/course/courseApi";
 import type { Course } from "@/lib/redux/features/course/courseSlice";
 import { useRouter } from "next/navigation";
 
@@ -48,10 +48,72 @@ const statusStyles: Record<string, { dot: string; bg: string; text: string }> =
   };
 
 export default function ChapterPage() {
-  const [currentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [searchInput, setSearchInput] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
+  const listingRef = useRef<HTMLDivElement | null>(null);
   const router = useRouter();
 
-  const { data: courses, isLoading, isError } = useGetAllCourseQuery();
+  const { data: coursePage, isLoading, isError } = useGetPaginatedCoursesQuery({
+    page: currentPage,
+    limit: 10,
+    search: searchTerm,
+  });
+  const courses = coursePage?.data ?? [];
+  const totalPages = coursePage?.pagination.totalPages ?? 1;
+  const resolvedCurrentPage = useMemo(
+    () => Math.min(Math.max(1, currentPage), totalPages),
+    [currentPage, totalPages],
+  );
+
+  const paginationItems = useMemo<Array<number | "ellipsis">>(() => {
+    if (totalPages <= 7) {
+      return Array.from({ length: totalPages }, (_, index) => index + 1);
+    }
+
+    const pages = new Set<number>([1, totalPages]);
+
+    for (let offset = -1; offset <= 1; offset += 1) {
+      const page = resolvedCurrentPage + offset;
+      if (page > 1 && page < totalPages) {
+        pages.add(page);
+      }
+    }
+
+    const sortedPages = Array.from(pages).sort((left, right) => left - right);
+    const items: Array<number | "ellipsis"> = [];
+
+    sortedPages.forEach((page, index) => {
+      const previousPage = sortedPages[index - 1];
+      if (typeof previousPage === "number" && page - previousPage > 1) {
+        items.push("ellipsis");
+      }
+
+      items.push(page);
+    });
+
+    return items;
+  }, [resolvedCurrentPage, totalPages]);
+
+  useEffect(() => {
+    listingRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, [resolvedCurrentPage]);
+
+  const applySearch = () => {
+    setCurrentPage(1);
+    setSearchTerm(searchInput.trim());
+  };
+
+  const clearSearch = () => {
+    setSearchInput("");
+    setSearchTerm("");
+    setCurrentPage(1);
+  };
+
+  const handleSearchSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    applySearch();
+  };
 
   const getCategoryImageUrl = (iconUrl: string) => {
     if (!iconUrl) return "";
@@ -99,15 +161,32 @@ export default function ChapterPage() {
         </div>
 
         {/* ─── Data Table ─── */}
-        <Card className="border-0 shadow-sm bg-white overflow-hidden">
-          <InputGroup className="w-sm ml-4">
-            <InputGroupInput placeholder="Search Category..." />
-            <InputGroupAddon align="inline-end">
-              <Button size="icon" variant="ghost" className="h-8 w-8 shrink-0">
-                <Search className="h-4 w-4" />
-              </Button>
-            </InputGroupAddon>
-          </InputGroup>
+        <Card className="border-0 shadow-sm bg-white overflow-hidden" ref={listingRef}>
+          <form className="w-sm ml-4" onSubmit={handleSearchSubmit}>
+            <InputGroup>
+              <InputGroupInput
+                placeholder="Search Course..."
+                value={searchInput}
+                onChange={(event) => setSearchInput(event.target.value)}
+              />
+              <InputGroupAddon align="inline-end">
+                <Button size="icon" variant="ghost" className="h-8 w-8 shrink-0" type="submit">
+                  <Search className="h-4 w-4" />
+                </Button>
+                {(searchInput || searchTerm) && (
+                  <Button
+                    size="icon"
+                    variant="ghost"
+                    className="h-8 w-8 shrink-0"
+                    type="button"
+                    onClick={clearSearch}
+                  >
+                    <X className="h-4 w-4" />
+                  </Button>
+                )}
+              </InputGroupAddon>
+            </InputGroup>
+          </form>
           <Table>
             <TableHeader>
               <TableRow className="bg-gray-50/80 hover:bg-gray-50/80 border-b border-gray-100 ">
@@ -198,39 +277,44 @@ export default function ChapterPage() {
                     href="#"
                     text=""
                     className="h-8 w-8 p-0 rounded-lg border border-gray-200 hover:border-violet-300 hover:bg-violet-50"
+                    onClick={(event) => {
+                      event.preventDefault();
+                      setCurrentPage((page) => Math.max(1, page - 1));
+                    }}
                   />
                 </PaginationItem>
-                {[1, 2, 3].map((page) => (
-                  <PaginationItem key={page}>
-                    <PaginationLink
-                      href="#"
-                      isActive={page === currentPage}
-                      className={`h-8 w-8 rounded-lg text-sm ${
-                        page === currentPage
-                          ? "bg-primary! text-white! border-primary! hover:bg-violet-700!"
-                          : "border border-gray-200 hover:border-violet-300 hover:bg-violet-50"
-                      }`}
-                    >
-                      {page}
-                    </PaginationLink>
+                {paginationItems.map((item, index) => (
+                  <PaginationItem key={`${item}-${index}`}>
+                    {item === "ellipsis" ? (
+                      <PaginationEllipsis />
+                    ) : (
+                      <PaginationLink
+                        href="#"
+                        isActive={item === resolvedCurrentPage}
+                        className={`h-8 w-8 rounded-lg text-sm ${
+                          item === resolvedCurrentPage
+                            ? "bg-primary! text-white! border-primary! hover:bg-violet-700!"
+                            : "border border-gray-200 hover:border-violet-300 hover:bg-violet-50"
+                        }`}
+                        onClick={(event) => {
+                          event.preventDefault();
+                          setCurrentPage(item);
+                        }}
+                      >
+                        {item}
+                      </PaginationLink>
+                    )}
                   </PaginationItem>
                 ))}
-                <PaginationItem>
-                  <PaginationEllipsis />
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationLink
-                    href="#"
-                    className="h-8 w-8 rounded-lg text-sm border border-gray-200 hover:border-violet-300 hover:bg-violet-50"
-                  >
-                    128
-                  </PaginationLink>
-                </PaginationItem>
                 <PaginationItem>
                   <PaginationNext
                     href="#"
                     text=""
                     className="h-8 w-8 p-0 rounded-lg border border-gray-200 hover:border-violet-300 hover:bg-violet-50"
+                    onClick={(event) => {
+                      event.preventDefault();
+                      setCurrentPage((page) => Math.min(totalPages, page + 1));
+                    }}
                   />
                 </PaginationItem>
               </PaginationContent>
