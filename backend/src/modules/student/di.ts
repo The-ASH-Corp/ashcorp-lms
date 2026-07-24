@@ -13,6 +13,7 @@ import { UpdateProfileUseCase } from "./application/usecase/UpdateProfileUseCase
 import { SaveExamResponseUseCase } from "./application/usecase/SaveExamResponseUseCase";
 import { VerifyPaymentUseCase } from "./application/usecase/VerifyPaymentUseCase";
 import { UpdateStudentUseCase } from "./application/usecase/UpdateStudentUseCase";
+import { GetAdminPaymentsUseCase } from "./application/usecase/GetAdminPaymentsUseCase";
 import { courseRepository } from "../course/di";
 import { adminRepository } from "../admins/di";
 import { examRepository } from "../exam/di";
@@ -75,4 +76,9 @@ export const verifyPaymentUseCase = new VerifyPaymentUseCase(
   enrollCourseUseCase,
   courseRepository,
   razorpay,
+);
+
+export const getAdminPaymentsUseCase = new GetAdminPaymentsUseCase(
+  studentUserRepository,
+  courseRepository,
 );

@@ -9,6 +9,7 @@ import {
   deleteStudentController,
   enrollCourseController,
   getAllStudentsController,
+  getAdminPaymentsController,
   getExamAttemptController,
   getMyCoursesController,
   getStudentByIdController,
@@ -37,6 +38,9 @@ router.post(
 
 // Get all students
 router.get("/get-all-students", requireRole("admin"), getAllStudentsController);
+
+// Get payments for admin
+router.get("/payments", requireRole("admin"), getAdminPaymentsController);
 
 // delete student
 router.delete("/delete-student/:id", requireRole("admin"), deleteStudentController);

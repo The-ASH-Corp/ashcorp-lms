@@ -6,6 +6,7 @@ import {
   deleteStudentUseCase,
   enrollCourseUseCase,
   getAllStudentsUseCase,
+  getAdminPaymentsUseCase,
   getMyCoursesUseCase,
   getWishlistUseCase,
   removeFromWishlistUseCase,
@@ -51,6 +52,24 @@ export const getAllStudentsController = async (
       status: 200,
       message: "Students fetched successfully",
       data: students,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const getAdminPaymentsController = async (
+  _req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
+  try {
+    const payments = await getAdminPaymentsUseCase.execute();
+
+    res.status(200).json({
+      success: true,
+      message: "Payments fetched successfully",
+      data: payments,
     });
   } catch (err) {
     next(err);

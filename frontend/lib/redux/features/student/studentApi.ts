@@ -39,6 +39,18 @@ export interface Student {
   updatedAt?: string;
 }
 
+export interface AdminPaymentRecord {
+  studentId: string;
+  studentName: string;
+  studentEmail: string;
+  courseId: string;
+  courseTitle: string;
+  paymentId: string;
+  methodOfPayment: string;
+  paymentTime: string | null;
+  amount: number;
+}
+
 export interface WishlistCourse {
   _id?: string;
   title: string;
@@ -119,6 +131,12 @@ export const studentApi = api.injectEndpoints({
     getAllStudents: builder.query<Student[], void>({
       query: () => "/student/get-all-students",
       transformResponse: (response: unknown) => (response as { data: Student[] }).data,
+      providesTags: ["Student"],
+    }),
+
+    getAdminPayments: builder.query<AdminPaymentRecord[], void>({
+      query: () => "/student/payments",
+      transformResponse: (response: unknown) => (response as { data: AdminPaymentRecord[] }).data,
       providesTags: ["Student"],
     }),
 
@@ -208,6 +226,7 @@ export const {
   useDeleteStudentMutation,
   useBlockStudentMutation,
   useGetAllStudentsQuery,
+  useGetAdminPaymentsQuery,
   useGetWishlistQuery,
   useAddToWishlistMutation,
   useRemoveFromWishlistMutation,
