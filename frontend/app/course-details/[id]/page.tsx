@@ -161,6 +161,19 @@ export default function CourseDetail() {
     }
   };
 
+  const averageRating = course?.rating?.length
+    ? course.rating.reduce((sum, item) => sum + item.rating, 0) /
+      course.rating.length
+    : 0;
+
+    const formattedRating = averageRating.toFixed(1);
+
+    const [showAllReviews, setShowAllReviews] = useState(false);
+
+    const visibleReviews = showAllReviews
+      ? (course?.rating ?? [])
+      : (course?.rating ?? []).slice(0, 5);
+
   if (isLoading) {
     return (
       <div className="flex justify-center items-center min-h-[80vh]">
@@ -209,12 +222,16 @@ export default function CourseDetail() {
               <div className="flex flex-wrap items-center gap-4 sm:gap-6 mb-6">
                 <div className="flex items-center gap-2">
                   <Star size={18} className="text-yellow-400 fill-yellow-400" />
-                  <span className="font-semibold text-gray-900">5.0</span>
-                  <span className="text-gray-600">(124 Ratings)</span>
+                  <span className="font-semibold text-gray-900">
+                    {formattedRating}
+                  </span>
+                  <span className="text-gray-600">
+                    ({course?.rating?.length} Ratings)
+                  </span>
                 </div>
                 <div className="flex items-center gap-2 text-gray-600">
                   <Users size={18} />
-                  <span>7,420 Enrolled</span>
+                  <span>{course?.enrolledStudents.length} Enrolled</span>
                 </div>
               </div>
 
@@ -403,7 +420,7 @@ export default function CourseDetail() {
             {activeTab === "reviews" && (
               <div className="space-y-4">
                 {course?.rating?.length ? (
-                  course.rating.map((review, index: number) => (
+                  visibleReviews.map((review, index: number) => (
                     <div
                       key={index}
                       className="border border-gray-200 rounded-lg p-5 shadow-sm"
@@ -437,6 +454,16 @@ export default function CourseDetail() {
                     No reviews yet.
                   </div>
                 )}
+              </div>
+            )}
+            {course?.rating && course.rating.length > 5 && (
+              <div className="flex justify-center mt-6">
+                <button
+                  onClick={() => setShowAllReviews(!showAllReviews)}
+                  className="text-primary font-medium hover:underline"
+                >
+                  {showAllReviews ? "See Less" : "See More"}
+                </button>
               </div>
             )}
           </div>
