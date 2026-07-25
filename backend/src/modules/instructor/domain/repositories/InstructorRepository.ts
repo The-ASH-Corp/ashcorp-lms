@@ -11,6 +11,12 @@ export interface InstructorRepository {
 
   findAll(): Promise<Instructor[]>;
 
+  getPaginatedInstructors(
+    page: number,
+    limit: number,
+    searchTerm?: string,
+  ): Promise<{ instructors: any[]; totalInstructors: number }>;
+
   findById(id: string): Promise<Instructor | null>;
 
   deleteInstructor(id: string): Promise<void>;

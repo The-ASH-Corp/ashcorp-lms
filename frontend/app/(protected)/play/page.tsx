@@ -83,6 +83,26 @@ export default function PlayPage() {
     setCurrentVideoProgress(0);
   }, [selectedLessonId]);
 
+  useEffect(() => {
+    if (courseId && course) {
+      try {
+        const lastPlayedData = {
+          courseId,
+          courseTitle: course.title,
+          chapterTitle: selectedLesson?.chapterTitle || course.title,
+          lessonTitle: selectedLesson?.contentTitle || "Lesson",
+          lessonId: selectedLessonId,
+          imageUrl: course.imageUrl,
+          progress: courseProgress,
+          updatedAt: new Date().toISOString(),
+        };
+        window.localStorage.setItem("ashcorp_last_played", JSON.stringify(lastPlayedData));
+      } catch {
+        // ignore localStorage errors
+      }
+    }
+  }, [courseId, course, selectedLesson, selectedLessonId, courseProgress]);
+
   const handleVideoProgress = async (event: React.SyntheticEvent<HTMLVideoElement>) => {
     if (!courseId) return;
 

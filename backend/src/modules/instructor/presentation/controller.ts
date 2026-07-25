@@ -33,12 +33,40 @@ export const createInstructorController = async (
 
 
 export const getAllInstructorsController = async (
-  _req: Request,
+  req: Request,
   res: Response,
   next: NextFunction,
 ): Promise<void> => {
   try {
-    const instructors = await getAllInstructorsUseCase.execute()
+    const page = Number(req.query.page ?? 0);
+    const limit = Number(req.query.limit ?? 0);
+    const searchTerm =
+      typeof req.query.search === "string" ? req.query.search : undefined;
+
+    if (Number.isFinite(page) && Number.isFinite(limit) && page > 0 && limit > 0) {
+      const result = await getAllInstructorsUseCase.execute({
+        page,
+        limit,
+        searchTerm,
+      });
+
+      if (result && !Array.isArray(result)) {
+        res.status(200).json({
+          status: 200,
+          message: "Instructors fetched successfully",
+          data: result.instructors,
+          pagination: {
+            totalInstructors: result.totalInstructors,
+            totalPages: Math.max(1, Math.ceil(result.totalInstructors / limit)),
+            currentPage: page,
+            limit,
+          },
+        });
+        return;
+      }
+    }
+
+    const instructors = await getAllInstructorsUseCase.execute();
 
     res.status(200).json({
       status: 200,

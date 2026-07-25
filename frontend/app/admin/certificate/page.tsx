@@ -103,7 +103,7 @@ export default function CertificatePage() {
       </div>
     );
   }
-
+console.log(studentList[0]?.courseProgress )
   return (
     <div className="space-y-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -203,8 +203,8 @@ export default function CertificatePage() {
 
                     <TableCell>
                       <div className="flex items-center justify-center gap-2">
-                        {students?.some(
-                          (course) => course?.courseProgress == 100,
+                        {Object.values(student?.courseProgress || {}).some(
+                          (progress) => Number(progress) >= 100,
                         ) ? (
                           <Label>No Course Is Completed</Label>
                         ) : (

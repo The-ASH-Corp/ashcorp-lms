@@ -32,7 +32,7 @@ import { PropagateLoader } from "react-spinners";
 import {
   useBlockInstructorMutation,
   useDeleteInstructorMutation,
-  useGetAllInstructorsQuery,
+  useGetPaginatedInstructorsQuery,
 } from "@/lib/redux/features/instructor/instructorApi";
 import { useAppDispatch } from "@/lib/redux/hooks";
 import { getAllInstructors } from "@/lib/redux/features/instructor/instructorSlice";
@@ -55,23 +55,79 @@ const statusStyles: Record<string, { dot: string; bg: string; text: string }> =
     Inactive: { dot: "bg-gray-400", bg: "bg-gray-100", text: "text-gray-600" },
   };
 
+const getPageNumbers = (currentPage: number, totalPages: number) => {
+  if (totalPages <= 7) {
+    return Array.from({ length: totalPages }, (_, index) => index + 1);
+  }
+
+  if (currentPage <= 4) {
+    return [1, 2, 3, 4, 5, "...", totalPages];
+  }
+
+  if (currentPage >= totalPages - 3) {
+    return [1, "...", totalPages - 4, totalPages - 3, totalPages - 2, totalPages - 1, totalPages];
+  }
+
+  return [1, "...", currentPage - 1, currentPage, currentPage + 1, "...", totalPages];
+};
+
 export default function InstructorsPage() {
+  const PAGE_SIZE = 10;
+  const [currentPage, setCurrentPage] = useState(1);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
+  const router = useRouter();
 
-    const [currentPage] = useState(1);
-    const router = useRouter();
-    
-      const { data: instructors, isLoading, isError } = useGetAllInstructorsQuery();
-      const dispatch = useAppDispatch();
-      const [deleteInstructor, { isLoading: isDeletingInstructor }] =
-        useDeleteInstructorMutation();
-      const [blockInstructor, { isLoading: isBlockingInstructor }] =
-        useBlockInstructorMutation();
+  const dispatch = useAppDispatch();
+  const { data: paginatedInstructors, isLoading, isError } = useGetPaginatedInstructorsQuery({
+    page: currentPage,
+    limit: PAGE_SIZE,
+    search: debouncedSearchTerm,
+  });
+  const [deleteInstructor, { isLoading: isDeletingInstructor }] =
+    useDeleteInstructorMutation();
+  const [blockInstructor, { isLoading: isBlockingInstructor }] =
+    useBlockInstructorMutation();
 
-      useEffect(() => {
-        if (instructors) {
-          dispatch(getAllInstructors(instructors));
-        }
-      }, [instructors, dispatch]);
+  const instructors = paginatedInstructors?.data ?? [];
+  const totalInstructors = paginatedInstructors?.pagination?.totalInstructors ?? instructors.length;
+  const totalPages = Math.max(1, paginatedInstructors?.pagination?.totalPages ?? 1);
+  const pageNumbers = getPageNumbers(currentPage, totalPages);
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm);
+    }, 400);
+
+    return () => window.clearTimeout(timer);
+  }, [searchTerm]);
+
+  useEffect(() => {
+    dispatch(getAllInstructors(instructors));
+  }, [instructors, dispatch]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [debouncedSearchTerm]);
+
+  useEffect(() => {
+    if (currentPage > totalPages) {
+      setCurrentPage(1);
+    }
+  }, [currentPage, totalPages]);
+
+  const handlePageChange = (page: number) => {
+    if (page < 1 || page > totalPages || page === currentPage) {
+      return;
+    }
+
+    setCurrentPage(page);
+  };
+
+  const handleSearch = () => {
+    setDebouncedSearchTerm(searchTerm.trim());
+    setCurrentPage(1);
+  };
 
       const handleDeleteInstructor = async (id: string) => {
         try {
@@ -148,6 +204,9 @@ export default function InstructorsPage() {
             <h1 className="text-2xl font-bold text-gray-900">
               Instructors Management
             </h1>
+            <p className="mt-1 text-sm text-gray-500">
+              Showing <span className="font-semibold text-gray-700">{instructors.length}</span> of <span className="font-semibold text-gray-700">{totalInstructors}</span> instructors.
+            </p>
           </div>
           <div className="flex items-center gap-3">
             <Button className="rounded-xl bg-primary text-white shadow-md shadow-violet-200 hover:bg-violet-700 h-10 px-5">
@@ -164,10 +223,25 @@ export default function InstructorsPage() {
 
         {/* ─── Data Table ─── */}
         <Card className="border-0 shadow-sm bg-white overflow-hidden">
-          <InputGroup className="w-sm ml-4">
-            <InputGroupInput placeholder="Search Instructor..." />
+          <InputGroup className="ml-4 w-full sm:w-96">
+            <InputGroupInput
+              placeholder="Search Instructor..."
+              value={searchTerm}
+              onChange={(event) => setSearchTerm(event.target.value)}
+              onKeyDown={(event) => {
+                if (event.key === "Enter") {
+                  event.preventDefault();
+                  handleSearch();
+                }
+              }}
+            />
             <InputGroupAddon align="inline-end">
-              <Button size="icon" variant="ghost" className="h-8 w-8 shrink-0">
+              <Button
+                size="icon"
+                variant="ghost"
+                className="h-8 w-8 shrink-0"
+                onClick={handleSearch}
+              >
                 <Search className="h-4 w-4" />
               </Button>
             </InputGroupAddon>
@@ -202,21 +276,28 @@ export default function InstructorsPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {instructors?.map((instructor: { _id: string; status: string; profileImage: string; name: string; email: string; instructorTitle: string; isFeatured: boolean }, index: number) => {
-                const style = statusStyles[instructor.status];
+              {instructors.length === 0 ? (
+                <TableRow className="border-b border-gray-50">
+                  <TableCell colSpan={8} className="py-16 text-center text-gray-500">
+                    No instructors found.
+                  </TableCell>
+                </TableRow>
+              ) : (
+                instructors.map((instructor, index) => {
+                  const style = statusStyles[instructor.status] ?? statusStyles.Inactive;
 
-                return (
-                  <TableRow
-                    key={index}
-                    className="hover:bg-violet-50/30 transition-colors border-b border-gray-50"
-                  >
-                    <TableCell>
-                      <div className="flex items-center gap-3 justify-center">
-                        <p className="text-sm font-semibold text-gray-900">
-                          {index + 1}
-                        </p>
-                      </div>
-                    </TableCell>
+                  return (
+                    <TableRow
+                      key={instructor._id}
+                      className="hover:bg-violet-50/30 transition-colors border-b border-gray-50"
+                    >
+                      <TableCell>
+                        <div className="flex items-center gap-3 justify-center">
+                          <p className="text-sm font-semibold text-gray-900">
+                            {index + 1 + (currentPage - 1) * PAGE_SIZE}
+                          </p>
+                        </div>
+                      </TableCell>
 
                     <TableCell>
                       <div className="flex items-center gap-3 justify-center ">
@@ -328,59 +409,74 @@ export default function InstructorsPage() {
                         />
                       </div>
                     </TableCell>
-                  </TableRow>
-                );
-              })}
+                    </TableRow>
+                  );
+                })
+              )}
             </TableBody>
           </Table>
 
-          {/* Pagination Footer */}
-          <div className="flex items-center justify-center border-t border-gray-100 px-5 py-4">
-            <Pagination className="w-auto mx-0">
-              <PaginationContent>
-                <PaginationItem>
-                  <PaginationPrevious
-                    href="#"
-                    text=""
-                    className="h-8 w-8 p-0 rounded-lg border border-gray-200 hover:border-violet-300 hover:bg-violet-50"
-                  />
-                </PaginationItem>
-                {[1, 2, 3].map((page) => (
-                  <PaginationItem key={page}>
-                    <PaginationLink
+          { (
+            <div className="flex items-center justify-center border-t border-gray-100 px-5 py-4">
+              <Pagination className="mx-0 w-auto">
+                <PaginationContent>
+                  <PaginationItem>
+                    <PaginationPrevious
                       href="#"
-                      isActive={page === currentPage}
-                      className={`h-8 w-8 rounded-lg text-sm ${
-                        page === currentPage
-                          ? "bg-primary! text-white! border-primary! hover:bg-violet-700!"
-                          : "border border-gray-200 hover:border-violet-300 hover:bg-violet-50"
-                      }`}
-                    >
-                      {page}
-                    </PaginationLink>
+                      text=""
+                      onClick={(event) => {
+                        event.preventDefault();
+                        handlePageChange(currentPage - 1);
+                      }}
+                      className={`h-8 w-8 rounded-lg border border-gray-200 p-0 hover:border-violet-300 hover:bg-violet-50 ${currentPage === 1 ? "pointer-events-none opacity-50" : ""}`}
+                    />
                   </PaginationItem>
-                ))}
-                <PaginationItem>
-                  <PaginationEllipsis />
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationLink
-                    href="#"
-                    className="h-8 w-8 rounded-lg text-sm border border-gray-200 hover:border-violet-300 hover:bg-violet-50"
-                  >
-                    128
-                  </PaginationLink>
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationNext
-                    href="#"
-                    text=""
-                    className="h-8 w-8 p-0 rounded-lg border border-gray-200 hover:border-violet-300 hover:bg-violet-50"
-                  />
-                </PaginationItem>
-              </PaginationContent>
-            </Pagination>
-          </div>
+                  {pageNumbers.map((page, index) => {
+                    if (page === "...") {
+                      return (
+                        <PaginationItem key={`ellipsis-${index}`}>
+                          <PaginationEllipsis />
+                        </PaginationItem>
+                      );
+                    }
+
+                    const pageNumber = Number(page);
+
+                    return (
+                      <PaginationItem key={pageNumber}>
+                        <PaginationLink
+                          href="#"
+                          isActive={pageNumber === currentPage}
+                          onClick={(event) => {
+                            event.preventDefault();
+                            handlePageChange(pageNumber);
+                          }}
+                          className={`h-8 w-8 rounded-lg text-sm ${
+                            pageNumber === currentPage
+                              ? "border-primary bg-primary! text-white! hover:bg-violet-700!"
+                              : "border border-gray-200 hover:border-violet-300 hover:bg-violet-50"
+                          }`}
+                        >
+                          {pageNumber}
+                        </PaginationLink>
+                      </PaginationItem>
+                    );
+                  })}
+                  <PaginationItem>
+                    <PaginationNext
+                      href="#"
+                      text=""
+                      onClick={(event) => {
+                        event.preventDefault();
+                        handlePageChange(currentPage + 1);
+                      }}
+                      className={`h-8 w-8 rounded-lg border border-gray-200 p-0 hover:border-violet-300 hover:bg-violet-50 ${currentPage === totalPages ? "pointer-events-none opacity-50" : ""}`}
+                    />
+                  </PaginationItem>
+                </PaginationContent>
+              </Pagination>
+            </div>
+          )}
         </Card>
       </div>
     </>

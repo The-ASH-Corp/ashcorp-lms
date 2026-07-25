@@ -100,6 +100,13 @@ export interface UpdateStudentDTO {
   confirmPassword?: string;
 }
 
+export interface CouponPricingInfo {
+  couponCode: string | null;
+  baseAmount: number;
+  discountAmount: number;
+  finalAmount: number;
+}
+
 export const studentApi = api.injectEndpoints({
   endpoints: (builder) => ({
 
@@ -222,11 +229,34 @@ export const studentApi = api.injectEndpoints({
     }),
 
     createOrder: builder.mutation<
-      { success: boolean; data: { orderId: string; amount: number; currency: string; keyId: string } },
-      { courseId: string }
+      {
+        success: boolean;
+        data: {
+          orderId: string;
+          amount: number;
+          currency: string;
+          keyId: string;
+          couponCode: string | null;
+          baseAmount: number;
+          discountAmount: number;
+          finalAmount: number;
+        };
+      },
+      { courseId: string; couponCode?: string }
     >({
       query: (body) => ({
         url: "/student/create-order",
+        method: "POST",
+        body,
+      }),
+    }),
+
+    validateCoupon: builder.mutation<
+      { success: boolean; data: CouponPricingInfo },
+      { courseId: string; couponCode: string }
+    >({
+      query: (body) => ({
+        url: "/student/validate-coupon",
         method: "POST",
         body,
       }),
@@ -263,5 +293,6 @@ export const {
   useUpdateCourseProgressMutation,
   useGetStudentByIdQuery,
   useCreateOrderMutation,
+  useValidateCouponMutation,
   useVerifyPaymentMutation,
 } = studentApi;

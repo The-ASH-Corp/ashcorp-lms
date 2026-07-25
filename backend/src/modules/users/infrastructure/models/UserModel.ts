@@ -138,6 +138,6 @@ const userSchema = new mongoose.Schema({
     type: [examAttemptSchema],
     default: [],
   },
-});
+},{ timestamps: true });
 
 export const UserModel = mongoose.model("User", userSchema);

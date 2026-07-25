@@ -55,12 +55,6 @@ const navItems = [
     icon: <History />,
   },
   {
-    title: "Plan & Payment",
-    url: "/plan-payment",
-    icon: <CreditCard />,
-  },
-
-  {
     title: "Logout",
     url: "#",
     isLogout: true,

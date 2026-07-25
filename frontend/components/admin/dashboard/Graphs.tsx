@@ -440,7 +440,7 @@ export default function Graphs() {
                       <div className="flex items-center gap-3">
                         {/* <div className="h-12 w-12 rounded-2xl bg-slate-100" /> */}
                         <Image
-                          src={course.imageUrl}
+                          src={course.imageUrl || ""}
                           alt={course.title}
                           className="h-12 w-12 rounded-2xl bg-slate-100"
                           width={48}

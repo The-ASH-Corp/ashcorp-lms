@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import {
   addToWishlistUseCase,
   blockStudentUseCase,
+  createOrderUseCase,
   createStudentUseCase,
   deleteStudentUseCase,
   enrollCourseUseCase,
@@ -15,12 +16,11 @@ import {
   updateCourseProgressUseCase,
   updateProfileUseCase,
   updateStudentUseCase,
+  validateCouponUseCase,
   verifyPaymentUseCase,
 } from "../di";
 import { serializeCourse } from "../../../shared/config/serializeCourses";
 import { AppError } from "../../../shared/error/AppError";
-import { razorpay } from "../../../shared/razorpay/razorpay";
-import { courseRepository } from "../../course/di";
 
 export const createStudentController = async (
   req: Request,
@@ -414,31 +414,41 @@ export const createOrderController = async (
   next: NextFunction,
 ): Promise<void> => {
   try {
-    const { courseId } = req.body;
-
-    if (!courseId) throw new AppError("courseId is required", 400);
-
-    const course = await courseRepository.getCourseById(courseId);
-    if (!course) throw new AppError("Course not found", 404);
-
-    const amount = Math.round(Number(course.offerPrice ?? course.price) * 100); 
-    if (!amount || amount <= 0) throw new AppError("Invalid course price", 400);
-
-    const order = await razorpay.orders.create({
-      amount,
-      currency: "INR",
-      receipt: `receipt_${courseId}_${Date.now()}`.substring(0, 40),
-      notes: { courseId, studentId: String(req.userId) },
+    const result = await createOrderUseCase.execute({
+      studentId: String(req.userId),
+      courseId: String(req.body?.courseId ?? ""),
+      couponCode: typeof req.body?.couponCode === "string" ? req.body.couponCode : undefined,
     });
 
     res.status(200).json({
       success: true,
       message: "Order created",
+      data: result,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const validateCouponController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
+  try {
+    const pricing = await validateCouponUseCase.execute({
+      courseId: String(req.body?.courseId ?? ""),
+      couponCode: String(req.body?.couponCode ?? ""),
+    });
+
+    res.status(200).json({
+      success: true,
+      message: "Coupon applied successfully",
       data: {
-        orderId: order.id,
-        amount: order.amount,
-        currency: order.currency,
-        keyId: process.env.RAZORPAY_KEY_ID,
+        couponCode: pricing.couponCode,
+        baseAmount: pricing.baseAmount,
+        discountAmount: pricing.discountAmount,
+        finalAmount: pricing.finalAmount,
       },
     });
   } catch (err) {
