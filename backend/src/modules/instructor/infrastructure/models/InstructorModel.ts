@@ -69,6 +69,11 @@ const instructorSchema = new mongoose.Schema(
         },
       },
     ],
+    role: {
+      type: String,
+      default: "Instructor",
+      trim: true,
+    },
   },
   { timestamps: true },
 );

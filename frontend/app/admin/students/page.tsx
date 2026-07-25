@@ -119,6 +119,10 @@ export default function StudentsPage() {
     router.push(`/admin/students/edit/${id}`);
   };
 
+  const handleViewStudentProfile = (id: string) => {
+    router.push(`/admin/students/profile/${id}`);
+  };
+
   const handleDeleteStudent = async (id: string) => {
     try {
       await deleteStudent(id).unwrap();
@@ -231,7 +235,17 @@ export default function StudentsPage() {
                 return (
                   <TableRow
                     key={student._id}
-                    className="border-b border-gray-50 transition-colors hover:bg-violet-50/30"
+                    className="cursor-pointer border-b border-gray-50 transition-colors hover:bg-violet-50/30"
+                    onClick={() => handleViewStudentProfile(student._id)}
+                    onKeyDown={(event) => {
+                      if (event.key === "Enter" || event.key === " ") {
+                        event.preventDefault();
+                        handleViewStudentProfile(student._id);
+                      }
+                    }}
+                    tabIndex={0}
+                    role="button"
+                    aria-label={`View ${student.name} profile`}
                   >
                     <TableCell className="text-center font-semibold text-gray-900">
                       {index + 1 + (currentPage - 1) * PAGE_SIZE}
@@ -275,7 +289,7 @@ export default function StudentsPage() {
                       </span>
                     </TableCell>
 
-                    <TableCell>
+                    <TableCell onClick={(event) => event.stopPropagation()}>
                       <div className="flex items-center justify-center gap-2">
                         <button
                           type="button"

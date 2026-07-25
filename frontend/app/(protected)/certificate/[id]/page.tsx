@@ -13,17 +13,22 @@ export default function CertificatePage() {
   const { data: user, isLoading } = useGetCurrentUserQuery();
   const { data: course } = useGetCourseQuery(courseId);
 
-  const certificate = user?.certificates?.find(
-    (certificate) => certificate.courseId === courseId
-  );
+  const certificate = user?.certificates?.find((certificate) => {
+    if (typeof certificate === 'string') {
+      return certificate === courseId;
+    }
+
+    return String(certificate?.courseId) === String(courseId) && Boolean(certificate?.link);
+  });
 
   // Find the exam attempt that matches this specific course
   const examAttempt = Array.isArray(user?.examAttempts)
     ? user.examAttempts.find((attempt) => String(attempt.courseId) === String(courseId))
     : undefined;
 
+  const hasPassedExam = examAttempt?.isPassed === true;
   const canViewCertificate = !!certificate;
-  const certificateLink = certificate?.link;
+  const certificateLink = typeof certificate === 'string' ? '' : certificate?.link;
 
 
   if (isLoading) {
@@ -35,6 +40,26 @@ export default function CertificatePage() {
   }
 
   if (!canViewCertificate) {
+    if (hasPassedExam) {
+      return (
+        <div className="flex min-h-screen items-center justify-center bg-white px-4">
+          <div className="max-w-md rounded-2xl border border-emerald-200 bg-emerald-50 px-6 py-8 text-center">
+            <h1 className="text-xl font-bold text-gray-900">Exam passed</h1>
+            <p className="mt-2 text-sm leading-6 text-gray-700">
+              You have passed the course exam. Your certificate will be available after admin uploads it.
+            </p>
+            <button
+              type="button"
+              onClick={() => route.push('/dashboard')}
+              className="mt-6 rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-white hover:bg-violet-700"
+            >
+              Back to Dashboard
+            </button>
+          </div>
+        </div>
+      );
+    }
+
     return (
       <div className="flex min-h-screen items-center justify-center bg-white px-4">
         <div className="max-w-md rounded-2xl border border-amber-200 bg-amber-50 px-6 py-8 text-center">
@@ -91,9 +116,9 @@ export default function CertificatePage() {
               <div className="bg-white rounded-xl p-4 sm:p-6 shadow-lg border border-gray-200 max-w-2xl mx-auto">
                 {/* Certificate Content */}
                 {certificateLink && (certificateLink.toLowerCase().endsWith('.pdf') ? (
-                  <iframe src={certificateLink} className="w-full h-[600px]" />
+                  <iframe src={certificateLink} className="h-150 w-full" />
                 ) : (
-                  <img src={certificateLink} alt="Certificate" className="w-full h-auto max-h-[600px] object-contain" />
+                  <img src={certificateLink} alt="Certificate" className="h-auto max-h-150 w-full object-contain" />
                 ))}
               </div>
             </div>
