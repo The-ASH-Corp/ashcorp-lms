@@ -51,7 +51,7 @@ export default function Lists() {
     instructors.forEach((instructor) => {
       const current = instructorStats.get(instructor.name)
       if (current) {
-        current.rating = instructor.rating ?? "0.0"
+        current.rating = (instructor as any).rating ?? "0.0"
         current.profileImage = instructor.profileImage
       }
     })

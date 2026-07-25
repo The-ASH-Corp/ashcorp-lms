@@ -5,30 +5,7 @@ import { CourseRepository } from "../../../course/domain/repositories/CourseRepo
 import { User } from "../../../users/domain/entities/User";
 import { EnrollCourseUseCase } from "./EnrollCourseUseCase";
 
-interface RazorpayClient {
-  orders: {
-    fetch: (orderId: string) => Promise<{
-      id: string;
-      amount: number | string;
-      amount_paid: number;
-      currency: string;
-      status: "created" | "attempted" | "paid";
-      notes?: Record<string, string | number | null>;
-    }>;
-  };
-  payments: {
-    fetch: (paymentId: string) => Promise<{
-      id: string;
-      order_id: string;
-      amount: number | string;
-      currency: string;
-      status: "created" | "authorized" | "captured" | "refunded" | "failed";
-      captured: boolean;
-      method?: string;
-      created_at: number;
-    }>;
-  };
-}
+type RazorpayClient = any;
 
 export interface VerifyPaymentInput {
   razorpay_order_id?: string;

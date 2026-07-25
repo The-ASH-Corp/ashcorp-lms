@@ -2,22 +2,7 @@ import { ENV } from "../../../../shared/env/ENV";
 import { AppError } from "../../../../shared/error/AppError";
 import { CalculateCouponPricingUseCase } from "./CalculateCouponPricingUseCase";
 
-interface RazorpayOrderResult {
-  id: string;
-  amount: number;
-  currency: string;
-}
-
-interface RazorpayClient {
-  orders: {
-    create: (payload: {
-      amount: number;
-      currency: string;
-      receipt: string;
-      notes: Record<string, string>;
-    }) => Promise<RazorpayOrderResult>;
-  };
-}
+type RazorpayClient = any;
 
 export interface CreateOrderInput {
   studentId: string;
