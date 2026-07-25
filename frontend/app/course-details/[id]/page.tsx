@@ -7,11 +7,12 @@ import Navbar from '@/components/landing/Navbar';
 import Footer from '@/components/landing/Footer';
 import { useGetCourseQuery } from '@/lib/redux/features/course/courseApi';
 import { useAppSelector } from '@/lib/redux/hooks';
-import { useGetWishlistQuery, useAddToWishlistMutation, useRemoveFromWishlistMutation, useEnrollCourseMutation, useCreateOrderMutation, useVerifyPaymentMutation } from '@/lib/redux/features/student/studentApi';
+import { useGetWishlistQuery, useAddToWishlistMutation, useRemoveFromWishlistMutation, useEnrollCourseMutation, useCreateOrderMutation, useValidateCouponMutation, useVerifyPaymentMutation, type CouponPricingInfo } from '@/lib/redux/features/student/studentApi';
 import { useGetCurrentUserQuery } from '@/lib/redux/features/auth/authApi';
 import { toast } from 'sonner';
 import { PropagateLoader } from 'react-spinners';
 import { CourseShareDialog } from '@/components/shared/course-share-dialog';
+import { Input } from '@/components/ui/input';
 
 export default function CourseDetail() {
   const router = useRouter();
@@ -30,12 +31,13 @@ export default function CourseDetail() {
   const [removeFromWishlist, { isLoading: isRemoving }] = useRemoveFromWishlistMutation();
   const [enrollCourse] = useEnrollCourseMutation();
   const [createOrder] = useCreateOrderMutation();
+  const [validateCoupon, { isLoading: isCouponValidating }] = useValidateCouponMutation();
   const [verifyPayment] = useVerifyPaymentMutation();
   const [isEnrolling, setIsEnrolling] = useState(false);
+  const [couponCodeInput, setCouponCodeInput] = useState('');
+  const [appliedCoupon, setAppliedCoupon] = useState<CouponPricingInfo | null>(null);
 
   const { data: course, isLoading, isError } = useGetCourseQuery(courseId ?? "");
-
-  console.log(course)
 
   const isWishlisted =
     wishlist?.some((wishlistedCourse) => String(wishlistedCourse._id) === String(courseId)) ??
@@ -44,6 +46,8 @@ export default function CourseDetail() {
 
   const price = Number(course?.price ?? 0);
   const offerPrice = Number(course?.offerPrice ?? 0);
+  const baseCheckoutAmount = Number(course?.offerPrice ?? course?.price ?? 0);
+  const payableAmount = Math.max(0, Number(appliedCoupon?.finalAmount ?? baseCheckoutAmount));
 
   const discountPercentage =
     price > 0 ? Math.round(((price - offerPrice) / price) * 100) : 0;
@@ -52,6 +56,40 @@ export default function CourseDetail() {
       typeof p === "string" ? p === courseId : p.courseId === courseId
     ),
   );
+
+  const handleApplyCoupon = async () => {
+    if (!courseId) return;
+
+    const normalizedCode = couponCodeInput.trim().toUpperCase();
+    if (!normalizedCode) {
+      toast.error('Please enter a coupon code');
+      return;
+    }
+
+    if (baseCheckoutAmount <= 0) {
+      toast.error('Coupon is not applicable on free courses');
+      return;
+    }
+
+    try {
+      const response = await validateCoupon({
+        courseId,
+        couponCode: normalizedCode,
+      }).unwrap();
+
+      setAppliedCoupon(response.data);
+      setCouponCodeInput(response.data.couponCode ?? normalizedCode);
+      toast.success('Coupon applied successfully');
+    } catch (error: any) {
+      setAppliedCoupon(null);
+      toast.error(error?.data?.message || 'Failed to apply coupon');
+    }
+  };
+
+  const handleRemoveCoupon = () => {
+    setAppliedCoupon(null);
+    setCouponCodeInput('');
+  };
 
   const handleEnrollNow = async () => {
     if (!user) {
@@ -67,10 +105,10 @@ export default function CourseDetail() {
       return;
     }
 
-    const price = Number(course?.offerPrice ?? course?.price ?? 0);
+    const finalPayableAmount = Math.max(0, Number(appliedCoupon?.finalAmount ?? course?.offerPrice ?? course?.price ?? 0));
 
     // Free course: enroll directly
-    if (price === 0) {
+    if (finalPayableAmount === 0) {
       try {
         setIsEnrolling(true);
         await enrollCourse({ courseId }).unwrap();
@@ -87,7 +125,10 @@ export default function CourseDetail() {
     // Paid course: Razorpay checkout
     try {
       setIsEnrolling(true);
-      const orderRes = await createOrder({ courseId }).unwrap();
+      const orderRes = await createOrder({
+        courseId,
+        couponCode: appliedCoupon?.couponCode ?? undefined,
+      }).unwrap();
       const { orderId, amount, currency, keyId } = orderRes.data;
 
       const options = {
@@ -494,6 +535,65 @@ export default function CourseDetail() {
                   )}
                 </div>
 
+                <div className="rounded-lg border border-violet-200 bg-violet-50 p-3 space-y-3">
+                  <p className="text-xs font-semibold uppercase tracking-wide text-violet-700">Apply Coupon</p>
+                  <div className="flex gap-2">
+                    <Input
+                      value={couponCodeInput}
+                      onChange={(event) => {
+                        setCouponCodeInput(event.target.value.toUpperCase());
+                        if (appliedCoupon && event.target.value.toUpperCase() !== (appliedCoupon.couponCode ?? '')) {
+                          setAppliedCoupon(null);
+                        }
+                      }}
+                      placeholder="Enter coupon code"
+                      className="h-10 bg-white"
+                      disabled={isEnrolling || isCouponValidating || isPurchased || baseCheckoutAmount <= 0}
+                    />
+                    <button
+                      type="button"
+                      onClick={handleApplyCoupon}
+                      disabled={isEnrolling || isCouponValidating || isPurchased || baseCheckoutAmount <= 0}
+                      className="rounded-lg bg-primary px-4 text-sm font-semibold text-white hover:bg-violet-700 disabled:cursor-not-allowed disabled:opacity-60"
+                    >
+                      {isCouponValidating ? 'Applying...' : 'Apply'}
+                    </button>
+                  </div>
+
+                  {appliedCoupon ? (
+                    <div className="rounded-md border border-emerald-200 bg-emerald-50 p-3">
+                      <p className="text-xs font-semibold text-emerald-700">
+                        Coupon {appliedCoupon.couponCode} applied
+                      </p>
+                      <p className="mt-1 text-xs text-emerald-700">
+                        You saved ₹{appliedCoupon.discountAmount.toFixed(2)}
+                      </p>
+                      <button
+                        type="button"
+                        onClick={handleRemoveCoupon}
+                        className="mt-2 text-xs font-semibold text-emerald-700 underline underline-offset-2"
+                      >
+                        Remove coupon
+                      </button>
+                    </div>
+                  ) : null}
+                </div>
+
+                <div className="rounded-lg border border-gray-200 bg-gray-50 p-3 text-sm space-y-2">
+                  <div className="flex items-center justify-between text-gray-600">
+                    <span>Base Price</span>
+                    <span>₹{baseCheckoutAmount.toFixed(2)}</span>
+                  </div>
+                  <div className="flex items-center justify-between text-emerald-700">
+                    <span>Coupon Discount</span>
+                    <span>-₹{Number(appliedCoupon?.discountAmount ?? 0).toFixed(2)}</span>
+                  </div>
+                  <div className="flex items-center justify-between border-t border-gray-200 pt-2 text-base font-bold text-gray-900">
+                    <span>Payable Amount</span>
+                    <span>₹{payableAmount.toFixed(2)}</span>
+                  </div>
+                </div>
+
                 {/* Enroll Button */}
                 <button
                   onClick={handleEnrollNow}
@@ -545,13 +645,6 @@ export default function CourseDetail() {
                   ))}
                 </div>
 
-                {/* Promo Code */}
-                <div className="bg-violet-50 border border-violet-200 rounded-lg p-3 text-center">
-                  <p className="text-xs text-violet-700">
-                    Use code <span className="font-bold">ZENITH20</span> for
-                    extra 20% off!
-                  </p>
-                </div>
               </div>
 
               {/* Social Share */}

@@ -14,9 +14,13 @@ import { SaveExamResponseUseCase } from "./application/usecase/SaveExamResponseU
 import { VerifyPaymentUseCase } from "./application/usecase/VerifyPaymentUseCase";
 import { UpdateStudentUseCase } from "./application/usecase/UpdateStudentUseCase";
 import { GetAdminPaymentsUseCase } from "./application/usecase/GetAdminPaymentsUseCase";
+import { CalculateCouponPricingUseCase } from "./application/usecase/CalculateCouponPricingUseCase";
+import { ValidateCouponUseCase } from "./application/usecase/ValidateCouponUseCase";
+import { CreateOrderUseCase } from "./application/usecase/CreateOrderUseCase";
 import { courseRepository } from "../course/di";
 import { adminRepository } from "../admins/di";
 import { examRepository } from "../exam/di";
+import { couponRepository } from "../coupon/di";
 import { razorpay } from "../../shared/razorpay/razorpay";
 
 export const studentUserRepository = new MongoUserRepository();
@@ -70,6 +74,20 @@ export const updateStudentUseCase = new UpdateStudentUseCase(studentUserReposito
 export const saveExamResponseUseCase = new SaveExamResponseUseCase(
   studentUserRepository,
   examRepository,
+);
+
+export const calculateCouponPricingUseCase = new CalculateCouponPricingUseCase(
+  courseRepository,
+  couponRepository,
+);
+
+export const validateCouponUseCase = new ValidateCouponUseCase(
+  calculateCouponPricingUseCase,
+);
+
+export const createOrderUseCase = new CreateOrderUseCase(
+  razorpay,
+  calculateCouponPricingUseCase,
 );
 
 export const verifyPaymentUseCase = new VerifyPaymentUseCase(

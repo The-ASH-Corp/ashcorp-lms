@@ -166,11 +166,6 @@ export default function StudentProfilePage() {
                 Edit Profile
               </Link>
             </Button>
-            
-
-
-
-            
             <ConfirmActionDialog
               title={student.status === 'Inactive' ? 'Unblock Student' : 'Block Student'}
               description={

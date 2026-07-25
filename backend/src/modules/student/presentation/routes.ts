@@ -19,6 +19,7 @@ import {
   updateCourseProgressController,
   updateProfileController,
   updateStudentController,
+  validateCouponController,
   verifyPaymentController,
 } from "./controller";
 import { authMiddleware } from "../../../shared/middleware/authMiddleware";
@@ -83,6 +84,9 @@ router.patch("/update-student/:id", requireRole("admin"), updateStudentControlle
 
 // razorpay: create order
 router.post("/create-order", createOrderController);
+
+// validate coupon against course purchase amount
+router.post("/validate-coupon", validateCouponController);
 
 // razorpay: verify payment & enroll
 router.post("/verify-payment", verifyPaymentController);

@@ -105,8 +105,12 @@ export class VerifyPaymentUseCase {
     const expectedCourseAmount = Math.round(
       Number(course.offerPrice ?? course.price) * 100,
     );
+    const expectedOrderAmountFromNotes = Number(orderDetails.notes?.finalAmountPaise ?? "");
+    const expectedAmount = Number.isFinite(expectedOrderAmountFromNotes) && expectedOrderAmountFromNotes > 0
+      ? expectedOrderAmountFromNotes
+      : expectedCourseAmount;
 
-    if (orderAmount !== expectedCourseAmount) {
+    if (orderAmount !== expectedAmount) {
       throw new AppError("Payment amount does not match course price", 400);
     }
 
