@@ -18,3 +18,19 @@ export const loginSchema = z.object({
   email: z.string().email(),
   password: z.string().min(6),
 });
+
+export const forgotPasswordRequestSchema = z.object({
+  email: z.string().trim().email(),
+});
+
+export const resetPasswordWithOtpSchema = z
+  .object({
+    email: z.string().trim().email(),
+    otp: z.string().trim().regex(/^\d{6}$/, "OTP must be exactly 6 digits"),
+    newPassword: z.string().min(6),
+    confirmPassword: z.string().min(6),
+  })
+  .refine((data) => data.newPassword === data.confirmPassword, {
+    message: "Passwords do not match",
+    path: ["confirmPassword"],
+  });

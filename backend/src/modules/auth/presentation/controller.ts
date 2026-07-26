@@ -1,5 +1,13 @@
 import { type CookieOptions, Request, Response, NextFunction } from "express";
-import { adminRepository, loginUsecase, registerUsecase, userRepository, changePasswordUseCase } from "../di";
+import {
+  adminRepository,
+  loginUsecase,
+  registerUsecase,
+  userRepository,
+  changePasswordUseCase,
+  requestPasswordResetOtpUseCase,
+  resetPasswordWithOtpUseCase,
+} from "../di";
 import { RegisterDTO } from "../application/dto/RegisterDTO";
 import { LoginDTO } from "../application/dto/LoginDTO";
 import { ENV } from "../../../shared/env/ENV";
@@ -126,6 +134,49 @@ export const changePasswordController = async (
     res.status(200).json({
       success: true,
       message: "Password changed successfully",
+    });
+  } catch (error: any) {
+    next(error);
+  }
+};
+
+export const requestPasswordResetOtpController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
+  try {
+    const { email } = req.body;
+
+    await requestPasswordResetOtpUseCase.execute(email);
+
+    res.status(200).json({
+      success: true,
+      message: "If an account exists with this email, an OTP has been sent.",
+    });
+  } catch (error: any) {
+    next(error);
+  }
+};
+
+export const resetPasswordWithOtpController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
+  try {
+    const { email, otp, newPassword, confirmPassword } = req.body;
+
+    await resetPasswordWithOtpUseCase.execute({
+      email,
+      otp,
+      newPassword,
+      confirmPassword,
+    });
+
+    res.status(200).json({
+      success: true,
+      message: "Password reset successful. Please login with your new password.",
     });
   } catch (error: any) {
     next(error);

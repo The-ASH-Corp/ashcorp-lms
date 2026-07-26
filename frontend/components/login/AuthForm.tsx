@@ -92,7 +92,7 @@ export default function AuthForm({
                   Password
                 </label>
                 <Link
-                  href="#"
+                  href="/forgot-password"
                   className="text-xs font-medium text-muted-foreground transition hover:text-sidebar-primary"
                 >
                   Forgot Password?
