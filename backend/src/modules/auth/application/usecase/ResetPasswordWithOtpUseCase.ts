@@ -5,6 +5,7 @@ import { ENV } from "../../../../shared/env/ENV";
 import { UserRepository } from "../../../users/domain/repositories/UserRepository";
 import { AdminRepository } from "../../../admins/domain/repositories/AdminRepository";
 import { PasswordResetOtpModel } from "../../infrastructure/models/PasswordResetOtpModel";
+import { PASSWORD_POLICY_MESSAGE, isStrongPassword } from "../../shared/passwordPolicy";
 
 export class ResetPasswordWithOtpUseCase {
   constructor(
@@ -22,6 +23,10 @@ export class ResetPasswordWithOtpUseCase {
 
     if (newPassword !== confirmPassword) {
       throw new AppError("Passwords do not match", 400);
+    }
+
+    if (!isStrongPassword(newPassword)) {
+      throw new AppError(PASSWORD_POLICY_MESSAGE, 400);
     }
 
     const normalizedEmail = email.trim().toLowerCase();
