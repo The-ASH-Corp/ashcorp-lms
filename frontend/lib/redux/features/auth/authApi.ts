@@ -15,6 +15,17 @@ export interface RegisterRequest {
   confirmPassword: string;
 }
 
+export interface ForgotPasswordRequest {
+  email: string;
+}
+
+export interface ResetPasswordWithOtpRequest {
+  email: string;
+  otp: string;
+  newPassword: string;
+  confirmPassword: string;
+}
+
 export interface AuthResponse {
   token?: string;
   accessToken?: string;
@@ -99,8 +110,31 @@ export const authApi = api.injectEndpoints({
       },
       invalidatesTags: ["Auth", "User"],
     }),
+
+    requestPasswordResetOtp: builder.mutation<{ message: string }, ForgotPasswordRequest>({
+      query: (payload) => ({
+        url: "/auth/forgot-password/request-otp",
+        method: "POST",
+        body: payload,
+      }),
+    }),
+
+    resetPasswordWithOtp: builder.mutation<{ message: string }, ResetPasswordWithOtpRequest>({
+      query: (payload) => ({
+        url: "/auth/forgot-password/reset",
+        method: "POST",
+        body: payload,
+      }),
+    }),
   }),
 
 });
 
-export const { useGetCurrentUserQuery, useLoginMutation, useRegisterMutation,useLogoutMutation } = authApi;
+export const {
+  useGetCurrentUserQuery,
+  useLoginMutation,
+  useRegisterMutation,
+  useLogoutMutation,
+  useRequestPasswordResetOtpMutation,
+  useResetPasswordWithOtpMutation,
+} = authApi;

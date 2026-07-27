@@ -2,6 +2,7 @@ import { AppError } from "../../../../shared/error/AppError";
 import { UserRepository } from "../../../users/domain/repositories/UserRepository";
 import { AdminRepository } from "../../../admins/domain/repositories/AdminRepository";
 import bcrypt from "bcrypt";
+import { PASSWORD_POLICY_MESSAGE, isStrongPassword } from "../../shared/passwordPolicy";
 
 export class ChangePasswordUseCase {
   constructor(
@@ -19,8 +20,8 @@ export class ChangePasswordUseCase {
       throw new AppError("All password fields are required", 400);
     }
 
-    if (newPassword.length < 6) {
-      throw new AppError("New password must be at least 6 characters", 400);
+    if (!isStrongPassword(newPassword)) {
+      throw new AppError(PASSWORD_POLICY_MESSAGE, 400);
     }
 
     if (newPassword !== confirmPassword) {

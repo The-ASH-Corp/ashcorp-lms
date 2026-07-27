@@ -513,7 +513,10 @@ export default function CourseDetail() {
           <div className="lg:col-span-1">
             <div className="sticky top-4 space-y-6">
               {/* Pricing */}
-              <div className="bg-white border-2 border-gray-200 rounded-xl p-6 space-y-4">
+              <div
+                id="purchase"
+                className="bg-white border-2 border-gray-200 rounded-xl p-6 space-y-4 scroll-mt-24"
+              >
                 <div>
                   <p className="text-gray-600 text-sm mb-1">Price</p>
                   {course?.offerPrice ? (
