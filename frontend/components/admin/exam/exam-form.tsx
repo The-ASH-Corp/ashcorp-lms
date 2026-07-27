@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Plus, Trash2, CheckCircle, Loader } from "lucide-react";
+import { Plus, Trash2, CheckCircle, Loader, ArrowLeft } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -193,15 +193,26 @@ export function ExamForm({ mode = "create", examId, initialCourseId, initialValu
   return (
     <div className="min-h-screen bg-white">
       <div className="px-4 sm:px-8 lg:px-12 py-6 sm:py-8 lg:py-12">
-        <div className="mb-8">
-          <h1 className="text-2xl font-bold text-gray-900">
-            {mode === "edit" ? "Edit Exam" : "Create Exam"}
-          </h1>
-          <p className="mt-2 text-sm text-gray-600">
-            {mode === "edit"
-              ? "Update the exam details and questions below."
-              : "Create a new exam with questions and answer options."}
-          </p>
+        {/* Header */}
+        <div className="mb-8 flex items-center gap-4">
+          <button
+            type="button"
+            onClick={() => router.back()}
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-gray-200 bg-white text-gray-700 shadow-xs hover:bg-gray-50 hover:border-gray-300 transition-all cursor-pointer"
+            aria-label="Go back"
+          >
+            <ArrowLeft className="h-5 w-5 text-gray-700" />
+          </button>
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900 tracking-tight">
+              {mode === "edit" ? "Edit Exam" : "Create Exam"}
+            </h1>
+            <p className="text-sm text-gray-500 mt-1">
+              {mode === "edit"
+                ? "Update the exam details and questions below."
+                : "Create a new exam with questions and answer options."}
+            </p>
+          </div>
         </div>
 
         <div className="space-y-6 mb-10">

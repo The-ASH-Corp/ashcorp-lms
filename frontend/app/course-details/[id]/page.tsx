@@ -236,13 +236,17 @@ export default function CourseDetail() {
       <Navbar />
       {/* Back Button */}
       <div className="max-w-fill mx-auto px-4 sm:px-6 lg:px-15 py-4 sm:py-6">
-        <button
-          onClick={() => router.back()}
-          className="flex items-center gap-2 text-gray-600 hover:text-primary transition-colors font-medium text-sm"
-        >
-          <ArrowLeft size={18} />
-          Back to Courses
-        </button>
+        <div className="flex items-center gap-3">
+          <button
+            type="button"
+            onClick={() => router.back()}
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-gray-200 bg-white text-gray-700 shadow-xs hover:bg-gray-50 hover:border-gray-300 transition-all cursor-pointer"
+            aria-label="Back to Courses"
+          >
+            <ArrowLeft className="h-5 w-5 text-gray-700" />
+          </button>
+          <span className="text-sm font-semibold text-gray-700">Back to Courses</span>
+        </div>
       </div>
 
       {/* Main Content */}

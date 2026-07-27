@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, ChangeEvent, FormEvent } from "react";
-import { Upload, Plus, Check, X, ChevronDown } from "lucide-react";
+import { Upload, Plus, Check, X, ChevronDown, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
@@ -25,16 +25,17 @@ interface CategoryFormData {
 }
 
 export default function CreateCategoryPage() {
+  const router = useRouter();
   const [formData, setFormData] = useState<CategoryFormData>({
     categoryName: "Your Title Here",
     description: "Your Description Here",
     icon: null,
     color: "#7C3AED",
-    isFeatured: false,
-    status: "Active",
+    isFeatured: true,
+    status: "Published",
   });
+
   const [createCategory, { isLoading }] = useCreateCategoryMutation();
-  const router = useRouter();
 
   const [iconPreview, setIconPreview] = useState<string | null>(null);
 
@@ -104,6 +105,26 @@ export default function CreateCategoryPage() {
   return (
     <div className="min-h-screen bg-white p-4 sm:p-6 lg:p-8">
       <div className="max-w-7xl mx-auto">
+        {/* Header */}
+        <div className="mb-8 flex items-center gap-4">
+          <button
+            type="button"
+            onClick={() => router.back()}
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-gray-200 bg-white text-gray-700 shadow-xs hover:bg-gray-50 hover:border-gray-300 transition-all cursor-pointer"
+            aria-label="Go back"
+          >
+            <ArrowLeft className="h-5 w-5 text-gray-700" />
+          </button>
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900 tracking-tight">
+              Create Category
+            </h1>
+            <p className="text-sm text-gray-500 mt-1">
+              Add a new course category to organize your curriculum
+            </p>
+          </div>
+        </div>
+
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
           {/* Form Section */}
           <div className="bg-white border border-gray-200 rounded-xl p-6 lg:p-8">

@@ -1,7 +1,7 @@
 "use client";
 
 import { ChangeEvent, FormEvent, useState } from "react";
-import { Upload, Plus, ChevronDown } from "lucide-react";
+import { Upload, Plus, ChevronDown, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
@@ -49,6 +49,7 @@ function CategoryEditorForm({
   isUpdating: boolean;
   onCancel: () => void;
 }) {
+  const router = useRouter();
   const [formData, setFormData] = useState<CategoryFormData>(() =>
     getInitialFormState(category),
   );
@@ -96,6 +97,25 @@ function CategoryEditorForm({
   return (
     <div className="min-h-screen bg-white p-4 sm:p-6 lg:p-8">
       <div className="max-w-7xl mx-auto">
+        <div className="mb-8 flex items-center gap-4">
+          <button
+            type="button"
+            onClick={() => router.back()}
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-gray-200 bg-white text-gray-700 shadow-xs hover:bg-gray-50 hover:border-gray-300 transition-all cursor-pointer"
+            aria-label="Go back"
+          >
+            <ArrowLeft className="h-5 w-5 text-gray-700" />
+          </button>
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900 tracking-tight">
+              Edit Category
+            </h1>
+            <p className="text-sm text-gray-500 mt-1">
+              Update details and icon for this category
+            </p>
+          </div>
+        </div>
+
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
           <div className="bg-white border border-gray-200 rounded-xl p-6 lg:p-8">
             <h2 className="text-xl font-bold text-gray-900 mb-8">Edit Category</h2>

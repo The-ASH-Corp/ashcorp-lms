@@ -164,12 +164,14 @@ export default function EditGraduatePage({
         {/* Header */}
         <div className="mb-8 flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <Link
-              href="/admin/graduates"
-              className="p-2 rounded-xl bg-white border border-gray-200 text-gray-600 hover:text-primary hover:border-violet-300 transition-colors shadow-xs"
+            <button
+              type="button"
+              onClick={() => router.back()}
+              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-gray-200 bg-white text-gray-700 shadow-xs hover:bg-gray-50 hover:border-gray-300 transition-all cursor-pointer"
+              aria-label="Go back"
             >
-              <ArrowLeft className="w-5 h-5" />
-            </Link>
+              <ArrowLeft className="h-5 w-5 text-gray-700" />
+            </button>
             <div>
               <h1 className="text-2xl font-bold text-gray-900 tracking-tight">
                 Edit Graduate Spotlight
