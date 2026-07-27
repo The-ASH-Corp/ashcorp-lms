@@ -12,6 +12,9 @@ import { CourseRequestDTO } from "../application/dto/CourseDTO";
 import { AppError } from "../../../shared/error/AppError";
 import { serializeCourse } from "../../../shared/config/serializeCourses";
 import { uploadToS3 } from "../../../shared/middleware/s3Uplosd";
+import { UserModel } from "../../users/infrastructure/models/UserModel";
+import { InstructorModel } from "../../instructor/infrastructure/models/InstructorModel";
+import { CourseModel } from "../infrastructure/models/CourseModel";
 
 
 type UploadedFile = Express.Multer.File;
@@ -244,6 +247,42 @@ export const addReviewController = async (
       success: true,
       message: "Review added successfully",
       data: course,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getLandingStatsController = async (
+  _req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
+  try {
+    const [studentsGlobally, expertMentors, ratingResult] = await Promise.all([
+      UserModel.countDocuments({ role: "user" }),
+      InstructorModel.countDocuments({ status: "Active" }),
+      CourseModel.aggregate<{ avgRating: number }>([
+        { $unwind: "$rating" },
+        {
+          $group: {
+            _id: null,
+            avgRating: { $avg: "$rating.rating" },
+          },
+        },
+      ]),
+    ]);
+
+    const avgRating = ratingResult[0]?.avgRating ?? 0;
+    const satisfactionRate = Number(Math.max(0, Math.min(5, avgRating)).toFixed(1));
+
+    res.status(200).json({
+      success: true,
+      data: {
+        studentsGlobally,
+        expertMentors,
+        satisfactionRate,
+      },
     });
   } catch (error) {
     next(error);

@@ -2,6 +2,7 @@ import { Router } from "express";
 import {
   addReviewController,
   createCourseController,
+  getLandingStatsController,
   deleteCourseController,
   getAllCourseController,
   getCourseByIdController,
@@ -26,6 +27,8 @@ router.post(
 );
 
 router.get("/all-course", getAllCourseController);
+
+router.get("/landing-stats", getLandingStatsController);
 
 router.get("/:id", getCourseByIdController);
 

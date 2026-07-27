@@ -19,6 +19,14 @@ interface PaginatedCourseResponse {
   };
 }
 
+interface LandingStatsResponse {
+  data: {
+    studentsGlobally: number;
+    expertMentors: number;
+    satisfactionRate: number;
+  };
+}
+
 
 export const courseApi = api.injectEndpoints({
   endpoints: (builder) => ({
@@ -32,6 +40,11 @@ export const courseApi = api.injectEndpoints({
       query: (courseId) => `/course/${courseId}`,
       transformResponse: (response: singleCourseResponse) => response.data,
       providesTags: ["Course"],
+    }),
+
+    getLandingStats: builder.query<LandingStatsResponse["data"], void>({
+      query: () => "/course/landing-stats",
+      transformResponse: (response: LandingStatsResponse) => response.data,
     }),
 
     getPaginatedCourses: builder.query<PaginatedCourseResponse, { page: number; limit: number; search?: string }>({
@@ -104,6 +117,7 @@ export const courseApi = api.injectEndpoints({
 
 export const {
   useGetAllCourseQuery,
+  useGetLandingStatsQuery,
   useGetPaginatedCoursesQuery,
   useCreateCourseMutation,
   useGetCourseQuery,
