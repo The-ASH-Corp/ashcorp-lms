@@ -34,7 +34,7 @@ export default function Rules({ selectedExamTitle,disclaimerSeconds }: { selecte
           {/* Card */}
           <div className="relative rounded-2xl bg-white p-6 shadow-sm sm:p-8">
             <div className="flex items-start gap-4">
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-violet-50 text-violet-600">
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-violet-50 text-primary">
                 <ShieldAlert size={26} />
               </div>
 

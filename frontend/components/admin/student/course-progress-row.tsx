@@ -99,7 +99,7 @@ export function CourseProgressRow({
           </div>
 
           <div className="mt-3 h-2 w-full overflow-hidden rounded-full bg-gray-200">
-            <div className="h-full bg-violet-600 transition-all" style={{ width: `${progress}%` }} />
+            <div className="h-full bg-primary transition-all" style={{ width: `${progress}%` }} />
           </div>
           <p className="mt-1 text-xs font-medium text-gray-700">{progress}% Complete</p>
         </div>

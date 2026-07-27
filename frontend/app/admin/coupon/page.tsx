@@ -158,7 +158,7 @@ export default function CouponPage() {
                     <TableRow key={coupon.id} className="border-b border-border hover:bg-gray-50 transition-colors">
                       <TableCell className="pl-6 text-sm font-medium text-gray-900">{shortId}</TableCell>
                       <TableCell className="text-sm font-medium text-gray-900 uppercase">{coupon.code}</TableCell>
-                      <TableCell className="text-sm font-medium text-violet-600">₹{coupon.discount}</TableCell>
+                      <TableCell className="text-sm font-medium text-primary">₹{coupon.discount}</TableCell>
                       <TableCell className="text-sm text-gray-600">
                         {new Date(coupon.applicableFrom).toLocaleDateString()} - {new Date(coupon.validUntil).toLocaleDateString()}
                       </TableCell>

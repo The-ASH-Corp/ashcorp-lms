@@ -20,6 +20,7 @@ import {
   Hash,
   RefreshCcw,
   Wallet,
+  ArrowLeft,
 } from "lucide-react";
 
 function CouponField({
@@ -139,14 +140,23 @@ export default function CreateCouponPage() {
   return (
     <div className="w-full bg-background p-4 text-foreground sm:p-6 lg:p-10">
       <div className="mx-auto flex w-full max-w-[1440px] flex-col">
-        <div className="mb-8">
-          <h1 className="mb-2 text-4xl font-bold text-foreground">
-            Create New Coupon
-          </h1>
-          <p className="text-base text-muted-foreground">
-            Issue promotional discounts for the Ash Academy elite course
-            library.
-          </p>
+        <div className="mb-8 flex items-center gap-4">
+          <button
+            type="button"
+            onClick={() => router.back()}
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-gray-200 bg-white text-gray-700 shadow-xs hover:bg-gray-50 hover:border-gray-300 transition-all cursor-pointer"
+            aria-label="Go back"
+          >
+            <ArrowLeft className="h-5 w-5 text-gray-700" />
+          </button>
+          <div>
+            <h1 className="text-2xl font-bold text-foreground">
+              Create New Coupon
+            </h1>
+            <p className="text-sm text-muted-foreground mt-1">
+              Issue promotional discounts for the Ash Academy elite course library.
+            </p>
+          </div>
         </div>
 
         <div className="mb-8 rounded-xl border border-border bg-card p-6 sm:p-8">
