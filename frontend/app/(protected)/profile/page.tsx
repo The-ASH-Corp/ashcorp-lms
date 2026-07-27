@@ -268,7 +268,7 @@ export default function AccountSettingsPage() {
             <button
               onClick={handleChangePassword}
               disabled={isPasswordUpdating}
-              className="w-full sm:w-auto px-6 py-3 bg-gray-900 hover:bg-gray-800 disabled:bg-gray-400 text-white rounded-lg font-semibold text-sm transition-colors flex items-center justify-center gap-2"
+              className="w-full sm:w-auto px-6 py-3 bg-primary hover:bg-violet-700 disabled:bg-violet-400 text-white rounded-lg font-semibold text-sm transition-colors flex items-center justify-center gap-2"
             >
               {isPasswordUpdating && <Loader2 size={16} className="animate-spin" />}
               {isPasswordUpdating ? 'Updating...' : 'Change Password'}

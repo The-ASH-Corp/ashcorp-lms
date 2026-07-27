@@ -369,7 +369,7 @@ export default function InstructorsPage() {
                         <button
                           type="button"
                           onClick={() => handleEditInstructor(instructor._id)}
-                          className="flex h-8 w-8 items-center justify-center rounded-lg text-violet-500 transition-colors hover:bg-violet-50 hover:text-violet-600"
+                          className="flex h-8 w-8 items-center justify-center rounded-lg text-violet-500 transition-colors hover:bg-violet-50 hover:text-primary"
                           title="Edit instructor"
                         >
                           <Pencil className="h-4 w-4" />

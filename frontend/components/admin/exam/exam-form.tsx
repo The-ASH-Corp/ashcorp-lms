@@ -260,7 +260,7 @@ export function ExamForm({ mode = "create", examId, initialCourseId, initialValu
                 placeholder="Enter exam title"
                 value={examTitle}
                 onChange={(event) => setExamTitle(event.target.value)}
-                className="w-full h-10 px-4 py-3 bg-white border border-gray-200 rounded-lg focus:outline-none focus:border-violet-600 focus:ring-2 focus:ring-violet-600 focus:ring-opacity-10 text-gray-900 placeholder-gray-400"
+                className="w-full h-10 px-4 py-3 bg-white border border-gray-200 rounded-lg focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary focus:ring-opacity-10 text-gray-900 placeholder-gray-400"
               />
             </div>
 
@@ -273,7 +273,7 @@ export function ExamForm({ mode = "create", examId, initialCourseId, initialValu
                 placeholder="Enter exam duration"
                 value={duration}
                 onChange={(event) => setDuration(event.target.value)}
-                className="w-full h-10 px-4 py-3 bg-white border border-gray-200 rounded-lg focus:outline-none focus:border-violet-600 focus:ring-2 focus:ring-violet-600 focus:ring-opacity-10 text-gray-900 placeholder-gray-400"
+                className="w-full h-10 px-4 py-3 bg-white border border-gray-200 rounded-lg focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary focus:ring-opacity-10 text-gray-900 placeholder-gray-400"
               />
             </div>
           </div>
@@ -288,7 +288,7 @@ export function ExamForm({ mode = "create", examId, initialCourseId, initialValu
                 placeholder="Enter marks per question"
                 value={marksPerQuestion}
                 onChange={(event) => setMarksPerQuestion(event.target.value)}
-                className="w-full h-10 px-4 py-3 bg-white border border-gray-200 rounded-lg focus:outline-none focus:border-violet-600 focus:ring-2 focus:ring-violet-600 focus:ring-opacity-10 text-gray-900 placeholder-gray-400"
+                className="w-full h-10 px-4 py-3 bg-white border border-gray-200 rounded-lg focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary focus:ring-opacity-10 text-gray-900 placeholder-gray-400"
               />
             </div>
 
@@ -301,7 +301,7 @@ export function ExamForm({ mode = "create", examId, initialCourseId, initialValu
                 placeholder="Enter marks required to pass"
                 value={passMarks}
                 onChange={(event) => setPassMarks(event.target.value)}
-                className="w-full h-10 px-4 py-3 bg-white border border-gray-200 rounded-lg focus:outline-none focus:border-violet-600 focus:ring-2 focus:ring-violet-600 focus:ring-opacity-10 text-gray-900 placeholder-gray-400"
+                className="w-full h-10 px-4 py-3 bg-white border border-gray-200 rounded-lg focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary focus:ring-opacity-10 text-gray-900 placeholder-gray-400"
               />
             </div>
           </div>
@@ -323,7 +323,7 @@ export function ExamForm({ mode = "create", examId, initialCourseId, initialValu
             </Button>
             <Button
               onClick={addTrueFalseQuestion}
-              className="flex h-10 items-center justify-center gap-2 px-6 py-3 bg-violet-600 text-white rounded-lg hover:bg-violet-700 transition-colors font-medium"
+              className="flex h-10 items-center justify-center gap-2 px-6 py-3 bg-primary text-white rounded-lg hover:bg-violet-700 transition-colors font-medium"
             >
               <Plus size={20} />
               <span>Add True/False Question</span>
@@ -364,7 +364,7 @@ export function ExamForm({ mode = "create", examId, initialCourseId, initialValu
                         placeholder="Enter question text"
                         value={question.title}
                         onChange={(event) => updateQuestion(question.id, event.target.value)}
-                        className="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg focus:outline-none focus:border-violet-600 focus:ring-2 focus:ring-violet-600 focus:ring-opacity-10 text-gray-900 placeholder-gray-400 min-h-24 resize-none"
+                        className="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary focus:ring-opacity-10 text-gray-900 placeholder-gray-400 min-h-24 resize-none"
                       />
                     </div>
 
@@ -380,7 +380,7 @@ export function ExamForm({ mode = "create", examId, initialCourseId, initialValu
                               placeholder="Enter option text"
                               value={option.text}
                               onChange={(event) => updateOption(question.id, option.id, event.target.value)}
-                              className="w-full h-10 px-4 py-3 bg-white border border-gray-200 rounded-lg focus:outline-none focus:border-violet-600 focus:ring-2 focus:ring-violet-600 focus:ring-opacity-10 text-gray-900 placeholder-gray-400"
+                              className="w-full h-10 px-4 py-3 bg-white border border-gray-200 rounded-lg focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary focus:ring-opacity-10 text-gray-900 placeholder-gray-400"
                             />
                           </div>
                           <div className="flex items-center gap-2">
@@ -388,7 +388,7 @@ export function ExamForm({ mode = "create", examId, initialCourseId, initialValu
                               type="checkbox"
                               checked={option.isCorrect}
                               onChange={() => toggleCorrect(question.id, option.id)}
-                              className="w-5 h-5 rounded border-gray-300 text-violet-600 focus:ring-violet-600 cursor-pointer"
+                              className="w-5 h-5 rounded border-gray-300 text-primary focus:ring-primary cursor-pointer"
                             />
                             <span className="text-xs font-semibold text-gray-600 uppercase tracking-wide whitespace-nowrap">
                               Correct

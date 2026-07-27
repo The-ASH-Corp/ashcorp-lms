@@ -27,7 +27,7 @@ export default function GraduateCard({
         className="object-cover "
         unoptimized
       />
-      <div className="absolute inset-0 bg-gradient-to-r from-violet-600 via-violet-600 to-transparent opacity-30"></div>
+      <div className="absolute inset-0 bg-gradient-to-r from-primary via-primary to-transparent opacity-30"></div>
 
       {/* Content Container */}
       <div className="absolute inset-0 flex flex-col justify-between p-6">
