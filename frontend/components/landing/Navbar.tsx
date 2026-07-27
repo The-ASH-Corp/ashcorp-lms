@@ -15,10 +15,11 @@ import {
 } from "../ui/dropdown-menu";
 import { NativeSelect, NativeSelectOption } from "../ui/native-select";
 import { useLogoutMutation } from "@/lib/redux/features/auth/authApi";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useGetAllCategoriesQuery } from "@/lib/redux/features/category/categoryApi";
 
 export default function Navbar() {
+  const router = useRouter();
   const {data:categories}=useGetAllCategoriesQuery()
   const pathname = usePathname();
   const dispatch = useAppDispatch();
@@ -30,6 +31,12 @@ export default function Navbar() {
     dispatch(Logout());
   };
   
+  const handleCategorySelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedCategory = e.target.value;
+    if (selectedCategory) {
+      router.push(`/courses?category=${encodeURIComponent(selectedCategory)}`);
+    }
+  };
 
   const navLinkClass = (path: string) =>
     `relative pb-1 transition-colors ${
@@ -55,7 +62,11 @@ export default function Navbar() {
 
           {/* Navigation Links */}
           <nav className="hidden md:flex items-center gap-8">
-            <NativeSelect className="w-32 border-0 bg-transparent text-gray-600">
+            <NativeSelect
+              className="w-32 border-0 bg-transparent text-gray-600 cursor-pointer"
+              onChange={handleCategorySelect}
+              defaultValue=""
+            >
               <NativeSelectOption value="">Categories</NativeSelectOption>
 
               {categories?.map((category) => (

@@ -73,7 +73,11 @@ export default function FilterSidebar({
               <label key={item._id} className="flex items-center gap-3 cursor-pointer">
                 <input
                   type="checkbox"
-                  checked={selectedCategories.includes(item.categoryName)}
+                  checked={selectedCategories.some(
+                    (cat) =>
+                      cat === item._id ||
+                      cat.toLowerCase() === item.categoryName.toLowerCase()
+                  )}
                   onChange={() => onToggleCategory(item.categoryName)}
                   className="w-4 h-4 rounded border-gray-300 text-primary focus:ring-primary cursor-pointer"
                 />
