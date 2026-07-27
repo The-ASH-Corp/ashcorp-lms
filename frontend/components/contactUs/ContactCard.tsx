@@ -35,6 +35,7 @@ const ContactCard = () => {
     const [formData, setFormData] = useState({
       fullName: "",
       email: "",
+      phone: "",
       subject: "",
       message: "",
     });
@@ -109,6 +110,16 @@ const ContactCard = () => {
                     required
                   />
                   <input
+                    type="tel"
+                    placeholder="Phone Number"
+                    value={formData.phone}
+                    onChange={(e) =>
+                      setFormData({ ...formData, phone: e.target.value })
+                    }
+                    className="rounded-lg border border-input bg-background px-4 py-2.5 text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary "
+                    required
+                  />
+                  <input
                     type="email"
                     placeholder="Work Email"
                     value={formData.email}
@@ -118,12 +129,6 @@ const ContactCard = () => {
                     className="rounded-lg border border-input bg-background px-4 py-2.5 text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
                     required
                   />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-foreground mb-2">
-                    Subject
-                  </label>
                   <select
                     value={formData.subject}
                     onChange={(e) =>
@@ -139,6 +144,12 @@ const ContactCard = () => {
                     <option value="general">General Support</option>
                   </select>
                 </div>
+
+                {/* <div>
+                  <label className="block text-sm font-medium text-foreground mb-2">
+                    Subject
+                  </label>
+                </div> */}
 
                 <div>
                   <label className="block text-sm font-medium text-foreground mb-2">
