@@ -13,6 +13,7 @@ import { toast } from 'sonner';
 import { PropagateLoader } from 'react-spinners';
 import { CourseShareDialog } from '@/components/shared/course-share-dialog';
 import { Input } from '@/components/ui/input';
+import Image from 'next/image';
 
 export default function CourseDetail() {
   const router = useRouter();
@@ -282,7 +283,14 @@ export default function CourseDetail() {
 
               {/* Instructor */}
               <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-full bg-linear-to-br from-purple-400 to-pink-600 shrink-0" />
+                <Image
+                src={course?.instructorProfileImage ||""}
+                alt={course?.instructor || "Instructor"}
+                width={48}
+                height={48}
+                className="object-cover w-12 h-12 rounded-full shrink-0 bg-red-300"
+                unoptimized
+                />
                 <div>
                   <p className="text-xs text-gray-600 uppercase font-semibold">
                     Instructor
