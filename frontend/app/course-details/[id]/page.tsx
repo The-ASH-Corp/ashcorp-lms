@@ -338,43 +338,6 @@ export default function CourseDetail() {
                   />
                 </div>
 
-                {/* Feature Cards */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="border border-gray-200 rounded-lg p-6 hover:border-primary transition-colors">
-                    <div className="flex items-start gap-4">
-                      <div className="w-12 h-12 rounded-lg bg-violet-100 flex items-center justify-center shrink-0">
-                        <Zap size={24} className="text-primary" />
-                      </div>
-                      <div>
-                        <h3 className="font-semibold text-gray-900 mb-2">
-                          Vector Precision
-                        </h3>
-                        <p className="text-sm text-gray-600">
-                          Learn the mathematics of curves and anchor points to
-                          create pixel-perfect art.
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="border border-gray-200 rounded-lg p-6 hover:border-primary transition-colors">
-                    <div className="flex items-start gap-4">
-                      <div className="w-12 h-12 rounded-lg bg-violet-100 flex items-center justify-center shrink-0">
-                        <Star size={24} className="text-primary" />
-                      </div>
-                      <div>
-                        <h3 className="font-semibold text-gray-900 mb-2">
-                          Color Theory
-                        </h3>
-                        <p className="text-sm text-gray-600">
-                          Master Pantone matching and digital color profiles for
-                          global brand consistency.
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
                 {/* Course Features */}
                 <div>
                   <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-6">
@@ -383,7 +346,7 @@ export default function CourseDetail() {
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                     {[
                       { icon: Clock, label: "Lifetime Access", desc: "" },
-                      { icon: Play, label: "3 Video Lectures", desc: "" },
+                      { icon: Play, label: " Video Lectures", desc: "" },
                       { icon: BookOpen, label: "1 Free Video", desc: "" },
                       { icon: Award, label: "Certificate Available", desc: "" },
                       { icon: Headphones, label: "24/7 Support", desc: "" },
@@ -440,7 +403,7 @@ export default function CourseDetail() {
                   <div className="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm">
                     <video
                       key={course?.videoUrl}
-                      src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${course?.videoUrl}`}
+                      src={`${course?.videoUrl}`}
                       controls
                       className="h-full w-full"
                     />
@@ -449,9 +412,6 @@ export default function CourseDetail() {
                       <h3 className="text-lg font-semibold text-gray-900">
                         {course.title}
                       </h3>
-                      {/* <p className="text-sm text-gray-600 mt-1">
-                        Watch this free preview before enrolling.
-                      </p> */}
                     </div>
                   </div>
                 ) : (
@@ -639,7 +599,6 @@ export default function CourseDetail() {
                   </p>
                   {[
                     "Lifetime Course Access",
-                    "15+ Downloadable Resources",
                     "Personal Q&A with Instructor",
                     "Completion Certificate",
                   ].map((item, idx) => (

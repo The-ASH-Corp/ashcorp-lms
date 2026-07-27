@@ -35,16 +35,15 @@ export default function Footer() {
               Academy
             </h4>
             <ul className="mt-4 space-y-2">
-              {["About Us", "Careers", "Mentors", "Success Stories"].map(
-                (link) => (
-                  <li key={link}>
-                    <Link
-                      href="#"
-                      className="text-xs text-gray-500 hover:text-purple-600 transition-colors"
-                    >
-                      {link}
-                    </Link>
-                  </li>
+              {["About", "Courses", "Contact"].map((link) => (
+                <li key={link}>
+                  <Link
+                    href={`/${link.toLowerCase()}`}
+                    className="text-xs text-gray-500 hover:text-purple-600 transition-colors"
+                  >
+                    {link}
+                  </Link>
+                </li>
                 ),
               )}
             </ul>
