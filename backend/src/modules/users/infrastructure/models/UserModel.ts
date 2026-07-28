@@ -112,6 +112,10 @@ const userSchema = new mongoose.Schema({
     required: true,
     default: "user",
   },
+  profileImage: {
+    type: String,
+    default: "",
+  },
   status: {
     type: String,
     enum: ["Active", "Inactive"],

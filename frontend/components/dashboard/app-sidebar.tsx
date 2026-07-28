@@ -20,8 +20,9 @@ import { Avatar, AvatarImage } from "../ui/avatar"
 import { useAppSelector, useAppDispatch } from "@/lib/redux/hooks"
 import { Logout } from "@/lib/redux/features/auth/authSlice"
 import { useLogoutMutation } from "@/lib/redux/features/auth/authApi"
+import { getUserProfileImageFromUser } from "@/lib/auth/profileImage"
 import Link from "next/link"
-import { LayoutDashboard, User, BookOpen, History, CreditCard, LogOut, Heart, BookOpenCheck } from "lucide-react"
+import { LayoutDashboard, User, BookOpen, History, LogOut, Heart, BookOpenCheck } from "lucide-react"
 
 const navItems = [
   {
@@ -86,9 +87,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 <div className="flex flex-col items-center gap-3 w-full p-2">
                   <Avatar className="h-12 w-12 cursor-pointer">
                     <AvatarImage
-                      src={
-                        "https://ashacademylms.com/assets/images/profile/demo-profile.png"
-                      }
+                      src={getUserProfileImageFromUser(user)}
                     />
                   </Avatar>
                   <div className="flex flex-col text-center justify-center">
