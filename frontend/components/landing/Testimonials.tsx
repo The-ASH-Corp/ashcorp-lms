@@ -2,6 +2,7 @@
 
 import React from "react";
 import Image from "next/image";
+import { motion } from "framer-motion";
 import { ChevronLeft, ChevronRight, Quote } from "lucide-react";
 
 interface Testimonial {
@@ -43,7 +44,13 @@ export default function Testimonials() {
     <section className="bg-white py-20">
       <div className="mx-auto w-full px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
         {/* Header */}
-        <div className="flex items-center justify-between mb-12">
+        <motion.div
+          className="flex items-center justify-between mb-12"
+          initial={{ opacity: 0, y: 26 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.5 }}
+          transition={{ duration: 0.58, ease: [0.22, 1, 0.36, 1] }}
+        >
           <h2 className="text-3xl font-bold tracking-tight text-indigo-950 max-w-md">
             What our creative community says about us
           </h2>
@@ -55,13 +62,42 @@ export default function Testimonials() {
               <ChevronRight className="h-5 w-5" />
             </button>
           </div>
-        </div>
+        </motion.div>
 
         {/* Testimonials Grid */}
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+        <motion.div
+          className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3"
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, amount: 0.2 }}
+          variants={{
+            hidden: { opacity: 0 },
+            show: {
+              opacity: 1,
+              transition: {
+                staggerChildren: 0.14,
+                delayChildren: 0.08,
+              },
+            },
+          }}
+        >
           {testimonials.map((t) => (
-            <div
+            <motion.div
               key={t.id}
+              variants={{
+                hidden: { opacity: 0, y: 30, scale: 0.98 },
+                show: {
+                  opacity: 1,
+                  y: 0,
+                  scale: 1,
+                  transition: {
+                    duration: 0.62,
+                    ease: [0.22, 1, 0.36, 1],
+                  },
+                },
+              }}
+              whileHover={{ y: -5 }}
+              transition={{ duration: 0.2 }}
               className="relative flex flex-col justify-between rounded-3xl border border-purple-50 bg-[#FAF8FC]/40 p-8 shadow-xs hover:shadow-md transition-shadow"
             >
               {/* Quote Icon */}
@@ -73,7 +109,7 @@ export default function Testimonials() {
 
               {/* Quote text */}
               <p className="text-sm font-medium leading-relaxed text-gray-600 italic">
-                "{t.quote}"
+                &ldquo;{t.quote}&rdquo;
               </p>
 
               {/* Author Info */}
@@ -91,9 +127,9 @@ export default function Testimonials() {
                   <p className="text-xs text-gray-500">{t.authorRole}</p>
                 </div>
               </div>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   );
