@@ -104,7 +104,7 @@ export default function Hero() {
         {/* Sparkle Badge */}
         <div className="inline-flex items-center gap-1.5 rounded-full bg-purple-50 px-4 py-1.5 text-xs font-semibold text-primary ring-1 ring-purple-600/10 mb-8 animate-bounce animation-duration-[2s]">
           <Sparkles className="h-3.5 w-3.5" />
-          <span>New: Creative Illustration Masterclass</span>
+          {/* <span>New: Creative Illustration Masterclass</span> */}
         </div>
 
         {/* Headline */}

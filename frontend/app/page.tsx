@@ -7,6 +7,7 @@ import Stats from "@/components/landing/Stats";
 import Partners from "@/components/landing/Graduates";
 import Testimonials from "@/components/landing/Testimonials";
 import Footer from "@/components/landing/Footer";
+import ScrollReveal from "@/components/landing/ScrollReveal";
 
 export default function Home() {
   return (
@@ -14,11 +15,21 @@ export default function Home() {
       <Navbar />
       <main className="flex-1">
         <Hero />
-        <ExploreCategories />
-        <TrendingWorkshops />
-        <Stats />
-        <Partners />
-        <Testimonials />
+        <ScrollReveal delay={0.05}>
+          <ExploreCategories />
+        </ScrollReveal>
+        <ScrollReveal delay={0.08}>
+          <TrendingWorkshops />
+        </ScrollReveal>
+        <ScrollReveal delay={0.1}>
+          <Stats />
+        </ScrollReveal>
+        <ScrollReveal delay={0.12}>
+          <Partners />
+        </ScrollReveal>
+        <ScrollReveal delay={0.14}>
+          <Testimonials />
+        </ScrollReveal>
       </main>
       <Footer />
     </div>

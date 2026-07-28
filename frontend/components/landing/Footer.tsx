@@ -103,7 +103,7 @@ export default function Footer() {
             © 2026 Ash Academy. Empowering learners worldwide.
           </p>
           <p className="text-[10px] text-gray-400">
-            Designed for Creators | Secure Payments
+            Designed for Students | Secure Payments
           </p>
         </div>
       </div>

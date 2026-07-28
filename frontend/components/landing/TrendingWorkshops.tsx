@@ -3,10 +3,35 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { motion } from "framer-motion";
 import { Play, ShoppingCart, Star } from "lucide-react";
 import { useGetAllCourseQuery } from "@/lib/redux/features/course/courseApi";
 import { useGetCurrentUserQuery } from "@/lib/redux/features/auth/authApi";
 import { useAppSelector } from "@/lib/redux/hooks";
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.14,
+      delayChildren: 0.08,
+    },
+  },
+};
+
+const cardVariants = {
+  hidden: { opacity: 0, y: 34, scale: 0.98 },
+  show: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: {
+      duration: 0.62,
+      ease: [0.22, 1, 0.36, 1] as const,
+    },
+  },
+};
 
 const getCourseImageUrl = (imageUrl?: string) => {
   if (!imageUrl) return "";
@@ -87,7 +112,13 @@ export default function TrendingWorkshops() {
             Loading trending courses...
           </div>
         ) : (
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+          <motion.div
+            className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3"
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true, amount: 0.22 }}
+          >
             {displayedCourses.map((course) => {
               const averageRating = course.rating?.length
                 ? course.rating.reduce((sum, item) => sum + item.rating, 0) /
@@ -97,8 +128,11 @@ export default function TrendingWorkshops() {
               const purchased = isPurchased(course.id);
 
               return (
-                <div
+                <motion.div
                   key={course.id}
+                  variants={cardVariants}
+                  whileHover={{ y: -6 }}
+                  transition={{ duration: 0.2 }}
                   className="flex flex-col overflow-hidden rounded-3xl bg-white border border-purple-50 shadow-xs hover:shadow-md transition-shadow group"
                 >
                   <div className="relative aspect-video w-full overflow-hidden bg-gray-100">
@@ -161,10 +195,10 @@ export default function TrendingWorkshops() {
                       </Link>
                     </div>
                   </div>
-                </div>
+                </motion.div>
               );
             })}
-          </div>
+          </motion.div>
         )}
       </div>
     </section>
