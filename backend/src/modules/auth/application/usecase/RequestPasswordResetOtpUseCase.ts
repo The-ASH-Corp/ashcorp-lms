@@ -5,6 +5,7 @@ import { PasswordResetOtpModel } from "../../infrastructure/models/PasswordReset
 import { ENV } from "../../../../shared/env/ENV";
 import { sendMail } from "../../../../shared/mail/mailer";
 import { AppError } from "../../../../shared/error/AppError";
+import { resentOTPTemplate } from "../../../../shared/mail/template";
 
 export class RequestPasswordResetOtpUseCase {
   constructor(
@@ -15,7 +16,9 @@ export class RequestPasswordResetOtpUseCase {
   async execute(email: string): Promise<void> {
     const normalizedEmail = email.trim().toLowerCase();
     const user = await this.userRepository.findByEmail(normalizedEmail);
-    const admin = user ? null : await this.adminRepository.findByEmail(normalizedEmail);
+    const admin = user
+      ? null
+      : await this.adminRepository.findByEmail(normalizedEmail);
 
     // Never reveal whether the email exists.
     if (!user && !admin) {
@@ -25,10 +28,13 @@ export class RequestPasswordResetOtpUseCase {
     const now = Date.now();
     const cooldownMs = ENV.OTP_REQUEST_COOLDOWN_SECONDS * 1000;
     const windowMs = ENV.OTP_REQUEST_WINDOW_MINUTES * 60 * 1000;
-    const existingOtpDoc = await PasswordResetOtpModel.findOne({ email: normalizedEmail });
+    const existingOtpDoc = await PasswordResetOtpModel.findOne({
+      email: normalizedEmail,
+    });
 
     if (existingOtpDoc?.lastRequestedAt) {
-      const elapsedSinceLastRequest = now - existingOtpDoc.lastRequestedAt.getTime();
+      const elapsedSinceLastRequest =
+        now - existingOtpDoc.lastRequestedAt.getTime();
       if (elapsedSinceLastRequest < cooldownMs) {
         throw new AppError(
           `Please wait ${ENV.OTP_REQUEST_COOLDOWN_SECONDS} seconds before requesting another OTP.`,
@@ -41,7 +47,9 @@ export class RequestPasswordResetOtpUseCase {
       !!existingOtpDoc?.requestWindowStart &&
       now - existingOtpDoc.requestWindowStart.getTime() <= windowMs;
 
-    const nextRequestCount = hasActiveWindow ? (existingOtpDoc?.requestCount ?? 0) + 1 : 1;
+    const nextRequestCount = hasActiveWindow
+      ? (existingOtpDoc?.requestCount ?? 0) + 1
+      : 1;
 
     if (hasActiveWindow && nextRequestCount > ENV.OTP_REQUEST_MAX_PER_WINDOW) {
       throw new AppError(
@@ -61,7 +69,9 @@ export class RequestPasswordResetOtpUseCase {
         expiresAt,
         attempts: 0,
         requestCount: nextRequestCount,
-        requestWindowStart: hasActiveWindow ? existingOtpDoc?.requestWindowStart : new Date(now),
+        requestWindowStart: hasActiveWindow
+          ? existingOtpDoc?.requestWindowStart
+          : new Date(now),
         lastRequestedAt: new Date(now),
       },
       { upsert: true, new: true, setDefaultsOnInsert: true },
@@ -73,16 +83,7 @@ export class RequestPasswordResetOtpUseCase {
       to: normalizedEmail,
       subject: "Your Password Reset OTP",
       text: `Hello ${targetName}, your OTP is ${otp}. It will expire in ${ENV.OTP_EXPIRY_MINUTES} minutes.`,
-      html: `
-        <div style="font-family: Arial, sans-serif; line-height: 1.5; color: #111;">
-          <h2>Password Reset Request</h2>
-          <p>Hello ${targetName},</p>
-          <p>Use the OTP below to reset your password:</p>
-          <p style="font-size: 24px; font-weight: 700; letter-spacing: 4px;">${otp}</p>
-          <p>This OTP will expire in ${ENV.OTP_EXPIRY_MINUTES} minutes.</p>
-          <p>If you did not request this, you can ignore this email.</p>
-        </div>
-      `,
+      html: resentOTPTemplate(targetName, otp, ENV.OTP_EXPIRY_MINUTES),
     });
   }
 
