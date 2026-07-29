@@ -1,7 +1,10 @@
 import { AppError } from "../../../../shared/error/AppError";
+import { ENV } from "../../../../shared/env/ENV";
+import { sendMail } from "../../../../shared/mail/mailer";
 import { ExamRepository } from "../../../exam/domain/repositories/ExamRepository";
 import { ExamAttempt } from "../../../users/domain/entities/User";
 import { UserRepository } from "../../../users/domain/repositories/UserRepository";
+import { mailTemplateForExamPassed } from "../../../../shared/mail/template";
 
 export interface SaveExamResponseInput {
   examId: string;
@@ -17,7 +20,10 @@ export class SaveExamResponseUseCase {
     private examRepository: ExamRepository,
   ) {}
 
-  async execute(studentId: string, input: SaveExamResponseInput): Promise<ExamAttempt> {
+  async execute(
+    studentId: string,
+    input: SaveExamResponseInput,
+  ): Promise<ExamAttempt> {
     const student = await this.userRepository.findById(studentId);
 
     if (!student) {
@@ -48,7 +54,9 @@ export class SaveExamResponseUseCase {
 
       return {
         questionIndex,
-        selectedOptionIndex: Number.isInteger(selectedOptionIndex) ? selectedOptionIndex : -1,
+        selectedOptionIndex: Number.isInteger(selectedOptionIndex)
+          ? selectedOptionIndex
+          : -1,
         isCorrect: Boolean(selectedOption?.isCorrect),
       };
     });
@@ -59,7 +67,8 @@ export class SaveExamResponseUseCase {
       return total + Number(exam.marksPerQuestion);
     }, 0);
     const totalMarks = exam.questions.length * Number(exam.marksPerQuestion);
-    const isPassed = input.status === "submitted" && score >= Number(exam.passMarks);
+    const isPassed =
+      input.status === "submitted" && score >= Number(exam.passMarks);
     const attempt: ExamAttempt = {
       examId: input.examId,
       courseId: input.courseId,
@@ -75,6 +84,80 @@ export class SaveExamResponseUseCase {
 
     await this.userRepository.saveExamAttempt(studentId, attempt);
 
+    if (attempt.isPassed && attempt.status === "submitted") {
+      await this.sendExamPassedNotification({
+        studentName: student.name,
+        studentEmail: student.email,
+        examTitle: exam.title,
+        courseId: input.courseId,
+        score: attempt.score,
+        totalMarks: attempt.totalMarks,
+        passMarks: attempt.passMarks,
+        attemptedAt: attempt.attemptedAt,
+      });
+    }
+
     return attempt;
+  }
+
+  private async sendExamPassedNotification(params: {
+    studentName: string;
+    studentEmail: string;
+    examTitle: string;
+    courseId: string;
+    score: number;
+    totalMarks: number;
+    passMarks: number;
+    attemptedAt: Date;
+  }): Promise<void> {
+    const recipient = ENV.EXAM_PASS_NOTIFICATION_EMAIL;
+
+    if (!recipient) {
+      return;
+    }
+
+    try {
+      const {
+        studentName,
+        studentEmail,
+        examTitle,
+        courseId,
+        score,
+        totalMarks,
+        passMarks,
+        attemptedAt,
+      } = params;
+
+      const percentage: number =
+        totalMarks > 0 ? Number(((score / totalMarks) * 100).toFixed(2)) : 0;
+      const attemptedAtText = attemptedAt.toISOString();
+
+      await sendMail({
+        to: recipient,
+        subject: `Exam Passed: ${studentName} (${examTitle})`,
+        text: [
+          `Student ${studentName} (${studentEmail}) has passed an exam.`,
+          `Exam: ${examTitle}`,
+          `Course ID: ${courseId}`,
+          `Score: ${score}/${totalMarks} (${percentage}%)`,
+          `Pass Marks: ${passMarks}`,
+          `Attempted At: ${attemptedAtText}`,
+        ].join("\n"),
+        html: mailTemplateForExamPassed({
+          studentName,
+          studentEmail,
+          score,
+          totalMarks,
+          percentage,
+          examTitle,
+          passMarks,
+          courseId,
+          attemptedAtText,
+        }),
+      });
+    } catch (error) {
+      // Email delivery should not block exam submission.
+      console.error("Failed to send exam pass notification email", error);
+    }
   }
 }

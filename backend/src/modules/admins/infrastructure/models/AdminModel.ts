@@ -23,6 +23,10 @@ const adminSchema = new mongoose.Schema({
     required: true,
     default: "admin",
   },
+  profileImage: {
+    type: String,
+    default: "",
+  },
 });
 
 export const AdminModel = mongoose.model("Admin", adminSchema);

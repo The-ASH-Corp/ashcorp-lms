@@ -10,7 +10,10 @@ export class UpdateProfileUseCase {
     private readonly adminRepository: AdminRepository,
   ) {}
 
-  async execute(userId: string, data: { name?: string; phone?: string }): Promise<User | Admin> {
+  async execute(
+    userId: string,
+    data: { name?: string; phone?: string; profileImage?: string },
+  ): Promise<User | Admin> {
     const user = await this.userRepository.findById(userId);
     const admin = user ? null : await this.adminRepository.findById(userId);
     const currentUser = user ?? admin;
@@ -34,6 +37,10 @@ export class UpdateProfileUseCase {
         throw new AppError("Phone number must be exactly 10 digits", 400);
       }
       updateData.phone = Number(phoneStr);
+    }
+
+    if (data.profileImage !== undefined) {
+      updateData.profileImage = data.profileImage;
     }
 
     if (user) {

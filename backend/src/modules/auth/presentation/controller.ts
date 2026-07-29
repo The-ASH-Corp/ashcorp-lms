@@ -93,6 +93,7 @@ export const getCurrentUserController = async (
       email: currentUser.email,
       phone: currentUser.phone,
       role: currentUser.role,
+      profileImage: currentUser.profileImage,
       purchasedCourses,
       certificates,
       examAttempts,
