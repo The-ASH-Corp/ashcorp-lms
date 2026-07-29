@@ -57,8 +57,7 @@ export default function Footer() {
             <ul className="mt-4 space-y-2">
               {[
                 { label: "Privacy Policy", href: "/privacy-policy" },
-                { label: "Terms of Service", href: "#" },
-                { label: "Help Center", href: "#" },
+                { label: "Terms of Service", href: "/terms-conditions" },
                 { label: "Contact", href: "/contact" },
               ].map((item) => (
                 <li key={item.label}>
