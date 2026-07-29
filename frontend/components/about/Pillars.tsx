@@ -5,25 +5,25 @@ const pillars = [
     icon: Lightbulb,
     title: "Innovation",
     description:
-      "Redefining boundaries through experimental curriculum and cutting-edge tech integration.",
+      "We constantly evolve our courses and platform, blending modern teaching methods with practical, real-world skills learners can actually use.",
   },
   {
     icon: ShieldCheck,
     title: "Integrity",
     description:
-      "Upholding the highest standards of academic honesty and professional transparency.",
+      "We're honest about what our courses deliver — no filler, no false promises. Just clear, quality content that respects your time and trust.",
   },
   {
     icon: Users,
     title: "Community",
     description:
-      "Building a global network of elite peers, mentors, and industry disruptor.",
+      "We're building a growing network of learners, mentors, and industry experts who support each other's growth, long after a course ends.",
   },
   {
     icon: Share2,
     title: "Excellence",
     description:
-      "Commitment to a standard that transcends 'good enough' to achieve the exceptional.",
+      "We hold every course to a high standard — because \"good enough\" isn't good enough when it comes to your career and your goals.",
   },
 ];
 
@@ -33,11 +33,10 @@ const Pillars = () => {
       <div className="mx-auto max-w-6xl px-6">
         <div className="mx-auto max-w-2xl text-center">
           <h2 className="text-3xl font-bold tracking-tight text-foreground md:text-4xl">
-            The Pillars of Ash
+            The Pillars of ASH Academy
           </h2>
           <p className="mt-4 text-pretty leading-relaxed text-muted-foreground">
-            Our values aren&apos;t just words on a wall; they are the
-            algorithmic core of every decision we make.
+            These aren&apos;t just values on a page they&apos;re the foundation behind every course we build and every learner we support.
           </p>
         </div>
         <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
