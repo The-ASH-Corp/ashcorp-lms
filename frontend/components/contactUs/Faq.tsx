@@ -10,7 +10,7 @@ const faqItems = [
   {
     question: "Will I receive a certificate after completing the course?",
     answer:
-      "Yes. Students who successfully complete their course will receive a course completion certificate.",
+      "Yes. Once you complete the course and successfully pass the final assessment, your certificate will be issued after verification.",
   },
   {
     question: "How can I contact support if I have an issue?",
