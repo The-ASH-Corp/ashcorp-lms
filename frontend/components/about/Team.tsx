@@ -1,27 +1,31 @@
 import React from 'react'
 import Image from "next/image";
+import  sufail  from "../../public/images/ASH_LMS_SUFAIL_photo.jpeg"
+import  hr  from "../../public/images/ASH_LMS_HR_photo.jpeg"
+import hashir from "../../public/images/ASH_LMS_HASHIR_photo.jpeg";
+import SR from "../../public/images/ASH_LMS_SR_photo.jpeg";
 
 
 const team = [
   {
-    name: "Dr. Aris Thorne",
+    name: "SUFAIL P",
     role: "Chief Executive Officer",
-    image: "/images/team-1.png",
+    image: sufail,
   },
   {
-    name: "Prof. Julian Vane",
-    role: "Head of Academics",
-    image: "/images/team-2.png",
+    name: "SHIBILI RAHIMAN KP",
+    role: "Co-founder",
+    image: SR,
   },
   {
-    name: "Sarah Jenkins",
-    role: "Chief Operations Officer",
-    image: "/images/team-3.png",
+    name: "GOPIKA",
+    role: "HUMAN RESOURCE",
+    image: hr,
   },
   {
-    name: "Marcus Chen",
-    role: "Head of Student Success",
-    image: "/images/team-4.png",
+    name: "MOHAMMED HASHIR U",
+    role: "ACADEMIC COORDINATOR",
+    image: hashir,
   },
 ];
 

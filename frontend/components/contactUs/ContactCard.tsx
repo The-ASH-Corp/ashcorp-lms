@@ -8,22 +8,15 @@ const contactCards = [
     title: "Student Support",
     description:
       "Dedicated assistance for enrollment, course access, and technical inquiries.",
-    email: "support@ashacademy.edu",
-    phone: "+1 (888) ZENITH-01",
-  },
-  {
-    icon: Mail,
-    title: "Press & Media",
-    description:
-      "Inquiries for interviews, brand assets, and official academy announcements.",
-    email: "press@ashacademy.edu",
+    email: "connect@ashacademy.ai",
+    phone: "+91 9037009400",
   },
   {
     icon: Phone,
     title: "Partnership Inquiries",
     description:
       "Explore institutional collaboration and corporate training opportunities.",
-    email: "partners@ashacademy.edu",
+    email: "hr@ashacademy.ai",
   },
 ];
 
