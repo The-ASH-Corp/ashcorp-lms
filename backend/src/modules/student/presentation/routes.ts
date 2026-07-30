@@ -24,6 +24,7 @@ import {
 } from "./controller";
 import { authMiddleware } from "../../../shared/middleware/authMiddleware";
 import { requireRole } from "../../../shared/middleware/requireRole";
+import { imageUpload } from "../../../shared/middleware/imageUpload";
 
 const router = Router();
 
@@ -68,7 +69,7 @@ router.get("/my-courses", getMyCoursesController);
 router.patch("/course-progress", updateCourseProgressController);
 
 // update profile
-router.patch("/update-profile", updateProfileController);
+router.patch("/update-profile", imageUpload("profileImage"), updateProfileController);
 
 // save exam response
 router.post("/exam-response", saveExamResponseController);

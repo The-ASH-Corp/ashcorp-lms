@@ -7,6 +7,7 @@ export interface Category {
   iconUrl: string;
   isFeatured: boolean;
   status: string;
+  details?: string;
 }
 
 interface PaginatedCategoryResponse {

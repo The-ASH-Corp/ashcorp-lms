@@ -193,7 +193,7 @@ export default function StudentProfilePage() {
           <Card className="border-gray-200 p-6">
             <div className="mb-3 flex items-start justify-between">
               <p className="text-xs font-semibold uppercase tracking-wide text-gray-600">Total Courses</p>
-              <BookOpen size={20} className="text-violet-600" />
+              <BookOpen size={20} className="text-primary" />
             </div>
             <p className="text-3xl font-bold text-gray-900">{courses.length}</p>
           </Card>
@@ -201,7 +201,7 @@ export default function StudentProfilePage() {
           <Card className="border-gray-200 p-6">
             <div className="mb-3 flex items-start justify-between">
               <p className="text-xs font-semibold uppercase tracking-wide text-gray-600">Completed</p>
-              <CheckCircle size={20} className="text-violet-600" />
+              <CheckCircle size={20} className="text-primary" />
             </div>
             <p className="text-3xl font-bold text-gray-900">{progressSummary.completedCourses}</p>
           </Card>
@@ -209,18 +209,18 @@ export default function StudentProfilePage() {
           <Card className="border-gray-200 p-6">
             <div className="mb-3 flex items-start justify-between">
               <p className="text-xs font-semibold uppercase tracking-wide text-gray-600">Avg. Progress</p>
-              <TrendingUp size={20} className="text-violet-600" />
+              <TrendingUp size={20} className="text-primary" />
             </div>
             <p className="mb-2 text-3xl font-bold text-gray-900">{progressSummary.averageProgress}%</p>
             <div className="h-2 w-full overflow-hidden rounded-full bg-gray-200">
-              <div className="h-full bg-violet-600" style={{ width: `${progressSummary.averageProgress}%` }} />
+              <div className="h-full bg-primary" style={{ width: `${progressSummary.averageProgress}%` }} />
             </div>
           </Card>
 
           <Card className="border-gray-200 p-6">
             <div className="mb-3 flex items-start justify-between">
               <p className="text-xs font-semibold uppercase tracking-wide text-gray-600">Last Update</p>
-              <Clock size={20} className="text-violet-600" />
+              <Clock size={20} className="text-primary" />
             </div>
             <p className="text-base font-bold text-gray-900">{formatDate(student.updatedAt)}</p>
           </Card>
@@ -232,23 +232,23 @@ export default function StudentProfilePage() {
               <h2 className="mb-6 text-lg font-bold text-gray-900">Profile Details</h2>
               <div className="space-y-4">
                 <div>
-                  <p className="mb-1 text-sm font-medium text-violet-600">Email Address</p>
+                  <p className="mb-1 text-sm font-medium text-primary">Email Address</p>
                   <p className="flex items-center gap-2 text-sm text-gray-700">
                     <Mail size={14} /> {student.email || 'N/A'}
                   </p>
                 </div>
                 <div>
-                  <p className="mb-1 text-sm font-medium text-violet-600">Phone Number</p>
+                  <p className="mb-1 text-sm font-medium text-primary">Phone Number</p>
                   <p className="flex items-center gap-2 text-sm text-gray-700">
                     <Phone size={14} /> {student.phone || 'N/A'}
                   </p>
                 </div>
                 <div>
-                  <p className="mb-1 text-sm font-medium text-violet-600">Role</p>
+                  <p className="mb-1 text-sm font-medium text-primary">Role</p>
                   <p className="text-sm text-gray-700">{student.role || 'user'}</p>
                 </div>
                 <div>
-                  <p className="mb-1 text-sm font-medium text-violet-600">Joined Date</p>
+                  <p className="mb-1 text-sm font-medium text-primary">Joined Date</p>
                   <p className="text-sm text-gray-700">{formatDate(student.createdAt)}</p>
                 </div>
               </div>
@@ -259,7 +259,7 @@ export default function StudentProfilePage() {
             <Card className="border-gray-200 p-6">
               <div className="mb-6 flex items-center justify-between">
                 <h2 className="text-lg font-bold text-gray-900">Enrolled Courses</h2>
-                <span className="text-sm font-medium text-violet-600">{courses.length} Total</span>
+                <span className="text-sm font-medium text-primary">{courses.length} Total</span>
               </div>
 
               {courses.length === 0 ? (

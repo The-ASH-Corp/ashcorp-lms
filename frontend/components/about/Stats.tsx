@@ -31,21 +31,6 @@ const Stats = () => {
             </div>
           ))}
         </div>
-        <div className="mx-auto mt-16 max-w-3xl rounded-2xl border border-border bg-card p-10 text-center shadow-sm">
-          <h3 className="text-2xl font-bold tracking-tight text-foreground">
-            Ready to start your journey?
-          </h3>
-          <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-muted-foreground">
-            Join a community of high-achievers and world-class mentors dedicated
-            to your professional evolution.
-          </p>
-          <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-            <Button size="lg">Apply for Enrollment</Button>
-            <Button size="lg" variant="outline">
-              Download Prospectus
-            </Button>
-          </div>
-        </div>
       </div>
     </section>
   );

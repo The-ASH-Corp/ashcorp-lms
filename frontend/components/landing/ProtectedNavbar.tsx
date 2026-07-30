@@ -14,6 +14,7 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import { useLogoutMutation } from "@/lib/redux/features/auth/authApi";
+import { getUserProfileImageFromUser } from "@/lib/auth/profileImage";
 
 export default function ProtectedNavbar() {
   const dispatch = useAppDispatch();
@@ -62,9 +63,7 @@ export default function ProtectedNavbar() {
                 <DropdownMenuTrigger asChild>
                   <Avatar className="h-12 w-12 cursor-pointer">
                     <AvatarImage
-                      src={
-                        "https://ashacademylms.com/assets/images/profile/demo-profile.png"
-                      }
+                      src={getUserProfileImageFromUser(user)}
                     />
                     <AvatarFallback>
                       {user.name?.split(" ")[0][0]}

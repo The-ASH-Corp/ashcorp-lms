@@ -1,8 +1,9 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { Menu } from "lucide-react";
 import { useAppDispatch, useAppSelector } from "@/lib/redux/hooks";
 import { Logout } from "@/lib/redux/features/auth/authSlice";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
@@ -15,10 +16,21 @@ import {
 } from "../ui/dropdown-menu";
 import { NativeSelect, NativeSelectOption } from "../ui/native-select";
 import { useLogoutMutation } from "@/lib/redux/features/auth/authApi";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useGetAllCategoriesQuery } from "@/lib/redux/features/category/categoryApi";
+import { getUserProfileImageFromUser } from "@/lib/auth/profileImage";
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "../ui/sheet";
 
 export default function Navbar() {
+  const router = useRouter();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const {data:categories}=useGetAllCategoriesQuery()
   const pathname = usePathname();
   const dispatch = useAppDispatch();
@@ -30,6 +42,13 @@ export default function Navbar() {
     dispatch(Logout());
   };
   
+  const handleCategorySelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedCategory = e.target.value;
+    if (selectedCategory) {
+      router.push(`/courses?category=${encodeURIComponent(selectedCategory)}`);
+      setMobileMenuOpen(false);
+    }
+  };
 
   const navLinkClass = (path: string) =>
     `relative pb-1 transition-colors ${
@@ -55,7 +74,11 @@ export default function Navbar() {
 
           {/* Navigation Links */}
           <nav className="hidden md:flex items-center gap-8">
-            <NativeSelect className="w-32 border-0 bg-transparent text-gray-600">
+            <NativeSelect
+              className="w-32 border-0 bg-transparent text-gray-600 cursor-pointer"
+              onChange={handleCategorySelect}
+              defaultValue=""
+            >
               <NativeSelectOption value="">Categories</NativeSelectOption>
 
               {categories?.map((category) => (
@@ -94,9 +117,7 @@ export default function Navbar() {
                 <DropdownMenuTrigger asChild>
                   <Avatar className="h-12 w-12 cursor-pointer">
                     <AvatarImage
-                      src={
-                        "https://ashacademylms.com/assets/images/profile/demo-profile.png"
-                      }
+                      src={getUserProfileImageFromUser(user)}
                     />
                     <AvatarFallback>
                       {user.name?.split(" ")[0][0]}
@@ -122,6 +143,106 @@ export default function Navbar() {
               Login
             </Link>
           )}
+
+          {/* Mobile Menu */}
+          <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
+            <SheetTrigger asChild>
+              <button
+                type="button"
+                className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-purple-100 text-primary transition-colors hover:bg-purple-50 md:hidden"
+                aria-label="Open navigation menu"
+              >
+                <Menu className="h-5 w-5" />
+              </button>
+            </SheetTrigger>
+            <SheetContent side="right" className="w-[85%] max-w-sm border-l border-purple-100 bg-white p-0">
+              <SheetHeader className="border-b border-purple-100 px-5 py-4">
+                <SheetTitle className="text-base font-semibold text-indigo-950">
+                  Navigation
+                </SheetTitle>
+              </SheetHeader>
+
+              <div className="space-y-5 px-5 py-5">
+                <NativeSelect
+                  className="w-full rounded-xl border border-purple-100 bg-white px-3 py-2 text-gray-700"
+                  onChange={handleCategorySelect}
+                  defaultValue=""
+                >
+                  <NativeSelectOption value="">Categories</NativeSelectOption>
+
+                  {categories?.map((category) => (
+                    <NativeSelectOption key={category._id} value={category.categoryName}>
+                      {category.categoryName}
+                    </NativeSelectOption>
+                  ))}
+                </NativeSelect>
+
+                <nav className="flex flex-col gap-2 text-sm">
+                  <SheetClose asChild>
+                    <Link
+                      href="/courses"
+                      className="rounded-xl px-3 py-2 font-medium text-gray-700 transition-colors hover:bg-purple-50 hover:text-primary"
+                    >
+                      Courses
+                    </Link>
+                  </SheetClose>
+                  <SheetClose asChild>
+                    <Link
+                      href="/about"
+                      className="rounded-xl px-3 py-2 font-medium text-gray-700 transition-colors hover:bg-purple-50 hover:text-primary"
+                    >
+                      About Us
+                    </Link>
+                  </SheetClose>
+                  <SheetClose asChild>
+                    <Link
+                      href="/contact"
+                      className="rounded-xl px-3 py-2 font-medium text-gray-700 transition-colors hover:bg-purple-50 hover:text-primary"
+                    >
+                      Contact Us
+                    </Link>
+                  </SheetClose>
+                </nav>
+
+                {user ? (
+                  <div className="rounded-2xl border border-purple-100 bg-purple-50/50 p-3">
+                    <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+                      Signed in as
+                    </p>
+                    <p className="mt-1 text-sm font-medium text-indigo-950">
+                      {user.name ?? user.email}
+                    </p>
+                    <div className="mt-3 flex gap-2">
+                      <SheetClose asChild>
+                        <Link
+                          href={route}
+                          className="rounded-full bg-primary px-4 py-2 text-xs font-semibold text-white"
+                        >
+                          Dashboard
+                        </Link>
+                      </SheetClose>
+                      <button
+                        type="button"
+                        onClick={handleLogout}
+                        className="rounded-full border border-purple-200 px-4 py-2 text-xs font-semibold text-primary"
+                      >
+                        Logout
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <SheetClose asChild>
+                    <Link
+                      href="/login"
+                      className="inline-flex w-full items-center justify-center rounded-full bg-primary px-4 py-2.5 text-sm font-semibold text-white"
+                    >
+                      Login
+                    </Link>
+                  </SheetClose>
+                )}
+              </div>
+            </SheetContent>
+          </Sheet>
         </div>
       </div>
     </header>

@@ -1,4 +1,3 @@
-import { ArrowRight } from 'lucide-react';
 import Image from "next/image";
 
 const About = () => {
@@ -16,31 +15,26 @@ const About = () => {
         </div>
         <div>
           <h2 className="text-3xl font-bold tracking-tight text-foreground md:text-4xl">
-            Architecting Excellence
+            Built for Learners, <span className="text-primary">Not Just Learning</span>
           </h2>
           <p className="mt-6 leading-relaxed text-muted-foreground">
-            Founded by a collective of Oxford scholars and Silicon Valley
-            pioneers, Ash Academy emerged as a response to the static nature of
-            modern higher education. We believe that true learning happens at
-            the intersection of proven theory and disruptive practice.
+            ASH Academy LMS started with a simple observation, most online
+            courses are built for content, not for people. We set out to change
+            that designing a platform where every course is crafted with care,
+            every lesson respects your time and every learner has the freedom
+            to move at their own pace.
           </p>
           <p className="mt-4 leading-relaxed text-muted-foreground">
-            Our journey began in a small research lab, exploring how immersive
-            technology could enhance cognitive retention. Today, we stand as a
-            global beacon for students who demand more than a degree—they demand
-            a transformation.
+            What began as a small idea has grown into a platform trusted by
+            learners worldwide. Today, we offer lifetime access to expertly
+            designed courses that turn curiosity into real, career-ready skills
+            because we believe education should adapt to your life, not the
+            other way around.
           </p>
-          <a
-            href="#mentors"
-            className="mt-8 inline-flex items-center gap-2 text-sm font-medium text-primary transition-colors hover:text-primary/80"
-          >
-            Learn about our faculty
-            <ArrowRight className="size-4" />
-          </a>
         </div>
       </div>
     </section>
   );
-}
+};
 
-export default About
+export default About;

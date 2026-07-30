@@ -64,7 +64,7 @@ export default function FilterSidebar({
       </div>
 
       <div className="mb-6 lg:mb-8">
-        <h3 className="text-xs flex items-center pl-3 rounded-lg h-8 font-bold bg-violet-600 text-white uppercase tracking-wide mb-3 lg:mb-4">
+        <h3 className="text-xs flex items-center pl-3 rounded-lg h-8 font-bold bg-primary text-white uppercase tracking-wide mb-3 lg:mb-4">
           Category
         </h3>
         <div className="space-y-2 lg:space-y-3">
@@ -73,7 +73,11 @@ export default function FilterSidebar({
               <label key={item._id} className="flex items-center gap-3 cursor-pointer">
                 <input
                   type="checkbox"
-                  checked={selectedCategories.includes(item.categoryName)}
+                  checked={selectedCategories.some(
+                    (cat) =>
+                      cat === item._id ||
+                      cat.toLowerCase() === item.categoryName.toLowerCase()
+                  )}
                   onChange={() => onToggleCategory(item.categoryName)}
                   className="w-4 h-4 rounded border-gray-300 text-primary focus:ring-primary cursor-pointer"
                 />
@@ -87,7 +91,7 @@ export default function FilterSidebar({
       </div>
 
       <div className="mb-6 lg:mb-8 pb-6 lg:pb-8 border-b border-gray-200">
-        <h3 className="text-xs flex items-center pl-3 rounded-lg h-8 font-bold bg-violet-600 text-white uppercase tracking-wide mb-3 lg:mb-4">
+        <h3 className="text-xs flex items-center pl-3 rounded-lg h-8 font-bold bg-primary text-white uppercase tracking-wide mb-3 lg:mb-4">
           Instructors
         </h3>
         <div className="space-y-2 lg:space-y-3">
@@ -110,7 +114,7 @@ export default function FilterSidebar({
       </div>
 
       <div className="mb-6 lg:mb-8 pb-6 lg:pb-8 border-b border-gray-200">
-        <h3 className="text-xs flex items-center pl-3 rounded-lg h-8 font-bold bg-violet-600 text-white uppercase tracking-wide mb-3 lg:mb-4">
+        <h3 className="text-xs flex items-center pl-3 rounded-lg h-8 font-bold bg-primary text-white uppercase tracking-wide mb-3 lg:mb-4">
           Price
         </h3>
         <div className="space-y-2 lg:space-y-3">
@@ -134,7 +138,7 @@ export default function FilterSidebar({
       </div>
 
       <div>
-        <h3 className="text-xs flex items-center pl-3 rounded-lg h-8 font-bold bg-violet-600 text-white uppercase tracking-wide mb-3 lg:mb-4">
+        <h3 className="text-xs flex items-center pl-3 rounded-lg h-8 font-bold bg-primary text-white uppercase tracking-wide mb-3 lg:mb-4">
           Ratings
         </h3>
         <label className="flex items-center gap-3 cursor-pointer">

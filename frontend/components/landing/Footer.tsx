@@ -35,16 +35,15 @@ export default function Footer() {
               Academy
             </h4>
             <ul className="mt-4 space-y-2">
-              {["About Us", "Careers", "Mentors", "Success Stories"].map(
-                (link) => (
-                  <li key={link}>
-                    <Link
-                      href="#"
-                      className="text-xs text-gray-500 hover:text-purple-600 transition-colors"
-                    >
-                      {link}
-                    </Link>
-                  </li>
+              {["About", "Courses", "Contact"].map((link) => (
+                <li key={link}>
+                  <Link
+                    href={`/${link.toLowerCase()}`}
+                    className="text-xs text-gray-500 hover:text-purple-600 transition-colors"
+                  >
+                    {link}
+                  </Link>
+                </li>
                 ),
               )}
             </ul>
@@ -57,17 +56,16 @@ export default function Footer() {
             </h4>
             <ul className="mt-4 space-y-2">
               {[
-                "Privacy Policy",
-                "Terms of Service",
-                "Help Center",
-                "Contact",
-              ].map((link) => (
-                <li key={link}>
+                { label: "Privacy Policy", href: "/privacy-policy" },
+                { label: "Terms of Service", href: "/terms-conditions" },
+                { label: "Contact", href: "/contact" },
+              ].map((item) => (
+                <li key={item.label}>
                   <Link
-                    href="#"
+                    href={item.href}
                     className="text-xs text-gray-500 hover:text-purple-600 transition-colors"
                   >
-                    {link}
+                    {item.label}
                   </Link>
                 </li>
               ))}
@@ -104,7 +102,7 @@ export default function Footer() {
             © 2026 Ash Academy. Empowering learners worldwide.
           </p>
           <p className="text-[10px] text-gray-400">
-            Designed for Creators | Secure Payments
+            Designed for Students | Secure Payments
           </p>
         </div>
       </div>

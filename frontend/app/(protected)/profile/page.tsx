@@ -2,12 +2,27 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { Upload, Loader2 } from 'lucide-react';
 import { useGetCurrentUserQuery } from '@/lib/redux/features/auth/authApi';
 import { useUpdateProfileMutation, useChangePasswordMutation } from '@/lib/redux/features/profile/profileApi';
 import { useAppSelector } from '@/lib/redux/hooks';
 import { PropagateLoader } from 'react-spinners';
 import { toast } from 'sonner';
+import { getUserProfileImageFromUser } from '@/lib/auth/profileImage';
+
+const getErrorMessage = (error: unknown, fallback: string): string => {
+  if (
+    typeof error === 'object' &&
+    error !== null &&
+    'data' in error &&
+    typeof (error as { data?: { message?: unknown } }).data?.message === 'string'
+  ) {
+    return (error as { data?: { message?: string } }).data?.message ?? fallback;
+  }
+
+  return fallback;
+};
 
 export default function AccountSettingsPage() {
   // --- Get current user ---
@@ -29,6 +44,8 @@ export default function AccountSettingsPage() {
     newPassword: '',
     confirmPassword: '',
   });
+  const [profileImageFile, setProfileImageFile] = useState<File | null>(null);
+  const [profileImagePreview, setProfileImagePreview] = useState('');
 
   // Pre‑fill form fields when user data arrives
   useEffect(() => {
@@ -39,8 +56,19 @@ export default function AccountSettingsPage() {
         mobile: user.phone || '',
         email: user.email || '',
       }));
+      if (!profileImageFile) {
+        setProfileImagePreview(getUserProfileImageFromUser(user));
+      }
     }
-  }, [user]);
+  }, [user, profileImageFile]);
+
+  useEffect(() => {
+    return () => {
+      if (profileImagePreview.startsWith('blob:')) {
+        URL.revokeObjectURL(profileImagePreview);
+      }
+    };
+  }, [profileImagePreview]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -50,17 +78,45 @@ export default function AccountSettingsPage() {
     }));
   };
 
+  const handleProfileImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+
+    if (!file) {
+      return;
+    }
+
+    if (!file.type.startsWith('image/')) {
+      toast.error('Please select a valid image file.');
+      return;
+    }
+
+    const maxSize = 10 * 1024 * 1024;
+    if (file.size > maxSize) {
+      toast.error('Image size should be less than 10MB.');
+      return;
+    }
+
+    if (profileImagePreview.startsWith('blob:')) {
+      URL.revokeObjectURL(profileImagePreview);
+    }
+
+    const objectUrl = URL.createObjectURL(file);
+    setProfileImageFile(file);
+    setProfileImagePreview(objectUrl);
+  };
+
   // --- Update profile ---
   const handleUpdateProfile = async () => {
     try {
       await updateProfile({
         name: formData.name,
         phone: formData.mobile,
+        profileImageFile: profileImageFile,
       }).unwrap();
       toast.success('Profile updated successfully!');
-    } catch (err: any) {
-      const message = err?.data?.message || 'Failed to update profile.';
-      toast.error(message);
+      setProfileImageFile(null);
+    } catch (error: unknown) {
+      toast.error(getErrorMessage(error, 'Failed to update profile.'));
     }
   };
 
@@ -87,9 +143,8 @@ export default function AccountSettingsPage() {
         newPassword: '',
         confirmPassword: '',
       }));
-    } catch (err: any) {
-      const message = err?.data?.message || 'Failed to change password.';
-      toast.error(message);
+    } catch (error: unknown) {
+      toast.error(getErrorMessage(error, 'Failed to change password.'));
     }
   };
 
@@ -115,21 +170,32 @@ export default function AccountSettingsPage() {
   const isVerified = false; // Adjust if you have a verification field
 
   return (
-    <div className="min-h-screen bg-white">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
+    <div className="min-h-full w-full overflow-x-hidden bg-white">
+      <div className="mx-auto w-full max-w-5xl px-2 py-6 sm:px-4 sm:py-8 lg:px-6 lg:py-10">
         {/* Profile Header */}
-        <div className="bg-linear-to-br from-gray-50 to-white border border-gray-200 rounded-xl p-6 sm:p-8 lg:p-10 mb-8 lg:mb-12">
-          <div className="flex flex-col sm:flex-row items-center gap-8">
+        <div className="mb-6 rounded-xl border border-gray-200 bg-linear-to-br from-gray-50 to-white p-4 sm:mb-8 sm:p-6 lg:mb-10 lg:p-8">
+          <div className="flex flex-col items-center gap-6 sm:flex-row sm:items-start">
             {/* Avatar */}
             <div className="shrink-0">
               <div className="relative">
-                <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full border-4 border-primary bg-linear-to-br from-violet-100 to-violet-50 flex items-center justify-center">
-                  <span className="text-3xl font-bold text-primary">
-                    {user.name?.charAt(0)?.toUpperCase() || 'U'}
-                  </span>
-                </div>
+                {profileImagePreview ? (
+                  <div className="relative h-20 w-20 overflow-hidden rounded-full border-4 border-primary sm:h-24 sm:w-24 lg:h-28 lg:w-28">
+                    <Image
+                      src={profileImagePreview}
+                      alt="Profile"
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                ) : (
+                  <div className="flex h-20 w-20 items-center justify-center rounded-full border-4 border-primary bg-linear-to-br from-violet-100 to-violet-50 sm:h-24 sm:w-24 lg:h-28 lg:w-28">
+                    <span className="text-3xl font-bold text-primary">
+                      {user.name?.charAt(0)?.toUpperCase() || 'U'}
+                    </span>
+                  </div>
+                )}
                 <div
-                  className={`absolute top-0 right-0 text-xs font-semibold px-2 py-1 rounded-full ${
+                  className={`absolute -right-2 -top-2 rounded-full px-2 py-1 text-[10px] font-semibold sm:right-0 sm:top-0 sm:text-xs ${
                     isVerified
                       ? 'bg-green-100 text-green-700'
                       : 'bg-red-100 text-red-700'
@@ -141,29 +207,35 @@ export default function AccountSettingsPage() {
             </div>
 
             {/* User Info */}
-            <div className="flex-1 text-center sm:text-left">
+            <div className="w-full flex-1 text-center sm:text-left">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-1">
                 {user.name || 'User'}
               </h2>
               <p className="text-gray-500 text-sm mb-4">
                 {user.role === 'admin' ? 'Administrator' : 'Student'}
               </p>
-              <button className="px-4 sm:px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hover:border-primary hover:text-primary transition-colors font-medium text-sm sm:text-base">
+              <label className="w-full cursor-pointer rounded-lg border border-gray-300 px-4 py-2 text-center text-sm font-medium text-gray-700 transition-colors hover:border-primary hover:text-primary sm:w-auto sm:px-6 sm:text-base">
                 <Upload size={16} className="inline mr-2" />
                 Change Photo
-              </button>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleProfileImageChange}
+                  className="hidden"
+                />
+              </label>
             </div>
           </div>
         </div>
 
         {/* Personal Information */}
-        <div className="bg-white border border-gray-200 rounded-xl p-6 sm:p-8 lg:p-10 mb-8 lg:mb-12">
+        <div className="mb-6 rounded-xl border border-gray-200 bg-white p-4 sm:mb-8 sm:p-6 lg:mb-10 lg:p-8">
           <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-6">
             Personal Information
           </h3>
 
           <div className="space-y-6">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6">
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2">
                   Name
@@ -215,13 +287,13 @@ export default function AccountSettingsPage() {
         </div>
 
         {/* Security & Passwords */}
-        <div className="bg-white border border-gray-200 rounded-xl p-6 sm:p-8 lg:p-10 mb-8 lg:mb-12">
+        <div className="mb-6 rounded-xl border border-gray-200 bg-white p-4 sm:mb-8 sm:p-6 lg:mb-10 lg:p-8">
           <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-6">
             Security &amp; Passwords
           </h3>
 
           <div className="space-y-6">
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-6">
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2">
                   Current Password
@@ -268,7 +340,7 @@ export default function AccountSettingsPage() {
             <button
               onClick={handleChangePassword}
               disabled={isPasswordUpdating}
-              className="w-full sm:w-auto px-6 py-3 bg-gray-900 hover:bg-gray-800 disabled:bg-gray-400 text-white rounded-lg font-semibold text-sm transition-colors flex items-center justify-center gap-2"
+              className="flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-violet-700 disabled:bg-violet-400 md:w-auto"
             >
               {isPasswordUpdating && <Loader2 size={16} className="animate-spin" />}
               {isPasswordUpdating ? 'Updating...' : 'Change Password'}

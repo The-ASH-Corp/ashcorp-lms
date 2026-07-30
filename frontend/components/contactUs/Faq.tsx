@@ -3,20 +3,25 @@ import React, { useState } from 'react'
 
 const faqItems = [
   {
-    question: "What are your support hours?",
+    question: "Why should I choose ASH Academy?",
     answer:
-      "Our support team is available Monday through Friday, 9 AM to 6 PM EST. Weekend inquiries are responded to by Monday morning.",
+      "ASH Academy focuses on practical, industry-relevant education through expert mentorship, hands-on training, real-world projects, and dedicated career support, helping learners become confident and job-ready professionals.",
   },
   {
-    question: "How can I request a demo?",
+    question: "Will I receive a certificate after completing the course?",
     answer:
-      "Visit our demo request page or email support@ashacademy.edu with your organization details. We typically respond within 24 hours.",
+      "Yes. Once you complete the course and successfully pass the final assessment, your certificate will be issued after verification.",
   },
   {
-    question: "Do you offer on-site training?",
+    question: "How can I contact support if I have an issue?",
     answer:
-      "Yes, we offer customized on-site training programs for enterprise clients. Contact our partnerships team for detailed pricing.",
+      "You can reach our support team anytime through the Contact Us page, and we'll get back to you promptly.",
   },
+  {
+    question: "What happens if I lose internet access mid-lesson?",
+    answer:
+      "You can pause and resume lessons anytime - your progress is automatically saved.",
+  }
 ];
 
 const Faq = () => {

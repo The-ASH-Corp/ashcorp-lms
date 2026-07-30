@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Eye, EyeOff, Upload } from "lucide-react";
+import { Eye, EyeOff, Upload, ArrowLeft } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { createInstructorSchema, updateInstructorSchema } from "@/lib/validations/instructor";
 import { useCreateInstructorMutation, useUpdateInstructorMutation } from "@/lib/redux/features/instructor/instructorApi";
@@ -140,6 +140,26 @@ export function InstructorForm({
   return (
     <div className="min-h-screen bg-white">
       <div className="px-4 sm:px-8 lg:px-12 py-6 sm:py-8 lg:py-12">
+        {/* Header */}
+        <div className="mb-8 flex items-center gap-4">
+          <button
+            type="button"
+            onClick={() => router.back()}
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-gray-200 bg-white text-gray-700 shadow-xs hover:bg-gray-50 hover:border-gray-300 transition-all cursor-pointer"
+            aria-label="Go back"
+          >
+            <ArrowLeft className="h-5 w-5 text-gray-700" />
+          </button>
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900 tracking-tight">
+              {mode === "edit" ? "Edit Instructor" : "Create Instructor"}
+            </h1>
+            <p className="text-sm text-gray-500 mt-1">
+              {mode === "edit" ? "Update instructor profile and verification details" : "Add a new instructor to the academy"}
+            </p>
+          </div>
+        </div>
+
         <form className="space-y-4 sm:space-y-6 lg:space-y-8" onSubmit={handleSubmit}>
           <div className="border border-gray-200 rounded-lg p-4 sm:p-6 lg:p-8">
             <div className="flex items-center gap-3 mb-6">

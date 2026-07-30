@@ -376,7 +376,7 @@ export default function CategoryPage() {
                         isActive={item === resolvedCurrentPage}
                         className={`h-8 w-8 rounded-lg text-sm ${
                           item === resolvedCurrentPage
-                            ? "bg-violet-600 text-white border-violet-600 hover:bg-violet-700"
+                            ? "bg-primary text-white border-primary hover:bg-violet-700"
                             : "border border-gray-200 hover:border-violet-300 hover:bg-violet-50"
                         }`}
                         onClick={(event) => {

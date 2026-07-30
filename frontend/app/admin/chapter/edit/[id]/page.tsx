@@ -192,7 +192,7 @@ export default function EditChapterPage() {
               <select
                 value={formState.selectedCourseId}
                 onChange={(e) => updateFormState({ selectedCourseId: e.target.value })}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg bg-white text-gray-900 focus:outline-none focus:border-violet-600 focus:ring-1 focus:ring-violet-600 appearance-none cursor-pointer"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg bg-white text-gray-900 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary appearance-none cursor-pointer"
               >
                 {courses?.map((course) => (
                   <option key={course.id} value={course.id}>
@@ -213,7 +213,7 @@ export default function EditChapterPage() {
               placeholder="Enter chapter title"
               value={formState.chapterTitle}
               onChange={(e) => updateFormState({ chapterTitle: e.target.value })}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:border-violet-600 focus:ring-1 focus:ring-violet-600"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary"
             />
           </div>
 
@@ -225,7 +225,7 @@ export default function EditChapterPage() {
               type="number"
               value={formState.serial}
               onChange={(e) => updateFormState({ serial: Number(e.target.value) })}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:border-violet-600 focus:ring-1 focus:ring-violet-600"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary"
             />
           </div>
         </div>
@@ -265,7 +265,7 @@ export default function EditChapterPage() {
                         placeholder="Enter content title"
                         value={item.title}
                         onChange={(e) => updateContentItem(item.id, "title", e.target.value)}
-                        className="w-full px-3 py-2 border border-gray-300 rounded bg-white text-gray-900 placeholder-gray-500 focus:outline-none focus:border-violet-600 focus:ring-1 focus:ring-violet-600 text-sm"
+                        className="w-full px-3 py-2 border border-gray-300 rounded bg-white text-gray-900 placeholder-gray-500 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary text-sm"
                       />
                     </td>
                     <td className="px-4 sm:px-6 py-4 hidden sm:table-cell">
@@ -273,7 +273,7 @@ export default function EditChapterPage() {
                         type="number"
                         value={item.sequence}
                         onChange={(e) => updateContentItem(item.id, "sequence", Number(e.target.value))}
-                        className="w-16 px-3 py-2 border border-gray-300 rounded bg-white text-gray-900 focus:outline-none focus:border-violet-600 focus:ring-1 focus:ring-violet-600 text-sm"
+                        className="w-16 px-3 py-2 border border-gray-300 rounded bg-white text-gray-900 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary text-sm"
                       />
                     </td>
                     <td className="px-4 sm:px-6 py-4">
@@ -281,7 +281,7 @@ export default function EditChapterPage() {
                         <select
                           value={item.fileType}
                           onChange={(e) => updateContentItem(item.id, "fileType", e.target.value)}
-                          className="w-full px-3 py-2 border border-gray-300 rounded bg-white text-gray-900 focus:outline-none focus:border-violet-600 focus:ring-1 focus:ring-violet-600 appearance-none cursor-pointer text-sm"
+                          className="w-full px-3 py-2 border border-gray-300 rounded bg-white text-gray-900 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary appearance-none cursor-pointer text-sm"
                         >
                           <option>Upload Files</option>
                           <option>Cloud Link</option>
@@ -294,7 +294,7 @@ export default function EditChapterPage() {
                         type="checkbox"
                         checked={item.isFree}
                         onChange={(e) => updateContentItem(item.id, "isFree", e.target.checked)}
-                        className="w-4 h-4 rounded border-gray-300 text-violet-600 focus:ring-violet-600 cursor-pointer mx-auto"
+                        className="w-4 h-4 rounded border-gray-300 text-primary focus:ring-primary cursor-pointer mx-auto"
                       />
                     </td>
                     <td className="px-4 sm:px-6 py-4">
@@ -325,14 +325,14 @@ export default function EditChapterPage() {
                             placeholder="Upload link"
                             value={item.fileUrl ?? ""}
                             onChange={(e) => updateContentItem(item.id, "fileUrl", e.target.value)}
-                            className="w-full px-3 py-2 border border-gray-300 rounded bg-white text-gray-900 placeholder-gray-500 focus:outline-none focus:border-violet-600 focus:ring-1 focus:ring-violet-600 text-sm"
+                            className="w-full px-3 py-2 border border-gray-300 rounded bg-white text-gray-900 placeholder-gray-500 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary text-sm"
                           />
                           <input
                             type="text"
                             placeholder="Duration (mins)"
                             value={item.duration ?? ""}
                             onChange={(e) => updateContentItem(item.id, "duration", e.target.value)}
-                            className="w-32 px-3 py-2 border border-gray-300 rounded bg-white text-gray-900 focus:outline-none focus:border-violet-600 focus:ring-1 focus:ring-violet-600 text-sm"
+                            className="w-32 px-3 py-2 border border-gray-300 rounded bg-white text-gray-900 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary text-sm"
                           />
                         </div>
                       )}
@@ -346,7 +346,7 @@ export default function EditChapterPage() {
           <div className="px-4 sm:px-6 py-4 border-t border-gray-200 flex justify-end gap-4">
             <button
               onClick={addContentItem}
-              className="flex items-center gap-2 text-violet-600 hover:text-violet-700 transition-colors font-medium text-sm"
+              className="flex items-center gap-2 text-primary hover:text-violet-700 transition-colors font-medium text-sm"
               type="button"
             >
               <Plus size={18} />
@@ -355,7 +355,7 @@ export default function EditChapterPage() {
             <button
               onClick={handleSaveChapter}
               disabled={isSubmitting}
-              className="inline-flex items-center gap-2 bg-violet-600 text-white px-4 py-2 rounded text-sm disabled:cursor-not-allowed disabled:opacity-60"
+              className="inline-flex items-center gap-2 bg-primary text-white px-4 py-2 rounded text-sm disabled:cursor-not-allowed disabled:opacity-60"
               type="button"
             >
               {isSubmitting ? "Updating..." : "Update Chapter"}

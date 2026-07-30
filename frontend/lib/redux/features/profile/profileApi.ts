@@ -2,7 +2,8 @@ import { api } from "../../services/api";
 
 export interface UpdateProfileRequest {
   name?: string;
-  phone?: string;
+  phone?: string | number;
+  profileImageFile?: File | null;
 }
 
 export interface UpdateProfileResponse {
@@ -12,6 +13,7 @@ export interface UpdateProfileResponse {
     name: string;
     phone: string;
     email: string;
+    profileImage?: string;
   };
 }
 
@@ -27,7 +29,23 @@ export const profileApi = api.injectEndpoints({
       query: (data) => ({
         url: "/student/update-profile",
         method: "PATCH",
-        body: data,
+        body: (() => {
+          const formData = new FormData();
+
+          if (data.name !== undefined) {
+            formData.append("name", data.name);
+          }
+
+          if (data.phone !== undefined) {
+            formData.append("phone", String(data.phone));
+          }
+
+          if (data.profileImageFile) {
+            formData.append("profileImage", data.profileImageFile);
+          }
+
+          return formData;
+        })(),
       }),
       invalidatesTags: ["User", "Student"],
     }),

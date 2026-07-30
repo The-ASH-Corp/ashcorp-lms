@@ -410,7 +410,7 @@ export default function ExamAssessment() {
   }
 
   return (
-    <div className="flex min-h-[calc(100vh-170px)] lg:h-[calc(100vh-170px)] flex-col bg-white overflow-hidden rounded-2xl border border-violet-600">
+    <div className="flex min-h-[calc(100vh-170px)] lg:h-[calc(100vh-170px)] flex-col bg-white overflow-hidden rounded-2xl border border-primary">
       <div className="border-b border-gray-200 bg-white px-4 py-4 sm:px-6 lg:px-8 shrink-0">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <div>

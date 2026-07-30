@@ -20,6 +20,7 @@ export interface AuthUser {
   email?: string;
   phone?: string;
   role?: string;
+  profileImage?: string;
   purchasedCourses?: PurchasedCourse[];
   certificates?: Certificate[];
   examAttempts?: ExamAttempt[];

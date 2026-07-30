@@ -9,18 +9,19 @@ const Hero = () => {
       />
       <div className="relative mx-auto max-w-3xl px-6 py-24 text-center md:py-32">
         <p className="mb-6 text-xs font-semibold uppercase tracking-[0.3em] text-primary">
-          Our Legacy
+          OUR STORY
         </p>
         <h1 className="text-balance text-4xl font-bold leading-tight tracking-tight text-foreground md:text-6xl">
-          Elevating Minds,
+          Learn Anywhere
           <br />
-          <span className="text-primary">Empowering Futures</span>
+          <span className="text-primary">Grow Everywhere</span>
         </h1>
         <p className="mx-auto mt-8 max-w-xl text-pretty leading-relaxed text-muted-foreground">
-          Ash Academy was born from a singular vision: to bridge the gap between
-          traditional academic rigor and the dynamic needs of a globalized
-          digital era. We cultivate the next generation of visionaries through
-          elite mentorship and innovative pedagogy.
+          ASH Academy LMS was built on one idea: great learning shouldn&apos;t
+          be limited by time, place, or pace. Through expertly crafted courses,
+          self-paced flexibility, and lifetime access, we help learners turn
+          curiosity into capability - building real skills that open real doors,
+          wherever they are in the world.
         </p>
       </div>
     </section>

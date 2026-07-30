@@ -21,6 +21,7 @@ import {
 } from "../di";
 import { serializeCourse } from "../../../shared/config/serializeCourses";
 import { AppError } from "../../../shared/error/AppError";
+import { uploadToS3 } from "../../../shared/middleware/s3Uplosd";
 
 export const createStudentController = async (
   req: Request,
@@ -288,8 +289,20 @@ export const updateProfileController = async (
   try {
     const studentId = String(req.userId);
     const { name, phone } = req.body;
+    const profileImageFile = req.file;
 
-    const user = await updateProfileUseCase.execute(studentId, { name, phone });
+    let profileImage: string | undefined;
+
+    if (profileImageFile) {
+      const uploaded = await uploadToS3(profileImageFile, ["profiles", studentId]);
+      profileImage = uploaded.url;
+    }
+
+    const user = await updateProfileUseCase.execute(studentId, {
+      name,
+      phone,
+      profileImage,
+    });
 
     res.status(200).json({
       success: true,
@@ -298,6 +311,7 @@ export const updateProfileController = async (
         name: user.name,
         phone: user.phone,
         email: user.email,
+        profileImage: user.profileImage,
       },
     });
   } catch (err) {

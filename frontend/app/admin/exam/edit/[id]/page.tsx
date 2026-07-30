@@ -46,7 +46,7 @@ export default function EditExamPage() {
     return (
       <div className="flex min-h-[60vh] items-center justify-center">
         <div className="flex items-center gap-3 text-sm font-medium text-gray-600">
-          <span className="h-5 w-5 animate-spin rounded-full border-2 border-violet-600 border-t-transparent" />
+          <span className="h-5 w-5 animate-spin rounded-full border-2 border-primary border-t-transparent" />
           Loading exam details...
         </div>
       </div>
