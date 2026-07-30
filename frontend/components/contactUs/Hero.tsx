@@ -1,4 +1,5 @@
 import React from 'react'
+import Institution from './Institution';
 
 const Hero = () => {
   return (
@@ -21,6 +22,7 @@ const Hero = () => {
           professional support you deserve.
         </p>
       </div>
+      
     </section>
   );
 }
