@@ -3,11 +3,17 @@ import { api } from "../../services/api";
 export interface ExamAttempt {
   examId?: string;
   courseId?: string;
+  answers?: {
+    questionIndex: number;
+    selectedOptionIndex: number;
+    isCorrect: boolean;
+  }[];
   score?: number;
   totalMarks?: number;
   passMarks?: number;
   isPassed?: boolean;
   status?: string;
+  reason?: string;
   attemptedAt?: string;
 }
 
