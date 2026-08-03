@@ -96,9 +96,9 @@ export default function TrendingWorkshops() {
     );
 
   return (
-    <section className="bg-purple-50/20 py-20">
-      <div className="mx-auto w-full px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
-        <div className="text-center mb-16">
+    <section className="bg-linear-to-b from-purple-50/40 to-white py-14 sm:py-16">
+      <div className="mx-auto w-full max-w-[96rem] px-4 sm:px-6 lg:px-8 xl:px-10 2xl:px-12">
+        <div className="mb-12 text-center">
           <h2 className="text-3xl font-bold tracking-tight text-indigo-950">
             Trending Courses
           </h2>
@@ -113,7 +113,7 @@ export default function TrendingWorkshops() {
           </div>
         ) : (
           <motion.div
-            className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3"
+            className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3"
             variants={containerVariants}
             initial="hidden"
             whileInView="show"

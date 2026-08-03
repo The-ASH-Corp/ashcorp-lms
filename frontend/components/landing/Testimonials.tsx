@@ -3,7 +3,7 @@
 import React from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { ChevronLeft, ChevronRight, Quote } from "lucide-react";
+import { Quote } from "lucide-react";
 
 interface Testimonial {
   id: number;
@@ -41,32 +41,31 @@ const testimonials: Testimonial[] = [
 
 export default function Testimonials() {
   return (
-    <section className="bg-white py-20">
-      <div className="mx-auto w-full px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
-        {/* Header */}
+    <section className="bg-white py-14 sm:py-16">
+      <div className="mx-auto w-full max-w-[96rem] px-4 sm:px-6 lg:px-8 xl:px-10 2xl:px-12">
         <motion.div
-          className="flex items-center justify-between mb-12"
+          className="mb-10 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between"
           initial={{ opacity: 0, y: 26 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.5 }}
           transition={{ duration: 0.58, ease: [0.22, 1, 0.36, 1] }}
         >
-          <h2 className="text-3xl font-bold tracking-tight text-indigo-950 max-w-md">
-            What our creative community says about us
-          </h2>
-          <div className="flex gap-2">
-            <button className="flex h-10 w-10 items-center justify-center rounded-full border border-purple-100 text-purple-600 hover:bg-purple-50 active:scale-95 transition-all">
-              <ChevronLeft className="h-5 w-5" />
-            </button>
-            <button className="flex h-10 w-10 items-center justify-center rounded-full border border-purple-100 text-purple-600 hover:bg-purple-50 active:scale-95 transition-all">
-              <ChevronRight className="h-5 w-5" />
-            </button>
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-purple-500">
+              Testimonials
+            </p>
+            <h2 className="mt-2 max-w-md text-3xl font-bold tracking-tight text-indigo-950">
+              What our creative community says about us
+            </h2>
+          </div>
+          <div className="inline-flex items-center gap-2 rounded-full bg-purple-50 px-4 py-2 text-sm font-medium text-primary">
+            <Quote className="h-4 w-4" />
+            Learner feedback
           </div>
         </motion.div>
 
-        {/* Testimonials Grid */}
         <motion.div
-          className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3"
+          className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3"
           initial="hidden"
           whileInView="show"
           viewport={{ once: true, amount: 0.2 }}
@@ -98,7 +97,7 @@ export default function Testimonials() {
               }}
               whileHover={{ y: -5 }}
               transition={{ duration: 0.2 }}
-              className="relative flex flex-col justify-between rounded-3xl border border-purple-50 bg-[#FAF8FC]/40 p-8 shadow-xs hover:shadow-md transition-shadow"
+              className="relative flex flex-col justify-between rounded-3xl border border-purple-100/70 bg-white p-7 shadow-[0_25px_60px_-45px_rgba(76,29,149,0.35)] transition-shadow hover:shadow-[0_30px_70px_-40px_rgba(76,29,149,0.45)]"
             >
               {/* Quote Icon */}
               {t.hasQuoteIcon && (
