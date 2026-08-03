@@ -495,3 +495,58 @@ color:#9CA3AF;
 </body>
 </html>`
 }
+
+export const mailTemplateForInquirySubmitted = ({
+  fullName,
+  email,
+  phone,
+  subject,
+  message,
+}: {
+  fullName: string;
+  email: string;
+  phone: string;
+  subject: string;
+  message: string;
+}) => {
+  const submittedAt = new Date().toISOString();
+
+  return `<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>New Inquiry Submitted</title>
+</head>
+<body style="margin:0;padding:32px 16px;background:#F8FAFC;font-family:Arial,Helvetica,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0">
+    <tr>
+      <td align="center">
+        <table width="640" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,.08);">
+          <tr>
+            <td style="padding:28px 32px;background:linear-gradient(135deg,#7C3AED,#9333EA);color:#ffffff;">
+              <h1 style="margin:0;font-size:24px;">New Contact Inquiry</h1>
+              <p style="margin:8px 0 0;font-size:14px;color:#E9D5FF;">A new inquiry has been submitted from the website contact form.</p>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:28px 32px;">
+              <table width="100%" cellpadding="0" cellspacing="0" style="font-size:14px;color:#334155;line-height:1.6;">
+                <tr><td style="padding:6px 0;"><strong>Name:</strong> ${fullName}</td></tr>
+                <tr><td style="padding:6px 0;"><strong>Email:</strong> ${email}</td></tr>
+                <tr><td style="padding:6px 0;"><strong>Phone:</strong> ${phone}</td></tr>
+                <tr><td style="padding:6px 0;"><strong>Subject:</strong> ${subject}</td></tr>
+                <tr><td style="padding:6px 0;"><strong>Submitted At:</strong> ${submittedAt}</td></tr>
+              </table>
+              <div style="margin-top:16px;padding:14px;border-radius:10px;background:#F8FAFC;border:1px solid #E2E8F0;color:#334155;white-space:pre-wrap;">
+                ${message}
+              </div>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`;
+};
