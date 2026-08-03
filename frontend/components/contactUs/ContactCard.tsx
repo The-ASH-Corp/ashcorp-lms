@@ -1,6 +1,8 @@
-import { useState } from 'react'
+import { useState, type FormEvent } from 'react';
 import { Button } from '../ui/button';
 import { Mail, MessageSquare, Phone } from 'lucide-react';
+import { toast } from 'sonner';
+import { useSubmitInquiryMutation } from '@/lib/redux/features/contact/contactApi';
 
 const contactCards = [
   {
@@ -32,10 +34,42 @@ const ContactCard = () => {
       subject: "",
       message: "",
     });
+    const [submitInquiry, { isLoading }] = useSubmitInquiryMutation();
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: FormEvent) => {
       e.preventDefault();
-      console.log("Form submitted:", formData);
+
+      try {
+        const payload = {
+          fullName: formData.fullName.trim(),
+          email: formData.email.trim(),
+          phone: formData.phone.trim(),
+          subject: formData.subject.trim(),
+          message: formData.message.trim(),
+        };
+
+        const response = await submitInquiry(payload).unwrap();
+
+        toast.success(response.message || 'Inquiry submitted successfully');
+
+        setFormData({
+          fullName: "",
+          email: "",
+          phone: "",
+          subject: "",
+          message: "",
+        });
+      } catch (error: unknown) {
+        const errorMessage =
+          typeof error === 'object' &&
+          error !== null &&
+          'data' in error &&
+          typeof (error as { data?: { message?: unknown } }).data?.message === 'string'
+            ? (error as { data?: { message?: string } }).data?.message
+            : 'Failed to submit inquiry';
+
+        toast.error(errorMessage);
+      }
     };
 
   return (
@@ -160,8 +194,8 @@ const ContactCard = () => {
                   />
                 </div>
 
-                <Button type="submit" size="lg" className="w-full">
-                  Submit Inquiry
+                <Button type="submit" size="lg" className="w-full" disabled={isLoading}>
+                  {isLoading ? 'Submitting...' : 'Submit Inquiry'}
                 </Button>
               </form>
             </div>
