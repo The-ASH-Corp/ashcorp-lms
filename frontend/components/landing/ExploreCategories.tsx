@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Paintbrush,
@@ -74,7 +75,7 @@ interface SmallCardProps {
 }
 
 /** Compact square card used in the bento grid */
-function SmallCard({ _id, categoryName, color, iconUrl, courseCount, animationDelay = 0 }: SmallCardProps) {
+function SmallCard({ categoryName, color, iconUrl, courseCount, animationDelay = 0 }: SmallCardProps) {
   const accent = color || "#4F46E5";
   const bg = hexToRgba(accent, 0.11);
 
@@ -86,7 +87,7 @@ function SmallCard({ _id, categoryName, color, iconUrl, courseCount, animationDe
       exit={{ opacity: 0, scale: 0.96 }}
       transition={{ duration: 0.32, delay: animationDelay, ease: "easeOut" }}
       whileHover={{ y: -3, transition: { duration: 0.18 } }}
-      className="relative rounded-3xl min-h-[148px] p-6 flex flex-col justify-between group cursor-pointer"
+      className="group relative flex min-h-[136px] flex-col justify-between rounded-3xl p-5 cursor-pointer"
       style={{ backgroundColor: bg }}
     >
       {/* Category name */}
@@ -95,13 +96,15 @@ function SmallCard({ _id, categoryName, color, iconUrl, courseCount, animationDe
       </h3>
 
       {/* Bottom row: count + icon */}
-      <div className="flex items-end justify-between mt-4">
+      <div className="mt-4 flex items-end justify-between">
         <span className="text-sm font-semibold" style={{ color: accent }}>
           {courseCount} {courseCount === 1 ? "Course" : "Courses"}
         </span>
         <div style={{ color: accent }} className="opacity-75 group-hover:opacity-100 transition-opacity">
           {iconUrl && /^https?:\/\//.test(iconUrl) ? (
-            <img src={iconUrl} alt={categoryName} className="h-6 w-6 object-contain" />
+            <span className="relative block h-6 w-6">
+              <Image src={iconUrl} alt={categoryName} fill className="object-contain" unoptimized />
+            </span>
           ) : (
             getCategoryIcon(categoryName, "h-6 w-6")
           )}
@@ -119,7 +122,7 @@ function SmallCard({ _id, categoryName, color, iconUrl, courseCount, animationDe
 }
 
 /** Wide landscape card used in the expanded "View All" section */
-function WideCard({ _id, categoryName, color, iconUrl, courseCount, animationDelay = 0 }: SmallCardProps) {
+function WideCard({ categoryName, color, iconUrl, courseCount, animationDelay = 0 }: SmallCardProps) {
   const accent = color || "#4F46E5";
   const bg = hexToRgba(accent, 0.10);
 
@@ -131,8 +134,8 @@ function WideCard({ _id, categoryName, color, iconUrl, courseCount, animationDel
       exit={{ opacity: 0, y: 10, scale: 0.97 }}
       transition={{ duration: 0.34, delay: animationDelay, ease: "easeOut" }}
       whileHover={{ y: -4, transition: { duration: 0.18 } }}
-      className="relative rounded-3xl p-7 flex flex-col justify-between group cursor-pointer"
-      style={{ backgroundColor: bg, minHeight: "170px" }}
+      className="group relative flex flex-col justify-between rounded-3xl p-6 cursor-pointer"
+      style={{ backgroundColor: bg, minHeight: "156px" }}
     >
       {/* Category name — large, top */}
       <h3 className="text-xl font-bold text-indigo-950 leading-snug">
@@ -152,7 +155,9 @@ function WideCard({ _id, categoryName, color, iconUrl, courseCount, animationDel
           className="opacity-60 group-hover:opacity-100 group-hover:scale-110 transition-all duration-200"
         >
           {iconUrl && /^https?:\/\//.test(iconUrl) ? (
-            <img src={iconUrl} alt={categoryName} className="h-7 w-7 object-contain" />
+            <span className="relative block h-7 w-7">
+              <Image src={iconUrl} alt={categoryName} fill className="object-contain" unoptimized />
+            </span>
           ) : (
             getCategoryIcon(categoryName, "h-7 w-7")
           )}
@@ -202,11 +207,11 @@ export default function ExploreCategories() {
   const hasMore = remainingCats.length > 0;
 
   return (
-    <section className="bg-white py-20">
-      <div className="mx-auto w-full px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
+    <section className="bg-white py-14 sm:py-16">
+      <div className="mx-auto w-full max-w-[96rem] px-4 sm:px-6 lg:px-8 xl:px-10 2xl:px-12">
 
         {/* ── Header ── */}
-        <div className="flex items-end justify-between mb-12">
+        <div className="mb-10 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <h2 className="text-3xl font-bold tracking-tight text-indigo-950">
               Explore Categories
@@ -236,7 +241,7 @@ export default function ExploreCategories() {
 
         {/* ── Loading Skeleton ── */}
         {isLoading && (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
             <div className="md:row-span-2 min-h-[316px] animate-pulse rounded-3xl bg-indigo-100" />
             <div className="min-h-[148px] animate-pulse rounded-3xl bg-gray-100" />
             <div className="min-h-[148px] animate-pulse rounded-3xl bg-gray-100" />
@@ -246,7 +251,7 @@ export default function ExploreCategories() {
         {/* ── Bento Grid (top 3 categories — always visible) ── */}
         {!isLoading && categories && (
           <>
-            <motion.div layout className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <motion.div layout className="grid grid-cols-1 gap-5 md:grid-cols-3">
 
               {/* ── Featured Large Card (first category) ── */}
               {featuredCat && (() => {
@@ -263,7 +268,7 @@ export default function ExploreCategories() {
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.42, ease: "easeOut" }}
                     whileHover={{ y: -4, transition: { duration: 0.2 } }}
-                    className="relative overflow-hidden rounded-3xl md:row-span-2 min-h-[316px] p-8 flex flex-col justify-between group cursor-pointer"
+                    className="group relative flex min-h-[288px] flex-col justify-between overflow-hidden rounded-3xl p-7 cursor-pointer md:row-span-2"
                     style={{ backgroundColor: darkBg }}
                   >
                     {/* Decorative glowing blobs */}
@@ -274,11 +279,15 @@ export default function ExploreCategories() {
                     <div className="relative z-10 flex justify-end">
                       <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-white/15 backdrop-blur-sm border border-white/20 text-white">
                         {featuredCat.iconUrl && /^https?:\/\//.test(featuredCat.iconUrl) ? (
-                          <img
-                            src={featuredCat.iconUrl}
-                            alt={featuredCat.categoryName}
-                            className="h-6 w-6 object-contain"
-                          />
+                          <span className="relative block h-6 w-6">
+                            <Image
+                              src={featuredCat.iconUrl}
+                              alt={featuredCat.categoryName}
+                              fill
+                              className="object-contain"
+                              unoptimized
+                            />
+                          </span>
                         ) : (
                           getCategoryIcon(featuredCat.categoryName, "h-5 w-5")
                         )}
@@ -337,7 +346,7 @@ export default function ExploreCategories() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 10 }}
                   transition={{ duration: 0.4, ease: "easeOut" }}
-                  className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6"
+                  className="mt-5 grid grid-cols-1 gap-5 md:grid-cols-2"
                 >
                   {remainingCats.map((cat, i) => (
                     <WideCard

@@ -6,8 +6,8 @@ import { Share2, Heart } from "lucide-react";
 
 export default function Footer() {
   return (
-    <footer className="bg-secondary border-t border-purple-100 pt-16 pb-8">
-      <div className="mx-auto w-full px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
+    <footer className="border-t border-purple-100 bg-secondary pt-14 pb-8 sm:pt-16">
+      <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 gap-10 md:grid-cols-4 lg:gap-12">
           {/* Brand Info */}
           <div className="md:col-span-1">
@@ -97,7 +97,7 @@ export default function Footer() {
         </div>
 
         {/* Bottom copyright/meta info */}
-        <div className="mt-16 flex flex-col items-center justify-between border-t border-purple-100/50 pt-8 gap-4 sm:flex-row">
+        <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-purple-100/50 pt-8 sm:flex-row">
           <p className="text-[10px] text-gray-400">
             © 2026 Ash Academy. Empowering learners worldwide.
           </p>

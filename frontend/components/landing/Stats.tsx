@@ -12,14 +12,12 @@ const useCountUp = (
 
   useEffect(() => {
     if (!shouldStart) {
-      setDisplayValue(0);
       return;
     }
 
     const safeTarget = Number.isFinite(targetValue) ? Math.max(0, targetValue) : 0;
 
     if (safeTarget === 0) {
-      setDisplayValue(0);
       return;
     }
 
@@ -122,9 +120,9 @@ export default function Stats() {
   );
 
   return (
-    <section ref={sectionRef} className="bg-white py-12">
-      <div className="mx-auto w-full px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
-        <div className="rounded-3xl bg-primary px-6 py-12 text-white shadow-xl shadow-purple-100 sm:px-12 md:py-16">
+    <section ref={sectionRef} className="bg-white py-8 sm:py-10">
+      <div className="mx-auto w-full max-w-[96rem] px-4 sm:px-6 lg:px-8 xl:px-10 2xl:px-12">
+        <div className="rounded-[2rem] bg-primary px-6 py-10 text-white shadow-xl shadow-purple-100 sm:px-12 md:py-14">
           <div className="grid grid-cols-1 gap-y-10 md:grid-cols-3 md:gap-y-0 md:divide-x md:divide-purple-500/40">
             {renderedStats.map((item) => (
               <div key={item.label} className="text-center md:px-4">

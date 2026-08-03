@@ -59,8 +59,8 @@ export default function Navbar() {
 
     const route =user?.role == "admin" ? "/admin" :"/dashboard"
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-purple-100 bg-white/80 backdrop-blur-md">
-      <div className="mx-auto flex h-16 w-full items-center justify-between px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
+    <header className="sticky top-0 z-50 w-full border-b border-purple-100 bg-white/85 backdrop-blur-md">
+      <div className="mx-auto flex h-16 w-full max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Logo */}
         <div className="flex items-center gap-8">
           <Link href="/" className="flex items-center gap-2">

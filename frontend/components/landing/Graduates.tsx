@@ -3,7 +3,10 @@
 import React from "react";
 import { motion } from "framer-motion";
 import GraduateCard from "./GraduateCard";
-import { useGetFeaturedGraduatesQuery } from "@/lib/redux/features/graduate/graduateApi";
+import {
+  useGetFeaturedGraduatesQuery,
+  type Graduate,
+} from "@/lib/redux/features/graduate/graduateApi";
 
 export default function Graduates() {
   const { data: featuredGraduates, isLoading } = useGetFeaturedGraduatesQuery();
@@ -29,9 +32,12 @@ export default function Graduates() {
     ? [...graduatesList, ...graduatesList]
     : graduatesList;
 
+  const getGraduateKey = (graduate: Graduate, index: number) =>
+    graduate.id || graduate._id || `${graduate.name}-${index}`;
+
   return (
-    <section className="bg-white py-12 border-b border-purple-50 overflow-hidden">
-      <div className="mx-auto w-full px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
+    <section className="overflow-hidden border-b border-purple-50 bg-white py-12 sm:py-14">
+      <div className="mx-auto w-full max-w-[96rem] px-4 sm:px-6 lg:px-8 xl:px-10 2xl:px-12">
         <p className="text-center text-xs font-bold uppercase tracking-widest text-gray-400">
           Our Graduates Work At
         </p>
@@ -47,7 +53,7 @@ export default function Graduates() {
             }}
           >
             <motion.div
-              className="flex w-max gap-12"
+              className="flex w-max gap-8"
               animate={{
                 x: ["0%", "-50%"],
               }}
@@ -57,9 +63,9 @@ export default function Graduates() {
                 repeat: Infinity,
               }}
             >
-              {marqueeItems.map((item: any, idx: number) => (
+              {marqueeItems.map((item: Graduate, idx: number) => (
                 <GraduateCard
-                  key={`${item.id || item._id}-${idx}`}
+                  key={`${getGraduateKey(item, idx)}-${idx}`}
                   name={item.name}
                   position={item.positionName}
                   company={item.positionName}
@@ -70,10 +76,10 @@ export default function Graduates() {
             </motion.div>
           </div>
         ) : (
-          <div className="mt-10 flex flex-wrap items-center justify-center gap-8">
-            {graduatesList.map((item: any, idx: number) => (
+          <div className="mt-10 flex flex-wrap items-center justify-center gap-6">
+            {graduatesList.map((item: Graduate, idx: number) => (
               <GraduateCard
-                key={item.id || item._id || idx}
+                key={getGraduateKey(item, idx)}
                 name={item.name}
                 position={item.positionName}
                 company={item.positionName}
