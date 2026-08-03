@@ -3,10 +3,11 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
-import { Play, Share2, BookmarkPlus, CheckCircle2, Volume2, BookOpen } from 'lucide-react';
+import { Play, CheckCircle2} from 'lucide-react';
 import { useAddReviewMutation, useGetCourseQuery } from '@/lib/redux/features/course/courseApi';
 import { useGetChaptersByCourseIdQuery } from '@/lib/redux/features/chapter/chapterApi';
 import { useGetMyCoursesQuery, useUpdateCourseProgressMutation } from '@/lib/redux/features/student/studentApi';
+import { useAppSelector } from '@/lib/redux/hooks';
 import { Star } from "lucide-react";
 import { toast } from 'sonner';
 
@@ -21,6 +22,7 @@ const formatDuration = (duration?: number) => {
 
 export default function PlayPage() {
   const [currentTab, setCurrentTab] = useState('overview');
+  const authUser = useAppSelector((state) => state.auth.user);
   const searchParams = useSearchParams();
   const courseId = searchParams.get("courseId") ?? "";
   const { data: course } = useGetCourseQuery(courseId, { skip: !courseId });
@@ -142,8 +144,18 @@ export default function PlayPage() {
   const [hoverRating, setHoverRating] = useState(0);
   const [review, setReview] = useState("");
 
+  const userId = authUser?.id != null ? String(authUser.id) : "";
+  const hasReviewedCourse = Boolean(
+    userId && course?.rating?.some((entry) => String(entry.userId) === userId),
+  );
+
   const handleSubmitReview = async () => {
     if (!courseId) return;
+
+    if (hasReviewedCourse) {
+      toast.info("You have already reviewed this course");
+      return;
+    }
 
     if (rating === 0) {
       toast.error("Please select a rating");
@@ -168,9 +180,17 @@ export default function PlayPage() {
       setRating(0);
       setHoverRating(0);
       setReview("");
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.log(error);
-      toast.error(error?.data?.message || "Something went wrong"); 
+      const errorMessage =
+        typeof error === "object" &&
+        error !== null &&
+        "data" in error &&
+        typeof (error as { data?: { message?: unknown } }).data?.message === "string"
+          ? (error as { data?: { message?: string } }).data?.message
+          : "Something went wrong";
+
+      toast.error(errorMessage);
     }
   };
 
@@ -392,62 +412,75 @@ export default function PlayPage() {
               )}
             </div>
             <div className="bg-linear-to-br from-violet-50 to-gray-50 rounded-xl p-6 border border-violet-200">
-              <h3 className="text-lg font-bold text-gray-900 mb-4">
-                Leave a Review
-              </h3>
-
-              {/* Rating */}
-              <div className="mb-5">
-                <p className="text-sm font-medium text-gray-700 mb-2">
-                  Your Rating
-                </p>
-
-                <div className="flex gap-1">
-                  {[1, 2, 3, 4, 5].map((star) => (
-                    <button
-                      key={star}
-                      type="button"
-                      onClick={() => setRating(star)}
-                      onMouseEnter={() => setHoverRating(star)}
-                      onMouseLeave={() => setHoverRating(0)}
-                    >
-                      <Star
-                        size={28}
-                        className={`transition-colors ${
-                          star <= (hoverRating || rating)
-                            ? "fill-yellow-400 text-yellow-400"
-                            : "text-gray-300"
-                        }`}
-                      />
-                    </button>
-                  ))}
+              {hasReviewedCourse ? (
+                <div>
+                  <h3 className="text-lg font-bold text-gray-900 mb-2">
+                    Review Submitted
+                  </h3>
+                  <p className="text-sm text-gray-600">
+                    You have already reviewed this course. One review per course is allowed.
+                  </p>
                 </div>
-              </div>
+              ) : (
+                <>
+                  <h3 className="text-lg font-bold text-gray-900 mb-4">
+                    Leave a Review
+                  </h3>
 
-              {/* Review */}
-              <div className="mb-5">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Your Review
-                </label>
+                  {/* Rating */}
+                  <div className="mb-5">
+                    <p className="text-sm font-medium text-gray-700 mb-2">
+                      Your Rating
+                    </p>
 
-                <textarea
-                  rows={5}
-                  value={review}
-                  onChange={(e) => setReview(e.target.value)}
-                  placeholder="Share your learning experience..."
-                  className="w-full rounded-lg border border-gray-300 bg-white p-3 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 resize-none"
-                />
-              </div>
+                    <div className="flex gap-1">
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <button
+                          key={star}
+                          type="button"
+                          onClick={() => setRating(star)}
+                          onMouseEnter={() => setHoverRating(star)}
+                          onMouseLeave={() => setHoverRating(0)}
+                        >
+                          <Star
+                            size={28}
+                            className={`transition-colors ${
+                              star <= (hoverRating || rating)
+                                ? "fill-yellow-400 text-yellow-400"
+                                : "text-gray-300"
+                            }`}
+                          />
+                        </button>
+                      ))}
+                    </div>
+                  </div>
 
-              {/* Submit */}
-              <button
-                type="button"
-                disabled={isLoading}
-                onClick={handleSubmitReview}
-                className="w-full rounded-lg bg-primary py-3 text-white font-medium hover:bg-violet-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {isLoading ? "Submitting..." : "Submit Review"}
-              </button>
+                  {/* Review */}
+                  <div className="mb-5">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Your Review
+                    </label>
+
+                    <textarea
+                      rows={5}
+                      value={review}
+                      onChange={(e) => setReview(e.target.value)}
+                      placeholder="Share your learning experience..."
+                      className="w-full rounded-lg border border-gray-300 bg-white p-3 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 resize-none"
+                    />
+                  </div>
+
+                  {/* Submit */}
+                  <button
+                    type="button"
+                    disabled={isLoading}
+                    onClick={handleSubmitReview}
+                    className="w-full rounded-lg bg-primary py-3 text-white font-medium hover:bg-violet-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {isLoading ? "Submitting..." : "Submit Review"}
+                  </button>
+                </>
+              )}
             </div>
           </div>
         </div>

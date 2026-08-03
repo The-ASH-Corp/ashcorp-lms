@@ -154,6 +154,15 @@ body {
   animation: fade-in 0.5s ease-out both;
 }
 
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
 /* Firefox */
 * {
   scrollbar-width: thin;
