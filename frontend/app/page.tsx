@@ -133,7 +133,6 @@ export default function Home() {
             <p className="mx-auto mt-5 max-w-2xl text-base leading-7 text-gray-500 sm:text-lg">
               Join 1k+ students building the future through design, code, and
               digital art.
-              <br className="hidden sm:inline" /> Playful and structured.
             </p>
 
             <div className="mx-auto mt-8 max-w-3xl rounded-[2rem] border border-white/70 bg-white/70 p-3 shadow-[0_30px_80px_-45px_rgba(109,40,217,0.45)] backdrop-blur-sm sm:p-4">

@@ -3,13 +3,21 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
-import { Play, CheckCircle2} from 'lucide-react';
+import { Play, CheckCircle2, X } from 'lucide-react';
 import { useAddReviewMutation, useGetCourseQuery } from '@/lib/redux/features/course/courseApi';
 import { useGetChaptersByCourseIdQuery } from '@/lib/redux/features/chapter/chapterApi';
 import { useGetMyCoursesQuery, useUpdateCourseProgressMutation } from '@/lib/redux/features/student/studentApi';
 import { useAppSelector } from '@/lib/redux/hooks';
 import { Star } from "lucide-react";
 import { toast } from 'sonner';
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 
 const formatDuration = (duration?: number) => {
   if (!duration || duration <= 0) return "Video";
@@ -25,16 +33,22 @@ export default function PlayPage() {
   const authUser = useAppSelector((state) => state.auth.user);
   const searchParams = useSearchParams();
   const courseId = searchParams.get("courseId") ?? "";
-  const { data: course } = useGetCourseQuery(courseId, { skip: !courseId });
+  const { data: course, isLoading: isCourseLoading } = useGetCourseQuery(courseId, { skip: !courseId });
   const { data: chapters = [], isLoading: isChaptersLoading } = useGetChaptersByCourseIdQuery(courseId, { skip: !courseId });
   const { data: myCourses = [] } = useGetMyCoursesQuery();
   const [updateCourseProgress] = useUpdateCourseProgressMutation();
-  const [courseProgress, setCourseProgress] = useState(0);
+  const [localCourseProgress, setLocalCourseProgress] = useState(0);
   const [currentVideoProgress, setCurrentVideoProgress] = useState(0);
   const [selectedLessonId, setSelectedLessonId] = useState<string | null>(null);
   const lastSyncedProgress = useRef(0);
   const enrolledCourseProgress = myCourses.find((item) => item.id === courseId)?.progress ?? 0;
-  
+  const courseProgress = Math.min(
+    100,
+    Math.max(
+      0,
+      Math.max(localCourseProgress, Math.round(enrolledCourseProgress)),
+    ),
+  );
 
   const sortedChapters = useMemo(
     () => [...chapters].sort((firstChapter, secondChapter) => (firstChapter.serialNumber ?? 0) - (secondChapter.serialNumber ?? 0)),
@@ -61,29 +75,14 @@ export default function PlayPage() {
   const lessonCount = lessons.length;
   const completedLessons = lessonCount > 0 ? Math.floor((courseProgress / 100) * lessonCount) : 0;
 
-  const selectedLesson = lessons.find((lesson) => lesson.id === selectedLessonId) ?? null;
+  const selectedLesson = lessons.find((lesson) => lesson.id === selectedLessonId) ?? lessons[0] ?? null;
   const selectedLessonPosition = selectedLesson ? lessons.findIndex((lesson) => lesson.id === selectedLesson.id) + 1 : 0;
   const activeVideoUrl = selectedLesson?.contentUrl || course?.videoUrl;
 
-
   useEffect(() => {
     const normalizedProgress = Math.min(100, Math.max(0, Math.round(enrolledCourseProgress)));
-
-    setCourseProgress(normalizedProgress);
     lastSyncedProgress.current = normalizedProgress;
   }, [enrolledCourseProgress]);
-
-  useEffect(() => {
-    if (selectedLessonId || sortedChapters.length === 0) return;
-
-    if (lessons[0]) {
-      setSelectedLessonId(lessons[0].id);
-    }
-  }, [lessons, selectedLessonId]);
-
-  useEffect(() => {
-    setCurrentVideoProgress(0);
-  }, [selectedLessonId]);
 
   useEffect(() => {
     if (courseId && course) {
@@ -123,7 +122,7 @@ export default function PlayPage() {
       : watchedVideoProgress;
 
     setCurrentVideoProgress(watchedVideoProgress);
-    setCourseProgress((currentProgress) => Math.max(currentProgress, watchedCourseProgress));
+    setLocalCourseProgress((currentProgress) => Math.max(currentProgress, watchedCourseProgress));
 
     if (
       watchedCourseProgress === 100 ||
@@ -138,16 +137,21 @@ export default function PlayPage() {
     }
   };
 
-  const [addReview, { isLoading }] = useAddReviewMutation();
+  const [addReview, { isLoading: isSubmittingReview }] = useAddReviewMutation();
 
   const [rating, setRating] = useState(0);
   const [hoverRating, setHoverRating] = useState(0);
   const [review, setReview] = useState("");
+  const [isReviewPromptDismissed, setIsReviewPromptDismissed] = useState(false);
 
   const userId = authUser?.id != null ? String(authUser.id) : "";
   const hasReviewedCourse = Boolean(
     userId && course?.rating?.some((entry) => String(entry.userId) === userId),
   );
+  const shouldPromptReview = Boolean(
+    courseId && course && !isCourseLoading && !hasReviewedCourse && courseProgress >= 100,
+  );
+  const isReviewModalOpen = shouldPromptReview && !isReviewPromptDismissed;
 
   const handleSubmitReview = async () => {
     if (!courseId) return;
@@ -176,6 +180,8 @@ export default function PlayPage() {
 
       toast.success("Review submitted successfully!");
 
+      setIsReviewPromptDismissed(true);
+
       // Reset form
       setRating(0);
       setHoverRating(0);
@@ -196,6 +202,89 @@ export default function PlayPage() {
 
   return (
     <div className="min-h-screen bg-white">
+      <Dialog open={isReviewModalOpen} onOpenChange={(open) => {
+        if (!open) {
+          setIsReviewPromptDismissed(true);
+        }
+      }}>
+        <DialogContent className="sm:max-w-lg">
+          <DialogHeader className="relative pr-8">
+            <DialogTitle className="text-xl font-semibold text-gray-900">
+              Rate this course
+            </DialogTitle>
+            <DialogDescription className="text-sm text-gray-600">
+              Your feedback helps other learners and helps us improve the experience.
+            </DialogDescription>
+            <DialogClose asChild>
+              <button
+                type="button"
+                className="absolute right-0 top-0 rounded-full p-1 text-gray-500 hover:bg-gray-100 hover:text-gray-700"
+                aria-label="Close review dialog"
+              >
+                <X size={18} />
+              </button>
+            </DialogClose>
+          </DialogHeader>
+
+          <div className="space-y-5">
+            <div>
+              <p className="mb-2 text-sm font-medium text-gray-700">Your rating</p>
+              <div className="flex gap-1">
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <button
+                    key={star}
+                    type="button"
+                    onClick={() => setRating(star)}
+                    onMouseEnter={() => setHoverRating(star)}
+                    onMouseLeave={() => setHoverRating(0)}
+                  >
+                    <Star
+                      size={28}
+                      className={`transition-colors ${
+                        star <= (hoverRating || rating)
+                          ? "fill-yellow-400 text-yellow-400"
+                          : "text-gray-300"
+                      }`}
+                    />
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <label className="mb-2 block text-sm font-medium text-gray-700">
+                Your review
+              </label>
+              <textarea
+                rows={5}
+                value={review}
+                onChange={(e) => setReview(e.target.value)}
+                placeholder="Share your learning experience..."
+                className="w-full resize-none rounded-lg border border-gray-300 bg-white p-3 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+              />
+            </div>
+
+            <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+              <button
+                type="button"
+                onClick={() => setIsReviewPromptDismissed(true)}
+                className="rounded-lg border border-gray-300 px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50"
+              >
+                Close
+              </button>
+              <button
+                type="button"
+                disabled={isSubmittingReview}
+                onClick={handleSubmitReview}
+                className="rounded-lg bg-primary px-4 py-2.5 text-sm font-medium text-white hover:bg-violet-700 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                {isSubmittingReview ? "Submitting..." : "Submit Review"}
+              </button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-10">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
@@ -347,7 +436,10 @@ export default function PlayPage() {
                               <button
                                 type="button"
                                 key={lesson.id}
-                                onClick={() => setSelectedLessonId(lesson.id)}
+                                onClick={() => {
+                                  setSelectedLessonId(lesson.id);
+                                  setCurrentVideoProgress(0);
+                                }}
                                 className={`flex w-full items-start gap-2 rounded p-2 text-left transition-colors ${
                                   isPlaying
                                     ? "bg-violet-100 border border-violet-300"
@@ -473,11 +565,11 @@ export default function PlayPage() {
                   {/* Submit */}
                   <button
                     type="button"
-                    disabled={isLoading}
+                    disabled={isSubmittingReview}
                     onClick={handleSubmitReview}
                     className="w-full rounded-lg bg-primary py-3 text-white font-medium hover:bg-violet-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    {isLoading ? "Submitting..." : "Submit Review"}
+                    {isSubmittingReview ? "Submitting..." : "Submit Review"}
                   </button>
                 </>
               )}
