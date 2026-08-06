@@ -8,8 +8,8 @@ export class Instructor{
         public password: string,
         public isFeatured: boolean,
         public verifyByDefault: boolean,
-        public role: string = "Instructor",
         public profileImage?: string,
+        public role: string = "Instructor",
         public status: string = "Active",
         public rating?: Array<{
           userId?: string | null;

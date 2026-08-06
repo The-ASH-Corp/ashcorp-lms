@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Grid3x3, List } from 'lucide-react';
+import { Grid3x3, List, BookOpen } from 'lucide-react';
 import UserCourseList from '@/components/courses/UserCourseList';
 import StatCard from '@/components/courses/StatCard';
 import { useGetMyCoursesQuery } from '@/lib/redux/features/student/studentApi';
@@ -149,10 +149,15 @@ export default function MyCourses() {
         )}
 
         {!isLoading && !isError && filteredCourses.length === 0 && (
-          <div className="rounded-lg border border-gray-200 bg-gray-50 p-8 text-center">
-            <h3 className="text-lg font-semibold text-gray-900">No courses found</h3>
-            <p className="mt-2 text-sm text-gray-600">
-              Enrolled courses will appear here after you join a course.
+          <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-gray-200 bg-gray-50/50 px-6 py-16 text-center dark:border-gray-800 dark:bg-gray-900/50">
+            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-violet-50 text-primary dark:bg-violet-950/50 dark:text-violet-400 mb-4">
+              <BookOpen className="h-8 w-8" />
+            </div>
+            <h3 className="text-xl font-bold text-gray-900 dark:text-white">
+              No Courses Available Yet
+            </h3>
+            <p className="mt-2 text-sm text-gray-500 dark:text-gray-400 max-w-sm">
+              Your courses will appear here once they are added or assigned to you.
             </p>
           </div>
         )}

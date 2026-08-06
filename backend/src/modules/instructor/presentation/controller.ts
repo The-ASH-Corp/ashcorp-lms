@@ -15,9 +15,14 @@ export const createInstructorController = async (
   next: NextFunction,
 ): Promise<void> => {
   try {
+    console.log("instructor creation..........");
+    
     const image = req.file
       ? (await uploadToS3(req.file, "instructors")).url
       : undefined;
+
+      console.log(image);
+      
 
     const instructor = await createInstructorUseCase.execute(req.body,image);
 
