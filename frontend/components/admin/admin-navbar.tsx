@@ -73,7 +73,7 @@ export function AdminNavbar() {
                   {user?.name || "Admin User"}
                 </span>
                 <span className="text-[11px] text-gray-500">
-                  Super Administrator
+                   Administrator
                 </span>
               </div>
               <Avatar className="h-9 w-9 ring-2 ring-violet-100">
@@ -90,9 +90,6 @@ export function AdminNavbar() {
           <DropdownMenuContent align="end" className="w-48">
             <DropdownMenuItem>
               <Link href="/admin" className="w-full">Dashboard</Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <Link href="/admin/settings" className="w-full">Settings</Link>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem

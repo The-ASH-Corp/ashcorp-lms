@@ -28,9 +28,9 @@ import {
   LogOut,
   ChevronDown,
   ChevronUp,
-  Ticket,BookOpenCheck,
-  NotebookText
-
+  Ticket,
+  BookOpenCheck,
+  NotebookText,
 } from "lucide-react";
 import Image from "next/image";
 
@@ -40,7 +40,7 @@ const navItems = [
     url: "/admin",
     icon: LayoutDashboard,
   },
-  
+
   {
     title: "Course Management",
     url: "/admin",
@@ -51,7 +51,7 @@ const navItems = [
       { title: "Chapter", url: "/admin/chapter" },
     ],
   },
- 
+
   {
     title: "Students",
     url: "/admin/students",
@@ -63,19 +63,19 @@ const navItems = [
     icon: Users,
   },
   {
-    title:"Exam",
-    url:"/admin/exam",
-    icon:BookOpenCheck
+    title: "Exam",
+    url: "/admin/exam",
+    icon: BookOpenCheck,
   },
   {
-    title:"Certificate",
-    url:"/admin/certificate",
-    icon:NotebookText
+    title: "Certificate",
+    url: "/admin/certificate",
+    icon: NotebookText,
   },
   {
-title:"Graduates",
-url:"/admin/graduates",
-icon:GraduationCap
+    title: "Graduates",
+    url: "/admin/graduates",
+    icon: GraduationCap,
   },
   {
     title: "Coupons",
@@ -86,6 +86,18 @@ icon:GraduationCap
     title: "Payments",
     url: "/admin/payments",
     icon: Wallet,
+  },
+  {
+    title: "Page Settings",
+    url: "/admin/page-settings",
+    icon: Settings,
+    children: [
+      { title: "Homepage", url: "/admin/page-settings/homepage" },
+      { title: "About", url: "/admin/page-settings/about" },
+      { title: "Contact", url: "/admin/page-settings/contact" },
+      { title: "Privacy Policy", url: "/admin/page-settings/privacy-policy" },
+      { title: "Terms & Conditions", url: "/admin/page-settings/terms-conditions" },
+    ],
   },
 ];
 
@@ -257,17 +269,6 @@ export function AdminSidebar({
       {/* Footer */}
       <SidebarFooter className="px-4 pb-5 space-y-1">
         <SidebarMenu className="mt-2">
-          <SidebarMenuItem>
-            <SidebarMenuButton
-              asChild
-              className="rounded-xl px-4 py-5 text-[13px] font-medium text-gray-600 hover:bg-violet-50 hover:text-violet-700 transition-colors"
-            >
-              <Link href="/admin/settings" className="flex items-center gap-3">
-                <Settings className="h-4.5 w-4.5" />
-                <span>Settings</span>
-              </Link>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
           <SidebarMenuItem>
             <SidebarMenuButton
               className="rounded-xl px-4 py-5 text-[13px] font-medium text-red-500 hover:bg-red-50 hover:text-red-600 transition-colors cursor-pointer"

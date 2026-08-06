@@ -142,6 +142,11 @@ const userSchema = new mongoose.Schema({
     type: [examAttemptSchema],
     default: [],
   },
+  tenantId: {
+    type: String,
+    required: true,
+    index: true,
+  },
 },{ timestamps: true });
 
 export const UserModel = mongoose.model("User", userSchema);
