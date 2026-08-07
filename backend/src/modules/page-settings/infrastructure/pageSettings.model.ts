@@ -405,4 +405,149 @@ const contactSettingsSchema = new Schema(
 
 export const ContactSettingsModel = model("ContactSettings", contactSettingsSchema);
 
+// --- Privacy Policy Page Settings Schema ---
+const policySectionItemSchema = new Schema({
+  id: { type: String, required: true },
+  sectionNumber: { type: Number, required: true },
+  title: { type: String, required: true },
+  content: { type: String, required: true },
+});
+
+const privacyPolicySettingsSchema = new Schema(
+  {
+    sectionVisibility: {
+      hero: { type: Boolean, default: true },
+      policySections: { type: Boolean, default: true },
+      supportCta: { type: Boolean, default: true },
+    },
+    metadata: {
+      pageTitle: { type: String, default: "Privacy Policy | Ash Academy" },
+      metaDescription: {
+        type: String,
+        default: "Learn how Ash Academy LMS collects, uses, and protects your personal data.",
+      },
+    },
+    hero: {
+      enabled: { type: Boolean, default: true },
+      badgeText: { type: String, default: "Ash Academy • Privacy & Information" },
+      headline: { type: String, default: "Privacy Policy" },
+      description: {
+        type: String,
+        default:
+          "Your privacy matters to us. This Privacy Policy explains how ASH Academy LMS collects, uses, and protects your personal information when you use our platform.",
+      },
+      lastUpdatedDate: { type: String, default: "July 29, 2026" },
+    },
+    policySections: {
+      enabled: { type: Boolean, default: true },
+      items: {
+        type: [policySectionItemSchema],
+        default: [
+          {
+            id: "pol-1",
+            sectionNumber: 1,
+            title: "Information We Collect",
+            content:
+              "We collect Account Information (Name, email address, password), Payment Information (Billing address, transaction history), Usage Data (Courses viewed, progress, quiz results), Device Information (IP address, browser type), and Communications (Support requests, feedback).",
+          },
+          {
+            id: "pol-2",
+            sectionNumber: 2,
+            title: "How We Use Your Information",
+            content:
+              "To create and manage your account, provide access to purchased courses, track learning progress, process payments, send certificates, customer support responses, and platform updates.",
+          },
+          {
+            id: "pol-3",
+            sectionNumber: 3,
+            title: "Cookies & Tracking Technologies",
+            content:
+              "We use cookies and similar technologies to keep you logged in, remember your preferences, and understand how you use the Platform. You can control cookie preferences through your browser settings.",
+          },
+          {
+            id: "pol-4",
+            sectionNumber: 4,
+            title: "How We Share Your Information",
+            content:
+              "We do not sell your personal information. We may share data with service providers (payment processors, hosting), course instructors (to support learning), and legal authorities when required by law.",
+          },
+          {
+            id: "pol-5",
+            sectionNumber: 5,
+            title: "Data Retention",
+            content:
+              "We retain your personal information for as long as your account is active or as needed to provide lifetime course access. You may request account deletion at any time.",
+          },
+          {
+            id: "pol-6",
+            sectionNumber: 6,
+            title: "Data Security",
+            content:
+              "We implement industry-standard security measures including encryption and secure servers to protect your personal information.",
+          },
+          {
+            id: "pol-7",
+            sectionNumber: 7,
+            title: "Your Rights",
+            content:
+              "You have the right to access, correct, delete, or restrict processing of your personal data, and withdraw marketing consent anytime by contacting us.",
+          },
+          {
+            id: "pol-8",
+            sectionNumber: 8,
+            title: "Children's Privacy",
+            content:
+              "ASH Academy LMS is not intended for children under 16. We do not knowingly collect personal information from children without parental consent.",
+          },
+          {
+            id: "pol-9",
+            sectionNumber: 9,
+            title: "Third-Party Links",
+            content:
+              "Our Platform may contain links to third-party websites. We are not responsible for the privacy practices of these third parties.",
+          },
+          {
+            id: "pol-10",
+            sectionNumber: 10,
+            title: "International Data Transfers",
+            content:
+              "Your information may be processed in countries other than your own with appropriate data protection safeguards in place.",
+          },
+          {
+            id: "pol-11",
+            sectionNumber: 11,
+            title: "Changes to This Policy",
+            content:
+              "We may update this Privacy Policy from time to time. We will notify you of significant changes by posting the updated policy with a revised date.",
+          },
+          {
+            id: "pol-12",
+            sectionNumber: 12,
+            title: "Contact Us",
+            content:
+              "If you have questions about this Privacy Policy or how we handle your data, please reach out via our Contact Us page.",
+          },
+        ],
+      },
+    },
+    supportCta: {
+      enabled: { type: Boolean, default: true },
+      title: { type: String, default: "Still have questions?" },
+      description: {
+        type: String,
+        default:
+          "Our support team is happy to help clarify any part of this policy or address your privacy concerns. Reach out anytime — we typically respond within one business day.",
+      },
+      buttonText: { type: String, default: "Contact Support" },
+    },
+  },
+  { timestamps: true }
+);
+
+export const PrivacyPolicySettingsModel = model(
+  "PrivacyPolicySettings",
+  privacyPolicySettingsSchema
+);
+
+
 

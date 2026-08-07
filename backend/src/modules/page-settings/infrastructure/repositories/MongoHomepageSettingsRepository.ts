@@ -1,8 +1,14 @@
 import { IHomepageSettingsEntity } from "../../domain/entities/HomepageSettings";
 import { IAboutSettingsEntity } from "../../domain/entities/AboutSettings";
 import { IContactSettingsEntity } from "../../domain/entities/ContactSettings";
+import { IPrivacyPolicySettingsEntity } from "../../domain/entities/PrivacyPolicySettings";
 import { HomepageSettingsRepository } from "../../domain/repositories/HomepageSettingsRepository";
-import { HomepageSettingsModel, AboutSettingsModel, ContactSettingsModel } from "../pageSettings.model";
+import {
+  HomepageSettingsModel,
+  AboutSettingsModel,
+  ContactSettingsModel,
+  PrivacyPolicySettingsModel,
+} from "../pageSettings.model";
 
 export class MongoHomepageSettingsRepository implements HomepageSettingsRepository {
   async getSettings(): Promise<IHomepageSettingsEntity> {
@@ -88,5 +94,31 @@ export class MongoHomepageSettingsRepository implements HomepageSettingsReposito
     }
 
     return settings as unknown as IContactSettingsEntity;
+  }
+
+  async getPrivacyPolicySettings(): Promise<IPrivacyPolicySettingsEntity> {
+    let settings = await PrivacyPolicySettingsModel.findOne();
+    if (!settings) {
+      settings = await PrivacyPolicySettingsModel.create({});
+    }
+    return settings as unknown as IPrivacyPolicySettingsEntity;
+  }
+
+  async updatePrivacyPolicySettings(data: Partial<IPrivacyPolicySettingsEntity>): Promise<IPrivacyPolicySettingsEntity> {
+    let settings = await PrivacyPolicySettingsModel.findOne();
+
+    if (!settings) {
+      settings = await PrivacyPolicySettingsModel.create(data);
+    } else {
+      if (data.sectionVisibility) settings.sectionVisibility = { ...settings.sectionVisibility, ...data.sectionVisibility };
+      if (data.metadata) settings.metadata = { ...settings.metadata, ...data.metadata };
+      if (data.hero) settings.hero = { ...settings.hero, ...data.hero };
+      if (data.policySections) (settings as any).policySections = { ...settings.policySections, ...data.policySections };
+      if (data.supportCta) settings.supportCta = { ...settings.supportCta, ...data.supportCta };
+
+      await settings.save();
+    }
+
+    return settings as unknown as IPrivacyPolicySettingsEntity;
   }
 }

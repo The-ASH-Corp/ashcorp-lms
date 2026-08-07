@@ -6,6 +6,8 @@ import {
   updateAboutSettingsUseCase,
   getContactSettingsUseCase,
   updateContactSettingsUseCase,
+  getPrivacyPolicySettingsUseCase,
+  updatePrivacyPolicySettingsUseCase,
 } from "../di";
 
 export const getHomepageSettings = async (
@@ -109,6 +111,42 @@ export const updateContactSettings = async (
     res.status(200).json({
       success: true,
       message: "Contact page settings updated successfully",
+      data: settings,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getPrivacyPolicySettings = async (
+  _req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const settings = await getPrivacyPolicySettingsUseCase.execute();
+
+    res.status(200).json({
+      success: true,
+      message: "Privacy policy settings fetched successfully",
+      data: settings,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const updatePrivacyPolicySettings = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const settings = await updatePrivacyPolicySettingsUseCase.execute(req.body);
+
+    res.status(200).json({
+      success: true,
+      message: "Privacy policy settings updated successfully",
       data: settings,
     });
   } catch (error) {

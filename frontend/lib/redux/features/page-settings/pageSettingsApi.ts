@@ -159,6 +159,44 @@ export interface IContactPageSettings {
   updatedAt?: string;
 }
 
+export interface IPolicySectionItem {
+  id: string;
+  sectionNumber: number;
+  title: string;
+  content: string;
+}
+
+export interface IPrivacyPolicySettings {
+  _id?: string;
+  sectionVisibility: {
+    hero: boolean;
+    policySections: boolean;
+    supportCta: boolean;
+  };
+  metadata: {
+    pageTitle: string;
+    metaDescription: string;
+  };
+  hero: {
+    enabled: boolean;
+    badgeText: string;
+    headline: string;
+    description: string;
+    lastUpdatedDate: string;
+  };
+  policySections: {
+    enabled: boolean;
+    items: IPolicySectionItem[];
+  };
+  supportCta: {
+    enabled: boolean;
+    title: string;
+    description: string;
+    buttonText: string;
+  };
+  updatedAt?: string;
+}
+
 export const pageSettingsApi = api.injectEndpoints({
   endpoints: (builder) => ({
     getHomepageSettings: builder.query<IHomepageSettings, void>({
@@ -218,6 +256,25 @@ export const pageSettingsApi = api.injectEndpoints({
         response.data,
       invalidatesTags: ["PageSettings"],
     }),
+    getPrivacyPolicySettings: builder.query<IPrivacyPolicySettings, void>({
+      query: () => "/page-settings/privacy-policy",
+      transformResponse: (response: { success: boolean; data: IPrivacyPolicySettings }) =>
+        response.data,
+      providesTags: ["PageSettings"],
+    }),
+    updatePrivacyPolicySettings: builder.mutation<
+      IPrivacyPolicySettings,
+      Partial<IPrivacyPolicySettings>
+    >({
+      query: (body) => ({
+        url: "/page-settings/privacy-policy",
+        method: "PUT",
+        body,
+      }),
+      transformResponse: (response: { success: boolean; data: IPrivacyPolicySettings }) =>
+        response.data,
+      invalidatesTags: ["PageSettings"],
+    }),
   }),
 });
 
@@ -228,4 +285,6 @@ export const {
   useUpdateAboutSettingsMutation,
   useGetContactSettingsQuery,
   useUpdateContactSettingsMutation,
+  useGetPrivacyPolicySettingsQuery,
+  useUpdatePrivacyPolicySettingsMutation,
 } = pageSettingsApi;
