@@ -7,7 +7,7 @@ import {
   IHomepageSettings,
 } from "@/lib/redux/features/page-settings/pageSettingsApi";
 import { HeaderStrip } from "@/components/admin/page-settings/homepage/HeaderStrip";
-import { MetricsOverview } from "@/components/admin/page-settings/homepage/MetricsOverview";
+import { SectionVisibilityCard } from "@/components/admin/page-settings/homepage/SectionVisibilityCard";
 import { HeroOrchestrationCard } from "@/components/admin/page-settings/homepage/HeroOrchestrationCard";
 import { StatsOrchestrationCard } from "@/components/admin/page-settings/homepage/StatsOrchestrationCard";
 import { CategoriesOrchestrationCard } from "@/components/admin/page-settings/homepage/CategoriesOrchestrationCard";
@@ -64,13 +64,18 @@ export default function LandingPageSettings() {
           savedSuccessfully={savedSuccessfully}
         />
 
-        {/* Status Overview Cards */}
-        <MetricsOverview settings={formState} />
+        {/* 2-Column Layout */}
+        <div className="grid grid-cols-1 gap-5 lg:grid-cols-12">
+          {/* Left Column (Section Visibility & Overview) - 4 cols */}
+          <div className="lg:col-span-4 space-y-5">
+            <SectionVisibilityCard
+              settings={formState}
+              onChange={(updated) => setFormState(updated)}
+            />
+          </div>
 
-        {/* Component-Wise Orchestration Grid */}
-        <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
-          {/* Column 1 */}
-          <div className="space-y-5">
+          {/* Right Column (Content Orchestration Cards) - 8 cols */}
+          <div className="lg:col-span-8 space-y-5">
             <HeroOrchestrationCard
               hero={formState.hero}
               onChange={(hero) => setFormState((prev) => ({ ...prev, hero }))}
@@ -87,10 +92,7 @@ export default function LandingPageSettings() {
                 setFormState((prev) => ({ ...prev, categories }))
               }
             />
-          </div>
 
-          {/* Column 2 */}
-          <div className="space-y-5">
             <TrendingWorkshopsCard
               trendingSection={formState.trendingWorkshops!}
               onChange={(trendingWorkshops) =>
