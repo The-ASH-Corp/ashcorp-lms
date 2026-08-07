@@ -55,10 +55,72 @@ const SectionHeading = ({
   </div>
 );
 
-/* ─── prose paragraph ─────────────────────────────────────────────── */
-const Prose = ({ children }: { children: React.ReactNode }) => (
-  <p className="text-sm leading-relaxed text-muted-foreground whitespace-pre-line">{children}</p>
-);
+/* ─── content block renderer (handles paragraphs and bullet lists) ─── */
+const FormattedContent = ({ content }: { content: string }) => {
+  if (!content) return null;
+
+  // Split into paragraph blocks by double newline or single newline
+  const lines = content.split("\n");
+  const blocks: { type: "text" | "bullet"; items: string[] }[] = [];
+
+  let currentBullets: string[] = [];
+
+  lines.forEach((line) => {
+    const trimmed = line.trim();
+    if (trimmed.startsWith("- ") || trimmed.startsWith("• ")) {
+      currentBullets.push(trimmed.replace(/^[-•]\s*/, ""));
+    } else {
+      if (currentBullets.length > 0) {
+        blocks.push({ type: "bullet", items: [...currentBullets] });
+        currentBullets = [];
+      }
+      if (trimmed) {
+        blocks.push({ type: "text", items: [trimmed] });
+      }
+    }
+  });
+
+  if (currentBullets.length > 0) {
+    blocks.push({ type: "bullet", items: currentBullets });
+  }
+
+  return (
+    <div className="space-y-3">
+      {blocks.map((block, idx) => {
+        if (block.type === "bullet") {
+          return (
+            <ul key={idx} className="my-3 space-y-2 text-sm text-muted-foreground">
+              {block.items.map((item, itemIdx) => {
+                const parts = item.split(":");
+                const hasLabel = parts.length > 1;
+                return (
+                  <li key={itemIdx} className="flex items-start gap-2">
+                    <span className="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-primary" />
+                    <span>
+                      {hasLabel ? (
+                        <>
+                          <strong className="font-semibold text-foreground">{parts[0]}:</strong>
+                          {parts.slice(1).join(":")}
+                        </>
+                      ) : (
+                        item
+                      )}
+                    </span>
+                  </li>
+                );
+              })}
+            </ul>
+          );
+        }
+        return (
+          <p key={idx} className="text-sm leading-relaxed text-muted-foreground">
+            {block.items[0]}
+          </p>
+        );
+      })}
+    </div>
+  );
+};
 
 /* ─────────────────────────────────────────────────────────────────── */
 
@@ -191,7 +253,7 @@ const PrivacyPolicy = () => {
                     }
                     title={item.title}
                   />
-                  <Prose>{item.content}</Prose>
+                  <FormattedContent content={item.content} />
                 </section>
               ))}
 

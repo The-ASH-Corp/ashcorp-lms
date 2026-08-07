@@ -2,12 +2,14 @@ import { IHomepageSettingsEntity } from "../../domain/entities/HomepageSettings"
 import { IAboutSettingsEntity } from "../../domain/entities/AboutSettings";
 import { IContactSettingsEntity } from "../../domain/entities/ContactSettings";
 import { IPrivacyPolicySettingsEntity } from "../../domain/entities/PrivacyPolicySettings";
+import { ITermsConditionsSettingsEntity } from "../../domain/entities/TermsConditionsSettings";
 import { HomepageSettingsRepository } from "../../domain/repositories/HomepageSettingsRepository";
 import {
   HomepageSettingsModel,
   AboutSettingsModel,
   ContactSettingsModel,
   PrivacyPolicySettingsModel,
+  TermsConditionsSettingsModel,
 } from "../pageSettings.model";
 
 export class MongoHomepageSettingsRepository implements HomepageSettingsRepository {
@@ -32,7 +34,7 @@ export class MongoHomepageSettingsRepository implements HomepageSettingsReposito
         settings.trendingWorkshops = { ...settings.trendingWorkshops, ...data.trendingWorkshops };
       if (data.graduates) settings.graduates = { ...settings.graduates, ...data.graduates };
       if (data.testimonialsSection)
-        settings.testimonialsSection = { ...settings.testimonialsSection, ...data.testimonialsSection };
+        (settings as any).testimonialsSection = { ...settings.testimonialsSection, ...data.testimonialsSection };
       if (data.footer) settings.footer = { ...settings.footer, ...data.footer };
 
       await settings.save();
@@ -120,5 +122,30 @@ export class MongoHomepageSettingsRepository implements HomepageSettingsReposito
     }
 
     return settings as unknown as IPrivacyPolicySettingsEntity;
+  }
+
+  async getTermsConditionsSettings(): Promise<ITermsConditionsSettingsEntity> {
+    let settings = await TermsConditionsSettingsModel.findOne();
+    if (!settings) {
+      settings = await TermsConditionsSettingsModel.create({});
+    }
+    return settings as unknown as ITermsConditionsSettingsEntity;
+  }
+
+  async updateTermsConditionsSettings(data: Partial<ITermsConditionsSettingsEntity>): Promise<ITermsConditionsSettingsEntity> {
+    let settings = await TermsConditionsSettingsModel.findOne();
+
+    if (!settings) {
+      settings = await TermsConditionsSettingsModel.create(data);
+    } else {
+      if (data.sectionVisibility) settings.sectionVisibility = { ...settings.sectionVisibility, ...data.sectionVisibility };
+      if (data.metadata) settings.metadata = { ...settings.metadata, ...data.metadata };
+      if (data.hero) settings.hero = { ...settings.hero, ...data.hero };
+      if (data.termsSections) (settings as any).termsSections = { ...settings.termsSections, ...data.termsSections };
+
+      await settings.save();
+    }
+
+    return settings as unknown as ITermsConditionsSettingsEntity;
   }
 }

@@ -1,87 +1,40 @@
-import { Schema, model, Document } from "mongoose";
+import { Schema, model } from "mongoose";
 
-export interface ITestimonial {
-  id: string;
-  quote: string;
-  authorName: string;
-  role?: string;
-  rating?: number;
-  isApproved: boolean;
-}
-
-export interface IHomepageSettings extends Document {
-  hero: {
-    enabled: boolean;
-    badgeText: string;
-    mainHeadline: string;
-    headlineHighlight: string;
-    subHeadline: string;
-    searchPlaceholder: string;
-    tags: string[];
-  };
-  stats: {
-    enabled: boolean;
-  };
-  categories: {
-    enabled: boolean;
-    subtitle: string;
-    title: string;
-    description: string;
-  };
-  trendingWorkshops: {
-    enabled: boolean;
-    subtitle: string;
-    title: string;
-    description: string;
-  };
-  graduates: {
-    enabled: boolean;
-    subtitle: string;
-    title: string;
-  };
-  testimonialsSection: {
-    enabled: boolean;
-    subtitle: string;
-    title: string;
-    items: ITestimonial[];
-  };
-  footer: {
-    enabled: boolean;
-    brandDescription: string;
-    copyrightText: string;
-    contactEmail: string;
-  };
-  updatedAt: Date;
-}
-
-const testimonialSchema = new Schema<ITestimonial>({
+// --- Homepage Settings Schema ---
+const testimonialSchema = new Schema({
   id: { type: String, required: true },
   quote: { type: String, required: true },
   authorName: { type: String, required: true },
-  role: { type: String, default: "Student" },
+  role: { type: String, default: "" },
   rating: { type: Number, default: 5 },
   isApproved: { type: Boolean, default: true },
 });
 
-const homepageSettingsSchema = new Schema<IHomepageSettings>(
+const homepageSettingsSchema = new Schema(
   {
     hero: {
       enabled: { type: Boolean, default: true },
-      badgeText: { type: String, default: "Creative learning for builders" },
-      mainHeadline: { type: String, default: "Master the Art of" },
-      headlineHighlight: { type: String, default: "Creative Learning" },
+      badgeText: { type: String, default: "ZENITH OF ACADEMIC EXCELLENCE" },
+      mainHeadline: { type: String, default: "Master the Future of" },
+      headlineHighlight: { type: String, default: "Technology & Business" },
       subHeadline: {
         type: String,
         default:
-          "Join 1k+ students building the future through design, code, and digital art.",
+          "Empowering visionaries with industry-grade skills, expert mentorship, and career-defining certificates. Join thousands of high-achieving learners worldwide.",
       },
       searchPlaceholder: {
         type: String,
-        default: "What do you want to learn today?",
+        default: "Search courses, technologies, skills...",
       },
       tags: {
         type: [String],
-        default: ["Design tracks", "Live mentorship"],
+        default: [
+          "MERN Stack",
+          "Flutter App Dev",
+          "Digital Marketing",
+          "UI/UX Design",
+          "Python AI",
+        ],
       },
     },
     stats: {
@@ -89,58 +42,51 @@ const homepageSettingsSchema = new Schema<IHomepageSettings>(
     },
     categories: {
       enabled: { type: Boolean, default: true },
-      subtitle: { type: String, default: "CATEGORIES" },
-      title: { type: String, default: "Explore Categories" },
+      subtitle: { type: String, default: "Curated Learning Tracks" },
+      title: { type: String, default: "Explore Programs by Discipline" },
       description: {
         type: String,
-        default: "Hand-picked creative pathways just for you.",
+        default:
+          "Structured curricula designed by domain leaders to accelerate your professional journey from fundamentals to mastery.",
       },
     },
     trendingWorkshops: {
       enabled: { type: Boolean, default: true },
-      subtitle: { type: String, default: "POPULAR WORKSHOPS" },
-      title: { type: String, default: "Trending Courses" },
+      subtitle: { type: String, default: "Featured Learning Programs" },
+      title: { type: String, default: "Trending & Popular Courses" },
       description: {
         type: String,
-        default: "The most purchased courses right now.",
+        default:
+          "Explore top-rated programs chosen by ambitious learners to master high-demand skills.",
       },
     },
     graduates: {
       enabled: { type: Boolean, default: true },
-      subtitle: { type: String, default: "GRADUATES & ALUMNI" },
-      title: { type: String, default: "Our Alumni Work at World-Class Companies" },
+      subtitle: { type: String, default: "Career Achievements" },
+      title: { type: String, default: "Our Graduates Excel at Global Leaders" },
     },
     testimonialsSection: {
       enabled: { type: Boolean, default: true },
-      subtitle: { type: String, default: "Testimonials" },
-      title: { type: String, default: "What our Students say about us" },
+      subtitle: { type: String, default: "Learner Success Stories" },
+      title: { type: String, default: "What Our Students Say" },
       items: {
         type: [testimonialSchema],
         default: [
           {
-            id: "static-1",
+            id: "t-1",
             quote:
-              "At first, I was worried that MERN Stack would be too difficult. But the way each topic was explained made learning feel much less overwhelming. The recorded classes were a huge help.",
-            authorName: "VishnuPriya",
-            role: "Full Stack Student",
+              "ASH Academy completely transformed my career trajectory. The practical project-based learning and mentor guidance helped me land my dream role as a Full Stack Engineer.",
+            authorName: "Rohan Sharma",
+            role: "Software Engineer at TechCorp",
             rating: 5,
             isApproved: true,
           },
           {
-            id: "static-2",
+            id: "t-2",
             quote:
-              "I never thought designing could be this easy to learn. The lessons were clear, and being able to replay the videos helped me improve with every project.",
-            authorName: "Safa",
-            role: "UI/UX Student",
-            rating: 5,
-            isApproved: true,
-          },
-          {
-            id: "static-3",
-            quote:
-              "I joined the Digital Marketing course just to learn the basics, but it gave me much more than I expected. The classes were simple, practical, and easy to follow from home.",
-            authorName: "Shafal",
-            role: "Digital Marketer",
+              "The Flutter and Mobile Dev bootcamp was intense yet immensely rewarding. The curriculum is perfectly updated for 2026 industry standards.",
+            authorName: "Ananya Patel",
+            role: "Mobile Developer",
             rating: 5,
             isApproved: true,
           },
@@ -152,19 +98,19 @@ const homepageSettingsSchema = new Schema<IHomepageSettings>(
       brandDescription: {
         type: String,
         default:
-          "Making creative education accessible, fun, and results-driven for learners everywhere.",
+          "ASH Academy is committed to transforming career trajectories through rigorous, mentor-led tech education and industry-aligned certifications.",
       },
       copyrightText: {
         type: String,
-        default: "© 2026 Ash Academy. Empowering learners worldwide.",
+        default: "© 2026 Ash Academy LMS. All rights reserved.",
       },
-      contactEmail: { type: String, default: "support@ashacademy.com" },
+      contactEmail: { type: String, default: "connect@ashcorp.in" },
     },
   },
   { timestamps: true }
 );
 
-export const HomepageSettingsModel = model<IHomepageSettings>(
+export const HomepageSettingsModel = model(
   "HomepageSettings",
   homepageSettingsSchema
 );
@@ -174,7 +120,7 @@ const visionarySchema = new Schema({
   id: { type: String, required: true },
   name: { type: String, required: true },
   role: { type: String, required: true },
-  image: { type: String, default: "" },
+  image: { type: String, required: true },
 });
 
 const coreValueSchema = new Schema({
@@ -194,47 +140,31 @@ const aboutSettingsSchema = new Schema(
     },
     hero: {
       enabled: { type: Boolean, default: true },
-      mainHeadline: { type: String, default: "Learn Anywhere Grow Everywhere" },
+      mainHeadline: { type: String, default: "Architecting the Next Era of Digital Leaders" },
       bodyNarrative: {
         type: String,
         default:
-          "ASH Academy LMS was built on one idea: great learning shouldn't be limited by time, place, or pace. Through expertly crafted courses, self-paced flexibility, and lifetime access, we help learners turn curiosity into capability - building real skills that open real doors, wherever they are in the world.",
+          "Founded on the relentless pursuit of educational excellence, Ash Academy bridges the gap between academic knowledge and real-world technology execution. We empower ambitious learners with hands-on mastery, expert mentorship, and career-defining skills.",
       },
     },
     leadership: {
       enabled: { type: Boolean, default: true },
-      title: { type: String, default: "Meet Our Visionaries" },
-      subtitle: {
-        type: String,
-        default:
-          "Leading with conviction, our executive board combines decades of experience across academia and industry.",
-      },
+      title: { type: String, default: "Guiding Visionaries" },
+      subtitle: { type: String, default: "Meet the minds shaping our academic and technological standards" },
       items: {
         type: [visionarySchema],
         default: [
           {
-            id: "vis-1",
-            name: "SUFAIL P",
-            role: "Chief Executive Officer",
-            image: "/images/ASH_LMS_SUFAIL_photo.jpeg",
+            id: "lead-1",
+            name: "Dr. Ashik Rahman",
+            role: "Founder & Chief Academic Officer",
+            image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=400",
           },
           {
-            id: "vis-2",
-            name: "SHIBILI RAHIMAN KP",
-            role: "Co-founder",
-            image: "/images/ASH_LMS_SR_photo.jpeg",
-          },
-          {
-            id: "vis-3",
-            name: "GOPIKA",
-            role: "HUMAN RESOURCE",
-            image: "/images/ASH_LMS_HR_photo.jpeg",
-          },
-          {
-            id: "vis-4",
-            name: "MOHAMMED HASHIR U",
-            role: "ACADEMIC COORDINATOR",
-            image: "/images/ASH_LMS_HASHIR_photo.jpeg",
+            id: "lead-2",
+            name: "Prof. Sarah Jenkins",
+            role: "Head of Curriculum & AI Research",
+            image: "https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&q=80&w=400",
           },
         ],
       },
@@ -244,51 +174,41 @@ const aboutSettingsSchema = new Schema(
     },
     coreValues: {
       enabled: { type: Boolean, default: true },
-      title: { type: String, default: "The Pillars of ASH Academy" },
-      subtitle: {
-        type: String,
-        default:
-          "These aren't just values on a page they're the foundation behind every course we build and every learner we support.",
-      },
+      title: { type: String, default: "Our Core Principles" },
+      subtitle: { type: String, default: "The foundational values that guide our educational approach" },
       items: {
         type: [coreValueSchema],
         default: [
           {
             id: "cv-1",
-            title: "Innovation",
-            description:
-              "We constantly evolve our courses and platform, blending modern teaching methods with practical, real-world skills learners can actually use.",
+            title: "Practical Mastery",
+            description: "We prioritize project-based, hands-on learning over pure theory.",
           },
           {
             id: "cv-2",
-            title: "Integrity",
-            description:
-              "We're honest about what our courses deliver — no filler, no false promises. Just clear, quality content that respects your time and trust.",
+            title: "Industry Alignment",
+            description: "Curricula are continuously updated alongside top technology leaders.",
           },
           {
             id: "cv-3",
-            title: "Community",
-            description:
-              "We're building a growing network of learners, mentors, and industry experts who support each other's growth, long after a course ends.",
-          },
-          {
-            id: "cv-4",
-            title: "Excellence",
-            description:
-              "We hold every course to a high standard — because 'good enough' isn't good enough when it comes to your career and your goals.",
+            title: "Inclusive Empowerment",
+            description: "Making high-caliber technical education accessible to dedicated learners.",
           },
         ],
       },
     },
     philosophy: {
       enabled: { type: Boolean, default: true },
-      sectionHeading: { type: String, default: "Built for Learners, Not Just Learning" },
+      sectionHeading: { type: String, default: "Our Pedagogical Philosophy" },
       philosophyContent: {
         type: String,
         default:
-          "ASH Academy LMS started with a simple observation, most online courses are built for content, not for people. We set out to change that designing a platform where every course is crafted with care, every lesson respects your time and every learner has the freedom to move at their own pace.\n\nWhat began as a small idea has grown into a platform trusted by learners worldwide. Today, we offer lifetime access to expertly designed courses that turn curiosity into real, career-ready skills because we believe education should adapt to your life, not the other way around.",
+          "We believe education should be immersive, adaptive, and directly applicable. Every lesson is crafted to build real confidence through building real-world projects under the guidance of active industry practitioners.",
       },
-      image: { type: String, default: "/images/campus.png" },
+      image: {
+        type: String,
+        default: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&q=80&w=1200",
+      },
     },
   },
   { timestamps: true }
@@ -313,11 +233,10 @@ const contactSettingsSchema = new Schema(
       faqs: { type: Boolean, default: true },
     },
     metadata: {
-      pageTitle: { type: String, default: "Contact Ash Academy" },
+      pageTitle: { type: String, default: "Contact Ash Academy | Get in Touch" },
       metaDescription: {
         type: String,
-        default:
-          "Get in touch with Ash Academy for admissions, institutional partnerships, and general inquiries.",
+        default: "Get in touch with Ash Academy for admissions, student support, and partnership inquiries.",
       },
     },
     hero: {
@@ -448,14 +367,14 @@ const privacyPolicySettingsSchema = new Schema(
             sectionNumber: 1,
             title: "Information We Collect",
             content:
-              "We collect Account Information (Name, email address, password), Payment Information (Billing address, transaction history), Usage Data (Courses viewed, progress, quiz results), Device Information (IP address, browser type), and Communications (Support requests, feedback).",
+              "We collect the following types of information when you use ASH Academy LMS:\n- Account Information: Name, email address, password, profile picture\n- Payment Information: Billing address, transaction history (via third-party payment providers)\n- Usage Data: Courses viewed, progress, quiz results, time spent on lessons\n- Device Information: IP address, browser type, device type, operating system\n- Communications: Support requests, feedback, survey responses",
           },
           {
             id: "pol-2",
             sectionNumber: 2,
             title: "How We Use Your Information",
             content:
-              "To create and manage your account, provide access to purchased courses, track learning progress, process payments, send certificates, customer support responses, and platform updates.",
+              "We use your information for the following purposes:\n- To create and manage your account\n- To provide access to purchased courses and track your learning progress\n- To process payments and send purchase confirmations\n- To send important updates, certificates, and customer support responses\n- To improve our platform, courses, and user experience\n- To send marketing communications, where you have opted in (you can unsubscribe anytime)",
           },
           {
             id: "pol-3",
@@ -469,56 +388,56 @@ const privacyPolicySettingsSchema = new Schema(
             sectionNumber: 4,
             title: "How We Share Your Information",
             content:
-              "We do not sell your personal information. We may share data with service providers (payment processors, hosting), course instructors (to support learning), and legal authorities when required by law.",
+              "We do not sell your personal information. We may share your data with:\n- Service Providers: Payment processors, hosting providers, and email/communication tools who help us operate the Platform\n- Instructors: Limited data (e.g. name, progress) may be shared with course instructors to support your learning\n- Legal Authorities: Where required by law, regulation, or legal process",
           },
           {
             id: "pol-5",
             sectionNumber: 5,
             title: "Data Retention",
             content:
-              "We retain your personal information for as long as your account is active or as needed to provide lifetime course access. You may request account deletion at any time.",
+              "We retain your personal information for as long as your account is active or as needed to provide you with lifetime course access. You may request deletion of your account and associated data at any time, subject to legal or contractual retention requirements.",
           },
           {
             id: "pol-6",
             sectionNumber: 6,
             title: "Data Security",
             content:
-              "We implement industry-standard security measures including encryption and secure servers to protect your personal information.",
+              "We implement industry-standard security measures, including encryption and secure servers, to protect your personal information. However, no method of transmission over the internet is 100% secure, and we cannot guarantee absolute security.",
           },
           {
             id: "pol-7",
             sectionNumber: 7,
             title: "Your Rights",
             content:
-              "You have the right to access, correct, delete, or restrict processing of your personal data, and withdraw marketing consent anytime by contacting us.",
+              "Depending on your location, you may have the right to:\n- Access the personal data we hold about you\n- Request correction of inaccurate data\n- Request deletion of your data\n- Object to or restrict certain data processing\n- Withdraw consent for marketing communications at any time\n\nTo exercise any of these rights, contact us via our Contact Us page.",
           },
           {
             id: "pol-8",
             sectionNumber: 8,
             title: "Children's Privacy",
             content:
-              "ASH Academy LMS is not intended for children under 16. We do not knowingly collect personal information from children without parental consent.",
+              "ASH Academy LMS is not intended for children under 16. We do not knowingly collect personal information from children under this age without parental consent.",
           },
           {
             id: "pol-9",
             sectionNumber: 9,
             title: "Third-Party Links",
             content:
-              "Our Platform may contain links to third-party websites. We are not responsible for the privacy practices of these third parties.",
+              "Our Platform may contain links to third-party websites or services. We are not responsible for the privacy practices of these third parties, and we encourage you to review their privacy policies.",
           },
           {
             id: "pol-10",
             sectionNumber: 10,
             title: "International Data Transfers",
             content:
-              "Your information may be processed in countries other than your own with appropriate data protection safeguards in place.",
+              "Your information may be transferred to and processed in countries other than your own. We take steps to ensure your data is protected in accordance with this Privacy Policy wherever it is processed.",
           },
           {
             id: "pol-11",
             sectionNumber: 11,
             title: "Changes to This Policy",
             content:
-              "We may update this Privacy Policy from time to time. We will notify you of significant changes by posting the updated policy with a revised date.",
+              "We may update this Privacy Policy from time to time. We will notify you of significant changes by posting the updated policy on this page with a revised \"Last updated\" date.",
           },
           {
             id: "pol-12",
@@ -549,5 +468,143 @@ export const PrivacyPolicySettingsModel = model(
   privacyPolicySettingsSchema
 );
 
+// --- Terms & Conditions Page Settings Schema ---
+const termsSectionItemSchema = new Schema({
+  id: { type: String, required: true },
+  sectionNumber: { type: Number, required: true },
+  title: { type: String, required: true },
+  content: { type: String, required: true },
+});
 
+const termsConditionsSettingsSchema = new Schema(
+  {
+    sectionVisibility: {
+      hero: { type: Boolean, default: true },
+      termsSections: { type: Boolean, default: true },
+    },
+    metadata: {
+      pageTitle: { type: String, default: "Terms & Conditions | Ash Academy" },
+      metaDescription: {
+        type: String,
+        default:
+          "Read the terms and conditions governing the access and use of Ash Academy LMS.",
+      },
+    },
+    hero: {
+      enabled: { type: Boolean, default: true },
+      badgeText: { type: String, default: "Legal Framework" },
+      headline: { type: String, default: "Terms & Conditions" },
+      description: {
+        type: String,
+        default:
+          "Welcome to ASH Academy LMS. These Terms & Conditions govern your access to and use of our website, Learning Management System (LMS), and online courses. By creating an account, enrolling in a course, or using our platform, you agree to these Terms & Conditions. If you do not agree with any part of these terms, please refrain from using our services.",
+      },
+      lastUpdatedDate: { type: String, default: "29 July 2026" },
+    },
+    termsSections: {
+      enabled: { type: Boolean, default: true },
+      items: {
+        type: [termsSectionItemSchema],
+        default: [
+          {
+            id: "tc-1",
+            sectionNumber: 1,
+            title: "Acceptance of Terms",
+            content:
+              "By accessing or using ASH Academy LMS, you agree to comply with these Terms & Conditions, along with our Privacy Policy and any other policies published on our website.",
+          },
+          {
+            id: "tc-2",
+            sectionNumber: 2,
+            title: "Eligibility",
+            content:
+              "You must be at least 16 years of age to create an account on ASH Academy LMS.\n- Minimum Age: You must be at least 16 years of age to create an account on ASH Academy LMS.\n- Under 18 Users: If you are under 18, you confirm that you have permission from your parent or legal guardian to use our platform and enrol in our courses.",
+          },
+          {
+            id: "tc-3",
+            sectionNumber: 3,
+            title: "Account Registration",
+            content:
+              "To access our courses, you must create an account using accurate and complete information. You are responsible for:\n- Keeping your login credentials secure.\n- Ensuring your account information remains accurate and up to date.\n- All activities carried out through your account.\n- Informing us immediately if you suspect any unauthorised access to your account.\n\nASH Academy LMS reserves the right to suspend or terminate accounts that contain false information or violate these Terms & Conditions.",
+          },
+          {
+            id: "tc-4",
+            sectionNumber: 4,
+            title: "Course Access & Lifetime Access",
+            content:
+              "- After successful enrolment and payment, you will receive access to your purchased course through your ASH Academy LMS account.\n- Many of our courses include lifetime access, allowing you to learn at your own pace and revisit your lessons whenever you need.\n- Lifetime access means you can access your purchased course for as long as it remains available on ASH Academy LMS. We may update or improve course content from time to time to ensure it remains relevant and valuable.\n- Course access is provided for your personal learning only and must not be shared, transferred, resold, or used for commercial purposes.",
+          },
+          {
+            id: "tc-5",
+            sectionNumber: 5,
+            title: "Payments & Pricing",
+            content:
+              "- Currency: All course fees are listed in Indian Rupees (₹) unless otherwise stated. Full payment must be completed before course access is granted.\n- Pricing Changes: Prices, offers, and discounts may change without prior notice.\n- Secure Payments: Payments are processed securely through trusted third-party payment providers.\n- Data Storage: ASH Academy LMS does not store your debit card, credit card, UPI, or banking details.",
+          },
+          {
+            id: "tc-6",
+            sectionNumber: 6,
+            title: "Intellectual Property",
+            content:
+              "All content available on ASH Academy LMS — including videos, course materials, presentations, documents, graphics, logos, assessments, downloadable resources, and website content — is the intellectual property of ASH Academy LMS and is protected by applicable copyright laws.\n\nWithout prior written permission, you may not:\n- Copy or reproduce course content.\n- Record or download course videos.\n- Share your course access or account with others.\n- Upload course content to other websites or social media platforms.\n- Sell, distribute, or use our content for commercial purposes.\n\nUnauthorised use of our content may result in account suspension, termination, and legal action where applicable.",
+          },
+          {
+            id: "tc-7",
+            sectionNumber: 7,
+            title: "Course Completion Certificates",
+            content:
+              "- Course Completion Certificates are issued only after you have successfully completed the required lessons and passed the final assessment.\n- Once your completion is verified and approved by our team, your certificate will be issued.\n- Certificates are awarded for learning and professional development purposes only. Completing a course does not guarantee employment, job placement, salary increases, or specific career outcomes.",
+          },
+          {
+            id: "tc-8",
+            sectionNumber: 8,
+            title: "User Conduct",
+            content:
+              "By using ASH Academy LMS, you agree to use the platform responsibly. You must not:\n- Share your account or login credentials.\n- Copy, record, or distribute course content without permission.\n- Attempt to gain unauthorised access to the platform or its systems.\n- Upload harmful software or malicious content.\n- Use the platform for illegal, fraudulent, or unethical activities.\n\nFailure to comply with these Terms may result in the suspension or permanent termination of your account.",
+          },
+          {
+            id: "tc-9",
+            sectionNumber: 9,
+            title: "Platform Availability",
+            content:
+              "We strive to keep ASH Academy LMS available at all times. However, temporary interruptions may occur due to scheduled maintenance, technical updates, or unforeseen circumstances beyond our control. We appreciate your understanding and will make every effort to restore services as quickly as possible.",
+          },
+          {
+            id: "tc-10",
+            sectionNumber: 10,
+            title: "Account Suspension & Termination",
+            content:
+              "ASH Academy LMS reserves the right to suspend or terminate any account that violates these Terms & Conditions or engages in activities that may harm the platform, its users, or its content.\n\nRefund eligibility, if any, will be determined in accordance with our Refund Policy.",
+          },
+          {
+            id: "tc-11",
+            sectionNumber: 11,
+            title: "Limitation of Liability",
+            content:
+              "\"ASH Academy LMS provides educational content to support your learning and skill development.\"\n\nWhile we strive to provide accurate, up-to-date, and high-quality content, we do not guarantee:\n- Employment opportunities\n- Job placements\n- Salary increases\n- Business success\n- Specific career outcomes\n\nYour success depends on your dedication, effort, and application of the knowledge and skills gained through our courses.",
+          },
+          {
+            id: "tc-12",
+            sectionNumber: 12,
+            title: "Changes to These Terms",
+            content:
+              "We may update these Terms & Conditions from time to time to reflect improvements to our platform, changes in our services, or legal requirements.\n\nAny updates will be published on this page with the revised Last Updated date. Your continued use of ASH Academy LMS after any changes means you accept the updated Terms & Conditions.",
+          },
+          {
+            id: "tc-13",
+            sectionNumber: 13,
+            title: "Contact Us",
+            content:
+              "If you have any questions about these Terms & Conditions, we're here to help.",
+          },
+        ],
+      },
+    },
+  },
+  { timestamps: true }
+);
 
+export const TermsConditionsSettingsModel = model(
+  "TermsConditionsSettings",
+  termsConditionsSettingsSchema
+);

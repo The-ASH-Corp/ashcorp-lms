@@ -7,6 +7,8 @@ import { GetContactSettingsUseCase } from "./application/usecase/GetContactSetti
 import { UpdateContactSettingsUseCase } from "./application/usecase/UpdateContactSettingsUseCase";
 import { GetPrivacyPolicySettingsUseCase } from "./application/usecase/GetPrivacyPolicySettingsUseCase";
 import { UpdatePrivacyPolicySettingsUseCase } from "./application/usecase/UpdatePrivacyPolicySettingsUseCase";
+import { GetTermsConditionsSettingsUseCase } from "./application/usecase/GetTermsConditionsSettingsUseCase";
+import { UpdateTermsConditionsSettingsUseCase } from "./application/usecase/UpdateTermsConditionsSettingsUseCase";
 
 export const homepageSettingsRepository = new MongoHomepageSettingsRepository();
 
@@ -21,3 +23,6 @@ export const updateContactSettingsUseCase = new UpdateContactSettingsUseCase(hom
 
 export const getPrivacyPolicySettingsUseCase = new GetPrivacyPolicySettingsUseCase(homepageSettingsRepository);
 export const updatePrivacyPolicySettingsUseCase = new UpdatePrivacyPolicySettingsUseCase(homepageSettingsRepository);
+
+export const getTermsConditionsSettingsUseCase = new GetTermsConditionsSettingsUseCase(homepageSettingsRepository);
+export const updateTermsConditionsSettingsUseCase = new UpdateTermsConditionsSettingsUseCase(homepageSettingsRepository);

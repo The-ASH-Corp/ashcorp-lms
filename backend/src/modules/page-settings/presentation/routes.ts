@@ -8,6 +8,8 @@ import {
   updateContactSettings,
   getPrivacyPolicySettings,
   updatePrivacyPolicySettings,
+  getTermsConditionsSettings,
+  updateTermsConditionsSettings,
 } from "./controller";
 
 const router = Router();
@@ -23,5 +25,8 @@ router.put("/contact", updateContactSettings);
 
 router.get("/privacy-policy", getPrivacyPolicySettings);
 router.put("/privacy-policy", updatePrivacyPolicySettings);
+
+router.get("/terms-conditions", getTermsConditionsSettings);
+router.put("/terms-conditions", updateTermsConditionsSettings);
 
 export default router;

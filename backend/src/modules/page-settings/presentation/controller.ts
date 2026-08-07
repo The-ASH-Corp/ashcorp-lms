@@ -8,6 +8,8 @@ import {
   updateContactSettingsUseCase,
   getPrivacyPolicySettingsUseCase,
   updatePrivacyPolicySettingsUseCase,
+  getTermsConditionsSettingsUseCase,
+  updateTermsConditionsSettingsUseCase,
 } from "../di";
 
 export const getHomepageSettings = async (
@@ -147,6 +149,42 @@ export const updatePrivacyPolicySettings = async (
     res.status(200).json({
       success: true,
       message: "Privacy policy settings updated successfully",
+      data: settings,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getTermsConditionsSettings = async (
+  _req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const settings = await getTermsConditionsSettingsUseCase.execute();
+
+    res.status(200).json({
+      success: true,
+      message: "Terms & conditions settings fetched successfully",
+      data: settings,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const updateTermsConditionsSettings = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const settings = await updateTermsConditionsSettingsUseCase.execute(req.body);
+
+    res.status(200).json({
+      success: true,
+      message: "Terms & conditions settings updated successfully",
       data: settings,
     });
   } catch (error) {

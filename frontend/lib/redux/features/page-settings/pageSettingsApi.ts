@@ -275,8 +275,58 @@ export const pageSettingsApi = api.injectEndpoints({
         response.data,
       invalidatesTags: ["PageSettings"],
     }),
+    getTermsConditionsSettings: builder.query<ITermsConditionsSettings, void>({
+      query: () => "/page-settings/terms-conditions",
+      transformResponse: (response: { success: boolean; data: ITermsConditionsSettings }) =>
+        response.data,
+      providesTags: ["PageSettings"],
+    }),
+    updateTermsConditionsSettings: builder.mutation<
+      ITermsConditionsSettings,
+      Partial<ITermsConditionsSettings>
+    >({
+      query: (body) => ({
+        url: "/page-settings/terms-conditions",
+        method: "PUT",
+        body,
+      }),
+      transformResponse: (response: { success: boolean; data: ITermsConditionsSettings }) =>
+        response.data,
+      invalidatesTags: ["PageSettings"],
+    }),
   }),
 });
+
+export interface ITermsSectionItem {
+  id: string;
+  sectionNumber: number;
+  title: string;
+  content: string;
+}
+
+export interface ITermsConditionsSettings {
+  _id?: string;
+  sectionVisibility: {
+    hero: boolean;
+    termsSections: boolean;
+  };
+  metadata: {
+    pageTitle: string;
+    metaDescription: string;
+  };
+  hero: {
+    enabled: boolean;
+    badgeText: string;
+    headline: string;
+    description: string;
+    lastUpdatedDate: string;
+  };
+  termsSections: {
+    enabled: boolean;
+    items: ITermsSectionItem[];
+  };
+  updatedAt?: string;
+}
 
 export const {
   useGetHomepageSettingsQuery,
@@ -287,4 +337,6 @@ export const {
   useUpdateContactSettingsMutation,
   useGetPrivacyPolicySettingsQuery,
   useUpdatePrivacyPolicySettingsMutation,
+  useGetTermsConditionsSettingsQuery,
+  useUpdateTermsConditionsSettingsMutation,
 } = pageSettingsApi;
