@@ -7,6 +7,7 @@ import { motion } from "framer-motion";
 import { Play, ShoppingCart, Star } from "lucide-react";
 import { useGetAllCourseQuery } from "@/lib/redux/features/course/courseApi";
 import { useGetCurrentUserQuery } from "@/lib/redux/features/auth/authApi";
+import { useGetHomepageSettingsQuery } from "@/lib/redux/features/page-settings/pageSettingsApi";
 import { useAppSelector } from "@/lib/redux/hooks";
 
 const containerVariants = {
@@ -52,6 +53,12 @@ export default function TrendingWorkshops() {
   });
   const user = currentUser ?? authUser;
   const { data: courses = [], isLoading } = useGetAllCourseQuery();
+  const { data: settings } = useGetHomepageSettingsQuery();
+  const trendingSettings = settings?.trendingWorkshops;
+
+  if (trendingSettings?.enabled === false) {
+    return null;
+  }
 
   const sortedAllCourses = [...courses]
     .map((course) => ({
@@ -100,10 +107,10 @@ export default function TrendingWorkshops() {
       <div className="mx-auto w-full max-w-[96rem] px-4 sm:px-6 lg:px-8 xl:px-10 2xl:px-12">
         <div className="mb-12 text-center">
           <h2 className="text-3xl font-bold tracking-tight text-indigo-950">
-            Trending Courses
+            {trendingSettings?.title || "Trending Courses"}
           </h2>
           <p className="mt-2 text-sm text-gray-500">
-            The most purchased courses right now.
+            {trendingSettings?.description || "The most purchased courses right now."}
           </p>
         </div>
 

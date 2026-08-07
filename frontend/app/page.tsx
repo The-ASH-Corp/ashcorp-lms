@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { Search, Sparkles, Paintbrush } from "lucide-react";
 import Navbar from "@/components/landing/Navbar";
@@ -17,6 +17,9 @@ import {
   type Category,
 } from "@/lib/redux/features/category/categoryApi";
 import { useGetAllCourseQuery } from "@/lib/redux/features/course/courseApi";
+import {
+  useGetHomepageSettingsQuery,
+} from "@/lib/redux/features/page-settings/pageSettingsApi";
 import type { Course } from "@/lib/redux/features/course/courseSlice";
 
 type SearchResult =
@@ -50,6 +53,9 @@ export default function Home() {
 
   const { data: courses = [] } = useGetAllCourseQuery();
   const { data: categories = [] } = useGetAllCategoriesQuery();
+  const { data: settings } = useGetHomepageSettingsQuery();
+
+  const heroSettings = settings?.hero;
 
   const query = normalizeText(searchQuery);
 
@@ -111,7 +117,8 @@ export default function Home() {
     <div className="flex min-h-screen flex-col bg-white">
       <Navbar />
       <main className="relative isolate flex-1 overflow-x-clip">
-        <section className="relative z-40 overflow-visible bg-linear-to-b from-[#FAF5FF] via-[#F5F3FF] to-white pt-16 pb-14 sm:pt-20 sm:pb-16 lg:pt-24 lg:pb-20">
+        {heroSettings?.enabled !== false && (
+          <section className="relative z-40 overflow-visible bg-linear-to-b from-[#FAF5FF] via-[#F5F3FF] to-white pt-16 pb-14 sm:pt-20 sm:pb-16 lg:pt-24 lg:pb-20">
           <div className="pointer-events-none absolute inset-0 overflow-hidden">
             <div className="absolute top-1/4 -left-20 h-72 w-72 rounded-full bg-blue-200/40 blur-3xl" />
             <div className="absolute top-1/3 -right-20 h-96 w-96 rounded-full bg-purple-300/30 blur-3xl" />
@@ -120,19 +127,19 @@ export default function Home() {
           <div className="relative mx-auto w-full max-w-7xl px-4 text-center sm:px-6 lg:px-8">
             <div className="mb-6 inline-flex items-center gap-1.5 rounded-full bg-white/70 px-4 py-1.5 text-xs font-semibold text-primary ring-1 ring-purple-600/10 shadow-sm shadow-purple-100/70 backdrop-blur">
               <Sparkles className="h-3.5 w-3.5" />
-              Creative learning for builders
+              {heroSettings?.badgeText || "Creative learning for builders"}
             </div>
 
             <h1 className="mx-auto max-w-4xl text-4xl font-extrabold tracking-tight text-indigo-950 sm:text-5xl lg:text-6xl/tight">
-              Master the Art of{" "}
+              {heroSettings?.mainHeadline || "Master the Art of"}{" "}
               <span className="relative inline-block px-1 font-serif italic text-primary underline decoration-purple-300 decoration-wavy decoration-3">
-                Creative Learning
+                {heroSettings?.headlineHighlight || "Creative Learning"}
               </span>
             </h1>
 
             <p className="mx-auto mt-5 max-w-2xl text-base leading-7 text-gray-500 sm:text-lg">
-              Join 1k+ students building the future through design, code, and
-              digital art.
+              {heroSettings?.subHeadline ||
+                "Join 1k+ students building the future through design, code, and digital art."}
             </p>
 
             <div className="mx-auto mt-8 max-w-3xl rounded-[2rem] border border-white/70 bg-white/70 p-3 shadow-[0_30px_80px_-45px_rgba(109,40,217,0.45)] backdrop-blur-sm sm:p-4">
@@ -147,7 +154,10 @@ export default function Home() {
                     <Search className="ml-3 h-5 w-5 shrink-0 text-gray-400" />
                     <input
                       type="text"
-                      placeholder="What do you want to learn today?"
+                      placeholder={
+                        heroSettings?.searchPlaceholder ||
+                        "What do you want to learn today?"
+                      }
                       value={searchQuery}
                       onChange={(event) => setSearchQuery(event.target.value)}
                       className="w-full bg-transparent px-3 py-3 text-sm text-indigo-950 placeholder-gray-400 outline-none"
@@ -247,14 +257,18 @@ export default function Home() {
             </div>
 
             <div className="mx-auto mt-8 flex max-w-3xl flex-wrap items-center justify-center gap-x-6 gap-y-3 text-sm text-gray-500">
-              <div className="inline-flex items-center gap-2 rounded-full bg-white/70 px-4 py-2 shadow-sm ring-1 ring-purple-100">
-                <Paintbrush className="h-4 w-4 text-primary" />
-                Design tracks
-              </div>
-              <div className="inline-flex items-center gap-2 rounded-full bg-white/70 px-4 py-2 shadow-sm ring-1 ring-purple-100">
-                <Sparkles className="h-4 w-4 text-primary" />
-                Live mentorship
-              </div>
+              {(heroSettings?.tags && heroSettings.tags.length > 0
+                ? heroSettings.tags
+                : ["Design tracks", "Live mentorship"]
+              ).map((tag, idx) => (
+                <div
+                  key={idx}
+                  className="inline-flex items-center gap-2 rounded-full bg-white/70 px-4 py-2 shadow-sm ring-1 ring-purple-100"
+                >
+                  <Sparkles className="h-4 w-4 text-primary" />
+                  {tag}
+                </div>
+              ))}
             </div>
 
             <div className="absolute right-[12%] top-[60%] hidden animate-bounce lg:block animation-duration-[4s]">
@@ -264,6 +278,7 @@ export default function Home() {
             </div>
           </div>
         </section>
+        )}
 
         <div className="relative z-0">
           <ScrollReveal delay={0.05}>

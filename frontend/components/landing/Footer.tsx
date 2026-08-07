@@ -3,8 +3,16 @@
 import React from "react";
 import Link from "next/link";
 import { Share2, Heart } from "lucide-react";
+import { useGetHomepageSettingsQuery } from "@/lib/redux/features/page-settings/pageSettingsApi";
 
 export default function Footer() {
+  const { data: settings } = useGetHomepageSettingsQuery();
+  const footerSettings = settings?.footer;
+
+  if (footerSettings?.enabled === false) {
+    return null;
+  }
+
   return (
     <footer className="border-t border-purple-100 bg-secondary pt-14 pb-8 sm:pt-16">
       <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -15,8 +23,8 @@ export default function Footer() {
               Ash <span className="text-primary">Academy</span>
             </span>
             <p className="mt-4 text-xs leading-relaxed text-gray-500">
-              Making creative education accessible, fun, and results-driven for
-              learners everywhere.
+              {footerSettings?.brandDescription ||
+                "Making creative education accessible, fun, and results-driven for learners everywhere."}
             </p>
             {/* Social / Utility Buttons */}
             <div className="mt-6 flex items-center gap-3">
@@ -99,7 +107,8 @@ export default function Footer() {
         {/* Bottom copyright/meta info */}
         <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-purple-100/50 pt-8 sm:flex-row">
           <p className="text-[10px] text-gray-400">
-            © 2026 Ash Academy. Empowering learners worldwide.
+            {footerSettings?.copyrightText ||
+              "© 2026 Ash Academy. Empowering learners worldwide."}
           </p>
           <p className="text-[10px] text-gray-400">
             Designed for Students | Secure Payments

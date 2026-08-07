@@ -4,6 +4,7 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { ChevronLeft, ChevronRight, Quote } from "lucide-react";
 import { useGetAllCourseQuery } from "@/lib/redux/features/course/courseApi";
+import { useGetHomepageSettingsQuery } from "@/lib/redux/features/page-settings/pageSettingsApi";
 
 interface Testimonial {
   id: string;
@@ -12,27 +13,7 @@ interface Testimonial {
   hasQuoteIcon?: boolean;
 }
 
-const staticTestimonials: Testimonial[] = [
-  {
-    id: "static-1",
-    quote:
-      "At first, I was worried that MERN Stack would be too difficult. But the way each topic was explained made learning feel much less overwhelming. The recorded classes were a huge help.",
-    authorName: "VishnuPriya",
-    hasQuoteIcon: true,
-  },
-  {
-    id: "static-2",
-    quote:
-      "I never thought designing could be this easy to learn. The lessons were clear, and being able to replay the videos helped me improve with every project.",
-    authorName: "Safa",
-  },
-  {
-    id: "static-3",
-    quote:
-      "I joined the Digital Marketing course just to learn the basics, but it gave me much more than I expected. The classes were simple, practical, and easy to follow from home.",
-    authorName: "Shafal",
-  },
-];
+
 
 const getInitials = (name: string) => {
   const parts = name.trim().split(/\s+/).filter(Boolean);
@@ -47,6 +28,13 @@ const getInitials = (name: string) => {
 
 export default function Testimonials() {
   const { data: courses = [] } = useGetAllCourseQuery();
+  const { data: settings } = useGetHomepageSettingsQuery();
+  const testimonialSectionSettings = settings?.testimonialsSection;
+
+  if (testimonialSectionSettings?.enabled === false) {
+    return null;
+  }
+
   const sliderRef = useRef<HTMLDivElement | null>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(false);
@@ -73,10 +61,21 @@ export default function Testimonials() {
     return Array.from(unique.values()).slice(0, 18);
   }, [courses]);
 
-  const testimonials = useMemo(
-    () => [...staticTestimonials, ...dynamicTestimonials],
-    [dynamicTestimonials],
-  );
+  const testimonials = useMemo(() => {
+    const adminItems = testimonialSectionSettings?.items
+      ?.filter((item) => item.isApproved !== false)
+      ?.map((item) => ({
+        id: item.id,
+        quote: item.quote,
+        authorName: item.authorName,
+      }));
+
+    if (adminItems && adminItems.length > 0) {
+      return [...adminItems, ...dynamicTestimonials];
+    }
+
+    return [...dynamicTestimonials];
+  }, [testimonialSectionSettings, dynamicTestimonials]);
 
   const updateScrollState = () => {
     const node = sliderRef.current;
@@ -127,10 +126,10 @@ export default function Testimonials() {
         >
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.24em] text-purple-500">
-              Testimonials
+              {testimonialSectionSettings?.subtitle || "Testimonials"}
             </p>
             <h2 className="mt-2 max-w-md text-3xl font-bold tracking-tight text-indigo-950">
-              What our Students say about us
+              {testimonialSectionSettings?.title || "What our Students say about us"}
             </h2>
           </div>
           <div className="flex items-center gap-2">

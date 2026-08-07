@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import { useGetAllCategoriesQuery } from "@/lib/redux/features/category/categoryApi";
 import { useGetAllCourseQuery } from "@/lib/redux/features/course/courseApi";
+import { useGetHomepageSettingsQuery } from "@/lib/redux/features/page-settings/pageSettingsApi";
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
@@ -181,6 +182,12 @@ export default function ExploreCategories() {
 
   const { data: categories, isLoading } = useGetAllCategoriesQuery();
   const { data: courses } = useGetAllCourseQuery();
+  const { data: settings } = useGetHomepageSettingsQuery();
+  const catSettings = settings?.categories;
+
+  if (catSettings?.enabled === false) {
+    return null;
+  }
 
   const getCourseCount = (catId: string, catName: string): number => {
     if (!courses) return 0;
@@ -214,10 +221,10 @@ export default function ExploreCategories() {
         <div className="mb-10 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <h2 className="text-3xl font-bold tracking-tight text-indigo-950">
-              Explore Categories
+              {catSettings?.title || "Explore Categories"}
             </h2>
             <p className="mt-2 text-sm text-gray-500">
-              Hand-picked creative pathways just for you.
+              {catSettings?.description || "Hand-picked creative pathways just for you."}
             </p>
           </div>
 

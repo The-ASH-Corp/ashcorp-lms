@@ -2,6 +2,7 @@
 
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useGetLandingStatsQuery } from "@/lib/redux/features/course/courseApi";
+import { useGetHomepageSettingsQuery } from "@/lib/redux/features/page-settings/pageSettingsApi";
 
 const useCountUp = (
   targetValue: number,
@@ -65,7 +66,13 @@ const formatSatisfaction = (value: number): string => {
 export default function Stats() {
   const sectionRef = useRef<HTMLElement | null>(null);
   const [hasEnteredView, setHasEnteredView] = useState(false);
-  const { data } = useGetLandingStatsQuery();
+  const { data: landingStats } = useGetLandingStatsQuery();
+  const { data: settings } = useGetHomepageSettingsQuery();
+  const pageStats = settings?.stats;
+
+  if (pageStats?.enabled === false) {
+    return null;
+  }
 
   useEffect(() => {
     const node = sectionRef.current;
@@ -93,9 +100,9 @@ export default function Stats() {
     };
   }, [hasEnteredView]);
 
-  const studentsTarget = data?.studentsGlobally ?? 0;
-  const mentorsTarget = data?.expertMentors ?? 0;
-  const satisfactionTarget = data?.satisfactionRate ?? 0;
+  const studentsTarget = landingStats?.studentsGlobally ?? 0;
+  const mentorsTarget = landingStats?.expertMentors ?? 0;
+  const satisfactionTarget = landingStats?.satisfactionRate ?? 0;
 
   const studentsValue = useCountUp(studentsTarget, hasEnteredView);
   const mentorsValue = useCountUp(mentorsTarget, hasEnteredView);
