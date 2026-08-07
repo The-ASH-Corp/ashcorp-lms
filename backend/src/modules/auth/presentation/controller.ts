@@ -29,6 +29,8 @@ export const registerController = async (
   next: NextFunction,
 ): Promise<void> => {
   try {
+    // console.log("register called....");
+    
     const body: RegisterDTO = req.body;
 
     const result = await registerUsecase.execute(body);
