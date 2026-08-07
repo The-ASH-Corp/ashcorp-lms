@@ -9,6 +9,7 @@ import couponRoutes from "../modules/coupon/presentation/routes";
 import examRoutes from "../modules/exam/presentation/routes";
 import graduateRouter from "../modules/graduates/presentation/routes";
 import contactRoutes from "../modules/contact/presentation/routes";
+import pageSettingsRoutes from "../modules/page-settings/presentation/routes";
 
 const router = Router();
 
@@ -31,5 +32,7 @@ router.use("/exam", examRoutes);
 router.use("/graduate",graduateRouter);
 
 router.use("/contact", contactRoutes);
+
+router.use("/page-settings", pageSettingsRoutes);
 
 export default router;

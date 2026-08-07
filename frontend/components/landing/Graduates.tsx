@@ -7,9 +7,12 @@ import {
   useGetFeaturedGraduatesQuery,
   type Graduate,
 } from "@/lib/redux/features/graduate/graduateApi";
+import { useGetHomepageSettingsQuery } from "@/lib/redux/features/page-settings/pageSettingsApi";
 
 export default function Graduates() {
   const { data: featuredGraduates, isLoading } = useGetFeaturedGraduatesQuery();
+  const { data: settings } = useGetHomepageSettingsQuery();
+  const graduateSettings = settings?.graduates;
 
   const getImageUrl = (url?: string) => {
     if (!url) return "";
@@ -22,7 +25,7 @@ export default function Graduates() {
 
   const graduatesList = featuredGraduates || [];
   
-  if (!isLoading && graduatesList.length === 0) {
+  if (graduateSettings?.enabled === false || (!isLoading && graduatesList.length === 0)) {
     return null;
   }
   
@@ -39,7 +42,7 @@ export default function Graduates() {
     <section className="overflow-hidden border-b border-purple-50 bg-white py-12 sm:py-14">
       <div className="mx-auto w-full max-w-[96rem] px-4 sm:px-6 lg:px-8 xl:px-10 2xl:px-12">
         <p className="text-center text-xs font-bold uppercase tracking-widest text-gray-400">
-          Our Graduates Work At
+          {graduateSettings?.subtitle || "Our Graduates Work At"}
         </p>
 
         {shouldScroll ? (

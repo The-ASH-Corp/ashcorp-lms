@@ -57,6 +57,6 @@ export const api = createApi({
 
     return baseQueryWithAuthRedirect;
   })(),
-  tagTypes: ["Auth", "User", "Course", "Category", "Instructor", "Chapter", "Student", "Coupon", "Exam", "Graduate"],
+  tagTypes: ["Auth", "User", "Course", "Category", "Instructor", "Chapter", "Student", "Coupon", "Exam", "Graduate", "PageSettings"],
   endpoints: () => ({}),
 });
