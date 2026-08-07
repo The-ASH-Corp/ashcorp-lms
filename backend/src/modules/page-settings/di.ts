@@ -3,6 +3,8 @@ import { GetHomepageSettingsUseCase } from "./application/usecase/GetHomepageSet
 import { UpdateHomepageSettingsUseCase } from "./application/usecase/UpdateHomepageSettingsUseCase";
 import { GetAboutSettingsUseCase } from "./application/usecase/GetAboutSettingsUseCase";
 import { UpdateAboutSettingsUseCase } from "./application/usecase/UpdateAboutSettingsUseCase";
+import { GetContactSettingsUseCase } from "./application/usecase/GetContactSettingsUseCase";
+import { UpdateContactSettingsUseCase } from "./application/usecase/UpdateContactSettingsUseCase";
 
 export const homepageSettingsRepository = new MongoHomepageSettingsRepository();
 
@@ -11,3 +13,6 @@ export const updateHomepageSettingsUseCase = new UpdateHomepageSettingsUseCase(h
 
 export const getAboutSettingsUseCase = new GetAboutSettingsUseCase(homepageSettingsRepository);
 export const updateAboutSettingsUseCase = new UpdateAboutSettingsUseCase(homepageSettingsRepository);
+
+export const getContactSettingsUseCase = new GetContactSettingsUseCase(homepageSettingsRepository);
+export const updateContactSettingsUseCase = new UpdateContactSettingsUseCase(homepageSettingsRepository);

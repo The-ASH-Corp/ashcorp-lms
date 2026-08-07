@@ -1,7 +1,8 @@
 import { IHomepageSettingsEntity } from "../../domain/entities/HomepageSettings";
 import { IAboutSettingsEntity } from "../../domain/entities/AboutSettings";
+import { IContactSettingsEntity } from "../../domain/entities/ContactSettings";
 import { HomepageSettingsRepository } from "../../domain/repositories/HomepageSettingsRepository";
-import { HomepageSettingsModel, AboutSettingsModel } from "../pageSettings.model";
+import { HomepageSettingsModel, AboutSettingsModel, ContactSettingsModel } from "../pageSettings.model";
 
 export class MongoHomepageSettingsRepository implements HomepageSettingsRepository {
   async getSettings(): Promise<IHomepageSettingsEntity> {
@@ -59,5 +60,33 @@ export class MongoHomepageSettingsRepository implements HomepageSettingsReposito
     }
 
     return settings as unknown as IAboutSettingsEntity;
+  }
+
+  async getContactSettings(): Promise<IContactSettingsEntity> {
+    let settings = await ContactSettingsModel.findOne();
+    if (!settings) {
+      settings = await ContactSettingsModel.create({});
+    }
+    return settings as unknown as IContactSettingsEntity;
+  }
+
+  async updateContactSettings(data: Partial<IContactSettingsEntity>): Promise<IContactSettingsEntity> {
+    let settings = await ContactSettingsModel.findOne();
+
+    if (!settings) {
+      settings = await ContactSettingsModel.create(data);
+    } else {
+      if (data.sectionVisibility) settings.sectionVisibility = { ...settings.sectionVisibility, ...data.sectionVisibility };
+      if (data.metadata) settings.metadata = { ...settings.metadata, ...data.metadata };
+      if (data.hero) settings.hero = { ...settings.hero, ...data.hero };
+      if (data.inquiryForm) settings.inquiryForm = { ...settings.inquiryForm, ...data.inquiryForm };
+      if (data.directories) settings.directories = { ...settings.directories, ...data.directories };
+      if (data.locationMap) settings.locationMap = { ...settings.locationMap, ...data.locationMap };
+      if (data.faqs) (settings as any).faqs = { ...settings.faqs, ...data.faqs };
+
+      await settings.save();
+    }
+
+    return settings as unknown as IContactSettingsEntity;
   }
 }

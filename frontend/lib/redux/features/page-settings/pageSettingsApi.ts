@@ -105,6 +105,60 @@ export interface IAboutPageSettings {
   updatedAt?: string;
 }
 
+export interface IFaqItem {
+  id: string;
+  question: string;
+  answer: string;
+}
+
+export interface IContactPageSettings {
+  _id?: string;
+  sectionVisibility: {
+    hero: boolean;
+    supportCards: boolean;
+    inquiryForm: boolean;
+    institutionMap: boolean;
+    faqs: boolean;
+  };
+  metadata: {
+    pageTitle: string;
+    metaDescription: string;
+  };
+  hero: {
+    badgeText: string;
+    headline: string;
+    description: string;
+  };
+  inquiryForm: {
+    formHeading: string;
+    routingEmail: string;
+    successMessage: string;
+  };
+  directories: {
+    studentSupport: {
+      phone: string;
+      email: string;
+      description: string;
+    };
+    partnerships: {
+      email: string;
+      description: string;
+    };
+  };
+  locationMap: {
+    enabled: boolean;
+    title: string;
+    address: string;
+    mapEmbedUrl: string;
+  };
+  faqs: {
+    title: string;
+    subtitle: string;
+    items: IFaqItem[];
+  };
+  updatedAt?: string;
+}
+
 export const pageSettingsApi = api.injectEndpoints({
   endpoints: (builder) => ({
     getHomepageSettings: builder.query<IHomepageSettings, void>({
@@ -145,6 +199,25 @@ export const pageSettingsApi = api.injectEndpoints({
         response.data,
       invalidatesTags: ["PageSettings"],
     }),
+    getContactSettings: builder.query<IContactPageSettings, void>({
+      query: () => "/page-settings/contact",
+      transformResponse: (response: { success: boolean; data: IContactPageSettings }) =>
+        response.data,
+      providesTags: ["PageSettings"],
+    }),
+    updateContactSettings: builder.mutation<
+      IContactPageSettings,
+      Partial<IContactPageSettings>
+    >({
+      query: (body) => ({
+        url: "/page-settings/contact",
+        method: "PUT",
+        body,
+      }),
+      transformResponse: (response: { success: boolean; data: IContactPageSettings }) =>
+        response.data,
+      invalidatesTags: ["PageSettings"],
+    }),
   }),
 });
 
@@ -153,4 +226,6 @@ export const {
   useUpdateHomepageSettingsMutation,
   useGetAboutSettingsQuery,
   useUpdateAboutSettingsMutation,
+  useGetContactSettingsQuery,
+  useUpdateContactSettingsMutation,
 } = pageSettingsApi;

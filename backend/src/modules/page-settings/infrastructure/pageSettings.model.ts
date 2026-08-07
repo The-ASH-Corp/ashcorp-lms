@@ -296,3 +296,113 @@ const aboutSettingsSchema = new Schema(
 
 export const AboutSettingsModel = model("AboutSettings", aboutSettingsSchema);
 
+// --- Contact Page Settings Schema ---
+const faqItemSchema = new Schema({
+  id: { type: String, required: true },
+  question: { type: String, required: true },
+  answer: { type: String, required: true },
+});
+
+const contactSettingsSchema = new Schema(
+  {
+    sectionVisibility: {
+      hero: { type: Boolean, default: true },
+      supportCards: { type: Boolean, default: true },
+      inquiryForm: { type: Boolean, default: true },
+      institutionMap: { type: Boolean, default: true },
+      faqs: { type: Boolean, default: true },
+    },
+    metadata: {
+      pageTitle: { type: String, default: "Contact Ash Academy" },
+      metaDescription: {
+        type: String,
+        default:
+          "Get in touch with Ash Academy for admissions, institutional partnerships, and general inquiries.",
+      },
+    },
+    hero: {
+      badgeText: { type: String, default: "Connect with Us" },
+      headline: { type: String, default: "Get in Touch with Academic Zenith" },
+      description: {
+        type: String,
+        default:
+          "Whether you're a prospective student seeking guidance, a corporate entity looking for strategic partnerships, or a media representative, our specialized teams are ready to provide the professional support you deserve.",
+      },
+    },
+    inquiryForm: {
+      formHeading: { type: String, default: "Send an Inquiry" },
+      routingEmail: { type: String, default: "inquiries@ashacademy.ai" },
+      successMessage: {
+        type: String,
+        default: "Thank you for contacting Ash Academy. A representative will respond within 24 hours.",
+      },
+    },
+    directories: {
+      studentSupport: {
+        phone: { type: String, default: "+91 9037009400" },
+        email: { type: String, default: "connect@ashacademy.ai" },
+        description: {
+          type: String,
+          default: "Dedicated assistance for enrollment, course access, and technical inquiries.",
+        },
+      },
+      partnerships: {
+        email: { type: String, default: "hr@ashacademy.ai" },
+        description: {
+          type: String,
+          default: "Explore institutional collaboration and corporate training opportunities.",
+        },
+      },
+    },
+    locationMap: {
+      enabled: { type: Boolean, default: true },
+      title: { type: String, default: "Our Campus & Location" },
+      address: {
+        type: String,
+        default: "Ashcorp Technology - Digital Marketing, Software Development, Tirur",
+      },
+      mapEmbedUrl: {
+        type: String,
+        default:
+          "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d712.5535472308395!2d75.94660271623343!3d10.953023494019337!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ba7b35545b7a371%3A0x59efa33ed27234a7!2sAshcorp%20Technology-%20Digital%20Marketing%2C%20Software%20Development%2C%20Flutter%20%2C%20MERN%20Stack%20Development%20in%20Tirur!5e1!3m2!1sen!2sin!4v1785563688272!5m2!1sen!2sin",
+      },
+    },
+    faqs: {
+      title: { type: String, default: "Frequently Asked Questions" },
+      subtitle: { type: String, default: "Quick answers to common inquiries" },
+      items: {
+        type: [faqItemSchema],
+        default: [
+          {
+            id: "faq-1",
+            question: "Why should I choose ASH Academy?",
+            answer:
+              "ASH Academy focuses on practical, industry-relevant education through expert mentorship, hands-on training, real-world projects, and dedicated career support, helping learners become confident and job-ready professionals.",
+          },
+          {
+            id: "faq-2",
+            question: "Will I receive a certificate after completing the course?",
+            answer:
+              "Yes. Once you complete the course and successfully pass the final assessment, your certificate will be issued after verification.",
+          },
+          {
+            id: "faq-3",
+            question: "How can I contact support if I have an issue?",
+            answer:
+              "You can reach our support team anytime through the Contact Us page, and we'll get back to you promptly.",
+          },
+          {
+            id: "faq-4",
+            question: "What happens if I lose internet access mid-lesson?",
+            answer: "You can pause and resume lessons anytime - your progress is automatically saved.",
+          },
+        ],
+      },
+    },
+  },
+  { timestamps: true }
+);
+
+export const ContactSettingsModel = model("ContactSettings", contactSettingsSchema);
+
+
