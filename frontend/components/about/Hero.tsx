@@ -1,6 +1,17 @@
+"use client";
+
 import React from "react";
+import { useGetAboutSettingsQuery } from "@/lib/redux/features/page-settings/pageSettingsApi";
 
 const Hero = () => {
+  const { data: settings } = useGetAboutSettingsQuery();
+  const heroSettings = settings?.hero;
+  const isVisible = settings?.sectionVisibility?.hero !== false && heroSettings?.enabled !== false;
+
+  if (!isVisible) {
+    return null;
+  }
+
   return (
     <section className="relative overflow-hidden">
       <div
@@ -12,16 +23,11 @@ const Hero = () => {
           OUR STORY
         </p>
         <h1 className="text-balance text-4xl font-bold leading-tight tracking-tight text-foreground md:text-6xl">
-          Learn Anywhere
-          <br />
-          <span className="text-primary">Grow Everywhere</span>
+          {heroSettings?.mainHeadline || "Learn Anywhere Grow Everywhere"}
         </h1>
-        <p className="mx-auto mt-8 max-w-xl text-pretty leading-relaxed text-muted-foreground">
-          ASH Academy LMS was built on one idea: great learning shouldn&apos;t
-          be limited by time, place, or pace. Through expertly crafted courses,
-          self-paced flexibility, and lifetime access, we help learners turn
-          curiosity into capability - building real skills that open real doors,
-          wherever they are in the world.
+        <p className="mx-auto mt-8 max-w-xl text-pretty leading-relaxed text-muted-foreground whitespace-pre-line">
+          {heroSettings?.bodyNarrative ||
+            "ASH Academy LMS was built on one idea: great learning shouldn't be limited by time, place, or pace. Through expertly crafted courses, self-paced flexibility, and lifetime access, we help learners turn curiosity into capability - building real skills that open real doors, wherever they are in the world."}
         </p>
       </div>
     </section>

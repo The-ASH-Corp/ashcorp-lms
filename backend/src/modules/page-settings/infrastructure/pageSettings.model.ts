@@ -168,3 +168,131 @@ export const HomepageSettingsModel = model<IHomepageSettings>(
   "HomepageSettings",
   homepageSettingsSchema
 );
+
+// --- About Page Settings Schema ---
+const visionarySchema = new Schema({
+  id: { type: String, required: true },
+  name: { type: String, required: true },
+  role: { type: String, required: true },
+  image: { type: String, default: "" },
+});
+
+const coreValueSchema = new Schema({
+  id: { type: String, required: true },
+  title: { type: String, required: true },
+  description: { type: String, required: true },
+});
+
+const aboutSettingsSchema = new Schema(
+  {
+    sectionVisibility: {
+      hero: { type: Boolean, default: true },
+      coreValues: { type: Boolean, default: true },
+      leadership: { type: Boolean, default: true },
+      impactMetrics: { type: Boolean, default: true },
+      philosophy: { type: Boolean, default: true },
+    },
+    hero: {
+      enabled: { type: Boolean, default: true },
+      mainHeadline: { type: String, default: "Learn Anywhere Grow Everywhere" },
+      bodyNarrative: {
+        type: String,
+        default:
+          "ASH Academy LMS was built on one idea: great learning shouldn't be limited by time, place, or pace. Through expertly crafted courses, self-paced flexibility, and lifetime access, we help learners turn curiosity into capability - building real skills that open real doors, wherever they are in the world.",
+      },
+    },
+    leadership: {
+      enabled: { type: Boolean, default: true },
+      title: { type: String, default: "Meet Our Visionaries" },
+      subtitle: {
+        type: String,
+        default:
+          "Leading with conviction, our executive board combines decades of experience across academia and industry.",
+      },
+      items: {
+        type: [visionarySchema],
+        default: [
+          {
+            id: "vis-1",
+            name: "SUFAIL P",
+            role: "Chief Executive Officer",
+            image: "/images/ASH_LMS_SUFAIL_photo.jpeg",
+          },
+          {
+            id: "vis-2",
+            name: "SHIBILI RAHIMAN KP",
+            role: "Co-founder",
+            image: "/images/ASH_LMS_SR_photo.jpeg",
+          },
+          {
+            id: "vis-3",
+            name: "GOPIKA",
+            role: "HUMAN RESOURCE",
+            image: "/images/ASH_LMS_HR_photo.jpeg",
+          },
+          {
+            id: "vis-4",
+            name: "MOHAMMED HASHIR U",
+            role: "ACADEMIC COORDINATOR",
+            image: "/images/ASH_LMS_HASHIR_photo.jpeg",
+          },
+        ],
+      },
+    },
+    impactMetrics: {
+      enabled: { type: Boolean, default: true },
+    },
+    coreValues: {
+      enabled: { type: Boolean, default: true },
+      title: { type: String, default: "The Pillars of ASH Academy" },
+      subtitle: {
+        type: String,
+        default:
+          "These aren't just values on a page they're the foundation behind every course we build and every learner we support.",
+      },
+      items: {
+        type: [coreValueSchema],
+        default: [
+          {
+            id: "cv-1",
+            title: "Innovation",
+            description:
+              "We constantly evolve our courses and platform, blending modern teaching methods with practical, real-world skills learners can actually use.",
+          },
+          {
+            id: "cv-2",
+            title: "Integrity",
+            description:
+              "We're honest about what our courses deliver — no filler, no false promises. Just clear, quality content that respects your time and trust.",
+          },
+          {
+            id: "cv-3",
+            title: "Community",
+            description:
+              "We're building a growing network of learners, mentors, and industry experts who support each other's growth, long after a course ends.",
+          },
+          {
+            id: "cv-4",
+            title: "Excellence",
+            description:
+              "We hold every course to a high standard — because 'good enough' isn't good enough when it comes to your career and your goals.",
+          },
+        ],
+      },
+    },
+    philosophy: {
+      enabled: { type: Boolean, default: true },
+      sectionHeading: { type: String, default: "Built for Learners, Not Just Learning" },
+      philosophyContent: {
+        type: String,
+        default:
+          "ASH Academy LMS started with a simple observation, most online courses are built for content, not for people. We set out to change that designing a platform where every course is crafted with care, every lesson respects your time and every learner has the freedom to move at their own pace.\n\nWhat began as a small idea has grown into a platform trusted by learners worldwide. Today, we offer lifetime access to expertly designed courses that turn curiosity into real, career-ready skills because we believe education should adapt to your life, not the other way around.",
+      },
+      image: { type: String, default: "/images/campus.png" },
+    },
+  },
+  { timestamps: true }
+);
+
+export const AboutSettingsModel = model("AboutSettings", aboutSettingsSchema);
+
