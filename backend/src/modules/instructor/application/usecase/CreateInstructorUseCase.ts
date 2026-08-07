@@ -9,14 +9,16 @@ export class CreateInstructorUseCase {
 
   async execute(
     data: InstructorRequestDTO,
-    image: string | undefined,
+    profileImage: string | undefined,
   ): Promise<Instructor> {
     
     const body: InstructorRequestDTO = data;
 
-    if (!image) {
+    if (!profileImage) {
       throw new AppError("Image not found", 400);
     }
+    console.log(profileImage);
+    
 
     if (body.password !== body.confirmPassword) {
       throw new AppError("Passwords do not match", 400);
@@ -46,8 +48,11 @@ export class CreateInstructorUseCase {
       hashed,
       body.isFeatured,
       body.verifyByDefault,
-      image,
+      profileImage,
+
     );
+    console.log(instructor);
+    
 
     return this.instructorRepository.createInstructor(instructor);
   }
