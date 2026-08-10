@@ -188,7 +188,6 @@ export default function PlayPage() {
       setHoverRating(0);
       setReview("");
     } catch (error: unknown) {
-      console.log(error);
       const errorMessage =
         typeof error === "object" &&
         error !== null &&
