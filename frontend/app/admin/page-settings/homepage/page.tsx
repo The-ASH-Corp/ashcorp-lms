@@ -24,6 +24,7 @@ export default function LandingPageSettings() {
 
   const [formState, setFormState] = useState<Partial<IHomepageSettings>>({});
   const [savedSuccessfully, setSavedSuccessfully] = useState(false);
+  const [activeTab, setActiveTab] = useState<string>("visibility");
 
   useEffect(() => {
     if (initialSettings) {
@@ -54,9 +55,20 @@ export default function LandingPageSettings() {
     );
   }
 
+  const tabs = [
+    { id: "visibility", label: "Visibility Settings" },
+    { id: "hero", label: "Hero Section" },
+    { id: "stats", label: "Stats Section" },
+    { id: "categories", label: "Categories" },
+    { id: "trending", label: "Trending Workshops" },
+    { id: "graduates", label: "Graduate Stories" },
+    { id: "testimonials", label: "Testimonials" },
+    { id: "footer", label: "Footer" },
+  ];
+
   return (
-    <main className="min-h-screen rounded-3xl border border-violet-100 bg-white p-4 text-slate-900 sm:p-5 lg:p-6">
-      <div className="mx-auto max-w-7xl space-y-5">
+    <main className="min-h-screen rounded-3xl border border-violet-100 bg-white p-4 text-slate-900 sm:p-5 lg:p-6 relative z-0 overflow-hidden">
+      <div className="mx-auto max-w-7xl space-y-6 relative z-10">
         {/* Header Strip & Action Triggers */}
         <HeaderStrip
           onPublish={handlePublish}
@@ -64,69 +76,114 @@ export default function LandingPageSettings() {
           savedSuccessfully={savedSuccessfully}
         />
 
-        {/* 2-Column Layout */}
-        <div className="grid grid-cols-1 gap-5 lg:grid-cols-12">
-          {/* Left Column (Section Visibility & Overview) - 4 cols */}
-          <div className="lg:col-span-4 space-y-5">
-            <SectionVisibilityCard
-              settings={formState}
-              onChange={(updated) => setFormState(updated)}
-            />
-          </div>
+        {/* Tabbed Layout */}
+        <div className="flex flex-col lg:flex-row gap-6 lg:gap-10">
+          {/* Sidebar Navigation */}
+          <aside className="w-full lg:w-64 shrink-0">
+            <nav className="sticky top-6 flex flex-col gap-1.5 rounded-2xl bg-slate-50/50 p-2 border border-slate-100 shadow-sm">
+              {tabs.map((tab) => (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`w-full text-left px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-200 cursor-pointer ${
+                    activeTab === tab.id
+                      ? "bg-white text-violet-700 shadow-sm border border-violet-100"
+                      : "text-slate-500 hover:bg-white/60 hover:text-slate-800"
+                  }`}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </nav>
+          </aside>
 
-          {/* Right Column (Content Orchestration Cards) - 8 cols */}
-          <div className="lg:col-span-8 space-y-5">
-            <HeroOrchestrationCard
-              hero={formState.hero}
-              onChange={(hero) => setFormState((prev) => ({ ...prev, hero }))}
-            />
+          {/* Main Content Area */}
+          <div className="flex-1 min-w-0 transition-all duration-300">
+            {activeTab === "visibility" && (
+              <div className="animate-in fade-in slide-in-from-bottom-2 duration-300">
+                <SectionVisibilityCard
+                  settings={formState}
+                  onChange={(updated) => setFormState(updated)}
+                />
+              </div>
+            )}
 
-            <StatsOrchestrationCard
-              stats={formState.stats!}
-              onChange={(stats) => setFormState((prev) => ({ ...prev, stats }))}
-            />
+            {activeTab === "hero" && (
+              <div className="animate-in fade-in slide-in-from-bottom-2 duration-300">
+                <HeroOrchestrationCard
+                  hero={formState.hero}
+                  onChange={(hero) => setFormState((prev) => ({ ...prev, hero }))}
+                />
+              </div>
+            )}
 
-            <CategoriesOrchestrationCard
-              categoriesSection={formState.categories!}
-              onChange={(categories) =>
-                setFormState((prev) => ({ ...prev, categories }))
-              }
-            />
+            {activeTab === "stats" && formState.stats && (
+              <div className="animate-in fade-in slide-in-from-bottom-2 duration-300">
+                <StatsOrchestrationCard
+                  stats={formState.stats}
+                  onChange={(stats) => setFormState((prev) => ({ ...prev, stats }))}
+                />
+              </div>
+            )}
 
-            <TrendingWorkshopsCard
-              trendingSection={formState.trendingWorkshops!}
-              onChange={(trendingWorkshops) =>
-                setFormState((prev) => ({ ...prev, trendingWorkshops }))
-              }
-            />
+            {activeTab === "categories" && formState.categories && (
+              <div className="animate-in fade-in slide-in-from-bottom-2 duration-300">
+                <CategoriesOrchestrationCard
+                  categoriesSection={formState.categories}
+                  onChange={(categories) =>
+                    setFormState((prev) => ({ ...prev, categories }))
+                  }
+                />
+              </div>
+            )}
 
-            <GraduateStoriesCard
-              graduatesSection={formState.graduates!}
-              onChange={(graduates) =>
-                setFormState((prev) => ({ ...prev, graduates }))
-              }
-            />
+            {activeTab === "trending" && formState.trendingWorkshops && (
+              <div className="animate-in fade-in slide-in-from-bottom-2 duration-300">
+                <TrendingWorkshopsCard
+                  trendingSection={formState.trendingWorkshops}
+                  onChange={(trendingWorkshops) =>
+                    setFormState((prev) => ({ ...prev, trendingWorkshops }))
+                  }
+                />
+              </div>
+            )}
 
-            <TestimonialsOrchestrationCard
-              testimonialsSection={formState.testimonialsSection!}
-              onChange={(testimonialsSection) =>
-                setFormState((prev) => ({ ...prev, testimonialsSection }))
-              }
-            />
+            {activeTab === "graduates" && formState.graduates && (
+              <div className="animate-in fade-in slide-in-from-bottom-2 duration-300">
+                <GraduateStoriesCard
+                  graduatesSection={formState.graduates}
+                  onChange={(graduates) =>
+                    setFormState((prev) => ({ ...prev, graduates }))
+                  }
+                />
+              </div>
+            )}
 
-            <FooterOrchestrationCard
-              footer={formState.footer!}
-              onChange={(footer) =>
-                setFormState((prev) => ({ ...prev, footer }))
-              }
-            />
+            {activeTab === "testimonials" && formState.testimonialsSection && (
+              <div className="animate-in fade-in slide-in-from-bottom-2 duration-300">
+                <TestimonialsOrchestrationCard
+                  testimonialsSection={formState.testimonialsSection}
+                  onChange={(testimonialsSection) =>
+                    setFormState((prev) => ({ ...prev, testimonialsSection }))
+                  }
+                />
+              </div>
+            )}
+
+            {activeTab === "footer" && formState.footer && (
+              <div className="animate-in fade-in slide-in-from-bottom-2 duration-300">
+                <FooterOrchestrationCard
+                  footer={formState.footer}
+                  onChange={(footer) =>
+                    setFormState((prev) => ({ ...prev, footer }))
+                  }
+                />
+              </div>
+            )}
           </div>
         </div>
       </div>
-
-      {/* Background aesthetics */}
-      <div className="pointer-events-none fixed inset-0 -z-10 bg-[radial-gradient(circle_at_15%_5%,rgba(124,58,237,0.09),transparent_28%),radial-gradient(circle_at_90%_90%,rgba(124,58,237,0.07),transparent_30%)]" />
-      <div className="pointer-events-none fixed inset-x-0 top-0 -z-10 h-32 bg-linear-to-b from-violet-100 to-transparent" />
+      
     </main>
   );
 }

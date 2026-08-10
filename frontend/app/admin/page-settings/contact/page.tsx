@@ -22,6 +22,7 @@ export default function ContactPageSettings() {
 
   const [formState, setFormState] = useState<Partial<IContactPageSettings>>({});
   const [savedSuccessfully, setSavedSuccessfully] = useState(false);
+  const [activeTab, setActiveTab] = useState<string>("visibility");
 
   useEffect(() => {
     if (initialSettings) {
@@ -79,9 +80,18 @@ export default function ContactPageSettings() {
     faqs: true,
   };
 
+  const tabs = [
+    { id: "visibility", label: "Visibility Settings" },
+    { id: "metadata", label: "Global Metadata" },
+    { id: "inquiry", label: "Inquiry Form" },
+    { id: "directories", label: "Contact Directories" },
+    { id: "location", label: "Location & Map" },
+    { id: "faqs", label: "FAQs" },
+  ];
+
   return (
-    <main className="min-h-screen rounded-3xl border border-violet-100 bg-white p-4 text-slate-900 sm:p-5 lg:p-6">
-      <div className="mx-auto max-w-7xl space-y-5">
+    <main className="min-h-screen rounded-3xl border border-violet-100 bg-white p-4 text-slate-900 sm:p-5 lg:p-6 relative z-0 overflow-hidden">
+      <div className="mx-auto max-w-7xl space-y-6 relative z-10">
         {/* Header Strip & Action Triggers */}
         <HeaderStrip
           onPublish={handlePublish}
@@ -89,69 +99,104 @@ export default function ContactPageSettings() {
           savedSuccessfully={savedSuccessfully}
         />
 
-        {/* 2-Column Main Layout Grid */}
-        <div className="grid grid-cols-1 gap-5 lg:grid-cols-12">
-          {/* Left Column (Visibility Toggles & Meta) - 4 cols */}
-          <div className="lg:col-span-4 space-y-5">
-            <SectionVisibilityCard
-              settings={formState as IContactPageSettings}
-              onChange={(updated) => setFormState(updated)}
-            />
+        {/* Tabbed Layout */}
+        <div className="flex flex-col lg:flex-row gap-6 lg:gap-10">
+          {/* Sidebar Navigation */}
+          <aside className="w-full lg:w-64 shrink-0">
+            <nav className="sticky top-6 flex flex-col gap-1.5 rounded-2xl bg-slate-50/50 p-2 border border-slate-100 shadow-sm">
+              {tabs.map((tab) => (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`w-full text-left px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-200 cursor-pointer ${
+                    activeTab === tab.id
+                      ? "bg-white text-violet-700 shadow-sm border border-violet-100"
+                      : "text-slate-500 hover:bg-white/60 hover:text-slate-800"
+                  }`}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </nav>
+          </aside>
 
-            <GlobalMetadataCard
-              metadata={formState.metadata!}
-              onChange={(metadata) =>
-                setFormState((prev) => ({ ...prev, metadata }))
-              }
-            />
-          </div>
+          {/* Main Content Area */}
+          <div className="flex-1 min-w-0 transition-all duration-300">
+            {activeTab === "visibility" && (
+              <div className="animate-in fade-in slide-in-from-bottom-2 duration-300">
+                <SectionVisibilityCard
+                  settings={formState as IContactPageSettings}
+                  onChange={(updated) => setFormState(updated)}
+                />
+              </div>
+            )}
 
-          {/* Right Column (Content Cards) - 8 cols */}
-          <div className="lg:col-span-8 space-y-5">
-            {/* Inquiry Form Config */}
-            <InquiryFormConfigCard
-              inquiryForm={formState.inquiryForm!}
-              isVisible={visibility.inquiryForm}
-              onToggleVisibility={() => handleSectionToggle("inquiryForm")}
-              onChange={(inquiryForm) =>
-                setFormState((prev) => ({ ...prev, inquiryForm }))
-              }
-            />
+            {activeTab === "metadata" && formState.metadata && (
+              <div className="animate-in fade-in slide-in-from-bottom-2 duration-300">
+                <GlobalMetadataCard
+                  metadata={formState.metadata}
+                  onChange={(metadata) =>
+                    setFormState((prev) => ({ ...prev, metadata }))
+                  }
+                />
+              </div>
+            )}
 
-            {/* Contact Directories */}
-            <ContactDirectoriesCard
-              directories={formState.directories!}
-              isVisible={visibility.supportCards}
-              onToggleVisibility={() => handleSectionToggle("supportCards")}
-              onChange={(directories) =>
-                setFormState((prev) => ({ ...prev, directories }))
-              }
-            />
+            {activeTab === "inquiry" && formState.inquiryForm && (
+              <div className="animate-in fade-in slide-in-from-bottom-2 duration-300">
+                <InquiryFormConfigCard
+                  inquiryForm={formState.inquiryForm}
+                  isVisible={visibility.inquiryForm}
+                  onToggleVisibility={() => handleSectionToggle("inquiryForm")}
+                  onChange={(inquiryForm) =>
+                    setFormState((prev) => ({ ...prev, inquiryForm }))
+                  }
+                />
+              </div>
+            )}
 
-            {/* Location & Map Config */}
-            <LocationMapCard
-              locationMap={formState.locationMap!}
-              isVisible={visibility.institutionMap}
-              onToggleVisibility={() => handleSectionToggle("institutionMap")}
-              onChange={(locationMap) =>
-                setFormState((prev) => ({ ...prev, locationMap }))
-              }
-            />
+            {activeTab === "directories" && formState.directories && (
+              <div className="animate-in fade-in slide-in-from-bottom-2 duration-300">
+                <ContactDirectoriesCard
+                  directories={formState.directories}
+                  isVisible={visibility.supportCards}
+                  onToggleVisibility={() => handleSectionToggle("supportCards")}
+                  onChange={(directories) =>
+                    setFormState((prev) => ({ ...prev, directories }))
+                  }
+                />
+              </div>
+            )}
 
-            {/* Frequently Asked Questions */}
-            <FaqConfigCard
-              faqs={formState.faqs!}
-              isVisible={visibility.faqs}
-              onToggleVisibility={() => handleSectionToggle("faqs")}
-              onChange={(faqs) => setFormState((prev) => ({ ...prev, faqs }))}
-            />
+            {activeTab === "location" && formState.locationMap && (
+              <div className="animate-in fade-in slide-in-from-bottom-2 duration-300">
+                <LocationMapCard
+                  locationMap={formState.locationMap}
+                  isVisible={visibility.institutionMap}
+                  onToggleVisibility={() => handleSectionToggle("institutionMap")}
+                  onChange={(locationMap) =>
+                    setFormState((prev) => ({ ...prev, locationMap }))
+                  }
+                />
+              </div>
+            )}
+
+            {activeTab === "faqs" && formState.faqs && (
+              <div className="animate-in fade-in slide-in-from-bottom-2 duration-300">
+                <FaqConfigCard
+                  faqs={formState.faqs}
+                  isVisible={visibility.faqs}
+                  onToggleVisibility={() => handleSectionToggle("faqs")}
+                  onChange={(faqs) => setFormState((prev) => ({ ...prev, faqs }))}
+                />
+              </div>
+            )}
           </div>
         </div>
       </div>
 
       {/* Background aesthetics */}
-      <div className="pointer-events-none fixed inset-0 -z-10 bg-[radial-gradient(circle_at_15%_5%,rgba(124,58,237,0.09),transparent_28%),radial-gradient(circle_at_90%_90%,rgba(124,58,237,0.07),transparent_30%)]" />
-      <div className="pointer-events-none fixed inset-x-0 top-0 -z-10 h-32 bg-linear-to-b from-violet-100 to-transparent" />
+      
     </main>
   );
 }
