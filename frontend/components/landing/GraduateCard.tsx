@@ -1,4 +1,7 @@
+"use client";
+
 import Image, { StaticImageData } from 'next/image';
+import { motion } from 'framer-motion';
 
 interface GraduateCardProps {
   name: string;
@@ -16,29 +19,36 @@ export default function GraduateCard({
   image,
 }: GraduateCardProps) {
   return (
-    <div className="group relative h-[21rem] w-[16.5rem] flex-shrink-0 overflow-hidden rounded-[2rem] border border-purple-100/70 shadow-[0_25px_60px_-35px_rgba(76,29,149,0.45)]">
+    <motion.div 
+      whileHover={{ y: -8, scale: 1.02 }}
+      transition={{ type: "spring", stiffness: 300, damping: 20 }}
+      className="group relative h-[21rem] w-[16.5rem] flex-shrink-0 overflow-hidden rounded-[2rem] border border-purple-100/70 shadow-[0_25px_60px_-35px_rgba(76,29,149,0.45)] hover:shadow-[0_30px_70px_-25px_rgba(76,29,149,0.55)] cursor-pointer"
+    >
       <Image
         src={image}
         alt={name}
         fill
-        className="object-cover transition-transform duration-500 group-hover:scale-105"
+        className="object-cover transition-transform duration-500 group-hover:scale-110"
         unoptimized
       />
-      <div className="absolute inset-0 bg-linear-to-t from-indigo-950 via-primary/70 to-transparent opacity-90"></div>
+      <div className="absolute inset-0 bg-linear-to-t from-indigo-950 via-primary/70 to-transparent opacity-90 transition-opacity duration-300 group-hover:opacity-100"></div>
       <div className="absolute inset-x-0 top-0 h-24 bg-linear-to-b from-black/15 to-transparent"></div>
 
       <div className="absolute inset-0 flex flex-col justify-between p-6">
-        <div className="max-w-[12rem]">
+        <div className="max-w-[12rem] transform transition-transform duration-300 group-hover:translate-x-1">
           <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-white/70">
             Graduate story
           </p>
           <h3 className="mt-3 text-3xl font-bold leading-none text-white">Placed</h3>
           <h3 className="text-3xl font-bold leading-none text-white">as</h3>
-          <p className="mt-3 line-clamp-2 text-base font-medium text-white/85">{position}</p>
+          <p className="mt-3 line-clamp-2 text-base font-medium text-white/85 group-hover:text-white transition-colors duration-300">{position}</p>
         </div>
 
         <div className="flex items-center justify-between">
-          <div className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-2xl bg-white/90 p-2 shadow-sm backdrop-blur-sm">
+          <motion.div 
+            whileHover={{ rotate: [0, -5, 5, -5, 0], transition: { duration: 0.5 } }}
+            className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-2xl bg-white/90 p-2 shadow-sm backdrop-blur-sm"
+          >
             <Image
               src={companyLogo}
               alt={company}
@@ -47,13 +57,13 @@ export default function GraduateCard({
               className="max-h-full w-auto rounded-lg object-contain"
               unoptimized
             />
-          </div>
+          </motion.div>
 
-          <div className="rounded-full bg-white px-4 py-2 shadow-sm">
-            <p className="text-sm font-semibold text-gray-900">{name}</p>
+          <div className="rounded-full bg-white px-4 py-2 shadow-sm transform transition-all duration-300 group-hover:bg-primary group-hover:text-white">
+            <p className="text-sm font-semibold text-gray-900 group-hover:text-white transition-colors duration-300">{name}</p>
           </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }

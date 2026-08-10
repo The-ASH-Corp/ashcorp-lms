@@ -5,6 +5,7 @@ import {
   useGetLandingStatsQuery,
   useGetPaginatedCoursesQuery,
 } from "@/lib/redux/features/course/courseApi";
+import { useGetAboutSettingsQuery } from "@/lib/redux/features/page-settings/pageSettingsApi";
 
 const useCountUp = (targetValue: number, shouldStart: boolean, duration = 1400): number => {
   const [displayValue, setDisplayValue] = useState(0);
@@ -62,6 +63,10 @@ const formatRating = (value: number): string => {
 };
 
 const Stats = () => {
+  const { data: settings } = useGetAboutSettingsQuery();
+  const impactMetricsSettings = settings?.impactMetrics;
+  const isVisible = settings?.sectionVisibility?.impactMetrics !== false && impactMetricsSettings?.enabled !== false;
+
   const [hasEnteredView, setHasEnteredView] = useState(false);
   const sectionRef = useRef<HTMLElement | null>(null);
   const { data: landingStats } = useGetLandingStatsQuery();
@@ -90,6 +95,10 @@ const Stats = () => {
       observer.disconnect();
     };
   }, [hasEnteredView]);
+
+  if (!isVisible) {
+    return null;
+  }
 
   const studentsTarget = landingStats?.studentsGlobally ?? 0;
   const coursesTarget = paginatedCourses?.pagination.totalCourses ?? 0;

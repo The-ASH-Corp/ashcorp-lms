@@ -196,11 +196,15 @@ export const getWishlistController = async (
   try {
     const studentId = String(req.userId);
     const wishlist = await getWishlistUseCase.execute(studentId);
+    
+    const data = await Promise.all(
+      wishlist.map((course) => serializeCourse(course))
+    );
 
     res.status(200).json({
       success: true,
       message: "Wishlist fetched successfully",
-      data: wishlist,
+      data,
     });
   } catch (err) {
     next(err);

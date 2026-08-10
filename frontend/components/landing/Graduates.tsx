@@ -41,9 +41,16 @@ export default function Graduates() {
   return (
     <section className="overflow-hidden border-b border-purple-50 bg-white py-12 sm:py-14">
       <div className="mx-auto w-full max-w-[96rem] px-4 sm:px-6 lg:px-8 xl:px-10 2xl:px-12">
-        <p className="text-center text-xs font-bold uppercase tracking-widest text-gray-400">
-          {graduateSettings?.subtitle || "Our Graduates Work At"}
-        </p>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+        >
+          <p className="text-center text-xs font-bold uppercase tracking-widest text-gray-400">
+            {graduateSettings?.subtitle || "Our Graduates Work At"}
+          </p>
+        </motion.div>
 
         {shouldScroll ? (
           <div
@@ -65,6 +72,7 @@ export default function Graduates() {
                 duration: Math.max(20, graduatesList.length * 4),
                 repeat: Infinity,
               }}
+              whileHover={{ animationPlayState: "paused" }}
             >
               {marqueeItems.map((item: Graduate, idx: number) => (
                 <GraduateCard
@@ -79,18 +87,37 @@ export default function Graduates() {
             </motion.div>
           </div>
         ) : (
-          <div className="mt-10 flex flex-wrap items-center justify-center gap-6">
+          <motion.div 
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true, margin: "-100px" }}
+            variants={{
+              hidden: { opacity: 0 },
+              show: {
+                opacity: 1,
+                transition: { staggerChildren: 0.15 }
+              }
+            }}
+            className="mt-10 flex flex-wrap items-center justify-center gap-6"
+          >
             {graduatesList.map((item: Graduate, idx: number) => (
-              <GraduateCard
+              <motion.div 
                 key={getGraduateKey(item, idx)}
-                name={item.name}
-                position={item.positionName}
-                company={item.positionName}
-                companyLogo={getImageUrl(item.companyLogo)}
-                image={getImageUrl(item.image)}
-              />
+                variants={{
+                  hidden: { opacity: 0, y: 30 },
+                  show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 24 } }
+                }}
+              >
+                <GraduateCard
+                  name={item.name}
+                  position={item.positionName}
+                  company={item.positionName}
+                  companyLogo={getImageUrl(item.companyLogo)}
+                  image={getImageUrl(item.image)}
+                />
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
         )}
       </div>
     </section>

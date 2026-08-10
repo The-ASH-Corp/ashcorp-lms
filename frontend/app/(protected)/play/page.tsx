@@ -2,8 +2,8 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
-import { Play, CheckCircle2, X } from 'lucide-react';
+import { useSearchParams, useRouter } from 'next/navigation';
+import { Play, CheckCircle2, X, ArrowLeft } from 'lucide-react';
 import { useAddReviewMutation, useGetCourseQuery } from '@/lib/redux/features/course/courseApi';
 import { useGetChaptersByCourseIdQuery } from '@/lib/redux/features/chapter/chapterApi';
 import { useGetMyCoursesQuery, useUpdateCourseProgressMutation } from '@/lib/redux/features/student/studentApi';
@@ -29,6 +29,7 @@ const formatDuration = (duration?: number) => {
 };
 
 export default function PlayPage() {
+  const router = useRouter();
   const [currentTab, setCurrentTab] = useState('overview');
   const authUser = useAppSelector((state) => state.auth.user);
   const searchParams = useSearchParams();
@@ -284,6 +285,21 @@ export default function PlayPage() {
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* Back Button */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
+        <div className="flex items-center gap-3">
+          <button
+            type="button"
+            onClick={() => router.back()}
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-gray-200 bg-white text-gray-700 shadow-xs hover:bg-gray-50 hover:border-gray-300 transition-all cursor-pointer"
+            aria-label="Back"
+          >
+            <ArrowLeft className="h-5 w-5 text-gray-700" />
+          </button>
+          <span className="text-sm font-semibold text-gray-700">Back</span>
+        </div>
+      </div>
 
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-10">
