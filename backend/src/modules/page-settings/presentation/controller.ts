@@ -191,3 +191,27 @@ export const updateTermsConditionsSettings = async (
     next(error);
   }
 };
+
+export const uploadImageController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const file = req.file;
+    if (!file) {
+      res.status(400).json({ success: false, message: "No image file provided" });
+      return;
+    }
+
+    const fileUrl = `/uploads/${file.filename}`;
+
+    res.status(200).json({
+      success: true,
+      message: "Image uploaded successfully",
+      url: fileUrl,
+    });
+  } catch (error) {
+    next(error);
+  }
+};

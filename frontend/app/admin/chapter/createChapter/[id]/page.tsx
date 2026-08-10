@@ -63,8 +63,8 @@ export default function CreateChapter() {
     field: string,
     value: string | number | boolean | File | null,
   ) => {
-    setContentItems(
-      contentItems.map((item) =>
+    setContentItems((prev) =>
+      prev.map((item) =>
         item.id === id ? { ...item, [field]: value } : item,
       ),
     );

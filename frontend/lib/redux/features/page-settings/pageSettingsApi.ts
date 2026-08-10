@@ -294,6 +294,14 @@ export const pageSettingsApi = api.injectEndpoints({
         response.data,
       invalidatesTags: ["PageSettings"],
     }),
+    uploadImage: builder.mutation<{ success: boolean; message: string; url: string }, FormData>({
+      query: (body) => ({
+        url: "/page-settings/upload-image",
+        method: "POST",
+        body,
+      }),
+      transformResponse: (response: { success: boolean; message: string; url: string }) => response,
+    }),
   }),
 });
 
@@ -339,4 +347,5 @@ export const {
   useUpdatePrivacyPolicySettingsMutation,
   useGetTermsConditionsSettingsQuery,
   useUpdateTermsConditionsSettingsMutation,
+  useUploadImageMutation,
 } = pageSettingsApi;

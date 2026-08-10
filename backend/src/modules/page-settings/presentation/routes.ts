@@ -10,7 +10,9 @@ import {
   updatePrivacyPolicySettings,
   getTermsConditionsSettings,
   updateTermsConditionsSettings,
+  uploadImageController,
 } from "./controller";
+import { localImageUpload } from "../../../shared/middleware/localImageUpload";
 
 const router = Router();
 
@@ -28,5 +30,7 @@ router.put("/privacy-policy", updatePrivacyPolicySettings);
 
 router.get("/terms-conditions", getTermsConditionsSettings);
 router.put("/terms-conditions", updateTermsConditionsSettings);
+
+router.post("/upload-image", localImageUpload("image"), uploadImageController);
 
 export default router;

@@ -1,8 +1,10 @@
 "use client";
 
 import React, { useState } from "react";
-import { Users, Plus, Trash2, Power, Upload, User, Image as ImageIcon } from "lucide-react";
+import { Users, Plus, Trash2, Power, Upload, User, Image as ImageIcon, Loader2 } from "lucide-react";
 import { IAboutPageSettings, IVisionary } from "./aboutSettingsTypes";
+import { useUploadImageMutation } from "@/lib/redux/features/page-settings/pageSettingsApi";
+import { toast } from "sonner";
 
 interface LeadershipCardProps {
   leadership: IAboutPageSettings["leadership"];
@@ -20,18 +22,38 @@ export function LeadershipCard({
   const [newName, setNewName] = useState("");
   const [newRole, setNewRole] = useState("");
   const [newImage, setNewImage] = useState<string>("");
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadImage] = useUploadImageMutation();
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    const reader = new FileReader();
-    reader.onload = () => {
-      if (typeof reader.result === "string") {
-        setNewImage(reader.result);
+    try {
+      setIsUploading(true);
+      const formData = new FormData();
+      formData.append("image", file);
+
+      const result = await uploadImage(formData).unwrap();
+      
+      if (result.success && result.url) {
+        // Ensure absolute URL if backend returns relative path
+        const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:5000";
+        const backendBaseUrl = apiBaseUrl.replace(/\/api$/, "");
+        
+        const imageUrl = result.url.startsWith("http") 
+          ? result.url 
+          : `${backendBaseUrl}${result.url.startsWith("/") ? "" : "/"}${result.url}`;
+          
+        setNewImage(imageUrl);
+        toast.success("Image uploaded successfully");
       }
-    };
-    reader.readAsDataURL(file);
+    } catch (error) {
+      console.error("Upload failed:", error);
+      toast.error("Failed to upload image. Please try again.");
+    } finally {
+      setIsUploading(false);
+    }
   };
 
   const handleAddVisionary = () => {
@@ -96,7 +118,7 @@ export function LeadershipCard({
       </div>
 
       <p className="mb-4 text-xs text-slate-500">
-        Manage the profiles displayed in the leadership grid. Images are stored locally in your browser storage.
+        Manage the profiles displayed in the leadership grid. Images are securely uploaded to the server's uploads folder.
       </p>
 
       <div
@@ -156,14 +178,24 @@ export function LeadershipCard({
                   </div>
                 )}
 
-                <label className="inline-flex items-center gap-2 rounded-xl border border-dashed border-violet-300 bg-violet-50/50 px-3.5 py-2 text-xs font-semibold text-violet-700 cursor-pointer hover:bg-violet-100 transition-colors">
-                  <Upload className="size-3.5" />
-                  Upload Image
+                <label className={`inline-flex items-center gap-2 rounded-xl border border-dashed border-violet-300 bg-violet-50/50 px-3.5 py-2 text-xs font-semibold text-violet-700 hover:bg-violet-100 transition-colors ${isUploading ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}>
+                  {isUploading ? (
+                    <>
+                      <Loader2 className="size-3.5 animate-spin" />
+                      Uploading...
+                    </>
+                  ) : (
+                    <>
+                      <Upload className="size-3.5" />
+                      Upload Image
+                    </>
+                  )}
                   <input
                     type="file"
                     accept="image/*"
                     onChange={handleImageUpload}
                     className="hidden"
+                    disabled={isUploading}
                   />
                 </label>
               </div>
