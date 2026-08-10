@@ -82,14 +82,18 @@ export default function CertificatePage() {
   return (
     <div className="min-h-screen bg-white">
       {/* Back Button */}
-      <div className="px-8 sm:px-6 lg:px-8 py-6 sm:py-8">
-        <button
-          onClick={() => route.back()}
-          className="flex items-center gap-2 text-gray-700 hover:text-primary transition-colors font-medium text-sm"
-        >
-          <ArrowLeft size={18} />
-          BACK
-        </button>
+      <div className="max-w-fill mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
+        <div className="flex items-center gap-3">
+          <button
+            type="button"
+            onClick={() => route.back()}
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-gray-200 bg-white text-gray-700 shadow-xs hover:bg-gray-50 hover:border-gray-300 transition-all cursor-pointer"
+            aria-label="Back"
+          >
+            <ArrowLeft className="h-5 w-5 text-gray-700" />
+          </button>
+          <span className="text-sm font-semibold text-gray-700">Back</span>
+        </div>
       </div>
 
       {/* Main Content */}

@@ -83,11 +83,12 @@ function SmallCard({ categoryName, color, iconUrl, courseCount, animationDelay =
   return (
     <motion.div
       layout
-      initial={{ opacity: 0, y: 18 }}
-      animate={{ opacity: 1, y: 0 }}
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-50px" }}
       exit={{ opacity: 0, scale: 0.96 }}
-      transition={{ duration: 0.32, delay: animationDelay, ease: "easeOut" }}
-      whileHover={{ y: -3, transition: { duration: 0.18 } }}
+      transition={{ duration: 0.4, delay: animationDelay, ease: "easeOut" }}
+      whileHover={{ y: -5, scale: 1.02, transition: { duration: 0.2, type: "spring", stiffness: 300 } }}
       className="group relative flex min-h-[136px] flex-col justify-between rounded-3xl p-5 cursor-pointer"
       style={{ backgroundColor: bg }}
     >
@@ -130,11 +131,12 @@ function WideCard({ categoryName, color, iconUrl, courseCount, animationDelay = 
   return (
     <motion.div
       layout
-      initial={{ opacity: 0, y: 22, scale: 0.97 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
+      initial={{ opacity: 0, y: 24, scale: 0.96 }}
+      whileInView={{ opacity: 1, y: 0, scale: 1 }}
+      viewport={{ once: true, margin: "-50px" }}
       exit={{ opacity: 0, y: 10, scale: 0.97 }}
-      transition={{ duration: 0.34, delay: animationDelay, ease: "easeOut" }}
-      whileHover={{ y: -4, transition: { duration: 0.18 } }}
+      transition={{ duration: 0.45, delay: animationDelay, ease: "easeOut" }}
+      whileHover={{ y: -5, scale: 1.02, transition: { duration: 0.2, type: "spring", stiffness: 300 } }}
       className="group relative flex flex-col justify-between rounded-3xl p-6 cursor-pointer"
       style={{ backgroundColor: bg, minHeight: "156px" }}
     >
@@ -219,14 +221,19 @@ export default function ExploreCategories() {
 
         {/* ── Header ── */}
         <div className="mb-10 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-          <div>
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: "-50px" }}
+            transition={{ duration: 0.5, ease: "easeOut" }}
+          >
             <h2 className="text-3xl font-bold tracking-tight text-indigo-950">
               {catSettings?.title || "Explore Categories"}
             </h2>
             <p className="mt-2 text-sm text-gray-500">
               {catSettings?.description || "Hand-picked creative pathways just for you."}
             </p>
-          </div>
+          </motion.div>
 
           {/* Keep "View All Categories" button - only visible when there are more */}
           {hasMore && (
@@ -271,11 +278,12 @@ export default function ExploreCategories() {
                   <motion.div
                     key={featuredCat._id}
                     layout
-                    initial={{ opacity: 0, scale: 0.96 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.42, ease: "easeOut" }}
-                    whileHover={{ y: -4, transition: { duration: 0.2 } }}
-                    className="group relative flex min-h-[288px] flex-col justify-between overflow-hidden rounded-3xl p-7 cursor-pointer md:row-span-2"
+                    initial={{ opacity: 0, scale: 0.94 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    viewport={{ once: true, margin: "-50px" }}
+                    transition={{ duration: 0.5, ease: "easeOut" }}
+                    whileHover={{ y: -5, scale: 1.01, transition: { duration: 0.3, type: "spring", stiffness: 300 } }}
+                    className="group relative flex min-h-[288px] flex-col justify-between overflow-hidden rounded-3xl p-7 cursor-pointer md:row-span-2 shadow-sm hover:shadow-xl hover:shadow-indigo-500/20 transition-shadow duration-300"
                     style={{ backgroundColor: darkBg }}
                   >
                     {/* Decorative glowing blobs */}
