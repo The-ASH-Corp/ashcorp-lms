@@ -50,6 +50,10 @@ const getCourseImageUrl = (imageUrl?: string) => {
 export default function TrendingWorkshops() {
   const authUser = useAppSelector((state) => state.auth.user);
 
+  // Fetch page settings for trending workshops
+  const { data: pageSettings } = useGetHomepageSettingsQuery();
+  const trendingSettings = pageSettings?.trendingWorkshops;
+
   const { data: currentUser } = useGetCurrentUserQuery(undefined, {
     skip: !authUser,
   });
