@@ -27,7 +27,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "../ui/sheet";
-import Logo from "../../public/images/logo.webp"
+import { AppLogo } from "../ui/app-logo";
 
 export default function Navbar() {
   const router = useRouter();
@@ -65,12 +65,7 @@ export default function Navbar() {
         {/* Logo */}
         <div className="flex items-center gap-8">
           <Link href="/" className="flex items-center gap-2">
-            <Image
-              src={Logo}
-              alt="Logo"
-              width={90}
-              height={90}
-            />
+            <AppLogo width={90} height={90} />
           </Link>
 
           {/* Navigation Links */}

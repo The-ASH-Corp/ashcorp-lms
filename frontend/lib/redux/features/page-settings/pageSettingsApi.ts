@@ -1,5 +1,10 @@
 import { api } from "@/lib/redux/services/api";
 
+export interface IGeneralSettings {
+  _id?: string;
+  logoUrl: string;
+}
+
 export interface ITestimonial {
   id: string;
   quote: string;
@@ -302,6 +307,25 @@ export const pageSettingsApi = api.injectEndpoints({
       }),
       transformResponse: (response: { success: boolean; message: string; url: string }) => response,
     }),
+    getGeneralSettings: builder.query<IGeneralSettings, void>({
+      query: () => "/page-settings/general",
+      transformResponse: (response: { success: boolean; data: IGeneralSettings }) =>
+        response.data,
+      providesTags: ["PageSettings"],
+    }),
+    updateGeneralSettings: builder.mutation<
+      IGeneralSettings,
+      Partial<IGeneralSettings>
+    >({
+      query: (body) => ({
+        url: "/page-settings/general",
+        method: "PUT",
+        body,
+      }),
+      transformResponse: (response: { success: boolean; data: IGeneralSettings }) =>
+        response.data,
+      invalidatesTags: ["PageSettings"],
+    }),
   }),
 });
 
@@ -348,4 +372,6 @@ export const {
   useGetTermsConditionsSettingsQuery,
   useUpdateTermsConditionsSettingsMutation,
   useUploadImageMutation,
+  useGetGeneralSettingsQuery,
+  useUpdateGeneralSettingsMutation,
 } = pageSettingsApi;

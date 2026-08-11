@@ -608,3 +608,16 @@ export const TermsConditionsSettingsModel = model(
   "TermsConditionsSettings",
   termsConditionsSettingsSchema
 );
+
+// --- General Settings Schema ---
+const generalSettingsSchema = new Schema(
+  {
+    logoUrl: { type: String, default: "" },
+  },
+  { timestamps: true }
+);
+
+export const GeneralSettingsModel = model(
+  "GeneralSettings",
+  generalSettingsSchema
+);
