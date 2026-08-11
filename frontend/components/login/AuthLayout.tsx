@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import AuthForm from "@/components/login/AuthForm";
+import { AppLogo } from "@/components/ui/app-logo";
 import { AuthFormValues } from "@/lib/validations/auth";
 import { Link } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -49,14 +50,9 @@ export default function AuthLayout({
         </div>
         
         <div className="relative z-10 flex items-center gap-3">
-          <Image
-            src="https://ashacademylms.com/storage/setting/logo/xrDvetmZgdczqHBL4GDygfTgdeyzPmZyq0Fa6Eo8.png"
-            alt="Logo"
-            width={90}
-            height={90}
-            onClick={handleLogoClick}
-            className="cursor-pointer"
-          />
+          <div onClick={handleLogoClick} className="cursor-pointer">
+            <AppLogo width={90} height={90} />
+          </div>
         </div>
 
         <div className="relative z-10">
