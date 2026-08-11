@@ -82,7 +82,6 @@ export default function CreateCategoryPage() {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    console.log(formData)
     try {
       const fd = new FormData();
       fd.append("categoryName", formData.categoryName);
@@ -93,7 +92,6 @@ export default function CreateCategoryPage() {
       fd.append("color", formData.color);
       fd.append("isFeatured", formData.isFeatured.toString());
       fd.append("status", formData.status);
-      console.log(formData)
       await createCategory(fd).unwrap();
       toast.success("Category created successfully");
       router.replace("/admin/category");

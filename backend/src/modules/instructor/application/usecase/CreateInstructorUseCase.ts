@@ -17,7 +17,6 @@ export class CreateInstructorUseCase {
     if (!profileImage) {
       throw new AppError("Image not found", 400);
     }
-    console.log(profileImage);
     
 
     if (body.password !== body.confirmPassword) {
@@ -50,9 +49,7 @@ export class CreateInstructorUseCase {
       body.verifyByDefault,
       profileImage,
 
-    );
-    console.log(instructor);
-    
+    );    
 
     return this.instructorRepository.createInstructor(instructor);
   }
