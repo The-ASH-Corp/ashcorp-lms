@@ -27,6 +27,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "../ui/sheet";
+import Logo from "../../public/images/logo.webp"
 
 export default function Navbar() {
   const router = useRouter();
@@ -65,7 +66,7 @@ export default function Navbar() {
         <div className="flex items-center gap-8">
           <Link href="/" className="flex items-center gap-2">
             <Image
-              src="https://ashacademylms.com/storage/setting/logo/xrDvetmZgdczqHBL4GDygfTgdeyzPmZyq0Fa6Eo8.png"
+              src={Logo}
               alt="Logo"
               width={90}
               height={90}

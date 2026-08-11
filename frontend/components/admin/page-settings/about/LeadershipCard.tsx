@@ -49,7 +49,6 @@ export function LeadershipCard({
         toast.success("Image uploaded successfully");
       }
     } catch (error) {
-      console.error("Upload failed:", error);
       toast.error("Failed to upload image. Please try again.");
     } finally {
       setIsUploading(false);

@@ -37,7 +37,6 @@ export default function ContactPageSettings() {
       toast.success("Contact page settings published successfully");
       setTimeout(() => setSavedSuccessfully(false), 3000);
     } catch (error) {
-      console.error("Failed to publish contact page settings", error);
       toast.error("Failed to publish contact page settings");
     }
   };

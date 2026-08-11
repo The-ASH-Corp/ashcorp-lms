@@ -39,7 +39,6 @@ export default function PrivacyPolicySettings() {
       toast.success("Privacy policy settings published successfully");
       setTimeout(() => setSavedSuccessfully(false), 3000);
     } catch (error) {
-      console.error("Failed to publish privacy policy settings", error);
       toast.error("Failed to publish privacy policy settings");
     }
   };

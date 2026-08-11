@@ -38,7 +38,6 @@ export default function TermsAndConditionsPage() {
       toast.success("Terms & conditions settings published successfully");
       setTimeout(() => setSavedSuccessfully(false), 3000);
     } catch (error) {
-      console.error("Failed to publish terms & conditions settings", error);
       toast.error("Failed to publish terms & conditions settings");
     }
   };

@@ -37,7 +37,6 @@ export default function AboutPageSettings() {
       toast.success("About page settings published successfully to database");
       setTimeout(() => setSavedSuccessfully(false), 3000);
     } catch (error) {
-      console.error("Failed to publish About page settings:", error);
       toast.error("Failed to publish settings to database");
     }
   };

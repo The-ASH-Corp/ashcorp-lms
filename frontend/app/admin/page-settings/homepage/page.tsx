@@ -39,7 +39,6 @@ export default function LandingPageSettings() {
       toast.success("Homepage settings published successfully");
       setTimeout(() => setSavedSuccessfully(false), 3000);
     } catch (error) {
-      console.error("Failed to publish homepage settings", error);
       toast.error("Failed to publish homepage settings");
     }
   };
