@@ -24,11 +24,14 @@ export default function Graduates() {
   };
 
   const graduatesList = featuredGraduates || [];
-  
-  if (graduateSettings?.enabled === false || (!isLoading && graduatesList.length === 0)) {
+
+  if (
+    graduateSettings?.enabled === false ||
+    (!isLoading && graduatesList.length === 0)
+  ) {
     return null;
   }
-  
+
   // Only enable infinite marquee scrolling if there are 4 or more graduates to scroll
   const shouldScroll = graduatesList.length >= 4;
   const marqueeItems = shouldScroll
@@ -40,7 +43,7 @@ export default function Graduates() {
 
   return (
     <section className="overflow-hidden border-b border-purple-50 bg-white py-12 sm:py-14">
-      <div className="mx-auto w-full max-w-[96rem] px-4 sm:px-6 lg:px-8 xl:px-10 2xl:px-12">
+      <div className="mx-auto w-full max-w-[120rem] px-4 sm:px-6 lg:px-12 xl:px-20">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -87,7 +90,7 @@ export default function Graduates() {
             </motion.div>
           </div>
         ) : (
-          <motion.div 
+          <motion.div
             initial="hidden"
             whileInView="show"
             viewport={{ once: true, margin: "-100px" }}
@@ -95,17 +98,21 @@ export default function Graduates() {
               hidden: { opacity: 0 },
               show: {
                 opacity: 1,
-                transition: { staggerChildren: 0.15 }
-              }
+                transition: { staggerChildren: 0.15 },
+              },
             }}
             className="mt-10 flex flex-wrap items-center justify-center gap-6"
           >
             {graduatesList.map((item: Graduate, idx: number) => (
-              <motion.div 
+              <motion.div
                 key={getGraduateKey(item, idx)}
                 variants={{
                   hidden: { opacity: 0, y: 30 },
-                  show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 24 } }
+                  show: {
+                    opacity: 1,
+                    y: 0,
+                    transition: { type: "spring", stiffness: 300, damping: 24 },
+                  },
                 }}
               >
                 <GraduateCard

@@ -17,7 +17,7 @@ const About = () => {
 
   return (
     <section id="about" className="bg-secondary py-20">
-      <div className="mx-auto grid max-w-6xl items-center gap-12 px-6 md:grid-cols-2">
+      <div className="mx-auto grid w-full max-w-[120rem] items-center gap-12 px-6 lg:px-12 xl:px-20 md:grid-cols-2">
         <div className="overflow-hidden rounded-xl border border-border shadow-sm aspect-4/3 relative">
           {imageSrc.startsWith("data:") || imageSrc.startsWith("http") ? (
             /* eslint-disable-next-html-element-for-img */

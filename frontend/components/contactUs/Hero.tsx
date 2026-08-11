@@ -18,7 +18,7 @@ const Hero = () => {
         aria-hidden="true"
         className="pointer-events-none absolute -top-32 right-0 h-72 w-160 rounded-full bg-primary/10 blur-3xl"
       />
-      <div className="relative mx-auto max-w-6xl px-6">
+      <div className="relative mx-auto w-full max-w-[120rem] px-6 lg:px-12 xl:px-20">
         <p className="text-xs font-semibold uppercase tracking-[0.3em] text-primary">
           {heroSettings?.badgeText || "Connect with Us"}
         </p>

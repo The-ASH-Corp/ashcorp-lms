@@ -16,7 +16,9 @@ const useCountUp = (
       return;
     }
 
-    const safeTarget = Number.isFinite(targetValue) ? Math.max(0, targetValue) : 0;
+    const safeTarget = Number.isFinite(targetValue)
+      ? Math.max(0, targetValue)
+      : 0;
 
     if (safeTarget === 0) {
       return;
@@ -49,7 +51,8 @@ const useCountUp = (
 const formatStudents = (value: number): string => {
   if (value >= 1000) {
     const inThousands = value / 1000;
-    const formatted = inThousands % 1 === 0 ? inThousands.toFixed(0) : inThousands.toFixed(1);
+    const formatted =
+      inThousands % 1 === 0 ? inThousands.toFixed(0) : inThousands.toFixed(1);
     return `${formatted}k+`;
   }
 
@@ -128,12 +131,14 @@ export default function Stats() {
 
   return (
     <section ref={sectionRef} className="bg-white py-8 sm:py-10">
-      <div className="mx-auto w-full max-w-[96rem] px-4 sm:px-6 lg:px-8 xl:px-10 2xl:px-12">
+      <div className="mx-auto w-full max-w-[120rem] px-4 sm:px-6 lg:px-12 xl:px-20">
         <div className="rounded-[2rem] bg-primary px-6 py-10 text-white shadow-xl shadow-purple-100 sm:px-12 md:py-14">
           <div className="grid grid-cols-1 gap-y-10 md:grid-cols-3 md:gap-y-0 md:divide-x md:divide-purple-500/40">
             {renderedStats.map((item) => (
               <div key={item.label} className="text-center md:px-4">
-                <p className="text-4xl font-extrabold tracking-tight sm:text-5xl">{item.value}</p>
+                <p className="text-4xl font-extrabold tracking-tight sm:text-5xl">
+                  {item.value}
+                </p>
                 <p className="mt-2 text-xs font-semibold uppercase tracking-wider text-purple-200">
                   {item.label}
                 </p>

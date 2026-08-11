@@ -21,7 +21,7 @@ const Institution = () => {
 
   return (
     <section className="bg-secondary py-20">
-      <div className="mx-auto max-w-6xl px-6 mb-8 text-center">
+      <div className="mx-auto w-full max-w-[120rem] px-6 lg:px-12 xl:px-20 mb-8 text-center">
         <h2 className="text-3xl font-bold tracking-tight text-foreground md:text-4xl">
           {locationMap?.title || "Our Campus & Location"}
         </h2>

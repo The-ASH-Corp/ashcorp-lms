@@ -44,7 +44,7 @@ const Team = () => {
 
   return (
     <section id="mentors" className="bg-secondary py-20">
-      <div className="mx-auto max-w-6xl px-6">
+      <div className="mx-auto w-full max-w-[120rem] px-6 lg:px-12 xl:px-20">
         <div className="flex flex-col justify-between gap-6 md:flex-row md:items-end">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.3em] text-primary">

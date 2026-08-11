@@ -4,7 +4,7 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Play, ShoppingCart, Star,SearchX } from "lucide-react";
+import { Play, ShoppingCart, Star, SearchX } from "lucide-react";
 import { useGetAllCourseQuery } from "@/lib/redux/features/course/courseApi";
 import { useGetCurrentUserQuery } from "@/lib/redux/features/auth/authApi";
 import { useGetHomepageSettingsQuery } from "@/lib/redux/features/page-settings/pageSettingsApi";
@@ -40,8 +40,7 @@ const getCourseImageUrl = (imageUrl?: string) => {
   if (/^https?:\/\//i.test(imageUrl)) return imageUrl;
   if (imageUrl.startsWith("/")) return imageUrl;
 
-  const baseUrl =
-    process.env.NEXT_PUBLIC_IMAGE_URL?.replace(/\/+$/, "") ?? "";
+  const baseUrl = process.env.NEXT_PUBLIC_IMAGE_URL?.replace(/\/+$/, "") ?? "";
   const path = imageUrl.replace(/\\/g, "/").replace(/^\/+/, "");
 
   return baseUrl ? `${baseUrl}/${path}` : `/${path}`;
@@ -58,11 +57,7 @@ export default function TrendingWorkshops() {
     skip: !authUser,
   });
 
-  const {
-    data: courseData,
-    isLoading,
-    isError,
-  } = useGetAllCourseQuery();
+  const { data: courseData, isLoading, isError } = useGetAllCourseQuery();
 
   // Protects the UI from undefined, null, or an invalid API response.
   const courses = Array.isArray(courseData) ? courseData : [];
@@ -114,13 +109,14 @@ export default function TrendingWorkshops() {
 
   return (
     <section className="bg-linear-to-b from-purple-50/40 to-white py-14 sm:py-16">
-      <div className="mx-auto w-full max-w-[96rem] px-4 sm:px-6 lg:px-8 xl:px-10 2xl:px-12">
+      <div className="mx-auto w-full max-w-[120rem] px-4 sm:px-6 lg:px-12 xl:px-20">
         <div className="mb-12 text-center">
           <h2 className="text-3xl font-bold tracking-tight text-indigo-950">
             {trendingSettings?.title || "Trending Courses"}
           </h2>
           <p className="mt-2 text-sm text-gray-500">
-            {trendingSettings?.description || "The most purchased courses right now."}
+            {trendingSettings?.description ||
+              "The most purchased courses right now."}
           </p>
         </div>
 
@@ -138,20 +134,20 @@ export default function TrendingWorkshops() {
             </p>
           </div>
         ) : courses.length === 0 ? (
-  <div className="rounded-2xl border border-dashed border-gray-300 bg-white px-6 py-10 text-center">
-    <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10">
-      <SearchX className="h-8 w-8 text-primary" />
-    </div>
+          <div className="rounded-2xl border border-dashed border-gray-300 bg-white px-6 py-10 text-center">
+            <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10">
+              <SearchX className="h-8 w-8 text-primary" />
+            </div>
 
-    <h3 className="text-lg font-semibold text-gray-900">
-      No trending courses available
-    </h3>
+            <h3 className="text-lg font-semibold text-gray-900">
+              No trending courses available
+            </h3>
 
-    <p className="mt-2 text-sm text-gray-500">
-      Check back soon for newly added courses.
-    </p>
-  </div>
-) : (
+            <p className="mt-2 text-sm text-gray-500">
+              Check back soon for newly added courses.
+            </p>
+          </div>
+        ) : (
           <motion.div
             className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3"
             variants={containerVariants}

@@ -15,7 +15,7 @@ export default function Footer() {
 
   return (
     <footer className="border-t border-purple-100 bg-secondary pt-14 pb-8 sm:pt-16">
-      <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto w-full max-w-[120rem] px-4 sm:px-6 lg:px-12 xl:px-20">
         <div className="grid grid-cols-1 gap-10 md:grid-cols-4 lg:gap-12">
           {/* Brand Info */}
           <div className="md:col-span-1">
@@ -52,8 +52,7 @@ export default function Footer() {
                     {link}
                   </Link>
                 </li>
-                ),
-              )}
+              ))}
             </ul>
           </div>
 
