@@ -8,7 +8,6 @@ import {
   useUploadImageMutation,
   IGeneralSettings,
 } from "@/lib/redux/features/page-settings/pageSettingsApi";
-import { ENV } from "@/lib/env";
 import { Save, UploadCloud, Image as ImageIcon } from "lucide-react";
 import Image from "next/image";
 

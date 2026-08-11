@@ -389,6 +389,10 @@ export default function ExploreCategories() {
   const [showAll, setShowAll] =
     useState(false);
 
+  // Fetch page settings for categories
+  const { data: pageSettings } = useGetHomepageSettingsQuery();
+  const catSettings = pageSettings?.categories;
+
   // Fetch categories
   const {
     data: categories,
@@ -497,7 +501,7 @@ export default function ExploreCategories() {
               Hand-picked creative pathways
               just for you.
             </p>
-          </div>
+          </motion.div>
 
           {/* Only show View All when courses exist */}
 
