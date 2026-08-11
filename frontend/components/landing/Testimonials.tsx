@@ -13,8 +13,6 @@ interface Testimonial {
   hasQuoteIcon?: boolean;
 }
 
-
-
 const getInitials = (name: string) => {
   const parts = name.trim().split(/\s+/).filter(Boolean);
 
@@ -116,7 +114,7 @@ export default function Testimonials() {
 
   return (
     <section className="bg-white py-14 sm:py-16">
-      <div className="mx-auto w-full max-w-[96rem] px-4 sm:px-6 lg:px-8 xl:px-10 2xl:px-12">
+      <div className="mx-auto w-full max-w-[120rem] px-4 sm:px-6 lg:px-12 xl:px-20">
         <motion.div
           className="mb-10 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between"
           initial={{ opacity: 0, y: 26 }}
@@ -129,7 +127,8 @@ export default function Testimonials() {
               {testimonialSectionSettings?.subtitle || "Testimonials"}
             </p>
             <h2 className="mt-2 max-w-md text-3xl font-bold tracking-tight text-indigo-950">
-              {testimonialSectionSettings?.title || "What our Students say about us"}
+              {testimonialSectionSettings?.title ||
+                "What our Students say about us"}
             </h2>
           </div>
           <div className="flex items-center gap-2">
@@ -194,11 +193,11 @@ export default function Testimonials() {
               transition={{ duration: 0.2 }}
               className="relative w-[90vw] max-w-[42rem] shrink-0 snap-start flex flex-col justify-between rounded-3xl border border-purple-100/70 bg-white p-7  sm:w-[34rem] lg:w-[32rem] xl:w-[31rem] shadow-md transition-shadow hover:shadow-lg"
             >
-              { (
+              {
                 <div className="absolute top-6 right-6 text-purple-200 pointer-events-none">
                   <Quote className="h-8 w-8 fill-current" />
                 </div>
-              )}
+              }
 
               <p className="text-sm font-medium leading-relaxed text-gray-600 italic">
                 &ldquo;{t.quote}&rdquo;

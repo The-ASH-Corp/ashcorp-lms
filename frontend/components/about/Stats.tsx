@@ -119,7 +119,7 @@ const Stats = () => {
 
   return (
     <section ref={sectionRef} id="numbers" className="py-20">
-      <div className="mx-auto max-w-6xl px-6">
+      <div className="mx-auto w-full max-w-[120rem] px-6 lg:px-12 xl:px-20">
         <div className="text-center">
           <h2 className="text-3xl font-bold tracking-tight text-foreground md:text-4xl">
             By the Numbers

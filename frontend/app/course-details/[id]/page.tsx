@@ -236,7 +236,7 @@ export default function CourseDetail() {
     <div className="min-h-screen bg-white">
       <Navbar />
       {/* Back Button */}
-      <div className="max-w-fill mx-auto px-4 sm:px-6 lg:px-15 py-4 sm:py-6">
+      <div className="w-full max-w-[120rem] mx-auto px-4 sm:px-6 lg:px-12 xl:px-20 py-4 sm:py-6">
         <div className="flex items-center gap-3">
           <button
             type="button"
@@ -251,7 +251,7 @@ export default function CourseDetail() {
       </div>
 
       {/* Main Content */}
-      <div className="max-w-fill mx-auto px-4 sm:px-6 lg:px-15 pb-12">
+      <div className="w-full max-w-[120rem] mx-auto px-4 sm:px-6 lg:px-12 xl:px-20 pb-12">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
           {/* Left Content */}
           <div className="lg:col-span-2">
