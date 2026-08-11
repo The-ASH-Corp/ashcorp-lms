@@ -26,3 +26,9 @@ export const updatePrivacyPolicySettingsUseCase = new UpdatePrivacyPolicySetting
 
 export const getTermsConditionsSettingsUseCase = new GetTermsConditionsSettingsUseCase(homepageSettingsRepository);
 export const updateTermsConditionsSettingsUseCase = new UpdateTermsConditionsSettingsUseCase(homepageSettingsRepository);
+
+import { GetGeneralSettingsUseCase } from "./application/usecase/GetGeneralSettingsUseCase";
+import { UpdateGeneralSettingsUseCase } from "./application/usecase/UpdateGeneralSettingsUseCase";
+
+export const getGeneralSettingsUseCase = new GetGeneralSettingsUseCase(homepageSettingsRepository);
+export const updateGeneralSettingsUseCase = new UpdateGeneralSettingsUseCase(homepageSettingsRepository);

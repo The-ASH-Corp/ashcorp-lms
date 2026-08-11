@@ -3,6 +3,7 @@ import { IAboutSettingsEntity } from "../../domain/entities/AboutSettings";
 import { IContactSettingsEntity } from "../../domain/entities/ContactSettings";
 import { IPrivacyPolicySettingsEntity } from "../../domain/entities/PrivacyPolicySettings";
 import { ITermsConditionsSettingsEntity } from "../../domain/entities/TermsConditionsSettings";
+import { IGeneralSettingsEntity } from "../../domain/entities/GeneralSettings";
 import { HomepageSettingsRepository } from "../../domain/repositories/HomepageSettingsRepository";
 import {
   HomepageSettingsModel,
@@ -10,6 +11,7 @@ import {
   ContactSettingsModel,
   PrivacyPolicySettingsModel,
   TermsConditionsSettingsModel,
+  GeneralSettingsModel,
 } from "../pageSettings.model";
 
 export class MongoHomepageSettingsRepository implements HomepageSettingsRepository {
@@ -147,5 +149,24 @@ export class MongoHomepageSettingsRepository implements HomepageSettingsReposito
     }
 
     return settings as unknown as ITermsConditionsSettingsEntity;
+  }
+
+  async getGeneralSettings(): Promise<IGeneralSettingsEntity> {
+    let settings = await GeneralSettingsModel.findOne();
+    if (!settings) {
+      settings = await GeneralSettingsModel.create({});
+    }
+    return settings as unknown as IGeneralSettingsEntity;
+  }
+
+  async updateGeneralSettings(data: Partial<IGeneralSettingsEntity>): Promise<IGeneralSettingsEntity> {
+    let settings = await GeneralSettingsModel.findOne();
+    if (!settings) {
+      settings = await GeneralSettingsModel.create(data);
+    } else {
+      if (data.logoUrl !== undefined) settings.logoUrl = data.logoUrl;
+      await settings.save();
+    }
+    return settings as unknown as IGeneralSettingsEntity;
   }
 }

@@ -11,6 +11,8 @@ import {
   getTermsConditionsSettings,
   updateTermsConditionsSettings,
   uploadImageController,
+  getGeneralSettings,
+  updateGeneralSettings,
 } from "./controller";
 import { localImageUpload } from "../../../shared/middleware/localImageUpload";
 
@@ -32,5 +34,8 @@ router.get("/terms-conditions", getTermsConditionsSettings);
 router.put("/terms-conditions", updateTermsConditionsSettings);
 
 router.post("/upload-image", localImageUpload("image"), uploadImageController);
+
+router.get("/general", getGeneralSettings);
+router.put("/general", updateGeneralSettings);
 
 export default router;

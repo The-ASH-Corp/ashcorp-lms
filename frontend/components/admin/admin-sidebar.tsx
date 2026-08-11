@@ -33,6 +33,7 @@ import {
   NotebookText,
 } from "lucide-react";
 import Image from "next/image";
+import { AppLogo } from "@/components/ui/app-logo";
 
 const navItems = [
   {
@@ -92,6 +93,7 @@ const navItems = [
     url: "/admin/page-settings",
     icon: Settings,
     children: [
+      { title: "General", url: "/admin/page-settings/general" },
       { title: "Homepage", url: "/admin/page-settings/homepage" },
       { title: "About", url: "/admin/page-settings/about" },
       { title: "Contact", url: "/admin/page-settings/contact" },
@@ -141,12 +143,7 @@ export function AdminSidebar({
       {/* Brand Header */}
       <SidebarHeader className="px-5 py-5">
         <Link href="/admin" className="flex items-center gap-3 justify-center">
-          <Image
-            src="https://ashacademylms.com/storage/setting/logo/xrDvetmZgdczqHBL4GDygfTgdeyzPmZyq0Fa6Eo8.png"
-            alt="Logo"
-            width={90}
-            height={90}
-          />
+          <AppLogo width={90} height={90} />
         </Link>
       </SidebarHeader>
 
