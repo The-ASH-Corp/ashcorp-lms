@@ -8,18 +8,15 @@ export class CreateGraduateWorkUseCase {
 
   async execute(data: CreateGraduateRequestDTO): Promise<GraduateResponseDTO> {
     
-    if (!data.name || !data.image || !data.positionName || !data.companyLogo) {
+    if (!data.image) {
       throw new AppError(
-        "Name, image, position name and company logo are required",
+        "Image is required",
         400,
       );
     }
 
     return this.graduateRepository.create({
-      name: data.name,
       image: data.image,
-      positionName: data.positionName,
-      companyLogo: data.companyLogo,
       featureOnLandingPage: data.featureOnLandingPage ?? false,
     });
   }

@@ -35,11 +35,8 @@ export default function EditGraduatePage({
   });
   const [updateGraduate, { isLoading: isUpdating }] = useUpdateGraduateMutation();
 
-  const [formData, setFormData] = useState({
-    name: "",
-    positionName: "",
+  const [formData,setFormData] =useState({
     image: "",
-    companyLogo: "",
     featureOnLandingPage: false,
   });
   const [errors, setErrors] = useState<Partial<Record<keyof typeof formData, string>>>({});
@@ -47,10 +44,7 @@ export default function EditGraduatePage({
   useEffect(() => {
     if (graduate) {
       setFormData({
-        name: graduate.name || "",
-        positionName: graduate.positionName || "",
         image: graduate.image || "",
-        companyLogo: graduate.companyLogo || "",
         featureOnLandingPage: graduate.featureOnLandingPage ?? false,
       });
     }
@@ -77,7 +71,7 @@ export default function EditGraduatePage({
 
   const handleFileUpload = (
     e: React.ChangeEvent<HTMLInputElement>,
-    field: "image" | "companyLogo"
+    field: "image"
   ) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -120,10 +114,7 @@ export default function EditGraduatePage({
     try {
       await updateGraduate({
         id,
-        name: formData.name.trim(),
-        positionName: formData.positionName.trim(),
         image: formData.image.trim(),
-        companyLogo: formData.companyLogo.trim(),
         featureOnLandingPage: formData.featureOnLandingPage,
       }).unwrap();
 
@@ -187,62 +178,7 @@ export default function EditGraduatePage({
           {/* Main Form (8 Columns) */}
           <div className="lg:col-span-7 xl:col-span-8">
             <form onSubmit={handleSubmit} className="space-y-6">
-              {/* Graduate Information Section */}
-              <div className="bg-white rounded-2xl border border-gray-200/80 p-6 sm:p-8 shadow-xs">
-                <div className="flex items-center gap-3 mb-6 pb-4 border-b border-gray-100">
-                  <div className="w-10 h-10 rounded-xl bg-violet-50 text-primary flex items-center justify-center font-semibold">
-                    <User className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <h2 className="text-lg font-bold text-gray-900">
-                      Graduate Details
-                    </h2>
-                    <p className="text-xs text-gray-500">
-                      Basic information about the placed graduate
-                    </p>
-                  </div>
-                </div>
 
-                <div className="space-y-6">
-                  {/* Name Input */}
-                  <div>
-                    <label className="block text-xs font-bold text-gray-700 uppercase tracking-wide mb-2">
-                      Graduate Name <span className="text-red-500">*</span>
-                    </label>
-                    <Input
-                      type="text"
-                      name="name"
-                      value={formData.name}
-                      onChange={handleInputChange}
-                      placeholder="e.g. Alex Johnson"
-                      className="w-full h-12 px-4 rounded-xl border border-gray-300 focus:border-primary focus:ring-2 focus:ring-violet-100 outline-hidden transition-all text-sm"
-                    />
-                    {errors.name && (
-                      <p className="text-xs text-red-500 mt-1.5">{errors.name}</p>
-                    )}
-                  </div>
-
-                  {/* Position Name Input */}
-                  <div>
-                    <label className="block text-xs font-bold text-gray-700 uppercase tracking-wide mb-2">
-                      Position Name <span className="text-red-500">*</span>
-                    </label>
-                    <Input
-                      type="text"
-                      name="positionName"
-                      value={formData.positionName}
-                      onChange={handleInputChange}
-                      placeholder="e.g. Senior Frontend Engineer at Google"
-                      className="w-full h-12 px-4 rounded-xl border border-gray-300 focus:border-primary focus:ring-2 focus:ring-violet-100 outline-hidden transition-all text-sm"
-                    />
-                    {errors.positionName && (
-                      <p className="text-xs text-red-500 mt-1.5">
-                        {errors.positionName}
-                      </p>
-                    )}
-                  </div>
-                </div>
-              </div>
 
               {/* Media Section (Images & Photo Uploads) */}
               <div className="bg-white rounded-2xl border border-gray-200/80 p-6 sm:p-8 shadow-xs">
@@ -260,7 +196,7 @@ export default function EditGraduatePage({
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 gap-6">
                   {/* Graduate Image / Photo Upload */}
                   <div>
                     <label className="block text-xs font-bold text-gray-700 uppercase tracking-wide mb-2">
@@ -305,51 +241,7 @@ export default function EditGraduatePage({
                     )}
                   </div>
 
-                  {/* Company Logo / Photo Upload */}
-                  <div>
-                    <label className="block text-xs font-bold text-gray-700 uppercase tracking-wide mb-2">
-                      Company Logo <span className="text-red-500">*</span>
-                    </label>
-                    <div className="space-y-3">
-                      <div className="border-2 border-dashed border-gray-300 rounded-xl p-5 text-center hover:border-primary/60 transition-colors bg-gray-50/50">
-                        <input
-                          type="file"
-                          accept="image/*"
-                          onChange={(e) => handleFileUpload(e, "companyLogo")}
-                          className="hidden"
-                          id="edit-company-logo-upload"
-                        />
-                        <label
-                          htmlFor="edit-company-logo-upload"
-                          className="cursor-pointer block"
-                        >
-                          <Building2 className="mx-auto mb-2 text-gray-400 w-6 h-6" />
-                          <p className="text-xs text-gray-600 font-medium">
-                            Click to upload company logo
-                          </p>
-                          <p className="text-[10px] text-gray-400 mt-1">
-                            PNG, SVG, WEBP transparent
-                          </p>
-                        </label>
-                      </div>
 
-                      <div className="relative">
-                        <Input
-                          type="text"
-                          name="companyLogo"
-                          value={formData.companyLogo}
-                          onChange={handleInputChange}
-                          placeholder="Or paste company logo URL"
-                          className="w-full h-10 px-3 text-xs rounded-lg border border-gray-300 focus:border-primary"
-                        />
-                      </div>
-                    </div>
-                    {errors.companyLogo && (
-                      <p className="text-xs text-red-500 mt-1.5">
-                        {errors.companyLogo}
-                      </p>
-                    )}
-                  </div>
                 </div>
               </div>
 
@@ -417,7 +309,7 @@ export default function EditGraduatePage({
                 {formData.image ? (
                   <Image
                     src={formData.image}
-                    alt={formData.name || "Graduate image preview"}
+                    alt={"Graduate image preview"}
                     fill
                     className="object-cover"
                     unoptimized
@@ -429,46 +321,7 @@ export default function EditGraduatePage({
                   </div>
                 )}
 
-                {/* Violet Gradient Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-r from-violet-900/80 via-violet-800/40 to-transparent opacity-80" />
 
-                {/* Card Content Overlay */}
-                <div className="absolute inset-0 flex flex-col justify-between p-6 z-10">
-                  {/* Top Section */}
-                  <div>
-                    <h4 className="text-white text-3xl font-bold tracking-tight">Placed</h4>
-                    <h4 className="text-white text-3xl font-bold tracking-tight">as</h4>
-                    <p className="text-white text-base font-medium mt-2 line-clamp-2">
-                      {formData.positionName || "Position Name"}
-                    </p>
-                  </div>
-
-                  {/* Bottom Section */}
-                  <div className="flex items-center justify-between gap-3">
-                    {/* Company Logo */}
-                    <div className="bg-white/90 backdrop-blur-xs rounded-xl w-14 h-14 p-2 flex items-center justify-center shrink-0 overflow-hidden shadow-sm">
-                      {formData.companyLogo ? (
-                        <Image
-                          src={formData.companyLogo}
-                          alt="Company Logo"
-                          width={48}
-                          height={48}
-                          className="object-contain max-h-full"
-                          unoptimized
-                        />
-                      ) : (
-                        <Building2 className="w-6 h-6 text-gray-400" />
-                      )}
-                    </div>
-
-                    {/* Name Badge */}
-                    <div className="bg-white rounded-full px-4 py-2 shadow-sm max-w-[170px] truncate">
-                      <p className="text-gray-900 font-semibold text-xs truncate">
-                        {formData.name || "Graduate Name"}
-                      </p>
-                    </div>
-                  </div>
-                </div>
               </div>
 
               {formData.featureOnLandingPage && (

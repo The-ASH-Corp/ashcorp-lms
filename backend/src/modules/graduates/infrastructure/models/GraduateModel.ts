@@ -2,22 +2,7 @@ import mongoose, { InferSchemaType } from "mongoose";
 
 const graduateSchema = new mongoose.Schema(
   {
-    name: {
-      type: String,
-      required: true,
-      trim: true,
-    },
     image: {
-      type: String,
-      required: true,
-      trim: true,
-    },
-    positionName: {
-      type: String,
-      required: true,
-      trim: true,
-    },
-    companyLogo: {
       type: String,
       required: true,
       trim: true,

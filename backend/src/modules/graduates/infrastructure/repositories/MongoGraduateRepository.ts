@@ -51,10 +51,7 @@ export class MongoGraduateRepository implements GraduateRepository {
   private toDTO(graduate: GraduateDocument): GraduateResponseDTO {
     return {
       id: graduate._id.toString(),
-      name: graduate.name,
       image: graduate.image,
-      positionName: graduate.positionName,
-      companyLogo: graduate.companyLogo,
       featureOnLandingPage: graduate.featureOnLandingPage,
       createdAt: graduate.createdAt,
       updatedAt: graduate.updatedAt,

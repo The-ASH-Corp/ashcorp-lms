@@ -75,14 +75,7 @@ export default function GraduatesPage() {
     }
   };
 
-  const filteredGraduates = graduates?.filter((graduate) => {
-    if (!searchQuery.trim()) return true;
-    const query = searchQuery.toLowerCase();
-    return (
-      graduate.name?.toLowerCase().includes(query) ||
-      graduate.positionName?.toLowerCase().includes(query)
-    );
-  });
+  const filteredGraduates = graduates;
 
   if (isLoading) {
     return (
@@ -130,21 +123,7 @@ export default function GraduatesPage() {
 
       {/* Data Table Card */}
       <Card className="border-0 shadow-xs bg-white overflow-hidden rounded-2xl">
-        <div className="p-4 border-b border-gray-100 flex items-center justify-between">
-          <InputGroup className="w-full max-w-xs">
-            <InputGroupInput
-              placeholder="Search by name or position..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="text-sm"
-            />
-            <InputGroupAddon align="inline-end">
-              <Button size="icon" variant="ghost" className="h-8 w-8 shrink-0">
-                <Search className="h-4 w-4 text-gray-400" />
-              </Button>
-            </InputGroupAddon>
-          </InputGroup>
-        </div>
+
 
         <Table>
           <TableHeader>
@@ -155,15 +134,7 @@ export default function GraduatesPage() {
               <TableHead className="text-xs font-semibold uppercase tracking-wider text-gray-500 text-center">
                 Graduate Photo
               </TableHead>
-              <TableHead className="text-xs font-semibold uppercase tracking-wider text-gray-500 text-center">
-                Graduate Name
-              </TableHead>
-              <TableHead className="text-xs font-semibold uppercase tracking-wider text-gray-500 text-center">
-                Position Name
-              </TableHead>
-              <TableHead className="text-xs font-semibold uppercase tracking-wider text-gray-500 text-center">
-                Company Logo
-              </TableHead>
+
               <TableHead className="text-xs font-semibold uppercase tracking-wider text-gray-500 text-center">
                 Featured On Landing Page
               </TableHead>
@@ -196,7 +167,7 @@ export default function GraduatesPage() {
                           {graduate.image ? (
                             <Image
                               src={getImageUrl(graduate.image)}
-                              alt={graduate.name || "Graduate"}
+                              alt="Graduate"
                               fill
                               className="object-cover"
                               unoptimized
@@ -210,39 +181,7 @@ export default function GraduatesPage() {
                       </div>
                     </TableCell>
 
-                    {/* Name */}
-                    <TableCell className="text-center align-middle">
-                      <span className="text-sm font-bold text-gray-900">
-                        {graduate.name}
-                      </span>
-                    </TableCell>
 
-                    {/* Position Name */}
-                    <TableCell className="text-center align-middle">
-                      <span className="text-sm font-medium text-gray-700 bg-gray-100/80 px-3 py-1 rounded-lg inline-block max-w-xs truncate">
-                        {graduate.positionName}
-                      </span>
-                    </TableCell>
-
-                    {/* Company Logo */}
-                    <TableCell className="text-center align-middle">
-                      <div className="flex items-center justify-center">
-                        <div className="relative h-11 w-11 rounded-lg overflow-hidden border border-gray-200 bg-white p-1 flex items-center justify-center shadow-2xs">
-                          {graduate.companyLogo ? (
-                            <Image
-                              src={getImageUrl(graduate.companyLogo)}
-                              alt="Company logo"
-                              width={36}
-                              height={36}
-                              className="object-contain max-h-full max-w-full"
-                              unoptimized
-                            />
-                          ) : (
-                            <Building2 className="h-5 w-5 text-gray-400" />
-                          )}
-                        </div>
-                      </div>
-                    </TableCell>
 
                     {/* Featured Toggle Switch */}
                     <TableCell className="text-center align-middle">
@@ -296,11 +235,11 @@ export default function GraduatesPage() {
                         {/* Delete Button with Confirmation Dialog */}
                         <ConfirmActionDialog
                           title="Delete Graduate Spotlight"
-                          description={`Are you sure you want to delete ${graduate.name}? This action cannot be undone.`}
+                          description={`Are you sure you want to delete this graduate? This action cannot be undone.`}
                           confirmLabel="Delete"
                           loading={isDeleting}
                           loadingLabel="Deleting..."
-                          onConfirm={() => handleDeleteGraduate(id, graduate.name)}
+                          onConfirm={() => handleDeleteGraduate(id, "this graduate")}
                           trigger={
                             <button
                               type="button"

@@ -3,29 +3,20 @@ import { api } from "../../services/api";
 export interface Graduate {
   _id?: string;
   id?: string;
-  name: string;
   image: string;
-  positionName: string;
-  companyLogo: string;
   featureOnLandingPage: boolean;
   createdAt?: string;
   updatedAt?: string;
 }
 
 export interface CreateGraduatePayload {
-  name: string;
   image: string;
-  positionName: string;
-  companyLogo: string;
   featureOnLandingPage?: boolean;
 }
 
 export interface UpdateGraduatePayload {
   id: string;
-  name?: string;
   image?: string;
-  positionName?: string;
-  companyLogo?: string;
   featureOnLandingPage?: boolean;
 }
 

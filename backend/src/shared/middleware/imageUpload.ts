@@ -43,7 +43,6 @@ export const graduateImagesUpload = (): RequestHandler => {
   return (req, res, next) => {
     upload.fields([
       { name: "image", maxCount: 1 },
-      { name: "companyLogo", maxCount: 1 },
     ])(req, res, (error: unknown) => {
       if (error) {
         if (error instanceof multer.MulterError) {
