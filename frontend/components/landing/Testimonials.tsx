@@ -136,86 +136,106 @@ export default function Testimonials() {
               <Quote className="h-4 w-4" />
               Learner feedback
             </div>
-            <button
-              type="button"
-              onClick={() => scrollCards("left")}
-              disabled={!canScrollLeft}
-              className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-purple-100 bg-white text-primary transition-colors hover:bg-purple-50 disabled:cursor-not-allowed disabled:opacity-40"
-              aria-label="Scroll testimonials left"
-            >
-              <ChevronLeft className="h-4 w-4" />
-            </button>
-            <button
-              type="button"
-              onClick={() => scrollCards("right")}
-              disabled={!canScrollRight}
-              className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-purple-100 bg-white text-primary transition-colors hover:bg-purple-50 disabled:cursor-not-allowed disabled:opacity-40"
-              aria-label="Scroll testimonials right"
-            >
-              <ChevronRight className="h-4 w-4" />
-            </button>
+            {testimonials.length > 0 && (
+              <>
+                <button
+                  type="button"
+                  onClick={() => scrollCards("left")}
+                  disabled={!canScrollLeft}
+                  className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-purple-100 bg-white text-primary transition-colors hover:bg-purple-50 disabled:cursor-not-allowed disabled:opacity-40"
+                  aria-label="Scroll testimonials left"
+                >
+                  <ChevronLeft className="h-4 w-4" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => scrollCards("right")}
+                  disabled={!canScrollRight}
+                  className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-purple-100 bg-white text-primary transition-colors hover:bg-purple-50 disabled:cursor-not-allowed disabled:opacity-40"
+                  aria-label="Scroll testimonials right"
+                >
+                  <ChevronRight className="h-4 w-4" />
+                </button>
+              </>
+            )}
           </div>
         </motion.div>
 
-        <motion.div
-          ref={sliderRef}
-          className="no-scrollbar flex snap-x snap-mandatory gap-6 overflow-x-auto pb-2"
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true, amount: 0.2 }}
-          variants={{
-            hidden: { opacity: 0 },
-            show: {
-              opacity: 1,
-              transition: {
-                staggerChildren: 0.14,
-                delayChildren: 0.08,
-              },
-            },
-          }}
-        >
-          {testimonials.map((t) => (
-            <motion.div
-              key={t.id}
-              variants={{
-                hidden: { opacity: 0, y: 30, scale: 0.98 },
-                show: {
-                  opacity: 1,
-                  y: 0,
-                  scale: 1,
-                  transition: {
-                    duration: 0.62,
-                    ease: [0.22, 1, 0.36, 1],
-                  },
+        {testimonials.length === 0 ? (
+          <div className="rounded-2xl border border-dashed border-gray-300 bg-white px-6 py-10 text-center">
+            <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10">
+              <Quote className="h-8 w-8 text-primary opacity-60" />
+            </div>
+
+            <h3 className="text-lg font-semibold text-gray-900">
+              No testimonials available
+            </h3>
+
+            <p className="mt-2 text-sm text-gray-500">
+              Check back later for newly added learner feedback.
+            </p>
+          </div>
+        ) : (
+          <motion.div
+            ref={sliderRef}
+            className="no-scrollbar flex snap-x snap-mandatory gap-6 overflow-x-auto pb-2"
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true, amount: 0.2 }}
+            variants={{
+              hidden: { opacity: 0 },
+              show: {
+                opacity: 1,
+                transition: {
+                  staggerChildren: 0.14,
+                  delayChildren: 0.08,
                 },
-              }}
-              whileHover={{ y: -5 }}
-              transition={{ duration: 0.2 }}
-              className="relative w-[90vw] max-w-[42rem] shrink-0 snap-start flex flex-col justify-between rounded-3xl border border-purple-100/70 bg-white p-7  sm:w-[34rem] lg:w-[32rem] xl:w-[31rem] shadow-md transition-shadow hover:shadow-lg"
-            >
-              {
-                <div className="absolute top-6 right-6 text-purple-200 pointer-events-none">
-                  <Quote className="h-8 w-8 fill-current" />
-                </div>
-              }
+              },
+            }}
+          >
+            {testimonials.map((t) => (
+              <motion.div
+                key={t.id}
+                variants={{
+                  hidden: { opacity: 0, y: 30, scale: 0.98 },
+                  show: {
+                    opacity: 1,
+                    y: 0,
+                    scale: 1,
+                    transition: {
+                      duration: 0.62,
+                      ease: [0.22, 1, 0.36, 1],
+                    },
+                  },
+                }}
+                whileHover={{ y: -5 }}
+                transition={{ duration: 0.2 }}
+                className="relative w-[90vw] max-w-[42rem] shrink-0 snap-start flex flex-col justify-between rounded-3xl border border-purple-100/70 bg-white p-7  sm:w-[34rem] lg:w-[32rem] xl:w-[31rem] shadow-md transition-shadow hover:shadow-lg"
+              >
+                {
+                  <div className="absolute top-6 right-6 text-purple-200 pointer-events-none">
+                    <Quote className="h-8 w-8 fill-current" />
+                  </div>
+                }
 
-              <p className="text-sm font-medium leading-relaxed text-gray-600 italic">
-                &ldquo;{t.quote}&rdquo;
-              </p>
+                <p className="text-sm font-medium leading-relaxed text-gray-600 italic">
+                  &ldquo;{t.quote}&rdquo;
+                </p>
 
-              <div className="mt-8 flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-full border border-purple-100 bg-purple-50 text-xs font-bold tracking-wide text-indigo-900">
-                  {getInitials(t.authorName)}
+                <div className="mt-8 flex items-center gap-3">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full border border-purple-100 bg-purple-50 text-xs font-bold tracking-wide text-indigo-900">
+                    {getInitials(t.authorName)}
+                  </div>
+                  <div>
+                    <h4 className="text-sm font-bold text-indigo-950">
+                      {t.authorName}
+                    </h4>
+                  </div>
                 </div>
-                <div>
-                  <h4 className="text-sm font-bold text-indigo-950">
-                    {t.authorName}
-                  </h4>
-                </div>
-              </div>
-            </motion.div>
-          ))}
-        </motion.div>
+              </motion.div>
+            ))}
+          </motion.div>
+        )}
       </div>
     </section>
   );
