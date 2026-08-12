@@ -39,7 +39,7 @@ export default function Graduates() {
     : graduatesList;
 
   const getGraduateKey = (graduate: Graduate, index: number) =>
-    graduate.id || graduate._id || `${graduate.name}-${index}`;
+    graduate.id || graduate._id || `grad-${index}`;
 
   return (
     <section className="overflow-hidden border-b border-purple-50 bg-white py-12 sm:py-14">
@@ -80,10 +80,6 @@ export default function Graduates() {
               {marqueeItems.map((item: Graduate, idx: number) => (
                 <GraduateCard
                   key={`${getGraduateKey(item, idx)}-${idx}`}
-                  name={item.name}
-                  position={item.positionName}
-                  company={item.positionName}
-                  companyLogo={getImageUrl(item.companyLogo)}
                   image={getImageUrl(item.image)}
                 />
               ))}
@@ -116,10 +112,6 @@ export default function Graduates() {
                 }}
               >
                 <GraduateCard
-                  name={item.name}
-                  position={item.positionName}
-                  company={item.positionName}
-                  companyLogo={getImageUrl(item.companyLogo)}
                   image={getImageUrl(item.image)}
                 />
               </motion.div>

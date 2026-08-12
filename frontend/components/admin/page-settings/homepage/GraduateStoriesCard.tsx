@@ -85,7 +85,7 @@ export function GraduateStoriesCard({
         </div>
 
         <div className="rounded-xl border border-violet-100 bg-violet-50/50 p-3 text-xs text-violet-900">
-          💡 <strong>Tip:</strong> Individual graduate cards and company logos can be added, updated, or featured on the landing page via the{" "}
+          💡 <strong>Tip:</strong> Individual graduate cards can be added, updated, or featured on the landing page via the{" "}
           <Link href="/admin/graduates" className="underline font-semibold">
             Graduates Management Page
           </Link>

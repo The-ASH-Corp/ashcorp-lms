@@ -25,21 +25,14 @@ export const createGraduateController = async (
       req.body.image,
       "student-image"
     );
-    const companyLogoUrl = await GraduateImageService.processAndUpload(
-      files?.companyLogo?.[0],
-      req.body.companyLogo,
-      "company-logo"
-    );
+
 
     const featureOnLandingPage =
       req.body.featureOnLandingPage === "true" ||
       req.body.featureOnLandingPage === true;
 
     const body: CreateGraduateRequestDTO = {
-      name: req.body.name,
-      positionName: req.body.positionName,
       image: imageUrl,
-      companyLogo: companyLogoUrl,
       featureOnLandingPage,
     };
 
@@ -152,13 +145,7 @@ export const updateGraduateController = async (
       );
     }
 
-    if (files?.companyLogo?.[0] || updateData.companyLogo) {
-      updateData.companyLogo = await GraduateImageService.processAndUpload(
-        files?.companyLogo?.[0],
-        updateData.companyLogo,
-        "company-logo"
-      );
-    }
+
 
     if (typeof updateData.featureOnLandingPage !== "undefined") {
       updateData.featureOnLandingPage =
