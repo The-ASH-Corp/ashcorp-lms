@@ -14,6 +14,7 @@ import { InquiryFormConfigCard } from "@/components/admin/page-settings/contact/
 import { ContactDirectoriesCard } from "@/components/admin/page-settings/contact/ContactDirectoriesCard";
 import { LocationMapCard } from "@/components/admin/page-settings/contact/LocationMapCard";
 import { FaqConfigCard } from "@/components/admin/page-settings/contact/FaqConfigCard";
+import { HeroConfigCard } from "@/components/admin/page-settings/contact/HeroConfigCard";
 
 export default function ContactPageSettings() {
   const { data: initialSettings, isLoading } = useGetContactSettingsQuery();
@@ -82,6 +83,7 @@ export default function ContactPageSettings() {
   const tabs = [
     { id: "visibility", label: "Visibility Settings" },
     { id: "metadata", label: "Global Metadata" },
+    { id: "hero", label: "Hero Section" },
     { id: "inquiry", label: "Inquiry Form" },
     { id: "directories", label: "Contact Directories" },
     { id: "location", label: "Location & Map" },
@@ -137,6 +139,17 @@ export default function ContactPageSettings() {
                   onChange={(metadata) =>
                     setFormState((prev) => ({ ...prev, metadata }))
                   }
+                />
+              </div>
+            )}
+
+            {activeTab === "hero" && formState.hero && (
+              <div className="animate-in fade-in slide-in-from-bottom-2 duration-300">
+                <HeroConfigCard
+                  hero={formState.hero}
+                  isVisible={visibility.hero}
+                  onToggleVisibility={() => handleSectionToggle("hero")}
+                  onChange={(hero) => setFormState((prev) => ({ ...prev, hero }))}
                 />
               </div>
             )}
