@@ -289,9 +289,7 @@ export default function Home() {
           <ScrollReveal delay={0.1}>
             <Stats />
           </ScrollReveal>
-          <ScrollReveal delay={0.12}>
-            <Partners />
-          </ScrollReveal>
+          <Partners />
           <ScrollReveal delay={0.14}>
             <Testimonials />
           </ScrollReveal>
