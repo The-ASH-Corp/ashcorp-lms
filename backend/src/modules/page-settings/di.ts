@@ -9,6 +9,10 @@ import { GetPrivacyPolicySettingsUseCase } from "./application/usecase/GetPrivac
 import { UpdatePrivacyPolicySettingsUseCase } from "./application/usecase/UpdatePrivacyPolicySettingsUseCase";
 import { GetTermsConditionsSettingsUseCase } from "./application/usecase/GetTermsConditionsSettingsUseCase";
 import { UpdateTermsConditionsSettingsUseCase } from "./application/usecase/UpdateTermsConditionsSettingsUseCase";
+import { GetGeneralSettingsUseCase } from "./application/usecase/GetGeneralSettingsUseCase";
+import { UpdateGeneralSettingsUseCase } from "./application/usecase/UpdateGeneralSettingsUseCase";
+import { GetAuthSettingsUseCase } from "./application/usecase/GetAuthSettingsUseCase";
+import { UpdateAuthSettingsUseCase } from "./application/usecase/UpdateAuthSettingsUseCase";
 
 export const homepageSettingsRepository = new MongoHomepageSettingsRepository();
 
@@ -26,11 +30,6 @@ export const updatePrivacyPolicySettingsUseCase = new UpdatePrivacyPolicySetting
 
 export const getTermsConditionsSettingsUseCase = new GetTermsConditionsSettingsUseCase(homepageSettingsRepository);
 export const updateTermsConditionsSettingsUseCase = new UpdateTermsConditionsSettingsUseCase(homepageSettingsRepository);
-
-import { GetGeneralSettingsUseCase } from "./application/usecase/GetGeneralSettingsUseCase";
-import { UpdateGeneralSettingsUseCase } from "./application/usecase/UpdateGeneralSettingsUseCase";
-import { GetAuthSettingsUseCase } from "./application/usecase/GetAuthSettingsUseCase";
-import { UpdateAuthSettingsUseCase } from "./application/usecase/UpdateAuthSettingsUseCase";
 
 export const getGeneralSettingsUseCase = new GetGeneralSettingsUseCase(homepageSettingsRepository);
 export const updateGeneralSettingsUseCase = new UpdateGeneralSettingsUseCase(homepageSettingsRepository);
