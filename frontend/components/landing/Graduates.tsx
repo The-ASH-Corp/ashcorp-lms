@@ -111,9 +111,7 @@ export default function Graduates() {
                   },
                 }}
               >
-                <GraduateCard
-                  image={getImageUrl(item.image)}
-                />
+                <GraduateCard image={getImageUrl(item.image)} />
               </motion.div>
             ))}
           </motion.div>
