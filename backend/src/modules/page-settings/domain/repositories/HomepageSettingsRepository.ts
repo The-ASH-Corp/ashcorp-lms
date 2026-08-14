@@ -4,6 +4,7 @@ import { IContactSettingsEntity } from "../entities/ContactSettings";
 import { IPrivacyPolicySettingsEntity } from "../entities/PrivacyPolicySettings";
 import { ITermsConditionsSettingsEntity } from "../entities/TermsConditionsSettings";
 import { IGeneralSettingsEntity } from "../entities/GeneralSettings";
+import { IAuthSettingsEntity } from "../entities/AuthSettings";
 
 export interface HomepageSettingsRepository {
   getSettings(): Promise<IHomepageSettingsEntity>;
@@ -18,4 +19,6 @@ export interface HomepageSettingsRepository {
   updateTermsConditionsSettings(data: Partial<ITermsConditionsSettingsEntity>): Promise<ITermsConditionsSettingsEntity>;
   getGeneralSettings(): Promise<IGeneralSettingsEntity>;
   updateGeneralSettings(data: Partial<IGeneralSettingsEntity>): Promise<IGeneralSettingsEntity>;
+  getAuthSettings(): Promise<IAuthSettingsEntity>;
+  updateAuthSettings(data: Partial<IAuthSettingsEntity>): Promise<IAuthSettingsEntity>;
 }

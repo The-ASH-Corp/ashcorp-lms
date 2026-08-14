@@ -5,6 +5,16 @@ export interface IGeneralSettings {
   logoUrl: string;
 }
 
+export interface IAuthSettings {
+  _id?: string;
+  heroImage: string;
+  heading: string;
+  headingHighlight1: string;
+  headingHighlight2: string;
+  description: string;
+  footerText: string;
+}
+
 export interface ITestimonial {
   id: string;
   quote: string;
@@ -326,6 +336,25 @@ export const pageSettingsApi = api.injectEndpoints({
         response.data,
       invalidatesTags: ["PageSettings"],
     }),
+    getAuthSettings: builder.query<IAuthSettings, void>({
+      query: () => "/page-settings/auth",
+      transformResponse: (response: { success: boolean; data: IAuthSettings }) =>
+        response.data,
+      providesTags: ["PageSettings"],
+    }),
+    updateAuthSettings: builder.mutation<
+      IAuthSettings,
+      Partial<IAuthSettings>
+    >({
+      query: (body) => ({
+        url: "/page-settings/auth",
+        method: "PUT",
+        body,
+      }),
+      transformResponse: (response: { success: boolean; data: IAuthSettings }) =>
+        response.data,
+      invalidatesTags: ["PageSettings"],
+    }),
   }),
 });
 
@@ -374,4 +403,6 @@ export const {
   useUploadImageMutation,
   useGetGeneralSettingsQuery,
   useUpdateGeneralSettingsMutation,
+  useGetAuthSettingsQuery,
+  useUpdateAuthSettingsMutation,
 } = pageSettingsApi;

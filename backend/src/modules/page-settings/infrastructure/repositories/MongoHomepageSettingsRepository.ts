@@ -4,6 +4,7 @@ import { IContactSettingsEntity } from "../../domain/entities/ContactSettings";
 import { IPrivacyPolicySettingsEntity } from "../../domain/entities/PrivacyPolicySettings";
 import { ITermsConditionsSettingsEntity } from "../../domain/entities/TermsConditionsSettings";
 import { IGeneralSettingsEntity } from "../../domain/entities/GeneralSettings";
+import { IAuthSettingsEntity } from "../../domain/entities/AuthSettings";
 import { HomepageSettingsRepository } from "../../domain/repositories/HomepageSettingsRepository";
 import {
   HomepageSettingsModel,
@@ -12,6 +13,7 @@ import {
   PrivacyPolicySettingsModel,
   TermsConditionsSettingsModel,
   GeneralSettingsModel,
+  AuthSettingsModel,
 } from "../pageSettings.model";
 
 export class MongoHomepageSettingsRepository implements HomepageSettingsRepository {
@@ -168,5 +170,29 @@ export class MongoHomepageSettingsRepository implements HomepageSettingsReposito
       await settings.save();
     }
     return settings as unknown as IGeneralSettingsEntity;
+  }
+
+  async getAuthSettings(): Promise<IAuthSettingsEntity> {
+    let settings = await AuthSettingsModel.findOne();
+    if (!settings) {
+      settings = await AuthSettingsModel.create({});
+    }
+    return settings as unknown as IAuthSettingsEntity;
+  }
+
+  async updateAuthSettings(data: Partial<IAuthSettingsEntity>): Promise<IAuthSettingsEntity> {
+    let settings = await AuthSettingsModel.findOne();
+    if (!settings) {
+      settings = await AuthSettingsModel.create(data);
+    } else {
+      if (data.heroImage !== undefined) settings.heroImage = data.heroImage;
+      if (data.heading !== undefined) settings.heading = data.heading;
+      if (data.headingHighlight1 !== undefined) settings.headingHighlight1 = data.headingHighlight1;
+      if (data.headingHighlight2 !== undefined) settings.headingHighlight2 = data.headingHighlight2;
+      if (data.description !== undefined) settings.description = data.description;
+      if (data.footerText !== undefined) settings.footerText = data.footerText;
+      await settings.save();
+    }
+    return settings as unknown as IAuthSettingsEntity;
   }
 }

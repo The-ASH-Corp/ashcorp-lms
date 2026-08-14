@@ -99,6 +99,7 @@ const navItems = [
       { title: "Contact", url: "/admin/page-settings/contact" },
       { title: "Privacy Policy", url: "/admin/page-settings/privacy-policy" },
       { title: "Terms & Conditions", url: "/admin/page-settings/terms-conditions" },
+      { title: "Auth Page", url: "/admin/page-settings/auth" },
     ],
   },
 ];

@@ -621,3 +621,28 @@ export const GeneralSettingsModel = model(
   "GeneralSettings",
   generalSettingsSchema
 );
+
+// --- Auth Page Settings Schema ---
+const authSettingsSchema = new Schema(
+  {
+    heroImage: { type: String, default: "/globe_hero.png" },
+    heading: { type: String, default: "Ascend to your" },
+    headingHighlight1: { type: String, default: "Academic" },
+    headingHighlight2: { type: String, default: "Zenith." },
+    description: {
+      type: String,
+      default:
+        "Join an elite community of scholars and industry leaders. Access world-class courses designed for the visionaries of tomorrow.",
+    },
+    footerText: {
+      type: String,
+      default: "© 2026 Ash Academy. All rights reserved.",
+    },
+  },
+  { timestamps: true }
+);
+
+export const AuthSettingsModel = model(
+  "AuthSettings",
+  authSettingsSchema
+);

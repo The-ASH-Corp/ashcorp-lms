@@ -13,6 +13,8 @@ import {
   uploadImageController,
   getGeneralSettings,
   updateGeneralSettings,
+  getAuthSettings,
+  updateAuthSettings,
 } from "./controller";
 import { localImageUpload } from "../../../shared/middleware/localImageUpload";
 
@@ -37,5 +39,8 @@ router.post("/upload-image", localImageUpload("image"), uploadImageController);
 
 router.get("/general", getGeneralSettings);
 router.put("/general", updateGeneralSettings);
+
+router.get("/auth", getAuthSettings);
+router.put("/auth", updateAuthSettings);
 
 export default router;

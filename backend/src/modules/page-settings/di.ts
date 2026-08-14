@@ -29,6 +29,11 @@ export const updateTermsConditionsSettingsUseCase = new UpdateTermsConditionsSet
 
 import { GetGeneralSettingsUseCase } from "./application/usecase/GetGeneralSettingsUseCase";
 import { UpdateGeneralSettingsUseCase } from "./application/usecase/UpdateGeneralSettingsUseCase";
+import { GetAuthSettingsUseCase } from "./application/usecase/GetAuthSettingsUseCase";
+import { UpdateAuthSettingsUseCase } from "./application/usecase/UpdateAuthSettingsUseCase";
 
 export const getGeneralSettingsUseCase = new GetGeneralSettingsUseCase(homepageSettingsRepository);
 export const updateGeneralSettingsUseCase = new UpdateGeneralSettingsUseCase(homepageSettingsRepository);
+
+export const getAuthSettingsUseCase = new GetAuthSettingsUseCase(homepageSettingsRepository);
+export const updateAuthSettingsUseCase = new UpdateAuthSettingsUseCase(homepageSettingsRepository);
