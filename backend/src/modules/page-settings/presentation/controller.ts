@@ -12,6 +12,8 @@ import {
   updateTermsConditionsSettingsUseCase,
   getGeneralSettingsUseCase,
   updateGeneralSettingsUseCase,
+  getAuthSettingsUseCase,
+  updateAuthSettingsUseCase,
 } from "../di";
 
 export const getHomepageSettings = async (
@@ -247,6 +249,42 @@ export const updateGeneralSettings = async (
     res.status(200).json({
       success: true,
       message: "General settings updated successfully",
+      data: settings,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getAuthSettings = async (
+  _req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const settings = await getAuthSettingsUseCase.execute();
+
+    res.status(200).json({
+      success: true,
+      message: "Auth settings fetched successfully",
+      data: settings,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const updateAuthSettings = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const settings = await updateAuthSettingsUseCase.execute(req.body);
+
+    res.status(200).json({
+      success: true,
+      message: "Auth settings updated successfully",
       data: settings,
     });
   } catch (error) {

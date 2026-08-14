@@ -6,6 +6,7 @@ import { AppLogo } from "@/components/ui/app-logo";
 import { AuthFormValues } from "@/lib/validations/auth";
 import { Link } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useGetAuthSettingsQuery } from "@/lib/redux/features/page-settings/pageSettingsApi";
 
 interface AuthLayoutProps {
   isSignUp: boolean;
@@ -31,18 +32,27 @@ export default function AuthLayout({
   onSubmit,
 }: AuthLayoutProps) {
   const router = useRouter();
+  const { data: authSettings } = useGetAuthSettingsQuery();
 
   const handleLogoClick = () => {
     router.push("/");
   }
+
+  // Fallbacks in case settings aren't loaded yet
+  const heroImage = authSettings?.heroImage || "/globe_hero.png";
+  const heading = authSettings?.heading || "Ascend to your";
+  const headingHighlight1 = authSettings?.headingHighlight1 || "Academic";
+  const headingHighlight2 = authSettings?.headingHighlight2 || "Zenith.";
+  const description = authSettings?.description || "Join an elite community of scholars and industry leaders. Access world-class courses designed for the visionaries of tomorrow.";
+  const footerText = authSettings?.footerText || "© 2026 Ash Academy. All rights reserved.";
 
   return (
     <div className="relative flex min-h-screen overflow-hidden bg-background">
       <div className="relative hidden flex-1 flex-col justify-between overflow-hidden p-10 lg:flex">
         <div className="absolute inset-0">
           <Image
-            src="/globe_hero.png"
-            alt="Globe hero"
+            src={heroImage}
+            alt="Hero image"
             fill
             className="object-cover object-center"
             priority
@@ -57,39 +67,18 @@ export default function AuthLayout({
 
         <div className="relative z-10">
           <h1 className="text-4xl font-extrabold leading-tight text-white lg:text-5xl">
-            Ascend to your <span className="italic text-purple-400">Academic</span>
+            {heading}{" "}
+            <span className="italic text-purple-400">{headingHighlight1}</span>
             <br />
-            <span className="italic text-purple-400">Zenith.</span>
+            <span className="italic text-purple-400">{headingHighlight2}</span>
           </h1>
-          <p className="mt-4 max-w-sm text-sm leading-relaxed text-slate-300/80">
-            Join an elite community of scholars and industry leaders. Access
-            world-class courses designed for the visionaries of tomorrow.
+          <p className="mt-4 max-w-sm text-sm leading-relaxed text-slate-300/80 whitespace-pre-wrap">
+            {description}
           </p>
-
-          <div className="mt-8 inline-flex items-center gap-3 rounded-2xl bg-white/5 px-4 py-3 ring-1 ring-white/10 backdrop-blur-sm">
-            <div className="flex -space-x-2">
-              {[
-                "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=64&h=64&fit=crop&crop=faces",
-                "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=64&h=64&fit=crop&crop=faces",
-                "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=64&h=64&fit=crop&crop=faces",
-              ].map((src, i) => (
-                <div
-                  key={i}
-                  className="relative h-8 w-8 overflow-hidden rounded-full ring-2 ring-background"
-                >
-                  <Image src={src} alt="student" fill className="object-cover" />
-                </div>
-              ))}
-            </div>
-            <div>
-              <p className="text-xs font-bold text-white">+12k Students Joined</p>
-              <p className="text-[11px] text-slate-400">Enrolled this semester</p>
-            </div>
-          </div>
         </div>
 
         <p className="relative z-10 text-[10px] font-semibold uppercase tracking-widest text-slate-500">
-          © 2026 Ash Academy. All rights reserved.
+          {footerText}
         </p>
       </div>
 
