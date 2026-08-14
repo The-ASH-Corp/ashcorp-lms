@@ -137,7 +137,6 @@ function SmallCard({
   animationDelay = 0,
 }: SmallCardProps) {
   const accent = color || "#4F46E5";
-  const bg = hexToRgba(accent, 0.11);
 
   return (
     <motion.div
@@ -160,42 +159,37 @@ function SmallCard({
         ease: "easeOut",
       }}
       whileHover={{
-        y: -3,
+        y: -4,
+        backgroundColor: hexToRgba(accent, 0.08),
+        boxShadow: `0 12px 30px -10px ${hexToRgba(accent, 0.3)}`,
+        borderColor: hexToRgba(accent, 0.3),
         transition: {
-          duration: 0.18,
+          duration: 0.2,
         },
       }}
-      className="group relative flex min-h-[136px] flex-col justify-between rounded-3xl p-5 cursor-pointer"
-      style={{
-        backgroundColor: bg,
+      className="group relative flex min-h-[136px] flex-col justify-between rounded-3xl p-6 cursor-pointer overflow-hidden border transition-colors duration-300"
+      style={{ 
+        backgroundColor: hexToRgba(accent, 0.04), 
+        borderColor: hexToRgba(accent, 0.12) 
       }}
     >
       {/* Category Name */}
-
-      <h3 className="text-lg font-bold text-indigo-950 leading-snug pr-8">
+      <h3 className="relative z-10 text-lg font-bold leading-snug pr-8" style={{ color: "#1e1b4b" }}>
         {categoryName}
       </h3>
 
       {/* Bottom Row */}
-
-      <div className="mt-4 flex items-end justify-between">
-        <span
-          className="text-sm font-semibold"
-          style={{
-            color: accent,
-          }}
-        >
+      <div className="relative z-10 mt-4 flex items-end justify-between">
+        <span className="text-sm font-semibold opacity-90 transition-colors" style={{ color: accent }}>
           {courseCount} {courseCount === 1 ? "Course" : "Courses"}
         </span>
 
-        <div
-          style={{
-            color: accent,
-          }}
-          className="opacity-75 group-hover:opacity-100 transition-opacity"
+        <div 
+          className="flex h-11 w-11 items-center justify-center rounded-2xl transition-all duration-300 group-hover:scale-110"
+          style={{ backgroundColor: hexToRgba(accent, 0.15), color: accent }}
         >
           {iconUrl && /^https?:\/\//.test(iconUrl) ? (
-            <span className="relative block h-6 w-6">
+            <span className="relative block h-5 w-5 opacity-80 group-hover:opacity-100 transition-opacity">
               <Image
                 src={iconUrl}
                 alt={categoryName}
@@ -205,16 +199,15 @@ function SmallCard({
               />
             </span>
           ) : (
-            getCategoryIcon(categoryName, "h-6 w-6")
+            getCategoryIcon(categoryName, "h-5 w-5")
           )}
         </div>
       </div>
 
       {/* Full Card Link */}
-
       <Link
         href={`/courses?category=${encodeURIComponent(categoryName)}`}
-        className="absolute inset-0 z-10 rounded-3xl"
+        className="absolute inset-0 z-20 rounded-3xl"
         aria-label={`Explore ${categoryName}`}
       />
     </motion.div>
@@ -231,8 +224,6 @@ function WideCard({
   animationDelay = 0,
 }: SmallCardProps) {
   const accent = color || "#4F46E5";
-
-  const bg = hexToRgba(accent, 0.1);
 
   return (
     <motion.div
@@ -259,42 +250,37 @@ function WideCard({
       }}
       whileHover={{
         y: -4,
+        backgroundColor: hexToRgba(accent, 0.08),
+        boxShadow: `0 12px 30px -10px ${hexToRgba(accent, 0.3)}`,
+        borderColor: hexToRgba(accent, 0.3),
         transition: {
-          duration: 0.18,
+          duration: 0.2,
         },
       }}
-      className="group relative flex flex-col justify-between rounded-3xl p-6 cursor-pointer"
+      className="group relative flex flex-col justify-between rounded-3xl p-7 cursor-pointer overflow-hidden border transition-colors duration-300"
       style={{
-        backgroundColor: bg,
         minHeight: "156px",
+        backgroundColor: hexToRgba(accent, 0.04), 
+        borderColor: hexToRgba(accent, 0.12)
       }}
     >
       {/* Category Name */}
-
-      <h3 className="text-xl font-bold text-indigo-950 leading-snug">
+      <h3 className="relative z-10 text-xl font-bold leading-snug" style={{ color: "#1e1b4b" }}>
         {categoryName}
       </h3>
 
       {/* Bottom Row */}
-
-      <div className="flex items-end justify-between mt-6">
-        <span
-          className="text-sm font-semibold"
-          style={{
-            color: accent,
-          }}
-        >
+      <div className="relative z-10 flex items-end justify-between mt-6">
+        <span className="text-sm font-semibold opacity-90 transition-colors" style={{ color: accent }}>
           {courseCount} {courseCount === 1 ? "Course" : "Courses"}
         </span>
 
-        <div
-          style={{
-            color: accent,
-          }}
-          className="opacity-60 group-hover:opacity-100 group-hover:scale-110 transition-all duration-200"
+        <div 
+          className="flex h-11 w-11 items-center justify-center rounded-2xl transition-all duration-300 group-hover:scale-110"
+          style={{ backgroundColor: hexToRgba(accent, 0.15), color: accent }}
         >
           {iconUrl && /^https?:\/\//.test(iconUrl) ? (
-            <span className="relative block h-7 w-7">
+            <span className="relative block h-6 w-6 opacity-80 group-hover:opacity-100 transition-opacity">
               <Image
                 src={iconUrl}
                 alt={categoryName}
@@ -304,16 +290,15 @@ function WideCard({
               />
             </span>
           ) : (
-            getCategoryIcon(categoryName, "h-7 w-7")
+            getCategoryIcon(categoryName, "h-6 w-6")
           )}
         </div>
       </div>
 
       {/* Full Card Link */}
-
       <Link
         href={`/courses?category=${encodeURIComponent(categoryName)}`}
-        className="absolute inset-0 z-10 rounded-3xl"
+        className="absolute inset-0 z-20 rounded-3xl"
         aria-label={`Explore ${categoryName}`}
       />
     </motion.div>
@@ -542,25 +527,15 @@ export default function ExploreCategories() {
                     <motion.div
                       key={featuredCat._id}
                       layout
-                      initial={{
-                        opacity: 0,
-                        scale: 0.96,
-                      }}
-                      animate={{
-                        opacity: 1,
-                        scale: 1,
-                      }}
-                      transition={{
-                        duration: 0.42,
-                        ease: "easeOut",
-                      }}
+                      initial={{ opacity: 0, scale: 0.96 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ duration: 0.42, ease: "easeOut" }}
                       whileHover={{
                         y: -4,
-                        transition: {
-                          duration: 0.2,
-                        },
+                        boxShadow: `0 20px 40px -12px ${hexToRgba(darkBg, 0.4)}`,
+                        transition: { duration: 0.2 },
                       }}
-                      className="group relative flex min-h-[288px] flex-col justify-between overflow-hidden rounded-3xl p-7 cursor-pointer md:row-span-2"
+                      className="group relative flex min-h-[288px] flex-col justify-between overflow-hidden rounded-3xl p-8 cursor-pointer md:row-span-2 transition-shadow"
                       style={{
                         backgroundColor: darkBg,
                       }}

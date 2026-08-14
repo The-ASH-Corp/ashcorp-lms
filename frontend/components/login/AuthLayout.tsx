@@ -65,27 +65,6 @@ export default function AuthLayout({
             Join an elite community of scholars and industry leaders. Access
             world-class courses designed for the visionaries of tomorrow.
           </p>
-
-          <div className="mt-8 inline-flex items-center gap-3 rounded-2xl bg-white/5 px-4 py-3 ring-1 ring-white/10 backdrop-blur-sm">
-            <div className="flex -space-x-2">
-              {[
-                "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=64&h=64&fit=crop&crop=faces",
-                "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=64&h=64&fit=crop&crop=faces",
-                "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=64&h=64&fit=crop&crop=faces",
-              ].map((src, i) => (
-                <div
-                  key={i}
-                  className="relative h-8 w-8 overflow-hidden rounded-full ring-2 ring-background"
-                >
-                  <Image src={src} alt="student" fill className="object-cover" />
-                </div>
-              ))}
-            </div>
-            <div>
-              <p className="text-xs font-bold text-white">+12k Students Joined</p>
-              <p className="text-[11px] text-slate-400">Enrolled this semester</p>
-            </div>
-          </div>
         </div>
 
         <p className="relative z-10 text-[10px] font-semibold uppercase tracking-widest text-slate-500">
