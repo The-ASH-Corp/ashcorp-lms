@@ -1,50 +1,77 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Ash-Corp LMS - Frontend
 
-## Getting Started
+The frontend of the Ash-Corp LMS is a modern, responsive web application built with Next.js (App Router), offering a seamless experience for students and administrators.
 
-First, run the development server:
+## 🛠️ Tech Stack
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- **Framework**: Next.js 16 (App Router)
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS v4 & Framer Motion (Animations)
+- **UI Components**: Shadcn UI (Radix UI + Tailwind)
+- **State Management**: Redux Toolkit (RTK) & React-Redux
+- **Form Handling & Validation**: React Hook Form with Zod resolvers
+- **Rich Text Editor**: Tiptap Editor
+- **Data Tables**: TanStack React Table
+- **Icons**: Lucide React
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🚀 Getting Started
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Prerequisites
 
-## API Configuration
+Ensure you have Node.js installed on your machine.
 
-Redux Toolkit and RTK Query are wired through `lib/redux`. Set the API base URL in `.env.local` when the backend is not served from the same Next.js origin:
+### Installation
 
-```bash
+1. Navigate to the frontend directory:
+   ```bash
+   cd frontend
+   ```
+2. Install the dependencies:
+   ```bash
+   npm install
+   ```
+
+### Environment Variables
+
+Create a `.env` file in the `frontend` directory. The application requires the following keys:
+
+```env
+# The Base URL for the Backend API
 NEXT_PUBLIC_API_BASE_URL=http://localhost:5000/api
+
+# The Base URL for Image/Media resolution
+NEXT_PUBLIC_IMAGE_URL=http://localhost:5000
+
+# Razorpay Key for Client-side payment initialization
+NEXT_PUBLIC_RAZORPAY_KEY_ID=your_razorpay_key_id
 ```
 
-The auth endpoints currently expect:
+### Available Scripts
 
-- `POST /auth/login`
-- `POST /auth/register`
-- `GET /auth/me`
+- `npm run dev`: Starts the Next.js development server on `localhost:3000`.
+- `npm run build`: Creates an optimized production build.
+- `npm start`: Starts the Next.js production server.
+- `npm run lint`: Runs ESLint to identify code issues.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 📖 Architecture & Features
 
-## Learn More
+### Next.js App Router (`app/`)
+This project leverages the modern Next.js App Router. Pages are mapped to directories containing a `page.tsx`. Layouts, loading states, and error boundaries are collocated with the routes.
 
-To learn more about Next.js, take a look at the following resources:
+### State Management (`lib/redux/`)
+Redux Toolkit is utilized for global state management. RTK Query might be used for data fetching, but always ensure that the API URL points to `NEXT_PUBLIC_API_BASE_URL`.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### UI Component Library (`components/`)
+We use **Shadcn UI**, which provides beautifully designed, accessible components built on top of Radix UI primitives. These components are fully customizable via Tailwind CSS. Check `components.json` for the configuration.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Forms & Validation
+Complex forms (e.g., login, registration, course creation) are built using **React Hook Form**. Validation is strongly typed and enforced using **Zod** schemas.
 
-## Deploy on Vercel
+### Rich Text Editing
+The platform features a fully-fledged rich text editor utilizing **Tiptap**, specifically equipped for formatting course content (bold, links, alignments, images).
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 💡 Development Guidelines
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **Component Creation**: Reusable components should be placed in `components/`. Use Shadcn CLI to add new primitives when needed.
+- **Styling**: Adhere to Tailwind utility classes. For custom animations, use Framer Motion (`framer-motion` / `motion`).
+- **Server vs Client Components**: Understand the difference in Next.js 16. By default, components in the `app/` directory are React Server Components. Use the `"use client"` directive at the top of the file only when you need client-side interactivity, hooks (useState, useEffect), or event listeners.
