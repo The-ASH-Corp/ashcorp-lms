@@ -303,10 +303,10 @@ export default function CategoryPage() {
                     {/* Status */}
                     <TableCell className="text-center align-middle">
                       <span
-                        className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium justify-center ${style.bg} ${style.text}`}
+                        className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium justify-center ${style?.bg} ${style?.text}`}
                       >
                         <span
-                          className={`h-1.5 w-1.5 rounded-full ${style.dot} animate-pulse`}
+                          className={`h-1.5 w-1.5 rounded-full ${style?.dot} animate-pulse`}
                         />
                         {category.status}
                       </span>
