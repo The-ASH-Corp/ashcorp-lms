@@ -20,6 +20,7 @@ export const api = createApi({
     const rawBaseQuery = fetchBaseQuery({
       baseUrl: apiBaseUrl,
       credentials: "include",
+      fetchFn: (input, init) => fetch(input, { ...init, cache: "no-store" }),
       prepareHeaders: (headers, { getState }) => {
         const token = (getState() as RootState).auth.token;
 
