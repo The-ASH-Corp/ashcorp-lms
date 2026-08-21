@@ -202,15 +202,21 @@ export default function CertificatePage() {
 
                     <TableCell>
                       <div className="flex items-center justify-center gap-2">
-                        {Object.values(student?.courseProgress || {}).some(
-                          (progress) => Number(progress) >= 100,
+                        {Object.entries(student?.courseProgress || {}).some(
+                          ([courseId, progress]) =>
+                            Number(progress) >= 100 &&
+                            student?.examAttempts?.some(
+                              (attempt) =>
+                                attempt.courseId === courseId &&
+                                attempt.isPassed,
+                            ),
                         ) ? (
-                          <Label>No Course Is Completed</Label>
-                        ) : (
                           <Button className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-violet-700"
                           onClick={()=>handleUploadPageChange(student._id)}>
                             Upload Certificate
                           </Button>
+                        ) : (
+                          <Label className="text-gray-500">No course is completed</Label>
                         )}
                       </div>
                     </TableCell>
