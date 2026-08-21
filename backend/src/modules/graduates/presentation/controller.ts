@@ -8,6 +8,7 @@ import {
   graduateWorkCreateUseCase,
   toggleGraduateFeatureUseCase,
   updateGraduateUseCase,
+  getPaginatedGraduatesUseCase,
 } from "../di";
 import { GraduateImageService } from "../infrastructure/services/GraduateImageService";
 
@@ -41,6 +42,29 @@ export const createGraduateController = async (
     res.status(201).json({
       success: true,
       message: "Graduate Card created successfully",
+      data: result,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Get paginated graduates
+export const getPaginatedGraduatesController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 10;
+    const search = (req.query.search as string) || undefined;
+
+    const result = await getPaginatedGraduatesUseCase.execute(page, limit, search);
+
+    res.status(200).json({
+      success: true,
+      message: "Graduates fetched successfully",
       data: result,
     });
   } catch (error) {

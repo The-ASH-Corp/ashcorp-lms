@@ -312,6 +312,7 @@ export default function PlayPage() {
                   key={activeVideoUrl}
                   src={activeVideoUrl}
                   controls
+                  controlsList="nodownload"
                   className="h-full w-full"
                   onTimeUpdate={handleVideoProgress}
                   onEnded={handleVideoProgress}

@@ -413,6 +413,7 @@ export default function CourseDetail() {
                       key={course?.videoUrl}
                       src={`${course?.videoUrl}`}
                       controls
+                      controlsList="nodownload"
                       className="h-full w-full"
                     />
 

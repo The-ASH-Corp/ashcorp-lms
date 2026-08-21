@@ -6,6 +6,7 @@ import { GetGraduateByIdUseCase } from "./application/usecase/GetGraduateByIdUse
 import { ToggleGraduateFeatureUseCase } from "./application/usecase/ToggleGraduateFeatureUseCase";
 import { UpdateGraduateUseCase } from "./application/usecase/UpdateGraduateUseCase";
 import { MongoGraduateRepository } from "./infrastructure/repositories/MongoGraduateRepository";
+import { GetPaginatedGraduatesUseCase } from "./application/usecase/GetPaginatedGraduatesUseCase";
 
 const graduateRepository = new MongoGraduateRepository();
 
@@ -34,5 +35,9 @@ export const toggleGraduateFeatureUseCase = new ToggleGraduateFeatureUseCase(
 );
 
 export const deleteGraduateUseCase = new DeleteGraduateUseCase(
+  graduateRepository
+);
+
+export const getPaginatedGraduatesUseCase = new GetPaginatedGraduatesUseCase(
   graduateRepository
 );

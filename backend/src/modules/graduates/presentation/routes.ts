@@ -7,6 +7,7 @@ import {
   getGraduateByIdController,
   toggleGraduateFeatureController,
   updateGraduateController,
+  getPaginatedGraduatesController,
 } from "./controller";
 import { graduateImagesUpload } from "../../../shared/middleware/imageUpload";
 
@@ -17,6 +18,9 @@ router.post("/create", graduateImagesUpload(), createGraduateController);
 
 // get all Graduates list
 router.get("/get-all", getAllGraduateWorks);
+
+// get paginated Graduates list
+router.get("/paginate", getPaginatedGraduatesController);
 
 // get featured graduates for landing page
 router.get("/get-featured", getFeaturedGraduatesController);

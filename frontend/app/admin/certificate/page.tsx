@@ -20,7 +20,7 @@ import {
   type Student,
   useBlockStudentMutation,
   useDeleteStudentMutation,
-  useGetAllStudentsQuery,
+  useGetPaginatedStudentsQuery,
 } from "@/lib/redux/features/student/studentApi";
 import { toast } from "sonner";
 import { ConfirmActionDialog } from "@/components/shared/confirm-action-dialog";
@@ -70,17 +70,24 @@ const getStudentStatus = (student: Student) =>
 
 export default function CertificatePage() {
   const router = useRouter();
-  const [currentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(1);
+  const limit = 10;
 
   const dispatch = useAppDispatch();
-  const { data: students, isLoading, isError } = useGetAllStudentsQuery();
-  const studentList = students ?? [];
+  const { data: response, isLoading, isError } = useGetPaginatedStudentsQuery({
+    page: currentPage,
+    limit,
+  });
+  
+  const studentList = response?.data || [];
+  const totalStudents = response?.pagination?.totalStudents || 0;
+  const totalPages = Math.ceil(totalStudents / limit);
 
   useEffect(() => {
-    if (students) {
-      dispatch(getAllStudents(students));
+    if (response?.data) {
+      dispatch(getAllStudents(response.data));
     }
-  }, [students, dispatch]);
+  }, [response, dispatch]);
 
   const handleUploadPageChange = (studentId: string) => {
     router.push(`/admin/certificate/list/${studentId}`);
@@ -227,52 +234,62 @@ export default function CertificatePage() {
           </TableBody>
         </Table>
 
-        <div className="flex items-center justify-center border-t border-gray-100 px-5 py-4">
-          <Pagination className="w-auto mx-0">
-            <PaginationContent>
-              <PaginationItem>
-                <PaginationPrevious
-                  href="#"
-                  text=""
-                  className="h-8 w-8 p-0 rounded-lg border border-gray-200 hover:border-violet-300 hover:bg-violet-50"
-                />
-              </PaginationItem>
-              {[1, 2, 3].map((page) => (
-                <PaginationItem key={page}>
-                  <PaginationLink
+        {totalPages > 1 && (
+          <div className="flex items-center justify-center border-t border-gray-100 px-5 py-4">
+            <Pagination className="w-auto mx-0">
+              <PaginationContent>
+                <PaginationItem>
+                  <PaginationPrevious
                     href="#"
-                    isActive={page === currentPage}
-                    className={`h-8 w-8 rounded-lg text-sm ${
-                      page === currentPage
-                        ? "bg-primary! text-white! border-primary! hover:bg-violet-700!"
-                        : "border border-gray-200 hover:border-violet-300 hover:bg-violet-50"
+                    text=""
+                    onClick={(e) => {
+                      e.preventDefault();
+                      if (currentPage > 1) setCurrentPage(currentPage - 1);
+                    }}
+                    className={`h-8 w-8 p-0 rounded-lg border border-gray-200 hover:border-violet-300 hover:bg-violet-50 flex items-center justify-center ${
+                      currentPage === 1 ? "opacity-50 pointer-events-none" : ""
                     }`}
-                  >
-                    {page}
-                  </PaginationLink>
+                  />
                 </PaginationItem>
-              ))}
-              <PaginationItem>
-                <PaginationEllipsis />
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationLink
-                  href="#"
-                  className="h-8 w-8 rounded-lg text-sm border border-gray-200 hover:border-violet-300 hover:bg-violet-50"
-                >
-                  128
-                </PaginationLink>
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationNext
-                  href="#"
-                  text=""
-                  className="h-8 w-8 p-0 rounded-lg border border-gray-200 hover:border-violet-300 hover:bg-violet-50"
-                />
-              </PaginationItem>
-            </PaginationContent>
-          </Pagination>
-        </div>
+                {Array.from({ length: totalPages }).map((_, i) => {
+                  const page = i + 1;
+                  return (
+                    <PaginationItem key={page}>
+                      <PaginationLink
+                        href="#"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setCurrentPage(page);
+                        }}
+                        isActive={currentPage === page}
+                        className={`h-8 w-8 rounded-lg text-sm ${
+                          currentPage === page
+                            ? "bg-primary! text-white! border-primary!"
+                            : "border border-gray-200 hover:border-violet-300 hover:bg-violet-50"
+                        }`}
+                      >
+                        {page}
+                      </PaginationLink>
+                    </PaginationItem>
+                  );
+                })}
+                <PaginationItem>
+                  <PaginationNext
+                    href="#"
+                    text=""
+                    onClick={(e) => {
+                      e.preventDefault();
+                      if (currentPage < totalPages) setCurrentPage(currentPage + 1);
+                    }}
+                    className={`h-8 w-8 p-0 rounded-lg border border-gray-200 hover:border-violet-300 hover:bg-violet-50 flex items-center justify-center ${
+                      currentPage === totalPages ? "opacity-50 pointer-events-none" : ""
+                    }`}
+                  />
+                </PaginationItem>
+              </PaginationContent>
+            </Pagination>
+          </div>
+        )}
       </Card>
     </div>
   );

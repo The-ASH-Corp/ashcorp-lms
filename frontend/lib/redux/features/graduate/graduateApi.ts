@@ -20,6 +20,15 @@ export interface UpdateGraduatePayload {
   featureOnLandingPage?: boolean;
 }
 
+export interface PaginatedGraduateResponse {
+  success: boolean;
+  message: string;
+  data: {
+    graduates: Graduate[];
+    totalGraduates: number;
+  };
+}
+
 export const graduateApi = api.injectEndpoints({
   endpoints: (builder) => ({
     createGraduate: builder.mutation<Graduate, CreateGraduatePayload>({
@@ -34,6 +43,22 @@ export const graduateApi = api.injectEndpoints({
     getAllGraduates: builder.query<Graduate[], void>({
       query: () => "/graduate/get-all",
       transformResponse: (response: { success: boolean; data: Graduate[] }) => response.data,
+      providesTags: ["Graduate"],
+    }),
+
+    getPaginatedGraduates: builder.query<PaginatedGraduateResponse, { page: number; limit: number; search?: string }>({
+      query: ({ page, limit, search }) => {
+        const params = new URLSearchParams({
+          page: String(page),
+          limit: String(limit),
+        });
+
+        if (search?.trim()) {
+          params.set("search", search.trim());
+        }
+
+        return `/graduate/paginate?${params.toString()}`;
+      },
       providesTags: ["Graduate"],
     }),
 
@@ -79,6 +104,7 @@ export const graduateApi = api.injectEndpoints({
 export const {
   useCreateGraduateMutation,
   useGetAllGraduatesQuery,
+  useGetPaginatedGraduatesQuery,
   useGetFeaturedGraduatesQuery,
   useGetGraduateByIdQuery,
   useDeleteGraduateMutation,

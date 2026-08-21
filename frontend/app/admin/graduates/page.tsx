@@ -32,15 +32,24 @@ import { toast } from "sonner";
 import { ConfirmActionDialog } from "@/components/shared/confirm-action-dialog";
 import {
   useDeleteGraduateMutation,
-  useGetAllGraduatesQuery,
+  useGetPaginatedGraduatesQuery,
   useToggleGraduateFeatureMutation,
 } from "@/lib/redux/features/graduate/graduateApi";
 
 export default function GraduatesPage() {
-  const [currentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(1);
+  const limit = 10;
   const [searchQuery, setSearchQuery] = useState("");
 
-  const { data: graduates, isLoading, isError } = useGetAllGraduatesQuery();
+  const { data: response, isLoading, isError } = useGetPaginatedGraduatesQuery({
+    page: currentPage,
+    limit,
+    search: searchQuery,
+  });
+  const graduates = response?.data?.graduates || [];
+  const totalGraduates = response?.data?.totalGraduates || 0;
+  const totalPages = Math.ceil(totalGraduates / limit);
+
   const [deleteGraduate, { isLoading: isDeleting }] = useDeleteGraduateMutation();
   const [toggleFeature, { isLoading: isToggling }] = useToggleGraduateFeatureMutation();
 
@@ -275,8 +284,7 @@ export default function GraduatesPage() {
           </TableBody>
         </Table>
 
-        {/* Pagination Footer */}
-        {filteredGraduates && filteredGraduates.length > 0 && (
+        {totalPages > 1 && (
           <div className="flex items-center justify-center border-t border-gray-100 px-5 py-4">
             <Pagination className="w-auto mx-0">
               <PaginationContent>
@@ -284,23 +292,48 @@ export default function GraduatesPage() {
                   <PaginationPrevious
                     href="#"
                     text=""
-                    className="h-8 w-8 p-0 rounded-lg border border-gray-200 hover:border-violet-300 hover:bg-violet-50"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      if (currentPage > 1) setCurrentPage(currentPage - 1);
+                    }}
+                    className={`h-8 w-8 p-0 rounded-lg border border-gray-200 hover:border-violet-300 hover:bg-violet-50 flex items-center justify-center ${
+                      currentPage === 1 ? "opacity-50 pointer-events-none" : ""
+                    }`}
                   />
                 </PaginationItem>
-                <PaginationItem>
-                  <PaginationLink
-                    href="#"
-                    isActive={currentPage === 1}
-                    className="h-8 w-8 rounded-lg text-sm bg-primary text-white border-primary"
-                  >
-                    1
-                  </PaginationLink>
-                </PaginationItem>
+                {Array.from({ length: totalPages }).map((_, i) => {
+                  const page = i + 1;
+                  return (
+                    <PaginationItem key={page}>
+                      <PaginationLink
+                        href="#"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setCurrentPage(page);
+                        }}
+                        isActive={currentPage === page}
+                        className={`h-8 w-8 rounded-lg text-sm ${
+                          currentPage === page
+                            ? "bg-primary! text-white! border-primary!"
+                            : "border border-gray-200 hover:border-violet-300 hover:bg-violet-50"
+                        }`}
+                      >
+                        {page}
+                      </PaginationLink>
+                    </PaginationItem>
+                  );
+                })}
                 <PaginationItem>
                   <PaginationNext
                     href="#"
                     text=""
-                    className="h-8 w-8 p-0 rounded-lg border border-gray-200 hover:border-violet-300 hover:bg-violet-50"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      if (currentPage < totalPages) setCurrentPage(currentPage + 1);
+                    }}
+                    className={`h-8 w-8 p-0 rounded-lg border border-gray-200 hover:border-violet-300 hover:bg-violet-50 flex items-center justify-center ${
+                      currentPage === totalPages ? "opacity-50 pointer-events-none" : ""
+                    }`}
                   />
                 </PaginationItem>
               </PaginationContent>
