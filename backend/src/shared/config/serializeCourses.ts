@@ -44,7 +44,7 @@ export const serializeCourse = async (course: any): Promise<CourseResponseDTO> =
     description: String(rawCourse?.description ?? ""),
     price: Number(rawCourse?.price ?? 0),
     offerPrice: Number(rawCourse?.offerPrice ?? 0),
-    instructor: instructor?.name ?? instructorRef,
+    instructor: instructor?.name ?? (mongoose.isValidObjectId(instructorRef) ? "Unknown Instructor" : instructorRef),
     instructorTitle: instructor?.instructorTitle ?? "",
     instructorProfileImage: instructor?.profileImage ?? "",
     category: category?.categoryName ?? categoryRef,
