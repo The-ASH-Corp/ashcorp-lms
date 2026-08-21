@@ -48,6 +48,25 @@ export class MongoGraduateRepository implements GraduateRepository {
     return this.toDTO(graduate.toObject() as GraduateDocument);
   }
 
+  async findPaginated(page: number, limit: number, search?: string): Promise<{ graduates: GraduateResponseDTO[]; total: number }> {
+    const safePage = Math.max(1, Math.floor(page));
+    const safeLimit = Math.max(1, Math.floor(limit));
+    const skip = (safePage - 1) * safeLimit;
+    const filter = {};
+
+    const [rawGraduates, total] = await Promise.all([
+      GraduateModel.find(filter)
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(safeLimit)
+        .lean(),
+      GraduateModel.countDocuments(filter),
+    ]);
+
+    const graduates = rawGraduates.map((graduate) => this.toDTO(graduate as GraduateDocument));
+    return { graduates, total };
+  }
+
   private toDTO(graduate: GraduateDocument): GraduateResponseDTO {
     return {
       id: graduate._id.toString(),

@@ -3,6 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { AppLogo } from "../ui/app-logo";
 import { useAppDispatch, useAppSelector } from "@/lib/redux/hooks";
 import { Logout } from "@/lib/redux/features/auth/authSlice";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
@@ -32,12 +33,7 @@ export default function ProtectedNavbar() {
         {/* Logo */}
         <div className="flex items-center gap-8">
           <Link href="/" className="flex items-center gap-2">
-            <Image
-              src="https://ashacademylms.com/storage/setting/logo/xrDvetmZgdczqHBL4GDygfTgdeyzPmZyq0Fa6Eo8.png"
-              alt="Logo"
-              width={90}
-              height={90}
-            />
+            <AppLogo width={90} height={90} />
           </Link>
         </div>
 

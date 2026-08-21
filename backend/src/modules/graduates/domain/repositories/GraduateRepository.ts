@@ -8,4 +8,5 @@ export interface GraduateRepository {
   delete(id: string): Promise<boolean>;
   toggleFeature(id: string): Promise<GraduateResponseDTO | null>;
   update(id: string, data: Partial<Graduate>): Promise<GraduateResponseDTO | null>;
+  findPaginated(page: number, limit: number, search?: string): Promise<{ graduates: GraduateResponseDTO[]; total: number }>;
 }
