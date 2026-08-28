@@ -22,7 +22,7 @@ export class RequestPasswordResetOtpUseCase {
 
     // Never reveal whether the email exists.
     if (!user && !admin) {
-     throw new AppError("No account is associated with this email", 404);
+return;
     }
 
     const now = Date.now();
