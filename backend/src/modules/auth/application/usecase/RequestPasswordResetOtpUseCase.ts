@@ -22,7 +22,7 @@ export class RequestPasswordResetOtpUseCase {
 
     // Never reveal whether the email exists.
     if (!user && !admin) {
-      return;
+     throw new AppError("No account is associated with this email", 404);
     }
 
     const now = Date.now();
@@ -79,12 +79,15 @@ export class RequestPasswordResetOtpUseCase {
 
     const targetName = user?.name ?? admin?.name ?? "there";
 
+    console.log("mail starts")
     await sendMail({
       to: normalizedEmail,
       subject: "Your Password Reset OTP",
       text: `Hello ${targetName}, your OTP is ${otp}. It will expire in ${ENV.OTP_EXPIRY_MINUTES} minutes.`,
       html: resentOTPTemplate(targetName, otp, ENV.OTP_EXPIRY_MINUTES),
     });
+
+    console.log("mail sent")
   }
 
   private generateOtp(): string {
