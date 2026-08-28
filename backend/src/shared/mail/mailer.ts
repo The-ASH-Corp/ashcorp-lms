@@ -39,6 +39,7 @@ const getTransporter = (): nodemailer.Transporter => {
 export const sendMail = async ({ to, subject, text, html }: SendMailPayload): Promise<void> => {
   const activeTransporter = getTransporter();
 
+  console.log(activeTransporter,"transporter")
   await activeTransporter.sendMail({
     from: ENV.SMTP_FROM,
     to,
@@ -46,4 +47,6 @@ export const sendMail = async ({ to, subject, text, html }: SendMailPayload): Pr
     text,
     html,
   });
+
+  console.log("mail sent from mailer.ts")
 };
