@@ -39,7 +39,7 @@ export default function AuthLayout({
   }
 
   // Fallbacks in case settings aren't loaded yet
-  const heroImage = authSettings?.heroImage || "/globe_hero.png";
+  const heroImage = "/images/banner final 01.jpg.jpeg";
   const heading = authSettings?.heading || "Ascend to your";
   const headingHighlight1 = authSettings?.headingHighlight1 || "Academic";
   const headingHighlight2 = authSettings?.headingHighlight2 || "Zenith.";
@@ -58,14 +58,14 @@ export default function AuthLayout({
             priority
           />
         </div>
-        
+{/*         
         <div className="relative z-10 flex items-center gap-3">
           <div onClick={handleLogoClick} className="cursor-pointer">
             <AppLogo width={90} height={90} />
           </div>
-        </div>
+        </div> */}
 
-        <div className="relative z-10">
+        {/* <div className="relative z-10">
           <h1 className="text-4xl font-extrabold leading-tight text-white lg:text-5xl">
             {heading}{" "}
             <span className="italic text-purple-400">{headingHighlight1}</span>
@@ -75,11 +75,11 @@ export default function AuthLayout({
           <p className="mt-4 max-w-sm text-sm leading-relaxed text-slate-300/80 whitespace-pre-wrap">
             {description}
           </p>
-        </div>
+        </div> */}
 
-        <p className="relative z-10 text-[10px] font-semibold uppercase tracking-widest text-slate-500">
+        {/* <p className="relative z-10 text-[10px] font-semibold uppercase tracking-widest text-slate-500">
           {footerText}
-        </p>
+        </p> */}
       </div>
 
       <div className="flex w-full flex-col items-center justify-center p-6 lg:w-120 lg:shrink-0 lg:p-10">
