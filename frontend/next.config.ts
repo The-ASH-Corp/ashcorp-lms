@@ -1,6 +1,12 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  turbopack: {
+    // Pin workspace root to this directory so Turbopack ignores any
+    // parent-level lockfiles (e.g. Hostinger's /home/u894094815/package-lock.json)
+    root: __dirname,
+  },
+
   images: {
     dangerouslyAllowLocalIP: true,
     remotePatterns: [
