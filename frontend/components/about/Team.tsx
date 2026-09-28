@@ -60,7 +60,7 @@ const Team = () => {
           </p>
         </div>
         <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {team.map((member) => {
+          {leadershipSettings?.enabled && team.map((member) => {
             const imgSrc = member.image || "/placeholder.svg";
             return (
               <div key={member.id || member.name}>
