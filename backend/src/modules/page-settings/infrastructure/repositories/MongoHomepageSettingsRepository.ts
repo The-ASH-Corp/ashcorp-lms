@@ -64,7 +64,10 @@ export class MongoHomepageSettingsRepository implements HomepageSettingsReposito
       if (data.sectionVisibility) settings.sectionVisibility = { ...settings.sectionVisibility, ...data.sectionVisibility };
       if (data.hero) settings.hero = { ...settings.hero, ...data.hero };
       if (data.leadership) (settings as any).leadership = { ...settings.leadership, ...data.leadership };
-      if (data.impactMetrics) settings.impactMetrics = { ...settings.impactMetrics, ...data.impactMetrics };
+      if (data.impactMetrics) {
+        (settings as any).impactMetrics = { ...(settings as any).impactMetrics, ...data.impactMetrics };
+        settings.markModified("impactMetrics");
+      }
       if (data.coreValues) (settings as any).coreValues = { ...settings.coreValues, ...data.coreValues };
       if (data.philosophy) settings.philosophy = { ...settings.philosophy, ...data.philosophy };
 

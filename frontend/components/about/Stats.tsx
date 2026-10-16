@@ -18,6 +18,7 @@ const useCountUp = (targetValue: number, shouldStart: boolean, duration = 1400):
     const safeTarget = Number.isFinite(targetValue) ? Math.max(0, targetValue) : 0;
 
     if (safeTarget === 0) {
+      setDisplayValue(0);
       return;
     }
 
@@ -100,21 +101,50 @@ const Stats = () => {
     return null;
   }
 
-  const studentsTarget = landingStats?.studentsGlobally ?? 0;
-  const coursesTarget = paginatedCourses?.pagination.totalCourses ?? 0;
-  const ratingTarget = landingStats?.satisfactionRate ?? 0;
+  // Check if admin chose custom frontend data or live DB data
+  const isFrontendMode =
+    impactMetricsSettings?.source === "frontend" ||
+    impactMetricsSettings?.source === "manual";
+
+  // Data selection based on admin settings
+  const studentsTarget = isFrontendMode
+    ? (impactMetricsSettings?.studentsCount ?? 26)
+    : (landingStats?.studentsGlobally ?? 0);
+
+  const coursesTarget = isFrontendMode
+    ? (impactMetricsSettings?.coursesCount ?? 7)
+    : (paginatedCourses?.pagination.totalCourses ?? 0);
+
+  const ratingTarget = isFrontendMode
+    ? (impactMetricsSettings?.rating ?? 0.0)
+    : (landingStats?.satisfactionRate ?? 0);
 
   const studentsValue = useCountUp(studentsTarget, hasEnteredView);
   const coursesValue = useCountUp(coursesTarget, hasEnteredView);
   const ratingValue = useCountUp(ratingTarget, hasEnteredView);
 
+  const sectionTitle = impactMetricsSettings?.title || "By the Numbers";
+  const sectionSubtitle = impactMetricsSettings?.subtitle || "Our Footprint on the Global Stage";
+
+  const studentsLabel = isFrontendMode && impactMetricsSettings?.studentsLabel
+    ? impactMetricsSettings.studentsLabel
+    : "Students";
+
+  const coursesLabel = isFrontendMode && impactMetricsSettings?.coursesLabel
+    ? impactMetricsSettings.coursesLabel
+    : "Courses Created";
+
+  const ratingLabel = isFrontendMode && impactMetricsSettings?.ratingLabel
+    ? impactMetricsSettings.ratingLabel
+    : "Rating";
+
   const stats = useMemo(
     () => [
-      { label: "Students", value: formatStudents(studentsValue) },
-      { label: "Courses Created", value: formatCount(coursesValue) },
-      { label: "Rating", value: formatRating(ratingValue) },
+      { label: studentsLabel, value: formatStudents(studentsValue) },
+      { label: coursesLabel, value: formatCount(coursesValue) },
+      { label: ratingLabel, value: formatRating(ratingValue) },
     ],
-    [studentsValue, coursesValue, ratingValue],
+    [studentsValue, coursesValue, ratingValue, studentsLabel, coursesLabel, ratingLabel],
   );
 
   return (
@@ -122,12 +152,13 @@ const Stats = () => {
       <div className="mx-auto w-full max-w-[120rem] px-6 lg:px-12 xl:px-20">
         <div className="text-center">
           <h2 className="text-3xl font-bold tracking-tight text-foreground md:text-4xl">
-            By the Numbers
+            {sectionTitle}
           </h2>
           <p className="mt-3 text-xs font-semibold uppercase tracking-[0.3em] text-muted-foreground">
-            Our Footprint on the Global Stage
+            {sectionSubtitle}
           </p>
         </div>
+
         <div className="mt-14 grid gap-10 text-center sm:grid-cols-3">
           {stats.map((stat) => (
             <div key={stat.label}>
