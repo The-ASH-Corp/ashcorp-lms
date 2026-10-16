@@ -171,6 +171,15 @@ const aboutSettingsSchema = new Schema(
     },
     impactMetrics: {
       enabled: { type: Boolean, default: true },
+      source: { type: String, enum: ["db", "frontend", "manual"], default: "db" },
+      title: { type: String, default: "By the Numbers" },
+      subtitle: { type: String, default: "Our Footprint on the Global Stage" },
+      studentsCount: { type: Number, default: 26 },
+      studentsLabel: { type: String, default: "Students" },
+      coursesCount: { type: Number, default: 7 },
+      coursesLabel: { type: String, default: "Courses Created" },
+      rating: { type: Number, default: 0.0 },
+      ratingLabel: { type: String, default: "Rating" },
     },
     coreValues: {
       enabled: { type: Boolean, default: true },

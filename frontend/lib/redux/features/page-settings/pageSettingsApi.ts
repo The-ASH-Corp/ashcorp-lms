@@ -104,6 +104,15 @@ export interface IAboutPageSettings {
   };
   impactMetrics: {
     enabled: boolean;
+    source?: "db" | "frontend" | "manual";
+    title?: string;
+    subtitle?: string;
+    studentsCount?: number;
+    studentsLabel?: string;
+    coursesCount?: number;
+    coursesLabel?: string;
+    rating?: number;
+    ratingLabel?: string;
   };
   coreValues: {
     enabled: boolean;

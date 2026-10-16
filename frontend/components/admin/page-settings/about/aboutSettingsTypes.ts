@@ -33,6 +33,15 @@ export interface IAboutPageSettings {
   };
   impactMetrics: {
     enabled: boolean;
+    source?: "db" | "frontend" | "manual";
+    title?: string;
+    subtitle?: string;
+    studentsCount?: number;
+    studentsLabel?: string;
+    coursesCount?: number;
+    coursesLabel?: string;
+    rating?: number;
+    ratingLabel?: string;
   };
   coreValues: {
     enabled: boolean;
@@ -96,6 +105,15 @@ export const defaultAboutPageSettings: IAboutPageSettings = {
   },
   impactMetrics: {
     enabled: true,
+    source: "db",
+    title: "By the Numbers",
+    subtitle: "Our Footprint on the Global Stage",
+    studentsCount: 26,
+    studentsLabel: "Students",
+    coursesCount: 7,
+    coursesLabel: "Courses Created",
+    rating: 0.0,
+    ratingLabel: "Rating",
   },
   coreValues: {
     enabled: true,
