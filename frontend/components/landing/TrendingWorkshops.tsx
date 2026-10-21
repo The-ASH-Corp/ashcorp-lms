@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { Play, ShoppingCart, Star, SearchX } from "lucide-react";
+import AdaptiveCourseThumbnail from "@/components/courses/AdaptiveCourseThumbnail";
 import { useGetAllCourseQuery } from "@/lib/redux/features/course/courseApi";
 import { useGetCurrentUserQuery } from "@/lib/redux/features/auth/authApi";
 import { useGetHomepageSettingsQuery } from "@/lib/redux/features/page-settings/pageSettingsApi";
@@ -172,17 +173,13 @@ export default function TrendingWorkshops() {
                   transition={{ duration: 0.2 }}
                   className="group flex flex-col overflow-hidden rounded-3xl border border-purple-50 bg-white shadow-xs transition-shadow hover:shadow-md"
                 >
-                  <div className="relative aspect-video w-full overflow-hidden bg-gray-100">
-                    <Image
-                      src={courseImage || "/images/course-placeholder.png"}
-                      alt={course.title || "Course image"}
-                      fill
-                      className="object-cover transition-transform duration-300 group-hover:scale-102"
-                    />
-                    <span className="absolute left-4 top-4 rounded-full bg-indigo-950 px-3 py-1 text-xs font-semibold text-white">
-                      Most Purchased
-                    </span>
-                  </div>
+                  {/* Adaptive Image Container */}
+                  <AdaptiveCourseThumbnail
+                    src={course.imageUrl}
+                    alt={course.title || "Course image"}
+                    badge="Most Purchased"
+                    badgeColor="bg-indigo-950"
+                  />
 
                   <div className="flex flex-1 flex-col p-6">
                     <div className="flex items-center justify-between text-xs text-gray-500">

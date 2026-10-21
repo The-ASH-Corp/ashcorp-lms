@@ -262,20 +262,23 @@ export default function EditCoursePage() {
             <div className="border border-gray-200 rounded-lg p-4 sm:p-6 lg:p-8">
               <h3 className="text-gray-900 font-semibold mb-1 flex items-center gap-2">
                 <span>Course Thumbnail</span>
-                <span className="text-xs text-gray-500">550 x 200 · JPG PNG</span>
+                <span className="text-xs text-gray-500">JPG, PNG, WEBP · Adaptive</span>
               </h3>
+              <p className="text-xs text-gray-500 mb-3">
+                Upload or change course thumbnail. The container automatically adjusts across all screen devices without cutting any sides.
+              </p>
               <label
                 htmlFor="course-thumbnail"
-                className="mt-4 border-2 border-dashed border-gray-300 rounded-lg p-6 sm:p-8 text-center hover:border-primary transition-colors cursor-pointer bg-gray-50 min-h-48 flex flex-col items-center justify-center"
+                className="mt-2 border-2 border-dashed border-gray-300 rounded-lg p-4 sm:p-6 text-center hover:border-primary transition-colors cursor-pointer bg-gray-50 min-h-48 flex flex-col items-center justify-center"
               >
                 {thumbnailPreview ? (
-                  <Image
-                    src={thumbnailPreview}
-                    alt="Thumbnail preview"
-                    width={400}
-                    height={240}
-                    className="max-h-40 w-full object-cover rounded-lg"
-                  />
+                  <div className="w-full flex items-center justify-center">
+                    <img
+                      src={thumbnailPreview}
+                      alt="Thumbnail preview"
+                      className="w-full max-w-md h-auto max-h-64 object-contain rounded-lg shadow-xs"
+                    />
+                  </div>
                 ) : (
                   <>
                     <svg className="w-12 h-12 text-gray-400 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">

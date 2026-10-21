@@ -442,7 +442,7 @@ export default function Graphs() {
                         <Image
                           src={course.imageUrl || ""}
                           alt={course.title}
-                          className="h-12 w-12 rounded-2xl bg-slate-100"
+                          className="h-12 w-12 rounded-2xl bg-slate-100 object-contain"
                           width={48}
                           height={48}
                           unoptimized

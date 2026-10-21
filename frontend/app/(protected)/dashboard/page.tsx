@@ -215,12 +215,12 @@ export default function StudentDashboardPage() {
             <div className="flex flex-1 flex-col justify-between space-y-5">
               <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
                 {/* Course Image / Video Poster Thumbnail */}
-                <div className="relative aspect-video w-full sm:w-44 shrink-0 overflow-hidden rounded-xl bg-gray-900 shadow-xs">
+                <div className="relative aspect-video w-full sm:w-44 shrink-0 overflow-hidden rounded-xl bg-gray-950 shadow-xs flex items-center justify-center">
                   {lastPlayed.imageUrl ? (
                     <img
                       src={lastPlayed.imageUrl}
                       alt={lastPlayed.courseTitle}
-                      className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                      className="h-full w-full object-contain transition-transform duration-300 group-hover:scale-105"
                     />
                   ) : (
                     <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-primary to-indigo-800 text-white">

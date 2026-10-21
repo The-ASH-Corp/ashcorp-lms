@@ -1,7 +1,7 @@
 import { Star } from "lucide-react";
 import Link from "next/link";
 import type { Course } from "@/lib/redux/features/course/courseSlice";
-import Image from "next/image";
+import AdaptiveCourseThumbnail from "./AdaptiveCourseThumbnail";
 
 interface CourseCardCourse extends Omit<Course, "offerPrice" | "rating"> {
   offerPrice?: string | number;
@@ -16,20 +16,6 @@ interface CourseCardProps {
 }
 
 export default function CourseCard({ course }: CourseCardProps) {
-  const getCategoryImageUrl = (iconUrl: string | undefined) => {
-    if (!iconUrl) return "";
-
-    if (/^https?:\/\//i.test(iconUrl)) return iconUrl;
-
-    const baseUrl =
-      process.env.NEXT_PUBLIC_IMAGE_URL?.replace(/\/+$/, "") ?? "";
-
-    const path = iconUrl
-      .replace(/\\/g, "/") // <-- replace \ with /
-      .replace(/^\/+/, "");
-
-    return `${baseUrl}/${path}`;
-  };
   const renderStars = (rating: number) => {
     return Array.from({ length: 5 }).map((_, i) => (
       <Star
@@ -46,22 +32,13 @@ export default function CourseCard({ course }: CourseCardProps) {
 
   return (
     <div className="group bg-white border border-gray-200 rounded-lg sm:rounded-xl overflow-hidden hover:shadow-lg transition-shadow h-full flex flex-col">
-      {/* Image Container */}
-      <div className="relative h-40 sm:h-48 lg:h-56 overflow-hidden bg-gray-100 shrink-0">
-        <Image
-          src={getCategoryImageUrl(course.imageUrl)}
-          alt={course.title}
-          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-          fill
-        />
-        {course.badge && (
-          <div
-            className={`absolute top-2 sm:top-4 left-2 sm:left-4 ${course.badgeColor} text-white text-xs font-semibold px-2 sm:px-3 py-1 rounded-full`}
-          >
-            {course.badge}
-          </div>
-        )}
-      </div>
+      {/* Adaptive Image Container */}
+      <AdaptiveCourseThumbnail
+        src={course.imageUrl}
+        alt={course.title}
+        badge={course.badge}
+        badgeColor={course.badgeColor}
+      />
 
       {/* Content */}
       <div className="p-4 sm:p-5 lg:p-6 flex-1 flex flex-col">

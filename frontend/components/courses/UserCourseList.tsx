@@ -1,5 +1,6 @@
 import { ArrowRight, RefreshCw } from 'lucide-react';
 import Link from 'next/link';
+import AdaptiveCourseThumbnail, { getCourseImageUrl } from './AdaptiveCourseThumbnail';
 
 interface CourseCardProps {
   course: {
@@ -25,8 +26,12 @@ export default function UserCourseList({ course, viewType }: CourseCardProps) {
   if (viewType === 'list') {
     return (
       <div className="flex flex-col sm:flex-row gap-4 bg-white border border-gray-200 rounded-lg p-4 sm:p-6 hover:shadow-md transition-shadow">
-        <div className="w-full sm:w-32 h-32 sm:h-32 rounded-lg overflow-hidden shrink-0">
-          <img src={course.image} alt={course.title} className="w-full h-full object-cover" />
+        <div className="w-full sm:w-44 h-auto min-h-[96px] rounded-lg overflow-hidden shrink-0 bg-gray-100 flex items-center justify-center">
+          <img
+            src={getCourseImageUrl(course.image)}
+            alt={course.title}
+            className="w-full h-auto max-h-32 object-contain"
+          />
         </div>
 
         <div className="flex-1">
@@ -87,16 +92,16 @@ export default function UserCourseList({ course, viewType }: CourseCardProps) {
   // ----------- GRID VIEW ------------
   return (
     <div className="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg transition-shadow h-full flex flex-col">
-      {/* Image Container */}
-      <div className="relative h-40 sm:h-48 overflow-hidden bg-gray-100">
-        <img src={course.image} alt={course.title} className="w-full h-full object-cover" />
-        <div className="absolute top-3 left-3">
-          <span className="px-2.5 py-1 bg-gray-900 bg-opacity-80 text-white text-xs font-bold rounded">
-            {course.category}
-          </span>
-        </div>
+      {/* Adaptive Image Container */}
+      <div className="relative">
+        <AdaptiveCourseThumbnail
+          src={course.image}
+          alt={course.title}
+          badge={course.category}
+          badgeColor="bg-gray-900/80"
+        />
         {course.hasCheckmark && (
-          <div className="absolute bottom-3 right-3 w-8 h-8 rounded-full bg-green-500 text-white flex items-center justify-center font-bold">
+          <div className="absolute bottom-3 right-3 w-8 h-8 rounded-full bg-green-500 text-white flex items-center justify-center font-bold z-10 shadow-xs">
             ✓
           </div>
         )}

@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { ConfirmActionDialog } from "@/components/shared/confirm-action-dialog";
+import AdaptiveCourseThumbnail from "@/components/courses/AdaptiveCourseThumbnail";
 import { useAppSelector } from "@/lib/redux/hooks";
 import {
   useGetWishlistQuery,
@@ -203,24 +204,13 @@ export default function Wishlist() {
                 key={courseId || `${course.title}-${course.instructor}`}
                 className="group flex h-full flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm transition-shadow hover:shadow-lg"
               >
-                <div className="relative aspect-[16/10] overflow-hidden bg-gray-100">
-                  {imageSrc ? (
-                    <img
-                      src={imageSrc}
-                      alt={course.title}
-                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                    />
-                  ) : (
-                    <div className="flex h-full w-full items-center justify-center bg-linear-to-br from-violet-100 to-gray-200">
-                      <BookOpen className="text-primary" size={40} />
-                    </div>
-                  )}
-
-                  <div className="absolute inset-0 bg-linear-to-t from-black/60 via-black/5 to-transparent" />
-
-                  <span className="absolute left-4 top-4 rounded-full bg-black/75 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-white">
-                    {course.category}
-                  </span>
+                <div className="relative">
+                  <AdaptiveCourseThumbnail
+                    src={course.imageUrl}
+                    alt={course.title}
+                    badge={course.category}
+                    badgeColor="bg-black/75 uppercase tracking-[0.2em]"
+                  />
 
                   <ConfirmActionDialog
                     title="Remove From Wishlist"

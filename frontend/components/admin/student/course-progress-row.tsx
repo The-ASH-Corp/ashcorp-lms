@@ -79,8 +79,8 @@ export function CourseProgressRow({
         <Image
           src={course.imageUrl || '/images/placeholder-course.png'}
           alt={course.title || 'Course image'}
-          className="h-16 w-16 rounded object-cover"
-          width={64}
+          className="h-16 w-20 rounded object-contain bg-white border border-gray-200"
+          width={80}
           height={64}
           unoptimized
         />

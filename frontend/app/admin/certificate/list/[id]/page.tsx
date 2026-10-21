@@ -193,11 +193,11 @@ export default function CompletedCourseList() {
                     <TableCell>
                       <div className="flex items-center gap-3 justify-center ">
                         <Image
-                          width={100}
-                          height={100}
+                          width={112}
+                          height={80}
                           src={getCategoryImageUrl(course.imageUrl)}
                           alt={course.title || "Course image"}
-                          className="h-24 w-24 rounded-md object-cover"
+                          className="h-20 w-28 rounded-md object-contain bg-gray-50 border border-gray-100"
                           unoptimized
                         />
                       </div>

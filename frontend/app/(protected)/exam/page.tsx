@@ -16,6 +16,7 @@ import { PropagateLoader } from "react-spinners";
 import { useGetExamsForCoursesQuery } from "@/lib/redux/features/exam/examApi";
 import { useGetMyCoursesQuery } from "@/lib/redux/features/student/studentApi";
 import { useAppSelector } from "@/lib/redux/hooks";
+import AdaptiveCourseThumbnail from "@/components/courses/AdaptiveCourseThumbnail";
 
 function stripHtml(value?: string) {
   if (!value) return "";
@@ -196,27 +197,17 @@ export default function ExamListPage() {
                   isFocused ? "border-primary ring-2 ring-violet-100" : "border-gray-200"
                 }`}
               >
-                <div className="relative aspect-[16/10] overflow-hidden bg-gray-100">
-                  {imageSrc ? (
-                    <img
-                      src={imageSrc}
-                      alt={course.title}
-                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                    />
-                  ) : (
-                    <div className="flex h-full w-full items-center justify-center bg-linear-to-br from-violet-100 to-gray-200">
-                      <BookOpenCheck className="text-primary" size={40} />
-                    </div>
-                  )}
-
-                  <div className="absolute inset-0 bg-linear-to-t from-black/65 via-black/10 to-transparent" />
-
-                  <span className="absolute left-4 top-4 rounded-full bg-black/75 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-white">
-                    {course.category}
-                  </span>
+                <div className="relative">
+                  <AdaptiveCourseThumbnail
+                    src={course.imageUrl}
+                    alt={course.title}
+                    badge={course.category}
+                    badgeColor="bg-black/75 uppercase tracking-[0.2em]"
+                    fallbackIcon={<BookOpenCheck className="text-primary" size={40} />}
+                  />
 
                   <span
-                    className={`absolute right-4 top-4 inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold ${
+                    className={`absolute right-4 top-4 inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold z-10 shadow-xs ${
                       isUnlocked
                         ? "bg-green-600 text-white"
                         : "bg-white/90 text-gray-800"
