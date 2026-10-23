@@ -80,6 +80,7 @@ export default function AdaptiveCourseThumbnail({
         aspectRatio: aspectRatio ? `${aspectRatio}` : "16 / 9",
       }}
     >
+
       {!showFallback ? (
         <img
           ref={imgRef}
@@ -88,9 +89,9 @@ export default function AdaptiveCourseThumbnail({
           loading="lazy"
           onLoad={handleImageLoad}
           onError={handleImageError}
-          className={`w-full h-full object-contain block transition-transform duration-500 group-hover:scale-105 ${
-            isLoaded ? "opacity-100" : "opacity-0"
-          } ${className}`}
+          className={`w-full h-full object-contain block transition-transform duration-500 group-hover:scale-105 ${isLoaded ? "opacity-100" : "opacity-0"
+            } ${className}`}
+
         />
       ) : (
         <div className="flex h-full w-full items-center justify-center bg-gray-100 text-gray-400">

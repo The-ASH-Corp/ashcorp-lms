@@ -19,6 +19,13 @@ export interface IHomepageSettingsEntity {
   };
   stats: {
     enabled: boolean;
+    source?: "db" | "frontend" | "manual";
+    studentsCount?: number;
+    studentsLabel?: string;
+    mentorsCount?: number;
+    mentorsLabel?: string;
+    rating?: number;
+    ratingLabel?: string;
   };
   categories: {
     enabled: boolean;

@@ -39,6 +39,13 @@ const homepageSettingsSchema = new Schema(
     },
     stats: {
       enabled: { type: Boolean, default: true },
+      source: { type: String, enum: ["db", "frontend", "manual"], default: "db" },
+      studentsCount: { type: Number, default: 26 },
+      studentsLabel: { type: String, default: "Students Globally" },
+      mentorsCount: { type: Number, default: 12 },
+      mentorsLabel: { type: String, default: "Expert Mentors" },
+      rating: { type: Number, default: 0.0 },
+      ratingLabel: { type: String, default: "Satisfaction Rate" },
     },
     categories: {
       enabled: { type: Boolean, default: true },

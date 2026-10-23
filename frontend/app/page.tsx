@@ -21,17 +21,17 @@ import type { Course } from "@/lib/redux/features/course/courseSlice";
 
 type SearchResult =
   | {
-      type: "course";
-      id: string;
-      title: string;
-      subtitle: string;
-    }
+    type: "course";
+    id: string;
+    title: string;
+    subtitle: string;
+  }
   | {
-      type: "category";
-      id: string;
-      title: string;
-      subtitle: string;
-    };
+    type: "category";
+    id: string;
+    title: string;
+    subtitle: string;
+  };
 
 const normalizeText = (value: string | undefined | null) =>
   value?.toLowerCase().trim() ?? "";
@@ -115,7 +115,7 @@ export default function Home() {
       <Navbar />
       <main className="relative isolate flex-1 overflow-x-clip">
         {heroSettings?.enabled !== false && (
-          <section className="relative z-40 overflow-visible bg-linear-to-b from-[#FAF5FF] via-[#F5F3FF] to-white pt-16 pb-14 sm:pt-20 sm:pb-16 lg:pt-24 lg:pb-20">
+          <section className="relative z-40 overflow-visible bg-linear-to-b from-[#FAF5FF] via-[#F5F3FF] to-white pt-16 pb-14 sm:pt-20 sm:pb-16 lg:pt-18 lg:pb-20">
             <div className="pointer-events-none absolute inset-0 overflow-hidden">
               <div className="absolute top-1/4 -left-20 h-72 w-72 rounded-full bg-blue-200/40 blur-3xl" />
               <div className="absolute top-1/3 -right-20 h-96 w-96 rounded-full bg-purple-300/30 blur-3xl" />
@@ -129,24 +129,24 @@ export default function Home() {
 
               <h1 className="mx-auto max-w-4xl text-4xl font-extrabold tracking-tight text-indigo-950 sm:text-5xl lg:text-6xl/tight">
                 {heroSettings?.mainHeadline || "Master the Art of"}{" "}
-                <span className="relative inline-block px-1 font-serif italic text-primary underline decoration-purple-300 decoration-wavy decoration-3">
+                <span className="relative inline-block px-1 bg-gradient-to-r from-purple-300 to-purple-600 bg-clip-text text-transparent">
                   {heroSettings?.headlineHighlight || "Creative Learning"}
                 </span>
               </h1>
 
-              <p className="mx-auto mt-5 max-w-2xl text-base leading-7 text-gray-500 sm:text-lg">
+              <p className="mx-auto mt-5 max-w-2xl text-base leading-7 text-gray-500 sm:text-base">
                 {heroSettings?.subHeadline ||
                   "Join 1k+ students building the future through design, code, and digital art."}
               </p>
 
-              <div className="mx-auto mt-8 max-w-3xl rounded-[2rem] border border-white/70 bg-white/70 p-3 shadow-[0_30px_80px_-45px_rgba(109,40,217,0.45)] backdrop-blur-sm sm:p-4">
+              <div className="mx-auto mt-8 max-w-3xl rounded-[2rem] border border-white/70 bg-white/70 p-3  shadow-[0_30px_80px_-45px_rgba(109,40,217,0.45)] backdrop-blur-sm sm:p-4">
                 <form
                   className="relative"
                   onSubmit={(event) => {
                     event.preventDefault();
                   }}
                 >
-                  <div className="flex flex-col gap-2 rounded-[1.75rem] border border-purple-100 bg-white p-2 shadow-xl shadow-purple-100/40 transition-all focus-within:ring-2 focus-within:ring-purple-500/20 sm:flex-row sm:items-center">
+                  <div className="flex flex-col gap-2 rounded-[1.75rem] border border-purple-100 p-2 shadow-xl shadow-purple-100/40 transition-all focus-within:ring-2 focus-within:ring-purple-500/20 sm:flex-row sm:items-center">
                     <div className="flex min-w-0 flex-1 items-center">
                       <Search className="ml-3 h-5 w-5 shrink-0 text-gray-400" />
                       <input
@@ -162,7 +162,7 @@ export default function Home() {
                     </div>
                     <button
                       type="submit"
-                      className="shrink-0 rounded-full bg-primary px-6 py-3 text-sm font-semibold text-white transition-all hover:bg-purple-700 active:scale-95 sm:min-w-32"
+                      className="shrink-0 rounded-full bg-primary px-6 py-3 text-sm font-semibold text-white transition-all hover:bg-purple-700 active:scale-95 sm:min-w-32 cursor-pointer"
                     >
                       Search
                     </button>
@@ -255,7 +255,7 @@ export default function Home() {
                 </form>
               </div>
 
-              <div className="mx-auto mt-8 flex max-w-3xl flex-wrap items-center justify-center gap-x-6 gap-y-3 text-sm text-gray-500">
+              <div className="mx-auto mt-6 flex max-w-3xl flex-wrap items-center justify-center gap-x-6 gap-y-3 text-sm text-gray-500">
                 {(heroSettings?.tags && heroSettings.tags.length > 0
                   ? heroSettings.tags
                   : ["Design tracks", "Live mentorship"]
@@ -269,17 +269,11 @@ export default function Home() {
                   </div>
                 ))}
               </div>
-
-              <div className="absolute right-[12%] top-[60%] hidden animate-bounce lg:block animation-duration-[4s]">
-                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white text-primary shadow-lg ring-1 ring-purple-100">
-                  <Paintbrush className="h-6 w-6" />
-                </div>
-              </div>
             </div>
           </section>
         )}
 
-        <div className="relative z-0">
+        <div className="relative z-0 ">
           <ScrollReveal delay={0.05}>
             <ExploreCategories />
           </ScrollReveal>

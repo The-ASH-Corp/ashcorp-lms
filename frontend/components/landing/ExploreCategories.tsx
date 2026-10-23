@@ -376,13 +376,13 @@ export default function ExploreCategories() {
   const hasMore = remainingCats.length > 0;
 
   return (
-    <section className="bg-white py-14 sm:py-16">
+    <section className="bg-white py-4 sm:py-6">  
       <div className="mx-auto w-full max-w-[120rem] px-4 sm:px-6 lg:px-12 xl:px-20">
         {/* ─────────────────────────────── */}
         {/* Header */}
         {/* ─────────────────────────────── */}
 
-        <div className="mb-10 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+        <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
