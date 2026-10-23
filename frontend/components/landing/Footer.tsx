@@ -2,7 +2,8 @@
 
 import React from "react";
 import Link from "next/link";
-import { Share2, Heart } from "lucide-react";
+import { FaInstagram } from "react-icons/fa";
+import { Globe } from "lucide-react";
 import { useGetHomepageSettingsQuery } from "@/lib/redux/features/page-settings/pageSettingsApi";
 
 export default function Footer() {
@@ -26,15 +27,31 @@ export default function Footer() {
               {footerSettings?.brandDescription ||
                 "Making creative education accessible, fun, and results-driven for learners everywhere."}
             </p>
-            {/* Social / Utility Buttons */}
+            
             <div className="mt-6 flex items-center gap-3">
-              <button className="flex h-8 w-8 items-center justify-center rounded-full bg-white text-gray-400 border border-purple-50 hover:text-purple-600 transition-colors shadow-xs">
-                <Share2 className="h-4 w-4" />
-              </button>
-              <button className="flex h-8 w-8 items-center justify-center rounded-full bg-white text-gray-400 border border-purple-50 hover:text-red-500 transition-colors shadow-xs">
-                <Heart className="h-4 w-4" />
-              </button>
+             <a
+                href="https://ashacademy.ai/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Visit our website"
+                className="flex h-8 w-8 items-center justify-center rounded-full border border-purple-50 bg-white text-gray-400 shadow-xs transition-colors hover:text-purple-600"
+              >
+                <Globe className="h-4 w-4" />
+              </a>
+              <a
+                href="https://www.instagram.com/ashacademy.ai?rpxt=MXNxYXlkcW5meDNycg=="
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Visit our Instagram"
+                className="flex h-8 w-8 items-center justify-center rounded-full border border-purple-50 bg-white text-gray-400 shadow-xs transition-colors hover:text-purple-600"
+              >
+                <FaInstagram className="h-4 w-4" />
+              </a>
+              
             </div>
+
+
+
           </div>
 
           {/* Links: Academy */}
