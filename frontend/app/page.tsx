@@ -11,6 +11,7 @@ import Partners from "@/components/landing/Graduates";
 import Testimonials from "@/components/landing/Testimonials";
 import Footer from "@/components/landing/Footer";
 import ScrollReveal from "@/components/landing/ScrollReveal";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   useGetAllCategoriesQuery,
   type Category,
@@ -50,7 +51,7 @@ export default function Home() {
 
   const { data: courses = [] } = useGetAllCourseQuery();
   const { data: categories = [] } = useGetAllCategoriesQuery();
-  const { data: settings } = useGetHomepageSettingsQuery();
+  const { data: settings, isLoading: isSettingsLoading } = useGetHomepageSettingsQuery();
 
   const heroSettings = settings?.hero;
 
@@ -122,22 +123,41 @@ export default function Home() {
             </div>
 
             <div className="relative mx-auto w-full max-w-[120rem] px-4 text-center sm:px-6 lg:px-12 xl:px-20">
-              <div className="mb-6 inline-flex items-center gap-1.5 rounded-full bg-white/70 px-4 py-1.5 text-xs font-semibold text-primary ring-1 ring-purple-600/10 shadow-sm shadow-purple-100/70 backdrop-blur">
-                <Sparkles className="h-3.5 w-3.5" />
-                {heroSettings?.badgeText || "Creative learning for builders"}
-              </div>
+              {isSettingsLoading ? (
+                <Skeleton className="mb-6 mx-auto h-7 w-52 rounded-full bg-purple-200/50" />
+              ) : heroSettings?.badgeText ? (
+                <div className="mb-6 inline-flex items-center gap-1.5 rounded-full bg-white/70 px-4 py-1.5 text-xs font-semibold text-primary ring-1 ring-purple-600/10 shadow-sm shadow-purple-100/70 backdrop-blur">
+                  <Sparkles className="h-3.5 w-3.5" />
+                  {heroSettings.badgeText}
+                </div>
+              ) : null}
 
-              <h1 className="mx-auto max-w-4xl text-4xl font-extrabold tracking-tight text-indigo-950 sm:text-5xl lg:text-6xl/tight">
-                {heroSettings?.mainHeadline || "Master the Art of"}{" "}
-                <span className="relative inline-block px-1 bg-gradient-to-r from-purple-300 to-purple-600 bg-clip-text text-transparent">
-                  {heroSettings?.headlineHighlight || "Creative Learning"}
-                </span>
-              </h1>
+              {isSettingsLoading ? (
+                <div className="mx-auto max-w-4xl space-y-3">
+                  <Skeleton className="mx-auto h-10 sm:h-12 lg:h-14 w-3/4 max-w-2xl rounded-2xl bg-purple-200/50" />
+                  <Skeleton className="mx-auto h-10 sm:h-12 lg:h-14 w-1/2 max-w-md rounded-2xl bg-purple-200/50" />
+                </div>
+              ) : (
+                <h1 className="mx-auto max-w-4xl text-4xl font-extrabold tracking-tight text-indigo-950 sm:text-5xl lg:text-6xl/tight">
+                  {heroSettings?.mainHeadline}{" "}
+                  {heroSettings?.headlineHighlight && (
+                    <span className="relative inline-block px-1 bg-gradient-to-r from-purple-300 to-purple-600 bg-clip-text text-transparent">
+                      {heroSettings.headlineHighlight}
+                    </span>
+                  )}
+                </h1>
+              )}
 
-              <p className="mx-auto mt-5 max-w-2xl text-base leading-7 text-gray-500 sm:text-base">
-                {heroSettings?.subHeadline ||
-                  "Join 1k+ students building the future through design, code, and digital art."}
-              </p>
+              {isSettingsLoading ? (
+                <div className="mx-auto mt-5 max-w-2xl space-y-2">
+                  <Skeleton className="mx-auto h-4 w-5/6 rounded-md bg-purple-200/40" />
+                  <Skeleton className="mx-auto h-4 w-3/5 rounded-md bg-purple-200/40" />
+                </div>
+              ) : heroSettings?.subHeadline ? (
+                <p className="mx-auto mt-5 max-w-2xl text-base leading-7 text-gray-500 sm:text-base">
+                  {heroSettings.subHeadline}
+                </p>
+              ) : null}
 
               <div className="mx-auto mt-8 max-w-3xl rounded-[2rem] border border-white/70 bg-white/70 p-3  shadow-[0_30px_80px_-45px_rgba(109,40,217,0.45)] backdrop-blur-sm sm:p-4">
                 <form
@@ -152,8 +172,9 @@ export default function Home() {
                       <input
                         type="text"
                         placeholder={
-                          heroSettings?.searchPlaceholder ||
-                          "What do you want to learn today?"
+                          isSettingsLoading
+                            ? ""
+                            : heroSettings?.searchPlaceholder || "What do you want to learn today?"
                         }
                         value={searchQuery}
                         onChange={(event) => setSearchQuery(event.target.value)}
@@ -256,18 +277,23 @@ export default function Home() {
               </div>
 
               <div className="mx-auto mt-6 flex max-w-3xl flex-wrap items-center justify-center gap-x-6 gap-y-3 text-sm text-gray-500">
-                {(heroSettings?.tags && heroSettings.tags.length > 0
-                  ? heroSettings.tags
-                  : ["Design tracks", "Live mentorship"]
-                ).map((tag, idx) => (
-                  <div
-                    key={idx}
-                    className="inline-flex items-center gap-2 rounded-full bg-white/70 px-4 py-2 shadow-sm ring-1 ring-purple-100"
-                  >
-                    <Sparkles className="h-4 w-4 text-primary" />
-                    {tag}
-                  </div>
-                ))}
+                {isSettingsLoading ? (
+                  <>
+                    <Skeleton className="h-9 w-32 rounded-full bg-purple-200/40" />
+                    <Skeleton className="h-9 w-36 rounded-full bg-purple-200/40" />
+                    <Skeleton className="h-9 w-28 rounded-full bg-purple-200/40" />
+                  </>
+                ) : (
+                  heroSettings?.tags?.map((tag, idx) => (
+                    <div
+                      key={idx}
+                      className="inline-flex items-center gap-2 rounded-full bg-white/70 px-4 py-2 shadow-sm ring-1 ring-purple-100"
+                    >
+                      <Sparkles className="h-4 w-4 text-primary" />
+                      {tag}
+                    </div>
+                  ))
+                )}
               </div>
             </div>
           </section>
