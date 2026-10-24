@@ -14,7 +14,13 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
-import { NativeSelect, NativeSelectOption } from "../ui/native-select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
 import { useLogoutMutation } from "@/lib/redux/features/auth/authApi";
 import { usePathname, useRouter } from "next/navigation";
 import { useGetAllCategoriesQuery } from "@/lib/redux/features/category/categoryApi";
@@ -43,8 +49,7 @@ export default function Navbar() {
     dispatch(Logout());
   };
 
-  const handleCategorySelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedCategory = e.target.value;
+  const handleCategorySelect = (selectedCategory: string) => {
     if (selectedCategory) {
       router.push(`/courses?category=${encodeURIComponent(selectedCategory)}`);
       setMobileMenuOpen(false);
@@ -69,21 +74,19 @@ export default function Navbar() {
 
           {/* Navigation Links */}
           <nav className="hidden md:flex items-center gap-8">
-            <NativeSelect
-              className="w-24 border-0 bg-transparent text-gray-600 cursor-pointer"
-              selectClassName="text-sm font-medium text-gray-600 hover:text-primary cursor-pointer pr-5 pl-0 py-1 h-auto focus:ring-0 focus:outline-none"
-              iconClassName="size-3.5 right-0.5 text-gray-600 group-hover/native-select:text-primary"
-              onChange={handleCategorySelect}
-              defaultValue=""
-            >
-              <NativeSelectOption value="">Categories</NativeSelectOption>
+            <Select value="" onValueChange={handleCategorySelect}>
+              <SelectTrigger className="h-auto w-auto gap-1 border-0 bg-transparent p-0 text-sm font-medium text-gray-600 shadow-none hover:text-primary focus:ring-0 focus-visible:ring-0 data-[size=default]:h-auto data-placeholder:text-gray-600 hover:data-placeholder:text-primary cursor-pointer [&>svg]:size-3.5 [&>svg]:text-gray-600 hover:[&>svg]:text-primary transition-colors">
+                <SelectValue placeholder="Categories" />
+              </SelectTrigger>
+              <SelectContent position="popper" align="start">
+                {categories?.map((category) => (
+                  <SelectItem key={category._id} value={category.categoryName} className="cursor-pointer bg-white text-gray-700 data-[highlighted]:bg-gray-200 data-[highlighted]:text-white">
+                    {category.categoryName}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
 
-              {categories?.map((category) => (
-                <NativeSelectOption key={category._id} value={category.categoryName}>
-                  {category.categoryName}
-                </NativeSelectOption>
-              ))}
-            </NativeSelect>
             <Link href="/courses" className={navLinkClass("/courses")}>
               Courses
             </Link>
@@ -160,21 +163,18 @@ export default function Navbar() {
               </SheetHeader>
 
               <div className="space-y-5 px-5 py-5">
-                <NativeSelect
-                  className="w-full rounded-xl border border-purple-100 bg-white px-3 py-2 text-gray-700"
-                  selectClassName="text-sm font-medium text-gray-700"
-                  iconClassName="size-3.5 right-3 text-gray-500"
-                  onChange={handleCategorySelect}
-                  defaultValue=""
-                >
-                  <NativeSelectOption value="">Categories</NativeSelectOption>
-
-                  {categories?.map((category) => (
-                    <NativeSelectOption key={category._id} value={category.categoryName}>
-                      {category.categoryName}
-                    </NativeSelectOption>
-                  ))}
-                </NativeSelect>
+                <Select value="" onValueChange={handleCategorySelect}>
+                  <SelectTrigger className="w-full justify-between rounded-xl border border-purple-100 bg-white px-3 py-2 text-sm font-medium text-gray-700 shadow-none focus:ring-0 focus-visible:ring-0 data-placeholder:text-gray-700 cursor-pointer">
+                    <SelectValue placeholder="Categories" />
+                  </SelectTrigger>
+                  <SelectContent position="popper">
+                    {categories?.map((category) => (
+                      <SelectItem key={category._id} value={category.categoryName} className="cursor-pointer">
+                        {category.categoryName}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
 
                 <nav className="flex flex-col gap-2 text-sm">
                   <SheetClose asChild>

@@ -2,6 +2,13 @@
 
 import { useState, type FormEvent } from "react";
 import { Button } from "../ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
 import { Mail, MessageSquare, Phone } from "lucide-react";
 import { toast } from "sonner";
 import { useSubmitInquiryMutation } from "@/lib/redux/features/contact/contactApi";
@@ -177,7 +184,7 @@ const ContactCard = () => {
                       onChange={(e) =>
                         setFormData({ ...formData, fullName: e.target.value })
                       }
-                      className="rounded-lg border border-input bg-background px-4 py-2.5 text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                      className="h-11 rounded-lg border border-input bg-background px-4 py-2.5 text-base sm:text-sm placeholder:text-base sm:placeholder:text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
                       required
                     />
                     <input
@@ -187,7 +194,7 @@ const ContactCard = () => {
                       onChange={(e) =>
                         setFormData({ ...formData, phone: e.target.value })
                       }
-                      className="rounded-lg border border-input bg-background px-4 py-2.5 text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                      className="h-11 rounded-lg border border-input bg-background px-4 py-2.5 text-base sm:text-sm placeholder:text-base sm:placeholder:text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
                       required
                     />
                     <input
@@ -197,23 +204,34 @@ const ContactCard = () => {
                       onChange={(e) =>
                         setFormData({ ...formData, email: e.target.value })
                       }
-                      className="rounded-lg border border-input bg-background px-4 py-2.5 text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                      className="h-11 rounded-lg border border-input bg-background px-4 py-2.5 text-base sm:text-sm placeholder:text-base sm:placeholder:text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
                       required
                     />
-                    <select
+                    <Select
                       value={formData.subject}
-                      onChange={(e) =>
-                        setFormData({ ...formData, subject: e.target.value })
+                      onValueChange={(value) =>
+                        setFormData({ ...formData, subject: value })
                       }
-                      className="w-full rounded-lg border border-input bg-background px-4 py-2.5 text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
                       required
                     >
-                      <option value="">Select a subject</option>
-                      <option value="student">Student Inquiry</option>
-                      <option value="partnership">Partnership Opportunity</option>
-                      <option value="press">Press Inquiry</option>
-                      <option value="general">General Support</option>
-                    </select>
+                      <SelectTrigger className="w-full data-[size=default]:h-11 rounded-lg border border-input bg-background px-4 py-2.5 text-base sm:text-sm text-foreground data-placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:border-transparent cursor-pointer shadow-none">
+                        <SelectValue placeholder="Select a subject" />
+                      </SelectTrigger>
+                      <SelectContent position="popper">
+                        <SelectItem value="student" className="cursor-pointer">
+                          Student Inquiry
+                        </SelectItem>
+                        <SelectItem value="partnership" className="cursor-pointer">
+                          Partnership Opportunity
+                        </SelectItem>
+                        <SelectItem value="press" className="cursor-pointer">
+                          Press Inquiry
+                        </SelectItem>
+                        <SelectItem value="general" className="cursor-pointer">
+                          General Support
+                        </SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
 
                   <div>
@@ -227,7 +245,7 @@ const ContactCard = () => {
                         setFormData({ ...formData, message: e.target.value })
                       }
                       rows={6}
-                      className="w-full rounded-lg border border-input bg-background px-4 py-2.5 text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                      className="w-full rounded-lg border border-input bg-background px-4 py-2.5 text-base sm:text-sm placeholder:text-base sm:placeholder:text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
                       required
                     />
                   </div>

@@ -38,6 +38,14 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
 import { useGetAllCategoriesQuery } from "@/lib/redux/features/category/categoryApi";
 import { useGetAllInstructorsQuery } from "@/lib/redux/features/instructor/instructorApi";
 import { useGetPaginatedCoursesQuery } from "@/lib/redux/features/course/courseApi";
@@ -543,38 +551,33 @@ function CoursesContent() {
                 </InputGroup>
 
                 {/* Sort */}
-                <span className="text-gray-700 font-medium text-sm">
-                  Sort By:
-                </span>
+                <div className="flex items-center gap-2">
+                  <span className="text-gray-700 font-medium text-sm whitespace-nowrap">
+                    Sort By:
+                  </span>
 
-                <div className="relative">
-                  <select
+                  <Select
                     value={sortBy}
-                    onChange={(
-                      event
-                    ) => {
-                      setSortBy(
-                        event.target
-                          .value as SortKey
-                      );
-
-                      setCurrentPage(
-                        1
-                      );
+                    onValueChange={(value) => {
+                      setSortBy(value as SortKey);
+                      setCurrentPage(1);
                     }}
-                    className="flex items-center gap-2 px-3 sm:px-4 py-2 border border-gray-300 rounded-lg hover:border-primary transition-colors bg-white text-gray-700 font-medium text-sm w-full sm:w-auto"
                   >
-                    {sortOptions.map(
-                      (option) => (
-                        <option
+                    <SelectTrigger className="w-full sm:w-[190px] border-gray-300 bg-white text-gray-700 font-medium text-sm rounded-lg hover:border-primary transition-colors cursor-pointer shadow-xs focus-visible:border-primary focus-visible:ring-primary/20">
+                      <SelectValue placeholder="Sort by" />
+                    </SelectTrigger>
+                    <SelectContent position="popper" align="end">
+                      {sortOptions.map((option) => (
+                        <SelectItem
                           key={option}
                           value={option}
+                          className="cursor-pointer"
                         >
                           {option}
-                        </option>
-                      )
-                    )}
-                  </select>
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
               </div>
             </div>

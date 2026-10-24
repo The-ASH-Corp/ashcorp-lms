@@ -24,7 +24,7 @@ function NativeSelect({
       )}
       data-slot="native-select-wrapper"
       data-size={size}
-  >
+    >
       <select
         data-slot="native-select"
         data-size={size}
