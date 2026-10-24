@@ -43,18 +43,18 @@ const Pillars = () => {
   ];
 
   return (
-    <section className="py-20">
+    <section className="py-16">
       <div className="mx-auto w-full max-w-[120rem] px-6 lg:px-12 xl:px-20">
         <div className="mx-auto max-w-2xl text-center">
           <h2 className="text-3xl font-bold tracking-tight text-foreground md:text-4xl">
             {coreValuesSettings?.title || "The Pillars of ASH Academy"}
           </h2>
-          <p className="mt-4 text-pretty leading-relaxed text-muted-foreground">
+          <p className="mt-2 text-pretty leading-relaxed text-muted-foreground">
             {coreValuesSettings?.subtitle ||
               "These aren't just values on a page they're the foundation behind every course we build and every learner we support."}
           </p>
         </div>
-        <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {items.map((pillar, idx) => {
             const IconComponent = iconMap[idx % iconMap.length];
             return (

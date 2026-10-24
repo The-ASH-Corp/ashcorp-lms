@@ -82,7 +82,7 @@ const ContactCard = () => {
   };
 
   return (
-    <section className="py-20">
+    <section className="py-4">
       <div className="mx-auto w-full max-w-[120rem] px-6 lg:px-12 xl:px-20">
         <div
           className={`grid gap-12 ${
