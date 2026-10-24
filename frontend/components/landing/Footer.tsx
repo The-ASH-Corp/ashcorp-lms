@@ -2,7 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import { FaInstagram } from "react-icons/fa";
+import { FaFacebookF, FaInstagram } from "react-icons/fa";
 import { Globe } from "lucide-react";
 import { useGetHomepageSettingsQuery } from "@/lib/redux/features/page-settings/pageSettingsApi";
 
@@ -27,31 +27,6 @@ export default function Footer() {
               {footerSettings?.brandDescription ||
                 "Making creative education accessible, fun, and results-driven for learners everywhere."}
             </p>
-            
-            <div className="mt-6 flex items-center gap-3">
-             <a
-                href="https://ashacademy.ai/"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Visit our website"
-                className="flex h-8 w-8 items-center justify-center rounded-full border border-purple-50 bg-white text-gray-400 shadow-xs transition-colors hover:text-purple-600"
-              >
-                <Globe className="h-4 w-4" />
-              </a>
-              <a
-                href="https://www.instagram.com/ashacademy.ai?rpxt=MXNxYXlkcW5meDNycg=="
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Visit our Instagram"
-                className="flex h-8 w-8 items-center justify-center rounded-full border border-purple-50 bg-white text-gray-400 shadow-xs transition-colors hover:text-purple-600"
-              >
-                <FaInstagram className="h-4 w-4" />
-              </a>
-              
-            </div>
-
-
-
           </div>
 
           {/* Links: Academy */}
@@ -104,19 +79,38 @@ export default function Footer() {
             <p className="mt-4 text-xs text-gray-500">
               Get weekly creative prompts and course discounts.
             </p>
-            <form className="mt-4 flex flex-col gap-2">
-              <input
-                type="email"
-                placeholder="Email Address"
-                className="rounded-full border border-purple-100 bg-white px-4 py-2.5 text-xs text-indigo-950 placeholder-gray-400 outline-none focus:ring-1 focus:ring-purple-500"
-              />
-              <button
-                type="submit"
-                className="rounded-full bg-primary px-4 py-2.5 text-xs font-semibold text-white transition-colors hover:bg-purple-700 active:scale-98 cursor-pointer"
+
+            <div className="mt-6 flex items-center gap-3">
+              <a
+                href="https://ashacademy.ai/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Visit our website"
+                className="flex h-8 w-8 items-center justify-center rounded-full border border-purple-50 bg-white text-gray-400 shadow-lg transition-colors hover:text-purple-600"
               >
-                Subscribe
-              </button>
-            </form>
+                <Globe className="h-4 w-4" />
+              </a>
+              <a
+                href="https://www.instagram.com/ashacademy.ai?rpxt=MXNxYXlkcW5meDNycg=="
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Visit our Instagram"
+                className="flex h-8 w-8 items-center justify-center rounded-full border border-purple-50 bg-white text-gray-400 shadow-lg transition-colors hover:text-purple-600"
+              >
+                <FaInstagram className="h-4 w-4" />
+              </a>
+              <a
+                href="https://www.facebook.com/share/1EcHm2mkfQ/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Visit our Facebook"
+                className="flex h-8 w-8 items-center justify-center rounded-full border border-purple-50 bg-white text-gray-400 shadow-lg transition-colors hover:text-purple-600"
+              >
+                <FaFacebookF className="h-4 w-4" />
+              </a>
+
+            </div>
+
           </div>
         </div>
 
