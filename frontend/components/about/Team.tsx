@@ -43,7 +43,7 @@ const Team = () => {
   const team = leadershipSettings?.items || defaultMembers;
 
   return (
-    <section id="mentors" className="bg-secondary py-20">
+    <section id="mentors" className="bg-secondary py-8">
       <div className="mx-auto w-full max-w-[120rem] px-6 lg:px-12 xl:px-20">
         <div className="flex flex-col justify-between gap-6 md:flex-row md:items-end">
           <div>
@@ -59,7 +59,7 @@ const Team = () => {
               "Leading with conviction, our executive board combines decades of experience across academia and industry."}
           </p>
         </div>
-        <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {leadershipSettings?.enabled && team.map((member) => {
             const imgSrc = member.image || "/placeholder.svg";
             return (

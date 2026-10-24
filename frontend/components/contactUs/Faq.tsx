@@ -45,7 +45,7 @@ const Faq = () => {
   const faqItems = faqSettings?.items || defaultFaqs;
 
   return (
-    <section className="py-20">
+    <section className="py-14 mt-2">
       <div className="mx-auto max-w-3xl px-6">
         <div className="text-center">
           <h2 className="text-3xl font-bold tracking-tight text-foreground md:text-4xl">
@@ -56,7 +56,7 @@ const Faq = () => {
           </p>
         </div>
 
-        <div className="mt-12 space-y-4">
+        <div className="mt-8 space-y-4">
           {faqItems.map((item, index) => (
             <button
               key={item.id || index}

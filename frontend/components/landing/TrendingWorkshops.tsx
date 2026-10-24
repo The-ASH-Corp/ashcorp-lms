@@ -109,9 +109,9 @@ export default function TrendingWorkshops() {
     );
 
   return (
-    <section className="bg-linear-to-b from-purple-50/40 to-white py-14 sm:py-16">
+    <section className="bg-linear-to-b from-purple-50/40 to-white py-10 bg-gray-100">
       <div className="mx-auto w-full max-w-[120rem] px-4 sm:px-6 lg:px-12 xl:px-20">
-        <div className="mb-12 text-center">
+        <div className="mb-6 text-center">
           <h2 className="text-3xl font-bold tracking-tight text-indigo-950">
             {trendingSettings?.title || "Trending Courses"}
           </h2>
@@ -171,7 +171,7 @@ export default function TrendingWorkshops() {
                   variants={cardVariants}
                   whileHover={{ y: -6 }}
                   transition={{ duration: 0.2 }}
-                  className="group flex flex-col overflow-hidden rounded-3xl border border-purple-50 bg-white shadow-xs transition-shadow hover:shadow-md"
+                  className="group flex flex-col overflow-hidden rounded-3xl border border-purple-50 bg-white shadow-lg transition-shadow hover:shadow-xl"
                 >
                   {/* Adaptive Image Container */}
                   <AdaptiveCourseThumbnail

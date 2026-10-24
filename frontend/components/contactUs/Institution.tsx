@@ -20,7 +20,7 @@ const Institution = () => {
   const mapSrc = locationMap?.mapEmbedUrl || defaultMapSrc;
 
   return (
-    <section className="bg-secondary py-20">
+    <section className="bg-secondary py-10 mt-6">
       <div className="mx-auto w-full max-w-[120rem] px-6 lg:px-12 xl:px-20 mb-8 text-center">
         <h2 className="text-3xl font-bold tracking-tight text-foreground md:text-4xl">
           {locationMap?.title || "Our Campus & Location"}

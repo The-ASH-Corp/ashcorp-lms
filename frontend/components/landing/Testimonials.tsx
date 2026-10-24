@@ -142,7 +142,7 @@ export default function Testimonials() {
                   type="button"
                   onClick={() => scrollCards("left")}
                   disabled={!canScrollLeft}
-                  className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-purple-100 bg-white text-primary transition-colors hover:bg-purple-50 disabled:cursor-not-allowed disabled:opacity-40"
+                  className="inline-flex h-10 w-10 items-center cursor-pointer justify-center rounded-full border border-purple-100 bg-white text-primary transition-colors hover:bg-purple-50 disabled:cursor-not-allowed disabled:opacity-40"
                   aria-label="Scroll testimonials left"
                 >
                   <ChevronLeft className="h-4 w-4" />
@@ -151,7 +151,7 @@ export default function Testimonials() {
                   type="button"
                   onClick={() => scrollCards("right")}
                   disabled={!canScrollRight}
-                  className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-purple-100 bg-white text-primary transition-colors hover:bg-purple-50 disabled:cursor-not-allowed disabled:opacity-40"
+                  className="inline-flex h-10 w-10 items-center cursor-pointer justify-center rounded-full border border-purple-100 bg-white text-primary transition-colors hover:bg-purple-50 disabled:cursor-not-allowed disabled:opacity-40"
                   aria-label="Scroll testimonials right"
                 >
                   <ChevronRight className="h-4 w-4" />
@@ -218,7 +218,7 @@ export default function Testimonials() {
                   </div>
                 }
 
-                <p className="text-sm font-medium leading-relaxed text-gray-600 italic">
+                <p className="text-sm font-medium leading-relaxed text-gray-600 italic pr-8">
                   &ldquo;{t.quote}&rdquo;
                 </p>
 

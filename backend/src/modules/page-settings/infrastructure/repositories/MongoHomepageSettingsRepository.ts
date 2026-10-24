@@ -32,7 +32,10 @@ export class MongoHomepageSettingsRepository implements HomepageSettingsReposito
       settings = await HomepageSettingsModel.create(data);
     } else {
       if (data.hero) settings.hero = { ...settings.hero, ...data.hero };
-      if (data.stats) settings.stats = { ...settings.stats, ...data.stats };
+      if (data.stats) {
+        (settings as any).stats = { ...(settings as any).stats, ...data.stats };
+        settings.markModified("stats");
+      }
       if (data.categories) settings.categories = { ...settings.categories, ...data.categories };
       if (data.trendingWorkshops)
         settings.trendingWorkshops = { ...settings.trendingWorkshops, ...data.trendingWorkshops };

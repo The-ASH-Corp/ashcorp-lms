@@ -2,7 +2,8 @@
 
 import React from "react";
 import Link from "next/link";
-import { Share2, Heart } from "lucide-react";
+import { FaFacebookF, FaInstagram } from "react-icons/fa";
+import { Globe } from "lucide-react";
 import { useGetHomepageSettingsQuery } from "@/lib/redux/features/page-settings/pageSettingsApi";
 
 export default function Footer() {
@@ -14,7 +15,7 @@ export default function Footer() {
   }
 
   return (
-    <footer className="border-t border-purple-100 bg-secondary pt-14 pb-8 sm:pt-16">
+    <footer className="border-t border-purple-100 bg-secondary pt-10 pb-8 sm:pt-12">
       <div className="mx-auto w-full max-w-[120rem] px-4 sm:px-6 lg:px-12 xl:px-20">
         <div className="grid grid-cols-1 gap-10 md:grid-cols-4 lg:gap-12">
           {/* Brand Info */}
@@ -26,15 +27,6 @@ export default function Footer() {
               {footerSettings?.brandDescription ||
                 "Making creative education accessible, fun, and results-driven for learners everywhere."}
             </p>
-            {/* Social / Utility Buttons */}
-            <div className="mt-6 flex items-center gap-3">
-              <button className="flex h-8 w-8 items-center justify-center rounded-full bg-white text-gray-400 border border-purple-50 hover:text-purple-600 transition-colors shadow-xs">
-                <Share2 className="h-4 w-4" />
-              </button>
-              <button className="flex h-8 w-8 items-center justify-center rounded-full bg-white text-gray-400 border border-purple-50 hover:text-red-500 transition-colors shadow-xs">
-                <Heart className="h-4 w-4" />
-              </button>
-            </div>
           </div>
 
           {/* Links: Academy */}
@@ -87,24 +79,43 @@ export default function Footer() {
             <p className="mt-4 text-xs text-gray-500">
               Get weekly creative prompts and course discounts.
             </p>
-            <form className="mt-4 flex flex-col gap-2">
-              <input
-                type="email"
-                placeholder="Email Address"
-                className="rounded-full border border-purple-100 bg-white px-4 py-2.5 text-xs text-indigo-950 placeholder-gray-400 outline-none focus:ring-1 focus:ring-purple-500"
-              />
-              <button
-                type="submit"
-                className="rounded-full bg-primary px-4 py-2.5 text-xs font-semibold text-white transition-colors hover:bg-purple-700 active:scale-98"
+
+            <div className="mt-6 flex items-center gap-3">
+              <a
+                href="https://ashacademy.ai/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Visit our website"
+                className="flex h-8 w-8 items-center justify-center rounded-full border border-purple-50 bg-white text-gray-400 shadow-lg transition-colors hover:text-purple-600"
               >
-                Subscribe
-              </button>
-            </form>
+                <Globe className="h-4 w-4" />
+              </a>
+              <a
+                href="https://www.instagram.com/ashacademy.ai?rpxt=MXNxYXlkcW5meDNycg=="
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Visit our Instagram"
+                className="flex h-8 w-8 items-center justify-center rounded-full border border-purple-50 bg-white text-gray-400 shadow-lg transition-colors hover:text-purple-600"
+              >
+                <FaInstagram className="h-4 w-4" />
+              </a>
+              <a
+                href="https://www.facebook.com/share/1EcHm2mkfQ/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Visit our Facebook"
+                className="flex h-8 w-8 items-center justify-center rounded-full border border-purple-50 bg-white text-gray-400 shadow-lg transition-colors hover:text-purple-600"
+              >
+                <FaFacebookF className="h-4 w-4" />
+              </a>
+
+            </div>
+
           </div>
         </div>
 
         {/* Bottom copyright/meta info */}
-        <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-purple-100/50 pt-8 sm:flex-row">
+        <div className="mt-6 flex flex-col items-center justify-between gap-4 border-t border-purple-100/50 pt-8 sm:flex-row">
           <p className="text-[10px] text-gray-400">
             {footerSettings?.copyrightText ||
               "© 2026 Ash Academy. Empowering learners worldwide."}

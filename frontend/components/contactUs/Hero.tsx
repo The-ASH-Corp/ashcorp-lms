@@ -13,7 +13,7 @@ const Hero = () => {
   }
 
   return (
-    <section className="relative overflow-hidden py-16 md:py-24">
+    <section className="relative overflow-hidden py-16 md:py-18">
       <div
         aria-hidden="true"
         className="pointer-events-none absolute -top-32 right-0 h-72 w-160 rounded-full bg-primary/10 blur-3xl"

@@ -21,6 +21,7 @@ const useCountUp = (
       : 0;
 
     if (safeTarget === 0) {
+      setDisplayValue(0);
       return;
     }
 
@@ -103,30 +104,66 @@ export default function Stats() {
     };
   }, [hasEnteredView]);
 
-  const studentsTarget = landingStats?.studentsGlobally ?? 0;
-  const mentorsTarget = landingStats?.expertMentors ?? 0;
-  const satisfactionTarget = landingStats?.satisfactionRate ?? 0;
+  // Check if admin chose custom frontend data or live DB data
+  const isFrontendMode =
+    pageStats?.source === "frontend" ||
+    pageStats?.source === "manual";
+
+  // Data selection based on admin settings
+  const studentsTarget = isFrontendMode
+    ? (pageStats?.studentsCount ?? 26)
+    : (landingStats?.studentsGlobally ?? 0);
+
+  const mentorsTarget = isFrontendMode
+    ? (pageStats?.mentorsCount ?? 12)
+    : (landingStats?.expertMentors ?? 0);
+
+  const satisfactionTarget = isFrontendMode
+    ? (pageStats?.rating ?? 0.0)
+    : (landingStats?.satisfactionRate ?? 0);
 
   const studentsValue = useCountUp(studentsTarget, hasEnteredView);
   const mentorsValue = useCountUp(mentorsTarget, hasEnteredView);
   const satisfactionValue = useCountUp(satisfactionTarget, hasEnteredView);
 
+  const studentsLabel =
+    isFrontendMode && pageStats?.studentsLabel
+      ? pageStats.studentsLabel
+      : "Students Globally";
+
+  const mentorsLabel =
+    isFrontendMode && pageStats?.mentorsLabel
+      ? pageStats.mentorsLabel
+      : "Expert Mentors";
+
+  const satisfactionLabel =
+    isFrontendMode && pageStats?.ratingLabel
+      ? pageStats.ratingLabel
+      : "Satisfaction Rate";
+
   const renderedStats = useMemo(
     () => [
       {
-        label: "Students Globally",
+        label: studentsLabel,
         value: formatStudents(studentsValue),
       },
       {
-        label: "Expert Mentors",
+        label: mentorsLabel,
         value: formatMentors(mentorsValue),
       },
       {
-        label: "Satisfaction Rate",
+        label: satisfactionLabel,
         value: formatSatisfaction(satisfactionValue),
       },
     ],
-    [studentsValue, mentorsValue, satisfactionValue],
+    [
+      studentsValue,
+      mentorsValue,
+      satisfactionValue,
+      studentsLabel,
+      mentorsLabel,
+      satisfactionLabel,
+    ],
   );
 
   return (
