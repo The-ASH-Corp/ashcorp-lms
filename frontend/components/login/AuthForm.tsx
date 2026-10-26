@@ -77,7 +77,7 @@ export default function AuthForm({
                   id="login-email"
                   type="email"
                   {...register("email")}
-                  placeholder="name@example.com"
+                  placeholder="Email Address"
                   className="w-full rounded-xl bg-input py-3 pl-10 pr-4 text-sm text-foreground placeholder-muted-foreground outline-none ring-1 ring-border transition focus:ring-sidebar-primary/60"
                 />
               </div>
@@ -104,7 +104,7 @@ export default function AuthForm({
                   id="login-password"
                   type={showPassword ? "text" : "password"}
                   {...register("password")}
-                  placeholder="••••••••"
+                  placeholder="Password"
                   className="w-full rounded-xl bg-input py-3 pl-10 pr-11 text-sm text-foreground placeholder-muted-foreground outline-none ring-1 ring-border transition focus:ring-sidebar-primary/60"
                 />
                 <button
@@ -153,7 +153,7 @@ export default function AuthForm({
                   id="signup-name"
                   type="text"
                   {...register("name")}
-                  placeholder="John Doe"
+                  placeholder="Full Name"
                   className="w-full rounded-xl bg-input py-3 pl-10 pr-4 text-sm text-foreground placeholder-muted-foreground outline-none ring-1 ring-border transition focus:ring-sidebar-primary/60"
                 />
               </div>
@@ -172,7 +172,7 @@ export default function AuthForm({
                   id="signup-email"
                   type="email"
                   {...register("email")}
-                  placeholder="name@example.com"
+                  placeholder="Email Address"
                   className="w-full rounded-xl bg-input py-3 pl-10 pr-4 text-sm text-foreground placeholder-muted-foreground outline-none ring-1 ring-border transition focus:ring-sidebar-primary/60"
                 />
               </div>
@@ -191,7 +191,7 @@ export default function AuthForm({
                   id="signup-phone"
                   type="tel"
                   {...register("phone")}
-                  placeholder="+1 (555) 000-0000"
+                  placeholder="Phone Number"
                   className="w-full rounded-xl bg-input py-3 pl-10 pr-4 text-sm text-foreground placeholder-muted-foreground outline-none ring-1 ring-border transition focus:ring-sidebar-primary/60"
                 />
               </div>
@@ -210,7 +210,7 @@ export default function AuthForm({
                   id="signup-password"
                   type={showPassword ? "text" : "password"}
                   {...register("password")}
-                  placeholder="••••••••"
+                  placeholder="Password"
                   className="w-full rounded-xl bg-input py-3 pl-10 pr-11 text-sm text-foreground placeholder-muted-foreground outline-none ring-1 ring-border transition focus:ring-sidebar-primary/60"
                 />
                 <button
@@ -236,7 +236,7 @@ export default function AuthForm({
                   id="signup-confirm-password"
                   type={showConfirmPassword ? "text" : "password"}
                   {...register("confirmPassword")}
-                  placeholder="••••••••"
+                  placeholder="Confirm Password"
                   className="w-full rounded-xl bg-input py-3 pl-10 pr-11 text-sm text-foreground placeholder-muted-foreground outline-none ring-1 ring-border transition focus:ring-sidebar-primary/60"
                 />
                 <button
