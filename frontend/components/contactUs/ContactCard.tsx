@@ -13,9 +13,10 @@ import { Mail, MessageSquare, Phone } from "lucide-react";
 import { toast } from "sonner";
 import { useSubmitInquiryMutation } from "@/lib/redux/features/contact/contactApi";
 import { useGetContactSettingsQuery } from "@/lib/redux/features/page-settings/pageSettingsApi";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const ContactCard = () => {
-  const { data: settings } = useGetContactSettingsQuery();
+  const { data: settings, isLoading: isSettingsLoading } = useGetContactSettingsQuery();
   const inquiryFormSettings = settings?.inquiryForm;
   const directoriesSettings = settings?.directories;
 
@@ -112,31 +113,45 @@ const ContactCard = () => {
                 <h3 className="mt-4 font-semibold text-foreground">
                   Student Support
                 </h3>
-                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                  {studentSupport.description}
-                </p>
-                <div className="mt-5 space-y-2">
-                  <div className="flex items-center gap-2 text-sm text-foreground">
-                    <Mail className="size-4 text-primary" />
-                    <a
-                      href={`mailto:${studentSupport.email}`}
-                      className="hover:text-primary"
-                    >
-                      {studentSupport.email}
-                    </a>
+                {isSettingsLoading ? (
+                  <div className="mt-2 space-y-1.5">
+                    <Skeleton className="h-3.5 w-full rounded bg-muted" />
+                    <Skeleton className="h-3.5 w-4/5 rounded bg-muted" />
                   </div>
-                  {studentSupport.phone && (
+                ) : (
+                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                    {studentSupport.description}
+                  </p>
+                )}
+                {isSettingsLoading ? (
+                  <div className="mt-5 space-y-2">
+                    <Skeleton className="h-4 w-44 rounded bg-muted" />
+                    <Skeleton className="h-4 w-36 rounded bg-muted" />
+                  </div>
+                ) : (
+                  <div className="mt-5 space-y-2">
                     <div className="flex items-center gap-2 text-sm text-foreground">
-                      <Phone className="size-4 text-primary" />
+                      <Mail className="size-4 text-primary" />
                       <a
-                        href={`tel:${studentSupport.phone}`}
+                        href={`mailto:${studentSupport.email}`}
                         className="hover:text-primary"
                       >
-                        {studentSupport.phone}
+                        {studentSupport.email}
                       </a>
                     </div>
-                  )}
-                </div>
+                    {studentSupport.phone && (
+                      <div className="flex items-center gap-2 text-sm text-foreground">
+                        <Phone className="size-4 text-primary" />
+                        <a
+                          href={`tel:${studentSupport.phone}`}
+                          className="hover:text-primary"
+                        >
+                          {studentSupport.phone}
+                        </a>
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
 
               <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
@@ -146,20 +161,33 @@ const ContactCard = () => {
                 <h3 className="mt-4 font-semibold text-foreground">
                   Partnership Inquiries
                 </h3>
-                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                  {partnerships.description}
-                </p>
-                <div className="mt-5 space-y-2">
-                  <div className="flex items-center gap-2 text-sm text-foreground">
-                    <Mail className="size-4 text-primary" />
-                    <a
-                      href={`mailto:${partnerships.email}`}
-                      className="hover:text-primary"
-                    >
-                      {partnerships.email}
-                    </a>
+                {isSettingsLoading ? (
+                  <div className="mt-2 space-y-1.5">
+                    <Skeleton className="h-3.5 w-full rounded bg-muted" />
+                    <Skeleton className="h-3.5 w-3/4 rounded bg-muted" />
                   </div>
-                </div>
+                ) : (
+                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                    {partnerships.description}
+                  </p>
+                )}
+                {isSettingsLoading ? (
+                  <div className="mt-5 space-y-2">
+                    <Skeleton className="h-4 w-40 rounded bg-muted" />
+                  </div>
+                ) : (
+                  <div className="mt-5 space-y-2">
+                    <div className="flex items-center gap-2 text-sm text-foreground">
+                      <Mail className="size-4 text-primary" />
+                      <a
+                        href={`mailto:${partnerships.email}`}
+                        className="hover:text-primary"
+                      >
+                        {partnerships.email}
+                      </a>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           )}
@@ -172,9 +200,13 @@ const ContactCard = () => {
               }`}
             >
               <div className="rounded-xl border border-border bg-card p-8 shadow-sm">
-                <h2 className="text-2xl font-bold text-foreground">
-                  {inquiryFormSettings?.formHeading || "Send an Inquiry"}
-                </h2>
+                {isSettingsLoading ? (
+                  <Skeleton className="h-8 w-52 rounded-lg bg-muted" />
+                ) : (
+                  <h2 className="text-2xl font-bold text-foreground">
+                    {inquiryFormSettings?.formHeading || "Send an Inquiry"}
+                  </h2>
+                )}
                 <form onSubmit={handleSubmit} className="mt-6 space-y-6">
                   <div className="grid gap-6 sm:grid-cols-2">
                     <input

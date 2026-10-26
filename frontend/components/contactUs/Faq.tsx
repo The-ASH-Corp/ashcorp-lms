@@ -3,6 +3,7 @@
 import { ChevronDown } from "lucide-react";
 import React, { useState } from "react";
 import { useGetContactSettingsQuery } from "@/lib/redux/features/page-settings/pageSettingsApi";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const defaultFaqs = [
   {
@@ -32,7 +33,7 @@ const defaultFaqs = [
 ];
 
 const Faq = () => {
-  const { data: settings } = useGetContactSettingsQuery();
+  const { data: settings, isLoading } = useGetContactSettingsQuery();
   const faqSettings = settings?.faqs;
   const isVisible = settings?.sectionVisibility?.faqs !== false;
 
@@ -48,39 +49,64 @@ const Faq = () => {
     <section className="py-14 mt-2">
       <div className="mx-auto max-w-3xl px-6">
         <div className="text-center">
-          <h2 className="text-3xl font-bold tracking-tight text-foreground md:text-4xl">
-            {faqSettings?.title || "Frequently Asked Questions"}
-          </h2>
-          <p className="mt-4 text-muted-foreground">
-            {faqSettings?.subtitle || "Quick answers to common inquiries"}
-          </p>
+          {isLoading ? (
+            <div className="space-y-3">
+              <Skeleton className="h-9 sm:h-10 w-80 mx-auto rounded-xl bg-muted" />
+              <Skeleton className="h-4 w-64 mx-auto rounded bg-muted" />
+            </div>
+          ) : (
+            <>
+              <h2 className="text-3xl font-bold tracking-tight text-foreground md:text-4xl">
+                {faqSettings?.title || "Frequently Asked Questions"}
+              </h2>
+              <p className="mt-4 text-muted-foreground">
+                {faqSettings?.subtitle || "Quick answers to common inquiries"}
+              </p>
+            </>
+          )}
         </div>
 
-        <div className="mt-8 space-y-4">
-          {faqItems.map((item, index) => (
-            <button
-              key={item.id || index}
-              onClick={() => setOpenFaq(openFaq === index ? null : index)}
-              className="w-full rounded-lg border border-border bg-card p-6 text-left transition-all hover:bg-secondary/50 cursor-pointer"
-            >
-              <div className="flex items-center justify-between">
-                <h3 className="font-semibold text-foreground">
-                  {item.question}
-                </h3>
-                <ChevronDown
-                  className={`size-5 text-primary transition-transform ${
-                    openFaq === index ? "rotate-180" : ""
-                  }`}
-                />
+        {isLoading ? (
+          <div className="mt-8 space-y-4">
+            {[1, 2, 3, 4].map((i) => (
+              <div
+                key={i}
+                className="w-full rounded-lg border border-border bg-card p-6"
+              >
+                <div className="flex items-center justify-between">
+                  <Skeleton className="h-5 w-2/3 max-w-md rounded bg-muted" />
+                  <Skeleton className="size-5 rounded-full bg-muted" />
+                </div>
               </div>
-              {openFaq === index && (
-                <p className="mt-4 leading-relaxed text-muted-foreground whitespace-pre-line">
-                  {item.answer}
-                </p>
-              )}
-            </button>
-          ))}
-        </div>
+            ))}
+          </div>
+        ) : (
+          <div className="mt-8 space-y-4">
+            {faqItems.map((item, index) => (
+              <button
+                key={item.id || index}
+                onClick={() => setOpenFaq(openFaq === index ? null : index)}
+                className="w-full rounded-lg border border-border bg-card p-6 text-left transition-all hover:bg-secondary/50 cursor-pointer"
+              >
+                <div className="flex items-center justify-between">
+                  <h3 className="font-semibold text-foreground">
+                    {item.question}
+                  </h3>
+                  <ChevronDown
+                    className={`size-5 text-primary transition-transform ${
+                      openFaq === index ? "rotate-180" : ""
+                    }`}
+                  />
+                </div>
+                {openFaq === index && (
+                  <p className="mt-4 leading-relaxed text-muted-foreground whitespace-pre-line">
+                    {item.answer}
+                  </p>
+                )}
+              </button>
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );

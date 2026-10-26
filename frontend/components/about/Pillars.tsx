@@ -3,11 +3,12 @@
 import React from "react";
 import { Lightbulb, Share2, ShieldCheck, Users, Zap, Diamond } from "lucide-react";
 import { useGetAboutSettingsQuery } from "@/lib/redux/features/page-settings/pageSettingsApi";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const iconMap = [Lightbulb, ShieldCheck, Users, Share2, Zap, Diamond];
 
 const Pillars = () => {
-  const { data: settings } = useGetAboutSettingsQuery();
+  const { data: settings, isLoading } = useGetAboutSettingsQuery();
   const coreValuesSettings = settings?.coreValues;
   const isVisible = settings?.sectionVisibility?.coreValues !== false && coreValuesSettings?.enabled !== false;
 
@@ -46,35 +47,64 @@ const Pillars = () => {
     <section className="py-16">
       <div className="mx-auto w-full max-w-[120rem] px-6 lg:px-12 xl:px-20">
         <div className="mx-auto max-w-2xl text-center">
-          <h2 className="text-3xl font-bold tracking-tight text-foreground md:text-4xl">
-            {coreValuesSettings?.title || "The Pillars of ASH Academy"}
-          </h2>
-          <p className="mt-2 text-pretty leading-relaxed text-muted-foreground">
-            {coreValuesSettings?.subtitle ||
-              "These aren't just values on a page they're the foundation behind every course we build and every learner we support."}
-          </p>
+          {isLoading ? (
+            <div className="space-y-3">
+              <Skeleton className="h-9 sm:h-10 w-72 mx-auto rounded-xl bg-muted" />
+              <Skeleton className="h-4 w-96 max-w-full mx-auto rounded bg-muted" />
+            </div>
+          ) : (
+            <>
+              <h2 className="text-3xl font-bold tracking-tight text-foreground md:text-4xl">
+                {coreValuesSettings?.title || "The Pillars of ASH Academy"}
+              </h2>
+              <p className="mt-2 text-pretty leading-relaxed text-muted-foreground">
+                {coreValuesSettings?.subtitle ||
+                  "These aren't just values on a page they're the foundation behind every course we build and every learner we support."}
+              </p>
+            </>
+          )}
         </div>
-        <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {items.map((pillar, idx) => {
-            const IconComponent = iconMap[idx % iconMap.length];
-            return (
+
+        {isLoading ? (
+          <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            {[1, 2, 3, 4].map((i) => (
               <div
-                key={pillar.id || pillar.title}
-                className="rounded-xl border border-border bg-card p-6 transition-shadow hover:shadow-md"
+                key={i}
+                className="rounded-xl border border-border bg-card p-6"
               >
-                <div className="flex size-11 items-center justify-center rounded-lg bg-accent text-primary">
-                  <IconComponent className="size-5" />
+                <Skeleton className="size-11 rounded-lg bg-muted" />
+                <Skeleton className="mt-5 h-6 w-28 rounded bg-muted" />
+                <div className="mt-3 space-y-2">
+                  <Skeleton className="h-3.5 w-full rounded bg-muted" />
+                  <Skeleton className="h-3.5 w-4/5 rounded bg-muted" />
+                  <Skeleton className="h-3.5 w-3/5 rounded bg-muted" />
                 </div>
-                <h3 className="mt-5 text-lg font-semibold text-foreground">
-                  {pillar.title}
-                </h3>
-                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                  {pillar.description}
-                </p>
               </div>
-            );
-          })}
-        </div>
+            ))}
+          </div>
+        ) : (
+          <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            {items.map((pillar, idx) => {
+              const IconComponent = iconMap[idx % iconMap.length];
+              return (
+                <div
+                  key={pillar.id || pillar.title}
+                  className="rounded-xl border border-border bg-card p-6 transition-shadow hover:shadow-md"
+                >
+                  <div className="flex size-11 items-center justify-center rounded-lg bg-accent text-primary">
+                    <IconComponent className="size-5" />
+                  </div>
+                  <h3 className="mt-5 text-lg font-semibold text-foreground">
+                    {pillar.title}
+                  </h3>
+                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                    {pillar.description}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
+        )}
       </div>
     </section>
   );
