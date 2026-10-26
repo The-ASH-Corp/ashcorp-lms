@@ -57,8 +57,8 @@ export default function Navbar() {
   };
 
   const navLinkClass = (path: string) =>
-    `relative pb-1 text-sm font-medium transition-colors ${pathname === path
-      ? "text-primary font-semibold border-b-2 border-primary"
+    `relative inline-flex items-center py-1 text-sm font-medium transition-colors ${pathname === path
+      ? "text-primary font-semibold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-primary after:rounded-full"
       : "text-gray-600 hover:text-primary"
     }`;
 
@@ -75,7 +75,7 @@ export default function Navbar() {
           {/* Navigation Links */}
           <nav className="hidden md:flex items-center gap-8">
             <Select value="" onValueChange={handleCategorySelect}>
-              <SelectTrigger className="h-auto w-auto gap-1 border-0 bg-transparent p-0 text-sm font-medium text-gray-600 shadow-none hover:text-primary focus:ring-0 focus-visible:ring-0 data-[size=default]:h-auto data-placeholder:text-gray-600 hover:data-placeholder:text-primary cursor-pointer [&>svg]:size-3.5 [&>svg]:text-gray-600 hover:[&>svg]:text-primary transition-colors">
+              <SelectTrigger className="h-auto w-auto gap-1 border-0 bg-transparent px-0 py-1 text-sm font-medium text-gray-600 shadow-none hover:text-primary focus:ring-0 focus-visible:ring-0 data-[size=default]:h-auto data-placeholder:text-gray-600 hover:data-placeholder:text-primary cursor-pointer [&>svg]:size-3.5 [&>svg]:text-gray-600 hover:[&>svg]:text-primary transition-colors">
                 <SelectValue placeholder="Categories" />
               </SelectTrigger>
               <SelectContent position="popper" align="start">
