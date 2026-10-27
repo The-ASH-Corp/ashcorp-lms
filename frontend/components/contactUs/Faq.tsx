@@ -93,7 +93,7 @@ const Faq = () => {
                     {item.question}
                   </h3>
                   <ChevronDown
-                    className={`size-5 text-primary transition-transform ${
+                    className={`size-5 shrink-0 text-primary transition-transform ${
                       openFaq === index ? "rotate-180" : ""
                     }`}
                   />
