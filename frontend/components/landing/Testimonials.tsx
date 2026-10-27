@@ -113,7 +113,7 @@ export default function Testimonials() {
   };
 
   return (
-    <section className="bg-white py-14 sm:py-16">
+    <section className="bg-white py-8 sm:py-10 ">
       <div className="mx-auto w-full max-w-[120rem] px-4 sm:px-6 lg:px-12 xl:px-20">
         <motion.div
           className="mb-10 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between"
