@@ -110,7 +110,7 @@ export default function AuthForm({
                 <button
                   type="button"
                   onClick={onTogglePassword}
-                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-muted-foreground transition hover:text-foreground"
+                  className="cursor-pointer absolute right-3.5 top-1/2 -translate-y-1/2 text-muted-foreground transition hover:text-foreground"
                 >
                   {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                 </button>
@@ -216,7 +216,7 @@ export default function AuthForm({
                 <button
                   type="button"
                   onClick={onTogglePassword}
-                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-muted-foreground transition hover:text-foreground"
+                  className="cursor-pointer absolute right-3.5 top-1/2 -translate-y-1/2 text-muted-foreground transition hover:text-foreground"
                 >
                   {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                 </button>
@@ -242,7 +242,7 @@ export default function AuthForm({
                 <button
                   type="button"
                   onClick={onToggleConfirmPassword}
-                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-muted-foreground transition hover:text-foreground"
+                  className="cursor-pointer absolute right-3.5 top-1/2 -translate-y-1/2 text-muted-foreground transition hover:text-foreground"
                 >
                   {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                 </button>
@@ -264,7 +264,7 @@ export default function AuthForm({
           id={isSignUp ? "signup-submit-btn" : "login-submit-btn"}
           type="submit"
           disabled={isSubmitting || formSubmitting}
-          className="w-full rounded-xl bg-purple-600 py-6 text-sm border-none font-semibold text-white shadow-lg shadow-purple-600/40 transition hover:bg-purple-700 hover:shadow-purple-600/50"
+          className="cursor-pointer w-full rounded-xl bg-purple-600 py-6 text-sm border-none font-semibold text-white shadow-lg shadow-purple-600/40 transition hover:bg-purple-700 hover:shadow-purple-600/50"
         >
           {isSubmitting || formSubmitting ? <Spinner /> : isSignUp ? "Create Account" : "Login"}
           {!isSubmitting && !formSubmitting && <ArrowRight className="ml-2 h-4 w-4" />}
@@ -276,7 +276,7 @@ export default function AuthForm({
         <button
           type="button"
           onClick={onToggleMode}
-          className="font-semibold text-foreground transition hover:text-purple-600"
+          className="cursor-pointer font-semibold text-foreground transition hover:text-purple-600"
         >
           {isSignUp ? "Login" : "Create an Account"}
         </button>

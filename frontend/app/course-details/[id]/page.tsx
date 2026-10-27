@@ -312,7 +312,7 @@ export default function CourseDetail() {
                   <button
                     key={tab}
                     onClick={() => setActiveTab(tab)}
-                    className={`pb-4 text-sm sm:text-base font-medium transition-colors whitespace-nowrap ${
+                    className={`cursor-pointer pb-4 text-sm sm:text-base font-medium transition-colors whitespace-nowrap ${
                       activeTab === tab
                         ? "text-primary border-b-2 border-primary"
                         : "text-gray-600 hover:text-gray-900"
@@ -474,7 +474,7 @@ export default function CourseDetail() {
               <div className="flex justify-center mt-6">
                 <button
                   onClick={() => setShowAllReviews(!showAllReviews)}
-                  className="text-primary font-medium hover:underline"
+                  className="cursor-pointer text-primary font-medium hover:underline"
                 >
                   {showAllReviews ? "See Less" : "See More"}
                 </button>
@@ -530,7 +530,7 @@ export default function CourseDetail() {
                       type="button"
                       onClick={handleApplyCoupon}
                       disabled={isEnrolling || isCouponValidating || isPurchased || baseCheckoutAmount <= 0}
-                      className="rounded-lg bg-primary px-4 text-sm font-semibold text-white hover:bg-violet-700 disabled:cursor-not-allowed disabled:opacity-60"
+                      className="cursor-pointer rounded-lg bg-primary px-4 text-sm font-semibold text-white hover:bg-violet-700 disabled:cursor-not-allowed disabled:opacity-60"
                     >
                       {isCouponValidating ? 'Applying...' : 'Apply'}
                     </button>
@@ -547,7 +547,7 @@ export default function CourseDetail() {
                       <button
                         type="button"
                         onClick={handleRemoveCoupon}
-                        className="mt-2 text-xs font-semibold text-emerald-700 underline underline-offset-2"
+                        className="cursor-pointer mt-2 text-xs font-semibold text-emerald-700 underline underline-offset-2"
                       >
                         Remove coupon
                       </button>
@@ -574,7 +574,7 @@ export default function CourseDetail() {
                 <button
                   onClick={handleEnrollNow}
                   disabled={isEnrolling}
-                  className="w-full bg-primary hover:bg-violet-700 text-white font-semibold py-3 rounded-lg transition-colors flex items-center justify-center gap-2 disabled:cursor-not-allowed disabled:opacity-60"
+                  className="cursor-pointer w-full bg-primary hover:bg-violet-700 text-white font-semibold py-3 rounded-lg transition-colors flex items-center justify-center gap-2 disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   <Play size={18} />
                   {isEnrolling
@@ -588,7 +588,7 @@ export default function CourseDetail() {
                 <button
                   onClick={handleWishlistToggle}
                   disabled={isToggling}
-                  className={`w-full border-2 font-semibold py-3 rounded-lg transition-colors flex items-center justify-center gap-2 ${
+                  className={`cursor-pointer w-full border-2 font-semibold py-3 rounded-lg transition-colors flex items-center justify-center gap-2 ${
                     isWishlisted
                       ? "border-red-200 text-red-600 bg-red-50 hover:bg-red-100 hover:border-red-300"
                       : "border-gray-200 text-gray-700 hover:border-primary hover:text-primary hover:bg-violet-50"

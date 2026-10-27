@@ -441,7 +441,7 @@ function CoursesContent() {
                 !sidebarOpen
               )
             }
-            className="lg:hidden flex items-center gap-2 text-gray-700 font-medium mb-4"
+            className="cursor-pointer lg:hidden flex items-center gap-2 text-gray-700 font-medium mb-4"
           >
             {sidebarOpen ? (
               <X size={20} />
@@ -619,7 +619,7 @@ function CoursesContent() {
                     onClick={
                       clearAllFilters
                     }
-                    className="mt-6 rounded-lg bg-primary px-5 py-2.5 text-sm font-medium text-white transition-all hover:opacity-90"
+                    className="cursor-pointer mt-6 rounded-lg bg-primary px-5 py-2.5 text-sm font-medium text-white transition-all hover:opacity-90"
                   >
                     Clear Filters
                   </button>

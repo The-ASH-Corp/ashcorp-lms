@@ -195,7 +195,7 @@ export default function ForgotPasswordPage() {
               <Button
                 type="submit"
                 disabled={isRequestingOtp}
-                className="w-full rounded-xl bg-purple-600 py-6 text-sm border-none font-semibold text-white shadow-lg shadow-purple-600/40 transition hover:bg-purple-700 hover:shadow-purple-600/50"
+                className="cursor-pointer w-full rounded-xl bg-purple-600 py-6 text-sm border-none font-semibold text-white shadow-lg shadow-purple-600/40 transition hover:bg-purple-700 hover:shadow-purple-600/50"
               >
                 {isRequestingOtp ? <Spinner /> : "Send OTP"}
                 {!isRequestingOtp && <ArrowRight className="ml-2 h-4 w-4" />}
@@ -253,7 +253,7 @@ export default function ForgotPasswordPage() {
                   <button
                     type="button"
                     onClick={() => setShowNewPassword((prev) => !prev)}
-                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-muted-foreground transition hover:text-foreground"
+                    className="cursor-pointer absolute right-3.5 top-1/2 -translate-y-1/2 text-muted-foreground transition hover:text-foreground"
                   >
                     {showNewPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                   </button>
@@ -279,7 +279,7 @@ export default function ForgotPasswordPage() {
                   <button
                     type="button"
                     onClick={() => setShowConfirmPassword((prev) => !prev)}
-                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-muted-foreground transition hover:text-foreground"
+                    className="cursor-pointer absolute right-3.5 top-1/2 -translate-y-1/2 text-muted-foreground transition hover:text-foreground"
                   >
                     {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                   </button>
@@ -298,7 +298,7 @@ export default function ForgotPasswordPage() {
               <Button
                 type="submit"
                 disabled={isResettingPassword}
-                className="w-full rounded-xl bg-purple-600 py-6 text-sm border-none font-semibold text-white shadow-lg shadow-purple-600/40 transition hover:bg-purple-700 hover:shadow-purple-600/50"
+                className="cursor-pointer w-full rounded-xl bg-purple-600 py-6 text-sm border-none font-semibold text-white shadow-lg shadow-purple-600/40 transition hover:bg-purple-700 hover:shadow-purple-600/50"
               >
                 {isResettingPassword ? <Spinner /> : "Reset Password"}
                 {!isResettingPassword && <ArrowRight className="ml-2 h-4 w-4" />}
@@ -307,7 +307,7 @@ export default function ForgotPasswordPage() {
               <Button
                 type="button"
                 variant="outline"
-                className="w-full rounded-xl"
+                className="cursor-pointer w-full rounded-xl"
                 disabled={isRequestingOtp}
                 onClick={requestForm.handleSubmit(handleRequestOtp)}
               >

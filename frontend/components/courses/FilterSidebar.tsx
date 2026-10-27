@@ -57,7 +57,7 @@ export default function FilterSidebar({
         <button
           type="button"
           onClick={onClearAll}
-          className="text-primary hover:text-violet-700 text-xs sm:text-sm font-semibold transition-colors"
+          className="cursor-pointer text-primary hover:text-violet-700 text-xs sm:text-sm font-semibold transition-colors"
         >
           CLEAR ALL{activeFiltersCount ? ` (${activeFiltersCount})` : ""}
         </button>

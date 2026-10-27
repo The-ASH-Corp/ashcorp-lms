@@ -282,7 +282,7 @@ const ContactCard = () => {
                     />
                   </div>
 
-                  <Button type="submit" size="lg" className="w-full" disabled={isLoading}>
+                  <Button type="submit" size="lg" className="w-full cursor-pointer" disabled={isLoading}>
                     {isLoading ? "Submitting..." : "Submit Inquiry"}
                   </Button>
                 </form>

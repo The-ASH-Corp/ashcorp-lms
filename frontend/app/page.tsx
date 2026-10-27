@@ -221,7 +221,7 @@ export default function Home() {
                                     onClick={() =>
                                       handleCategoryClick(result.title)
                                     }
-                                    className="flex w-full items-start justify-between gap-3 rounded-2xl border border-gray-100 bg-gray-50 px-4 py-3 text-left transition-colors hover:border-purple-200 hover:bg-purple-50"
+                                    className="cursor-pointer flex w-full items-start justify-between gap-3 rounded-2xl border border-gray-100 bg-gray-50 px-4 py-3 text-left transition-colors hover:border-purple-200 hover:bg-purple-50"
                                   >
                                     <div>
                                       <p className="text-sm font-semibold text-indigo-950">
@@ -251,7 +251,7 @@ export default function Home() {
                                     key={result.id}
                                     type="button"
                                     onClick={() => handleCourseClick(result.id)}
-                                    className="flex w-full items-start justify-between gap-3 rounded-2xl border border-gray-100 bg-gray-50 px-4 py-3 text-left transition-colors hover:border-purple-200 hover:bg-purple-50"
+                                    className="cursor-pointer flex w-full items-start justify-between gap-3 rounded-2xl border border-gray-100 bg-gray-50 px-4 py-3 text-left transition-colors hover:border-purple-200 hover:bg-purple-50"
                                   >
                                     <div>
                                       <p className="text-sm font-semibold text-indigo-950">

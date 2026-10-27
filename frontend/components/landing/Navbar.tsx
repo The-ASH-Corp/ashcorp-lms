@@ -221,7 +221,7 @@ export default function Navbar() {
                       <button
                         type="button"
                         onClick={handleLogout}
-                        className="rounded-full border border-purple-200 px-4 py-2 text-xs font-semibold text-primary"
+                        className="rounded-full border border-purple-200 px-4 py-2 text-xs font-semibold text-primary cursor-pointer"
                       >
                         Logout
                       </button>
