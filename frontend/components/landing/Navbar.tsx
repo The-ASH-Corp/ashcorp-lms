@@ -149,17 +149,15 @@ export default function Navbar() {
             <SheetTrigger asChild>
               <button
                 type="button"
-                className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-purple-100 text-primary transition-colors hover:bg-purple-50 md:hidden"
+                className="cursor-pointer inline-flex h-10 w-10 items-center justify-center rounded-full border border-purple-100 text-primary transition-colors hover:bg-purple-50 md:hidden"
                 aria-label="Open navigation menu"
               >
                 <Menu className="h-5 w-5" />
               </button>
             </SheetTrigger>
             <SheetContent side="right" className="w-[85%] max-w-sm border-l border-purple-100 bg-white p-0">
-              <SheetHeader className="border-b border-purple-100 px-5 py-4">
-                <SheetTitle className="text-base font-semibold text-indigo-950">
-                  Navigation
-                </SheetTitle>
+              <SheetHeader className="h-16 border-b border-purple-100 px-5 py-4">
+                <SheetTitle className="sr-only">Navigation</SheetTitle>
               </SheetHeader>
 
               <div className="space-y-5 px-5 py-5">
