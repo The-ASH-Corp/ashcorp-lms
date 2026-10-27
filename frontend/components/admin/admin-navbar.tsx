@@ -1,6 +1,6 @@
 "use client"
 
-import React from "react"
+import React, { useState } from "react"
 import { Input } from "@/components/ui/input"
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
 import {
@@ -17,17 +17,28 @@ import { useLogoutMutation } from "@/lib/redux/features/auth/authApi"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { Search, Bell, Settings, HelpCircle } from "lucide-react"
+import { LogoutConfirmationModal } from "@/components/shared/logout-confirmation-modal"
 
 export function AdminNavbar() {
   const user = useAppSelector((state) => state.auth.user)
   const dispatch = useAppDispatch()
   const router = useRouter()
   const [logout] = useLogoutMutation()
+  const [showLogoutModal, setShowLogoutModal] = useState(false)
+  const [isLoggingOut, setIsLoggingOut] = useState(false)
 
   const handleLogout = async () => {
-    await logout()
-    dispatch(Logout())
-    router.push("/")
+    try {
+      setIsLoggingOut(true)
+      await logout()
+      dispatch(Logout())
+      setShowLogoutModal(false)
+      router.push("/")
+    } catch (error) {
+      console.error("Logout failed:", error)
+    } finally {
+      setIsLoggingOut(false)
+    }
   }
 
   return (
@@ -93,14 +104,21 @@ export function AdminNavbar() {
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem
-              className="text-red-600 focus:text-red-600"
-              onClick={handleLogout}
+              className="text-red-600 focus:text-red-600 cursor-pointer"
+              onClick={() => setShowLogoutModal(true)}
             >
               Logout
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
+
+      <LogoutConfirmationModal
+        open={showLogoutModal}
+        onOpenChange={setShowLogoutModal}
+        onConfirm={handleLogout}
+        loading={isLoggingOut}
+      />
     </header>
   )
 }

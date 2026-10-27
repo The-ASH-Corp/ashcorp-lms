@@ -34,6 +34,7 @@ import {
   SheetTrigger,
 } from "../ui/sheet";
 import { AppLogo } from "../ui/app-logo";
+import { LogoutConfirmationModal } from "@/components/shared/logout-confirmation-modal";
 
 export default function Navbar() {
   const router = useRouter();
@@ -44,9 +45,20 @@ export default function Navbar() {
   const user = useAppSelector((state) => state.auth.user);
   const [logout] = useLogoutMutation();
 
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+
   const handleLogout = async () => {
-    await logout();
-    dispatch(Logout());
+    try {
+      setIsLoggingOut(true);
+      await logout();
+      dispatch(Logout());
+      setShowLogoutModal(false);
+    } catch (error) {
+      console.error("Logout failed:", error);
+    } finally {
+      setIsLoggingOut(false);
+    }
   };
 
   const handleCategorySelect = (selectedCategory: string) => {
@@ -129,7 +141,10 @@ export default function Navbar() {
                     <Link href={route}>Dashboard</Link>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={() => handleLogout()}>
+                  <DropdownMenuItem
+                    className="cursor-pointer text-red-600 focus:text-red-600"
+                    onClick={() => setShowLogoutModal(true)}
+                  >
                     Logout
                   </DropdownMenuItem>
                 </DropdownMenuContent>
@@ -220,8 +235,11 @@ export default function Navbar() {
                       </SheetClose>
                       <button
                         type="button"
-                        onClick={handleLogout}
-                        className="rounded-full border border-purple-200 px-4 py-2 text-xs font-semibold text-primary cursor-pointer"
+                        onClick={() => {
+                          setMobileMenuOpen(false);
+                          setShowLogoutModal(true);
+                        }}
+                        className="rounded-full border border-purple-200 px-4 py-2 text-xs font-semibold text-primary cursor-pointer hover:bg-purple-50"
                       >
                         Logout
                       </button>
@@ -242,6 +260,13 @@ export default function Navbar() {
           </Sheet>
         </div>
       </div>
+
+      <LogoutConfirmationModal
+        open={showLogoutModal}
+        onOpenChange={setShowLogoutModal}
+        onConfirm={handleLogout}
+        loading={isLoggingOut}
+      />
     </header>
   );
 }

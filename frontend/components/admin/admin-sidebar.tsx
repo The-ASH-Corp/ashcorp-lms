@@ -1,6 +1,6 @@
 "use client";
 
-import * as React from "react";
+import React, { useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 
@@ -33,6 +33,7 @@ import {
   NotebookText,
 } from "lucide-react";
 import Image from "next/image";
+import { LogoutConfirmationModal } from "@/components/shared/logout-confirmation-modal";
 import { AppLogo } from "@/components/ui/app-logo";
 
 const navItems = [
@@ -128,11 +129,21 @@ export function AdminSidebar({
     return initial;
   });
 
-  const handleLogout = async (e: React.MouseEvent) => {
-    e.preventDefault();
-    await logout();
-    dispatch(Logout());
-    router.push("/");
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+
+  const handleLogout = async () => {
+    try {
+      setIsLoggingOut(true);
+      await logout();
+      dispatch(Logout());
+      setShowLogoutModal(false);
+      router.push("/");
+    } catch (error) {
+      console.error("Logout failed:", error);
+    } finally {
+      setIsLoggingOut(false);
+    }
   };
 
   return (
@@ -270,7 +281,7 @@ export function AdminSidebar({
           <SidebarMenuItem>
             <SidebarMenuButton
               className="rounded-xl px-4 py-5 text-[13px] font-medium text-red-500 hover:bg-red-50 hover:text-red-600 transition-colors cursor-pointer"
-              onClick={handleLogout}
+              onClick={() => setShowLogoutModal(true)}
             >
               <LogOut className="h-4.5 w-4.5" />
               <span>Logout</span>
@@ -278,6 +289,13 @@ export function AdminSidebar({
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarFooter>
+
+      <LogoutConfirmationModal
+        open={showLogoutModal}
+        onOpenChange={setShowLogoutModal}
+        onConfirm={handleLogout}
+        loading={isLoggingOut}
+      />
     </Sidebar>
   );
 }

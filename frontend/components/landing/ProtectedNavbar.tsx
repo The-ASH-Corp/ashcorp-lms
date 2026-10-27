@@ -1,7 +1,8 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { AppLogo } from "../ui/app-logo";
 import { useAppDispatch, useAppSelector } from "@/lib/redux/hooks";
@@ -16,15 +17,29 @@ import {
 } from "../ui/dropdown-menu";
 import { useLogoutMutation } from "@/lib/redux/features/auth/authApi";
 import { getUserProfileImageFromUser } from "@/lib/auth/profileImage";
+import { LogoutConfirmationModal } from "@/components/shared/logout-confirmation-modal";
 
 export default function ProtectedNavbar() {
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.auth.user);
+  const router = useRouter();
   const [logout] = useLogoutMutation();
 
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+
   const handleLogout = async () => {
-    await logout();
-    dispatch(Logout());
+    try {
+      setIsLoggingOut(true);
+      await logout();
+      dispatch(Logout());
+      setShowLogoutModal(false);
+      router.push("/");
+    } catch (error) {
+      console.error("Logout failed:", error);
+    } finally {
+      setIsLoggingOut(false);
+    }
   };
 
   return (
@@ -69,7 +84,10 @@ export default function ProtectedNavbar() {
                 <DropdownMenuContent>
                   <DropdownMenuItem><Link href="/">Home</Link></DropdownMenuItem>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={() => handleLogout()}>
+                  <DropdownMenuItem
+                    className="cursor-pointer text-red-600 focus:text-red-600"
+                    onClick={() => setShowLogoutModal(true)}
+                  >
                     Logout
                   </DropdownMenuItem>
                 </DropdownMenuContent>
@@ -85,6 +103,13 @@ export default function ProtectedNavbar() {
           )}
         </div>
       </div>
+
+      <LogoutConfirmationModal
+        open={showLogoutModal}
+        onOpenChange={setShowLogoutModal}
+        onConfirm={handleLogout}
+        loading={isLoggingOut}
+      />
     </header>
   );
 }

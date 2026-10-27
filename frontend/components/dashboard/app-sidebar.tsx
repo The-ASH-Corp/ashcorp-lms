@@ -1,6 +1,6 @@
 "use client"
 
-import * as React from "react"
+import React, { useState } from "react"
 import { usePathname, useRouter } from "next/navigation"
 
 import {
@@ -23,6 +23,7 @@ import { useLogoutMutation } from "@/lib/redux/features/auth/authApi"
 import { getUserProfileImageFromUser } from "@/lib/auth/profileImage"
 import Link from "next/link"
 import { LayoutDashboard, User, BookOpen, History, LogOut, Heart, BookOpenCheck } from "lucide-react"
+import { LogoutConfirmationModal } from "@/components/shared/logout-confirmation-modal"
 
 const navItems = [
   {
@@ -69,12 +70,21 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const [logout] = useLogoutMutation();
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
-  const handleLogout = async (e: React.MouseEvent) => {
-    e.preventDefault();
-    await logout();
-    dispatch(Logout());
-    router.push("/");
+  const handleLogout = async () => {
+    try {
+      setIsLoggingOut(true);
+      await logout();
+      dispatch(Logout());
+      setShowLogoutModal(false);
+      router.push("/");
+    } catch (error) {
+      console.error("Logout failed:", error);
+    } finally {
+      setIsLoggingOut(false);
+    }
   };
 
   return (
@@ -112,7 +122,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     return (
                       <SidebarMenuSubItem key={item.title}>
                         <SidebarMenuSubButton asChild className="rounded-xl p-6 hover:bg-red-600 hover:text-white transition-colors cursor-pointer">
-                          <a onClick={handleLogout} className="p-5 flex items-center gap-3 w-full">{item.icon} {item.title}</a>
+                          <button
+                            type="button"
+                            onClick={() => setShowLogoutModal(true)}
+                            className="p-5 flex items-center gap-3 w-full text-left cursor-pointer"
+                          >
+                            {item.icon} {item.title}
+                          </button>
                         </SidebarMenuSubButton>
                       </SidebarMenuSubItem>
                     );
@@ -131,6 +147,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           </SidebarMenu>
         </SidebarGroup>
       </SidebarContent>
+
+      <LogoutConfirmationModal
+        open={showLogoutModal}
+        onOpenChange={setShowLogoutModal}
+        onConfirm={handleLogout}
+        loading={isLoggingOut}
+      />
     </Sidebar>
   )
 }
