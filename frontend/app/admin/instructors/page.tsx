@@ -129,101 +129,97 @@ export default function InstructorsPage() {
     setCurrentPage(1);
   };
 
-      const handleDeleteInstructor = async (id: string) => {
-        try {
-          await deleteInstructor(id).unwrap();
-          toast.success("Instructor deleted successfully");
-        } catch (error: unknown) {
-          const message =
-            typeof error === "object" && error !== null && "data" in error &&
-            typeof (error as { data?: { message?: string } }).data?.message === "string"
-              ? (error as { data?: { message?: string } }).data?.message
-              : "Failed to delete instructor";
+  const handleDeleteInstructor = async (id: string) => {
+    try {
+      await deleteInstructor(id).unwrap();
+      toast.success("Instructor deleted successfully");
+    } catch (error: unknown) {
+      const message =
+        typeof error === "object" && error !== null && "data" in error &&
+        typeof (error as { data?: { message?: string } }).data?.message === "string"
+          ? (error as { data?: { message?: string } }).data?.message
+          : "Failed to delete instructor";
 
-          toast.error(message);
-        }
-      };
+      toast.error(message);
+    }
+  };
 
-      const handleEditInstructor = (id: string) => {
-        router.push(`/admin/instructors/edit/${id}`);
-      };
+  const handleEditInstructor = (id: string) => {
+    router.push(`/admin/instructors/edit/${id}`);
+  };
 
-      const handleBlockInstructor = async (id: string) => {
-        try {
-          const instructor = await blockInstructor(id).unwrap();
-          toast.success(
-            instructor.status === "Inactive"
-              ? "Instructor blocked successfully"
-              : "Instructor unblocked successfully",
-          );
-        } catch (error: unknown) {
-          const message =
-            typeof error === "object" && error !== null && "data" in error &&
-            typeof (error as { data?: { message?: string } }).data?.message === "string"
-              ? (error as { data?: { message?: string } }).data?.message
-              : "Failed to update instructor status";
+  const handleBlockInstructor = async (id: string) => {
+    try {
+      const instructor = await blockInstructor(id).unwrap();
+      toast.success(
+        instructor.status === "Inactive"
+          ? "Instructor blocked successfully"
+          : "Instructor unblocked successfully",
+      );
+    } catch (error: unknown) {
+      const message =
+        typeof error === "object" && error !== null && "data" in error &&
+        typeof (error as { data?: { message?: string } }).data?.message === "string"
+          ? (error as { data?: { message?: string } }).data?.message
+          : "Failed to update instructor status";
 
-          toast.error(message);
-        }
-      };
+      toast.error(message);
+    }
+  };
 
-      const getInstructorImageUrl = (iconUrl: string) => {
-        if (!iconUrl) return "";
-        if (/^https?:\/\//i.test(iconUrl)) return iconUrl;
-        const baseUrl =
-          process.env.NEXT_PUBLIC_IMAGE_URL?.replace(/\/+$/, "") ?? "";
-        const path = iconUrl.replace(/^\/+/, "");
-        return `${baseUrl}/${path}`;
-      };
-    
-      if (isLoading) {
-        return (
-          <div className="flex justify-center items-center min-h-[80vh]">
-            <PropagateLoader color="#7E23FE" loading={true} size={15} />
-          </div>
-        );
-      }
-    
-      if (isError) {
-        return (
-          <div className="flex justify-center items-center min-h-[80vh]">
-            <h1 className="text-2xl font-bold text-gray-900">
-              Something went wrong
-            </h1>
-          </div>
-        );
-      }
+  const getInstructorImageUrl = (iconUrl: string) => {
+    if (!iconUrl) return "";
+    if (/^https?:\/\//i.test(iconUrl)) return iconUrl;
+    const baseUrl =
+      process.env.NEXT_PUBLIC_IMAGE_URL?.replace(/\/+$/, "") ?? "";
+    const path = iconUrl.replace(/^\/+/, "");
+    return `${baseUrl}/${path}`;
+  };
 
-
+  if (isLoading) {
     return (
-         <>
-      <div className="space-y-6">
-        {/* ─── Page Header ─── */}
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <h1 className="text-2xl font-bold text-indigo-950">
-              Instructors Management
-            </h1>
-            <p className="mt-1 text-sm text-gray-500">
-              Showing <span className="font-semibold text-gray-700">{instructors.length}</span> of <span className="font-semibold text-gray-700">{totalInstructors}</span> instructors.
-            </p>
-          </div>
-          <div className="flex items-center gap-3">
-            <Button className="rounded-xl bg-primary text-white shadow-md shadow-violet-200 hover:bg-violet-700 h-10 px-5">
-              <Link
-                href="/admin/instructors/createInstructor"
-                className="flex items-center"
-              >
-                <Plus className="h-4 w-4 mr-2" />
-                Add Instructor
-              </Link>
-            </Button>
-          </div>
-        </div>
+      <div className="flex min-h-[80vh] items-center justify-center">
+        <PropagateLoader color="#7E23FE" loading={true} size={15} />
+      </div>
+    );
+  }
 
-        {/* ─── Data Table ─── */}
-        <Card className="border-0 shadow-sm bg-white overflow-hidden">
-          <InputGroup className="ml-4 w-full sm:w-96">
+  if (isError) {
+    return (
+      <div className="flex min-h-[80vh] items-center justify-center">
+        <h1 className="text-2xl font-bold text-gray-900">
+          Something went wrong
+        </h1>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-6">
+      {/* ─── Page Header ─── */}
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h1 className="text-2xl font-bold text-indigo-950">
+            Instructors Management
+          </h1>
+        </div>
+        <div className="flex items-center gap-3">
+          <Button asChild className="h-10 rounded-xl bg-primary px-5 text-white shadow-md shadow-violet-200 hover:bg-violet-700">
+            <Link
+              href="/admin/instructors/createInstructor"
+              className="flex items-center"
+            >
+              <Plus className="mr-2 h-4 w-4" />
+              Add Instructor
+            </Link>
+          </Button>
+        </div>
+      </div>
+
+      {/* ─── Data Table ─── */}
+      <Card className="overflow-hidden border-0 bg-white shadow-sm">
+        <div className="px-5 pt-2">
+          <InputGroup className="w-full sm:w-96">
             <InputGroupInput
               placeholder="Search Instructor..."
               value={searchTerm}
@@ -246,126 +242,121 @@ export default function InstructorsPage() {
               </Button>
             </InputGroupAddon>
           </InputGroup>
-          <Table>
-            <TableHeader>
-              <TableRow className="bg-gray-50/80 hover:bg-gray-50/80 border-b border-gray-100 ">
-                <TableHead className="text-xs font-semibold uppercase tracking-wider text-gray-500 text-center ">
-                  #
-                </TableHead>
-                <TableHead className="text-xs font-semibold uppercase tracking-wider text-gray-500 text-center">
-                  Image
-                </TableHead>
-                <TableHead className="text-xs font-semibold uppercase tracking-wider text-gray-500 text-center ">
-                  Name
-                </TableHead>
-                <TableHead className="text-xs font-semibold uppercase tracking-wider text-gray-500 text-center ">
-                  Email
-                </TableHead>
-                <TableHead className="text-xs font-semibold uppercase tracking-wider text-gray-500 text-center ">
-                  Title
-                </TableHead>
-                <TableHead className="text-xs font-semibold uppercase tracking-wider text-gray-500 text-center ">
-                  IsFeatured
-                </TableHead>
-                <TableHead className="text-xs font-semibold uppercase tracking-wider text-gray-500 text-center ">
-                  Status
-                </TableHead>
-                <TableHead className="text-xs font-semibold uppercase tracking-wider text-gray-500 text-center ">
-                  Actions
-                </TableHead>
+        </div>
+        <Table>
+          <TableHeader>
+            <TableRow className="border-b border-gray-100 bg-gray-50/80 hover:bg-gray-50/80">
+              <TableHead className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-gray-500">
+                #
+              </TableHead>
+              <TableHead className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-gray-500">
+                Image
+              </TableHead>
+              <TableHead className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-gray-500">
+                Name
+              </TableHead>
+              <TableHead className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-gray-500">
+                Email
+              </TableHead>
+              <TableHead className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-gray-500">
+                Title
+              </TableHead>
+              <TableHead className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-gray-500">
+                IsFeatured
+              </TableHead>
+              <TableHead className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-gray-500">
+                Status
+              </TableHead>
+              <TableHead className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-gray-500">
+                Actions
+              </TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {instructors.length === 0 ? (
+              <TableRow className="border-b border-gray-50">
+                <TableCell colSpan={8} className="px-4 py-16 text-center text-sm text-gray-500">
+                  No instructors found.
+                </TableCell>
               </TableRow>
-            </TableHeader>
-            <TableBody>
-              {instructors.length === 0 ? (
-                <TableRow className="border-b border-gray-50">
-                  <TableCell colSpan={8} className="py-16 text-center text-gray-500">
-                    No instructors found.
-                  </TableCell>
-                </TableRow>
-              ) : (
-                instructors.map((instructor, index) => {
-                  const style = statusStyles[instructor.status] ?? statusStyles.Inactive;
+            ) : (
+              instructors.map((instructor, index) => {
+                const style = statusStyles[instructor.status] ?? statusStyles.Inactive;
 
-                  return (
-                    <TableRow
-                      key={instructor._id}
-                      className="hover:bg-violet-50/30 transition-colors border-b border-gray-50"
-                    >
-                      <TableCell>
-                        <div className="flex items-center gap-3 justify-center">
-                          <p className="text-sm font-semibold text-gray-900">
-                            {index + 1 + (currentPage - 1) * PAGE_SIZE}
-                          </p>
-                        </div>
-                      </TableCell>
+                return (
+                  <TableRow
+                    key={instructor._id}
+                    className="border-b border-gray-50 transition-colors hover:bg-violet-50/30"
+                  >
+                    <TableCell className="px-4 py-3 text-center align-middle text-sm font-semibold text-gray-900">
+                      {index + 1 + (currentPage - 1) * PAGE_SIZE}
+                    </TableCell>
 
-                    <TableCell>
-                      <div className="flex items-center gap-3 justify-center ">
+                    <TableCell className="px-4 py-3 text-center align-middle">
+                      <div className="flex items-center justify-center">
                         <Image
-                          width={100}
-                          height={100}
+                          width={56}
+                          height={56}
                           src={getInstructorImageUrl(instructor.profileImage)}
                           alt={instructor.name || "Instructor image"}
-                          className="h-24 w-24 rounded-md object-cover"
+                          className="h-14 w-14 rounded-lg border border-gray-100 object-cover"
                           unoptimized
                         />
                       </div>
                     </TableCell>
 
-                    <TableCell>
-                      <div className="flex items-center gap-3 min-w-30 justify-center">
-                        <span className="text-sm font-semibold text-gray-900 w-10">
-                          {instructor.name}
-                        </span>
-                      </div>
+                    <TableCell className="px-4 py-3 text-center align-middle">
+                      <span className="text-sm font-semibold text-gray-900">
+                        {instructor.name}
+                      </span>
                     </TableCell>
 
-                    <TableCell>
-                        <div className="flex items-center gap-3 min-w-30 justify-center">
-                            <span className="text-sm font-semibold text-gray-900 w-10">
-                                {instructor.email}
-                            </span>
-                        </div>
+                    <TableCell className="px-4 py-3 text-center align-middle">
+                      <span className="text-sm font-medium text-gray-700">
+                        {instructor.email}
+                      </span>
                     </TableCell>
-                    <TableCell>
-                        <div className="flex items-center gap-3 min-w-30 justify-center">
-                            <span className="text-sm font-semibold text-gray-900 w-10">
-                                {instructor.instructorTitle}
-                            </span>
-                        </div>
+
+                    <TableCell className="px-4 py-3 text-center align-middle">
+                      <span className="text-sm font-medium text-gray-700">
+                        {instructor.instructorTitle}
+                      </span>
                     </TableCell>
+
                     {/* Featured */}
-                    <TableCell className="text-center align-middle">
-                      <div
-                        className={
-                          instructor.isFeatured
-                            ? "bg-green-300 w-20 h-10 rounded-xl flex justify-center items-center "
-                            : "bg-red-300 w-20 h-10 rounded-xl flex justify-center items-center"
-                        }
-                      >
-                        {instructor.isFeatured ? (
-                          <Check className="h-4 w-4 text-green-600" />
-                        ) : (
-                          <X className="h-4 w-4 text-red-600" />
-                        )}
+                    <TableCell className="px-4 py-3 text-center align-middle">
+                      <div className="flex items-center justify-center">
+                        <div
+                          className={
+                            instructor.isFeatured
+                              ? "flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-50"
+                              : "flex h-8 w-8 items-center justify-center rounded-lg bg-red-50"
+                          }
+                        >
+                          {instructor.isFeatured ? (
+                            <Check className="h-4 w-4 text-emerald-600" />
+                          ) : (
+                            <X className="h-4 w-4 text-red-600" />
+                          )}
+                        </div>
                       </div>
                     </TableCell>
 
                     {/* Status */}
-                    <TableCell className="text-center align-middle">
+                    <TableCell className="px-4 py-3 text-center align-middle">
                       <span
-                        className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium justify-center ${style.bg} ${style.text}`}
+                        className={`inline-flex items-center justify-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium ${style.bg} ${style.text}`}
                       >
                         <span
-                          className={`h-1.5 w-1.5 rounded-full ${style.dot} animate-pulse`}
+                          className={`h-1.5 w-1.5 rounded-full ${style.dot}`}
                         />
                         {instructor.status}
                       </span>
                     </TableCell>
 
                     {/* Actions */}
-                    <TableCell className="text-center align-middle">
-                      <div className="flex items-center justify-center gap-1">
+                    <TableCell className="px-4 py-3 text-center align-middle">
+                      <div className="flex items-center justify-center gap-2">
                         <button
                           type="button"
                           onClick={() => handleEditInstructor(instructor._id)}
@@ -409,76 +400,81 @@ export default function InstructorsPage() {
                         />
                       </div>
                     </TableCell>
-                    </TableRow>
+                  </TableRow>
+                );
+              })
+            )}
+          </TableBody>
+        </Table>
+
+        <div className="flex flex-col items-center justify-between gap-4 border-t border-gray-100 px-5 py-4 sm:flex-row">
+          <p className="text-sm text-gray-500">
+            Showing <span className="font-semibold text-gray-700">{instructors.length}</span> of{" "}
+            <span className="font-semibold text-gray-700">{totalInstructors}</span> instructors.
+          </p>
+          <Pagination className="mx-0 w-auto">
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious
+                  href="#"
+                  text=""
+                  onClick={(event) => {
+                    event.preventDefault();
+                    handlePageChange(currentPage - 1);
+                  }}
+                  className={`flex h-8 w-8 items-center justify-center rounded-lg border border-gray-200 p-0 hover:border-violet-300 hover:bg-violet-50 ${
+                    currentPage === 1 ? "pointer-events-none opacity-50" : ""
+                  }`}
+                />
+              </PaginationItem>
+              {pageNumbers.map((page, index) => {
+                if (page === "...") {
+                  return (
+                    <PaginationItem key={`ellipsis-${index}`}>
+                      <PaginationEllipsis />
+                    </PaginationItem>
                   );
-                })
-              )}
-            </TableBody>
-          </Table>
+                }
 
-          { (
-            <div className="flex items-center justify-center border-t border-gray-100 px-5 py-4">
-              <Pagination className="mx-0 w-auto">
-                <PaginationContent>
-                  <PaginationItem>
-                    <PaginationPrevious
+                const pageNumber = Number(page);
+
+                return (
+                  <PaginationItem key={pageNumber}>
+                    <PaginationLink
                       href="#"
-                      text=""
+                      isActive={pageNumber === currentPage}
                       onClick={(event) => {
                         event.preventDefault();
-                        handlePageChange(currentPage - 1);
+                        handlePageChange(pageNumber);
                       }}
-                      className={`h-8 w-8 rounded-lg border border-gray-200 p-0 hover:border-violet-300 hover:bg-violet-50 ${currentPage === 1 ? "pointer-events-none opacity-50" : ""}`}
-                    />
+                      className={`h-8 w-8 rounded-lg text-sm ${
+                        pageNumber === currentPage
+                          ? "border-primary! bg-primary! text-white! hover:bg-violet-700!"
+                          : "border border-gray-200 hover:border-violet-300 hover:bg-violet-50"
+                      }`}
+                    >
+                      {pageNumber}
+                    </PaginationLink>
                   </PaginationItem>
-                  {pageNumbers.map((page, index) => {
-                    if (page === "...") {
-                      return (
-                        <PaginationItem key={`ellipsis-${index}`}>
-                          <PaginationEllipsis />
-                        </PaginationItem>
-                      );
-                    }
-
-                    const pageNumber = Number(page);
-
-                    return (
-                      <PaginationItem key={pageNumber}>
-                        <PaginationLink
-                          href="#"
-                          isActive={pageNumber === currentPage}
-                          onClick={(event) => {
-                            event.preventDefault();
-                            handlePageChange(pageNumber);
-                          }}
-                          className={`h-8 w-8 rounded-lg text-sm ${
-                            pageNumber === currentPage
-                              ? "border-primary bg-primary! text-white! hover:bg-violet-700!"
-                              : "border border-gray-200 hover:border-violet-300 hover:bg-violet-50"
-                          }`}
-                        >
-                          {pageNumber}
-                        </PaginationLink>
-                      </PaginationItem>
-                    );
-                  })}
-                  <PaginationItem>
-                    <PaginationNext
-                      href="#"
-                      text=""
-                      onClick={(event) => {
-                        event.preventDefault();
-                        handlePageChange(currentPage + 1);
-                      }}
-                      className={`h-8 w-8 rounded-lg border border-gray-200 p-0 hover:border-violet-300 hover:bg-violet-50 ${currentPage === totalPages ? "pointer-events-none opacity-50" : ""}`}
-                    />
-                  </PaginationItem>
-                </PaginationContent>
-              </Pagination>
-            </div>
-          )}
-        </Card>
-      </div>
-    </>
-    );
+                );
+              })}
+              <PaginationItem>
+                <PaginationNext
+                  href="#"
+                  text=""
+                  onClick={(event) => {
+                    event.preventDefault();
+                    handlePageChange(currentPage + 1);
+                  }}
+                  className={`flex h-8 w-8 items-center justify-center rounded-lg border border-gray-200 p-0 hover:border-violet-300 hover:bg-violet-50 ${
+                    currentPage === totalPages ? "pointer-events-none opacity-50" : ""
+                  }`}
+                />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
+        </div>
+      </Card>
+    </div>
+  );
 }

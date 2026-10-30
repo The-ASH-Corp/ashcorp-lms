@@ -1,14 +1,27 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { Search, Edit2, Trash2, Plus } from "lucide-react";
+import { Search, Pencil, Trash2, Plus } from "lucide-react";
 import { useRouter, useParams, useSearchParams } from "next/navigation";
-import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from "@/components/ui/input-group";
 import { useGetAllCourseQuery } from "@/lib/redux/features/course/courseApi";
 import {
   Pagination,
   PaginationContent,
-  PaginationEllipsis,
   PaginationItem,
   PaginationLink,
   PaginationNext,
@@ -16,8 +29,14 @@ import {
 } from "@/components/ui/pagination";
 import { toast } from "sonner";
 import { ConfirmActionDialog } from "@/components/shared/confirm-action-dialog";
-import { useDeleteExamMutation, useGetExamByCourseQuery, type Exam } from "@/lib/redux/features/exam/examApi";
+import {
+  useDeleteExamMutation,
+  useGetExamByCourseQuery,
+  type Exam,
+} from "@/lib/redux/features/exam/examApi";
 import type { Course } from "@/lib/redux/features/course/courseSlice";
+
+const EXAMS_PER_PAGE = 10;
 
 export default function ExamListPage() {
   const router = useRouter();
@@ -37,10 +56,23 @@ export default function ExamListPage() {
   const { data: courses } = useGetAllCourseQuery(undefined, {
     skip: Boolean(courseTitleFromRoute),
   });
-  const [deleteExam, { isLoading: isDeletingExam }] =
-    useDeleteExamMutation();
+  const [deleteExam, { isLoading: isDeletingExam }] = useDeleteExamMutation();
 
   const examList = exams?.data ?? [];
+
+  const filteredExams = useMemo(() => {
+    const query = searchQuery.trim().toLowerCase();
+    if (!query) return examList;
+    return examList.filter((exam) => exam.title?.toLowerCase().includes(query));
+  }, [examList, searchQuery]);
+
+  const totalExams = filteredExams.length;
+  const totalPages = Math.max(1, Math.ceil(totalExams / EXAMS_PER_PAGE));
+  const resolvedPage = Math.min(currentPage, totalPages);
+  const paginatedExams = filteredExams.slice(
+    (resolvedPage - 1) * EXAMS_PER_PAGE,
+    resolvedPage * EXAMS_PER_PAGE,
+  );
 
   const courseTitle = useMemo(() => {
     if (courseTitleFromRoute) {
@@ -48,8 +80,7 @@ export default function ExamListPage() {
     }
 
     const resolvedCourse = (courses as Array<Course & { _id?: string }>)?.find(
-      (course) =>
-        course.id === courseId || course._id === courseId,
+      (course) => course.id === courseId || course._id === courseId,
     );
 
     return resolvedCourse?.title ?? courseId ?? "Unknown Course";
@@ -62,7 +93,9 @@ export default function ExamListPage() {
 
   const handleEditExam = (exam: Exam) => {
     if (!exam._id && !exam.id) return;
-    router.push(`/admin/exam/edit/${exam._id ?? exam.id}?courseId=${encodeURIComponent(courseId ?? "")}`);
+    router.push(
+      `/admin/exam/edit/${exam._id ?? exam.id}?courseId=${encodeURIComponent(courseId ?? "")}`,
+    );
   };
 
   const handleDeleteExam = async (examId: string) => {
@@ -71,7 +104,9 @@ export default function ExamListPage() {
       toast.success("Exam deleted successfully");
     } catch (error: unknown) {
       const message =
-        typeof error === "object" && error !== null && "data" in error &&
+        typeof error === "object" &&
+        error !== null &&
+        "data" in error &&
         typeof (error as { data?: { message?: string } }).data?.message === "string"
           ? (error as { data?: { message?: string } }).data?.message
           : "Failed to delete exam";
@@ -82,214 +117,204 @@ export default function ExamListPage() {
 
   if (isError) {
     return (
-      <div className="min-h-screen bg-white rounded-xl flex items-center justify-center">
-        Something went wrong 
+      <div className="flex min-h-[80vh] items-center justify-center">
+        <h1 className="text-2xl font-bold text-gray-900">
+          Something went wrong
+        </h1>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-white rounded-xl">
-      <div className="px-4 sm:px-8 lg:px-12 py-6 sm:py-8 border-b border-gray-200">
-        <p className="text-gray-600 text-sm sm:text-base">
-          Showing Exams for:{" "}
-          <span className="font-semibold">{courseTitle}</span>
-        </p>
+    <div className="space-y-6">
+      {/* Page Header */}
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h1 className="text-2xl font-bold text-indigo-950">
+            Exams: {courseTitle}
+          </h1>
+        </div>
+
+        <Button
+          onClick={handleAddNewExam}
+          className="h-10 rounded-xl bg-primary px-5 text-white shadow-md shadow-violet-200 hover:bg-violet-700"
+        >
+          <Plus className="mr-2 h-4 w-4" />
+          New Exam
+        </Button>
       </div>
-      {/* Main Content */}
-      <div className="px-4 sm:px-8 lg:px-12 py-6 sm:py-8">
-        {/* Controls Section */}
-        <div className="flex flex-col sm:flex-row gap-4 mb-8">
-          {/* Search Bar */}
-          <div className="flex-1">
-            <div className="relative">
-              <Search
-                className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
-                size={20}
-              />
-              <Input
-                type="text"
-                placeholder="Search Exams..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-[70%] h-12 pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary bg-white text-gray-900"
-              />
-            </div>
-          </div>
 
-          {/* Info and New Chapter Button */}
-          <div className="flex items-center justify-between sm:justify-end gap-4 flex-wrap">
-            <button
-              className="flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-lg hover:bg-violet-700 transition-colors font-medium whitespace-nowrap"
-              onClick={() => {
-                handleAddNewExam();
+      {/* Data Table Card */}
+      <Card className="overflow-hidden border-0 bg-white shadow-sm">
+        <div className="px-5 pt-2">
+          <InputGroup className="w-full sm:w-96">
+            <InputGroupInput
+              placeholder="Search Exams..."
+              value={searchQuery}
+              onChange={(e) => {
+                setSearchQuery(e.target.value);
+                setCurrentPage(1);
               }}
-            >
-              <Plus size={18} />
-              <span className="hidden sm:inline"> New Exam</span>
-              <span className="sm:hidden"> New</span>
-            </button>
-          </div>
+            />
+            <InputGroupAddon align="inline-end">
+              <Button size="icon" variant="ghost" className="h-8 w-8 shrink-0">
+                <Search className="h-4 w-4" />
+              </Button>
+            </InputGroupAddon>
+          </InputGroup>
         </div>
 
-        {/* Table Section */}
-        <div className="overflow-x-auto border border-gray-200 rounded-lg mb-8">
-          <table className="w-full">
-            {/* Table Header */}
-            <thead>
-              <tr className="bg-gray-50 border-b border-gray-200">
-                <th className="px-4 sm:px-6 py-4 text-left align-middle">
-                  <span className="text-xs font-semibold text-gray-600 uppercase tracking-wide">
-                    #
-                  </span>
-                </th>
-                <th className="px-4 sm:px-6 py-4 text-left align-middle">
-                  <span className="text-xs font-semibold text-gray-600 uppercase tracking-wide">
-                    Exam Title
-                  </span>
-                </th>
+        <Table>
+          <TableHeader>
+            <TableRow className="border-b border-gray-100 bg-gray-50/80 hover:bg-gray-50/80">
+              <TableHead className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-gray-500">
+                #
+              </TableHead>
+              <TableHead className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-gray-500">
+                Exam Title
+              </TableHead>
+              <TableHead className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-gray-500">
+                Questions
+              </TableHead>
+              <TableHead className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-gray-500">
+                Actions
+              </TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {isLoading ? (
+              <TableRow className="border-b border-gray-50">
+                <TableCell colSpan={4} className="px-4 py-16 text-center text-sm text-gray-500">
+                  Loading exams...
+                </TableCell>
+              </TableRow>
+            ) : paginatedExams.length === 0 ? (
+              <TableRow className="border-b border-gray-50">
+                <TableCell colSpan={4} className="px-4 py-16 text-center text-sm text-gray-500">
+                  No exams found for this course.
+                </TableCell>
+              </TableRow>
+            ) : (
+              paginatedExams.map((exam, index) => (
+                <TableRow
+                  key={exam._id ?? exam.id ?? index}
+                  className="border-b border-gray-50 transition-colors hover:bg-violet-50/30"
+                >
+                  <TableCell className="px-4 py-3 text-center align-middle text-sm font-semibold text-gray-900">
+                    {(resolvedPage - 1) * EXAMS_PER_PAGE + index + 1}
+                  </TableCell>
 
-                <th className="px-4 sm:px-6 py-4 text-left align-middle">
-                  <span className="text-xs font-semibold text-gray-600 uppercase tracking-wide">
-                    Questions
-                  </span>
-                </th>
-                <th className="px-4 sm:px-6 py-4 text-left align-middle">
-                  <span className="text-xs font-semibold text-gray-600 uppercase tracking-wide">
-                    Action
-                  </span>
-                </th>
-              </tr>
-            </thead>
+                  <TableCell className="px-4 py-3 text-center align-middle">
+                    <span className="text-sm font-semibold text-gray-900">
+                      {exam.title}
+                    </span>
+                  </TableCell>
 
-            {/* Table Body */}
-            <tbody>
-              {isLoading ? (
-                <tr>
-                  <td
-                    colSpan={5}
-                    className="px-4 py-6 text-center text-gray-500"
-                  >
-                    Loading exams...
-                  </td>
-                </tr>
-              ) : !examList || examList.length === 0 ? (
-                <tr>
-                  <td
-                    colSpan={5}
-                    className="px-4 py-6 text-center text-gray-500"
-                  >
-                    No exams found for this course.
-                  </td>
-                </tr>
-              ) : (
-                examList.map((exam, index) => (
-                  <tr
-                    key={exam._id}
-                    className="border-b border-gray-200 hover:bg-gray-50 transition-colors"
-                  >
-                    <td className="px-4 sm:px-6 py-4 align-middle">
-                      <span className="text-sm font-semibold text-gray-900">
-                        {index + 1}
-                      </span>
-                    </td>
-                    <td className="px-4 sm:px-6 py-4 align-middle">
-                      <div className="flex items-center gap-3">
-                        <div className="min-w-0">
-                          <p className="text-sm font-semibold text-gray-900 truncate">
-                            {exam.title}
-                          </p>
-                        </div>
-                      </div>
-                    </td>
-                    <td className="px-4 sm:px-6 py-4 align-middle">
-                      <span className="inline-block px-3 py-1 bg-gray-100 text-gray-700 text-xs font-medium rounded">
-                        {exam.questions?.length ?? 0} Questions
-                      </span>
-                    </td>
-                    <td className="px-4 sm:px-6 py-4 align-middle">
-                      <div className="flex items-center justify-center gap-2">
-                        <button
-                          onClick={() => handleEditExam(exam)}
-                          className="p-2 hover:bg-gray-100 rounded transition-colors text-gray-600"
-                        >
-                          <Edit2 size={16} />
-                        </button>
-                        <ConfirmActionDialog
-                          title="Delete Exam"
-                          description={`This will permanently delete ${exam.title}.`}
-                          confirmLabel="Delete"
-                          loading={isDeletingExam}
-                          loadingLabel="Deleting..."
-                          onConfirm={() => {
-                            if (exam._id) {
-                              handleDeleteExam(exam._id);
-                            }
-                          }}
-                          trigger={
-                            <button className="p-2 hover:bg-red-50 rounded transition-colors text-red-600">
-                              <Trash2 size={16} />
-                            </button>
+                  <TableCell className="px-4 py-3 text-center align-middle">
+                    <span className="inline-flex rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-700">
+                      {exam.questions?.length ?? 0} Questions
+                    </span>
+                  </TableCell>
+
+                  <TableCell className="px-4 py-3 text-center align-middle">
+                    <div className="flex items-center justify-center gap-2">
+                      <button
+                        onClick={() => handleEditExam(exam)}
+                        type="button"
+                        className="flex h-8 w-8 items-center justify-center rounded-lg text-violet-500 transition-colors hover:bg-violet-50 hover:text-primary"
+                        title="Edit exam"
+                      >
+                        <Pencil className="h-4 w-4" />
+                      </button>
+                      <ConfirmActionDialog
+                        title="Delete Exam"
+                        description={`This will permanently delete ${exam.title}.`}
+                        confirmLabel="Delete"
+                        loading={isDeletingExam}
+                        loadingLabel="Deleting..."
+                        onConfirm={() => {
+                          if (exam._id) {
+                            handleDeleteExam(exam._id);
                           }
-                        />
-                      </div>
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
+                        }}
+                        trigger={
+                          <button
+                            type="button"
+                            className="flex h-8 w-8 items-center justify-center rounded-lg text-red-400 transition-colors hover:bg-red-50 hover:text-red-600"
+                            title="Delete exam"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </button>
+                        }
+                      />
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))
+            )}
+          </TableBody>
+        </Table>
 
-        {/* Pagination */}
-        <div className="flex items-center justify-center border-t border-gray-100 px-5 py-4">
-          <Pagination className="w-auto mx-0">
+        {/* Pagination Footer */}
+        <div className="flex flex-col items-center justify-between gap-4 border-t border-gray-100 px-5 py-4 sm:flex-row">
+          <p className="text-sm text-gray-500">
+            Showing <span className="font-semibold text-gray-700">{paginatedExams.length}</span> of{" "}
+            <span className="font-semibold text-gray-700">{totalExams}</span> exams.
+          </p>
+          <Pagination className="mx-0 w-auto">
             <PaginationContent>
               <PaginationItem>
                 <PaginationPrevious
                   href="#"
                   text=""
-                  className="h-8 w-8 p-0 rounded-lg border border-gray-200 hover:border-violet-300 hover:bg-violet-50"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setCurrentPage((p) => Math.max(1, p - 1));
+                  }}
+                  className={`flex h-8 w-8 items-center justify-center rounded-lg border border-gray-200 p-0 hover:border-violet-300 hover:bg-violet-50 ${
+                    resolvedPage === 1 ? "pointer-events-none opacity-50" : ""
+                  }`}
                 />
               </PaginationItem>
-              {[1, 2, 3].map((page) => (
-                <PaginationItem key={page}>
-                  <PaginationLink
-                    href="#"
-                    isActive={page === currentPage}
-                    onClick={() => setCurrentPage(page)}
-                    className={`h-8 w-8 rounded-lg text-sm ${
-                      page === currentPage
-                        ? "bg-primary! text-white! border-primary! hover:bg-violet-700!"
-                        : "border border-gray-200 hover:border-violet-300 hover:bg-violet-50"
-                    }`}
-                  >
-                    {page}
-                  </PaginationLink>
-                </PaginationItem>
-              ))}
-              <PaginationItem>
-                <PaginationEllipsis />
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationLink
-                  href="#"
-                  className="h-8 w-8 rounded-lg text-sm border border-gray-200 hover:border-violet-300 hover:bg-violet-50"
-                >
-                  128
-                </PaginationLink>
-              </PaginationItem>
+              {Array.from({ length: totalPages }).map((_, idx) => {
+                const page = idx + 1;
+                return (
+                  <PaginationItem key={page}>
+                    <PaginationLink
+                      href="#"
+                      isActive={page === resolvedPage}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setCurrentPage(page);
+                      }}
+                      className={`h-8 w-8 rounded-lg text-sm ${
+                        page === resolvedPage
+                          ? "border-primary! bg-primary! text-white! hover:bg-violet-700!"
+                          : "border border-gray-200 hover:border-violet-300 hover:bg-violet-50"
+                      }`}
+                    >
+                      {page}
+                    </PaginationLink>
+                  </PaginationItem>
+                );
+              })}
               <PaginationItem>
                 <PaginationNext
                   href="#"
                   text=""
-                  className="h-8 w-8 p-0 rounded-lg border border-gray-200 hover:border-violet-300 hover:bg-violet-50"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setCurrentPage((p) => Math.min(totalPages, p + 1));
+                  }}
+                  className={`flex h-8 w-8 items-center justify-center rounded-lg border border-gray-200 p-0 hover:border-violet-300 hover:bg-violet-50 ${
+                    resolvedPage === totalPages ? "pointer-events-none opacity-50" : ""
+                  }`}
                 />
               </PaginationItem>
             </PaginationContent>
           </Pagination>
         </div>
-      </div>
+      </Card>
     </div>
   );
 }

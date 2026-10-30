@@ -1,11 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
-import { Ban, Plus, Trash2, Users } from "lucide-react";
 import { PropagateLoader } from "react-spinners";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import {
   Table,
   TableBody,
@@ -18,16 +16,11 @@ import { useAppDispatch } from "@/lib/redux/hooks";
 import { getAllStudents } from "@/lib/redux/features/student/studentSlice";
 import {
   type Student,
-  useBlockStudentMutation,
-  useDeleteStudentMutation,
   useGetPaginatedStudentsQuery,
 } from "@/lib/redux/features/student/studentApi";
-import { toast } from "sonner";
-import { ConfirmActionDialog } from "@/components/shared/confirm-action-dialog";
 import {
   Pagination,
   PaginationContent,
-  PaginationEllipsis,
   PaginationItem,
   PaginationLink,
   PaginationNext,
@@ -78,10 +71,10 @@ export default function CertificatePage() {
     page: currentPage,
     limit,
   });
-  
+
   const studentList = response?.data || [];
-  const totalStudents = response?.pagination?.totalStudents || 0;
-  const totalPages = Math.ceil(totalStudents / limit);
+  const totalStudents = response?.pagination?.totalStudents ?? studentList.length;
+  const totalPages = Math.max(1, Math.ceil(totalStudents / limit));
 
   useEffect(() => {
     if (response?.data) {
@@ -110,6 +103,7 @@ export default function CertificatePage() {
       </div>
     );
   }
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -117,12 +111,6 @@ export default function CertificatePage() {
           <h1 className="text-2xl font-bold text-indigo-950">
             Certificate Management
           </h1>
-          <p className="mt-1 text-sm text-gray-500">
-            <span className="font-semibold text-gray-700">
-              {studentList.length}
-            </span>{" "}
-            students currently loaded.
-          </p>
         </div>
       </div>
 
@@ -130,22 +118,22 @@ export default function CertificatePage() {
         <Table>
           <TableHeader>
             <TableRow className="border-b border-gray-100 bg-gray-50/80 hover:bg-gray-50/80">
-              <TableHead className="text-center text-xs font-semibold uppercase tracking-wider text-gray-500">
+              <TableHead className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-gray-500">
                 #
               </TableHead>
-              <TableHead className="text-center text-xs font-semibold uppercase tracking-wider text-gray-500">
+              <TableHead className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-gray-500">
                 Name
               </TableHead>
-              <TableHead className="text-center text-xs font-semibold uppercase tracking-wider text-gray-500">
+              <TableHead className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-gray-500">
                 Email
               </TableHead>
-              <TableHead className="text-center text-xs font-semibold uppercase tracking-wider text-gray-500">
+              <TableHead className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-gray-500">
                 Phone
               </TableHead>
-              <TableHead className="text-center text-xs font-semibold uppercase tracking-wider text-gray-500">
+              <TableHead className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-gray-500">
                 Status
               </TableHead>
-              <TableHead className="text-center text-xs font-semibold uppercase tracking-wider text-gray-500">
+              <TableHead className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-gray-500">
                 Actions
               </TableHead>
             </TableRow>
@@ -154,8 +142,8 @@ export default function CertificatePage() {
             {studentList.length === 0 ? (
               <TableRow className="border-b border-gray-50">
                 <TableCell
-                  colSpan={7}
-                  className="py-16 text-center text-gray-500"
+                  colSpan={6}
+                  className="px-4 py-16 text-center text-sm text-gray-500"
                 >
                   No students found yet.
                 </TableCell>
@@ -170,13 +158,13 @@ export default function CertificatePage() {
                     key={student._id}
                     className="border-b border-gray-50 transition-colors hover:bg-violet-50/30"
                   >
-                    <TableCell className="text-center font-semibold text-gray-900">
-                      {index + 1}
+                    <TableCell className="px-4 py-3 text-center align-middle text-sm font-semibold text-gray-900">
+                      {index + 1 + (currentPage - 1) * limit}
                     </TableCell>
 
-                    <TableCell>
+                    <TableCell className="px-4 py-3 text-center align-middle">
                       <div className="flex items-center justify-center gap-3">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-violet-100 text-sm font-semibold text-violet-700">
+                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-violet-100 text-sm font-semibold text-violet-700">
                           {getInitials(student.name)}
                         </div>
                         <span className="text-sm font-semibold text-gray-900">
@@ -185,18 +173,19 @@ export default function CertificatePage() {
                       </div>
                     </TableCell>
 
-                    <TableCell className="text-center">
+                    <TableCell className="px-4 py-3 text-center align-middle">
                       <span className="text-sm font-medium text-gray-700">
                         {student.email}
                       </span>
                     </TableCell>
 
-                    <TableCell className="text-center">
+                    <TableCell className="px-4 py-3 text-center align-middle">
                       <span className="text-sm font-medium text-gray-700">
                         {student.phone}
                       </span>
                     </TableCell>
-                    <TableCell className="text-center">
+
+                    <TableCell className="px-4 py-3 text-center align-middle">
                       <span
                         className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium ${style.bg} ${style.text}`}
                       >
@@ -207,7 +196,7 @@ export default function CertificatePage() {
                       </span>
                     </TableCell>
 
-                    <TableCell>
+                    <TableCell className="px-4 py-3 text-center align-middle">
                       <div className="flex items-center justify-center gap-2">
                         {Object.entries(student?.courseProgress || {}).some(
                           ([courseId, progress]) =>
@@ -218,12 +207,16 @@ export default function CertificatePage() {
                                 attempt.isPassed,
                             ),
                         ) ? (
-                          <Button className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-violet-700"
-                          onClick={()=>handleUploadPageChange(student._id)}>
+                          <Button
+                            className="rounded-lg bg-primary px-4 py-2 text-white hover:bg-violet-700"
+                            onClick={() => handleUploadPageChange(student._id)}
+                          >
                             Upload Certificate
                           </Button>
                         ) : (
-                          <Label className="text-gray-500">No course is completed</Label>
+                          <Label className="text-sm font-medium text-gray-500">
+                            No course is completed
+                          </Label>
                         )}
                       </div>
                     </TableCell>
@@ -234,62 +227,64 @@ export default function CertificatePage() {
           </TableBody>
         </Table>
 
-        {totalPages > 1 && (
-          <div className="flex items-center justify-center border-t border-gray-100 px-5 py-4">
-            <Pagination className="w-auto mx-0">
-              <PaginationContent>
-                <PaginationItem>
-                  <PaginationPrevious
-                    href="#"
-                    text=""
-                    onClick={(e) => {
-                      e.preventDefault();
-                      if (currentPage > 1) setCurrentPage(currentPage - 1);
-                    }}
-                    className={`h-8 w-8 p-0 rounded-lg border border-gray-200 hover:border-violet-300 hover:bg-violet-50 flex items-center justify-center ${
-                      currentPage === 1 ? "opacity-50 pointer-events-none" : ""
-                    }`}
-                  />
-                </PaginationItem>
-                {Array.from({ length: totalPages }).map((_, i) => {
-                  const page = i + 1;
-                  return (
-                    <PaginationItem key={page}>
-                      <PaginationLink
-                        href="#"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          setCurrentPage(page);
-                        }}
-                        isActive={currentPage === page}
-                        className={`h-8 w-8 rounded-lg text-sm ${
-                          currentPage === page
-                            ? "bg-primary! text-white! border-primary!"
-                            : "border border-gray-200 hover:border-violet-300 hover:bg-violet-50"
-                        }`}
-                      >
-                        {page}
-                      </PaginationLink>
-                    </PaginationItem>
-                  );
-                })}
-                <PaginationItem>
-                  <PaginationNext
-                    href="#"
-                    text=""
-                    onClick={(e) => {
-                      e.preventDefault();
-                      if (currentPage < totalPages) setCurrentPage(currentPage + 1);
-                    }}
-                    className={`h-8 w-8 p-0 rounded-lg border border-gray-200 hover:border-violet-300 hover:bg-violet-50 flex items-center justify-center ${
-                      currentPage === totalPages ? "opacity-50 pointer-events-none" : ""
-                    }`}
-                  />
-                </PaginationItem>
-              </PaginationContent>
-            </Pagination>
-          </div>
-        )}
+        <div className="flex flex-col items-center justify-between gap-4 border-t border-gray-100 px-5 py-4 sm:flex-row">
+          <p className="text-sm text-gray-500">
+            Showing <span className="font-semibold text-gray-700">{studentList.length}</span> of{" "}
+            <span className="font-semibold text-gray-700">{totalStudents}</span> students.
+          </p>
+          <Pagination className="mx-0 w-auto">
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious
+                  href="#"
+                  text=""
+                  onClick={(e) => {
+                    e.preventDefault();
+                    if (currentPage > 1) setCurrentPage(currentPage - 1);
+                  }}
+                  className={`flex h-8 w-8 items-center justify-center rounded-lg border border-gray-200 p-0 hover:border-violet-300 hover:bg-violet-50 ${
+                    currentPage === 1 ? "pointer-events-none opacity-50" : ""
+                  }`}
+                />
+              </PaginationItem>
+              {Array.from({ length: totalPages }).map((_, i) => {
+                const page = i + 1;
+                return (
+                  <PaginationItem key={page}>
+                    <PaginationLink
+                      href="#"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setCurrentPage(page);
+                      }}
+                      isActive={currentPage === page}
+                      className={`h-8 w-8 rounded-lg text-sm ${
+                        currentPage === page
+                          ? "border-primary! bg-primary! text-white! hover:bg-violet-700!"
+                          : "border border-gray-200 hover:border-violet-300 hover:bg-violet-50"
+                      }`}
+                    >
+                      {page}
+                    </PaginationLink>
+                  </PaginationItem>
+                );
+              })}
+              <PaginationItem>
+                <PaginationNext
+                  href="#"
+                  text=""
+                  onClick={(e) => {
+                    e.preventDefault();
+                    if (currentPage < totalPages) setCurrentPage(currentPage + 1);
+                  }}
+                  className={`flex h-8 w-8 items-center justify-center rounded-lg border border-gray-200 p-0 hover:border-violet-300 hover:bg-violet-50 ${
+                    currentPage === totalPages ? "pointer-events-none opacity-50" : ""
+                  }`}
+                />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
+        </div>
       </Card>
     </div>
   );

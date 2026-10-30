@@ -6,7 +6,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { useDeleteCourseMutation, useGetAllCourseQuery } from "@/lib/redux/features/course/courseApi"
 import { useGetAllInstructorsQuery } from "@/lib/redux/features/instructor/instructorApi"
 import { useGetAdminPaymentsQuery, useGetAllStudentsQuery } from "@/lib/redux/features/student/studentApi"
-import { ArrowRight, Edit, Trash2 } from "lucide-react"
+import { ArrowRight, Pencil, Trash2 } from "lucide-react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useMemo, useState } from "react"
@@ -272,7 +272,7 @@ export default function Graphs() {
   return (
     <div className="gap-6 xl:grid-cols-[1.6fr_1fr]">
       <Card className="mb-5 border-0 bg-white shadow-sm">
-        <CardHeader className="flex flex-row gap-4 bg-[#] border-b border-slate-300 px-5 sm:items-center sm:justify-between">
+        <CardHeader className="flex flex-row gap-4 border-b border-slate-300 px-5 sm:items-center sm:justify-between">
           <div>
             <CardTitle className="text-base font-semibold text-primary">Course & User Statistics</CardTitle>
           </div>
@@ -296,7 +296,7 @@ export default function Graphs() {
             <div className="flex h-56 items-center justify-center text-sm text-slate-500">Loading chart data...</div>
           ) : (
             <div className="grid gap-4 lg:grid-cols-[2fr_1fr]">
-              <div className="rounded-2xl border border-slate-300 p-4 bg-primary/10">
+              <div className="rounded-2xl border border-slate-300 bg-primary/10 p-4">
                 <h3 className="text-4xl font-semibold text-slate-900">{totalSalesCount}</h3>
                 <p className="mt-1 text-xl font-semibold tracking-tight text-indigo-950">Course Sale Overview</p>
                 <div className="mt-4 border-t border-slate-300 pt-3">
@@ -336,7 +336,6 @@ export default function Graphs() {
 
                     <path d={chartGeometry.areaPath} fill="url(#salesAreaGradient)" />
                     <path
- 
                       d={chartGeometry.linePath}
                       fill="none"
                       stroke="#A855F7"
@@ -364,7 +363,7 @@ export default function Graphs() {
                 </div>
               </div>
 
-              <div className="rounded-2xl border border-slate-300 p-4 bg-primary/10">
+              <div className="rounded-2xl border border-slate-300 bg-primary/10 p-4">
                 <h3 className="text-4xl font-semibold text-slate-900">{totalOverviewUsers}</h3>
                 <p className="mt-1 text-xl font-semibold tracking-tight text-indigo-950">New User Overview</p>
 
@@ -403,67 +402,94 @@ export default function Graphs() {
         </CardContent>
       </Card>
 
-      <Card className="border-0 bg-white shadow-sm">
-        <CardHeader className="flex items-center justify-between">
+      <Card className="overflow-hidden border-0 bg-white shadow-sm">
+        <CardHeader className="flex items-center justify-between px-5">
           <div>
-            <CardTitle className="text-base font-semibold text-slate-900">Top Selling Course (Latest 5)</CardTitle>
-            <p className="mt-1 text-sm text-slate-500">Latest performance by course.</p>
+            <CardTitle className="text-base font-semibold text-indigo-950">Top Selling Course (Latest 5)</CardTitle>
+            <p className="mt-1 text-sm text-gray-500">Latest performance by course.</p>
           </div>
           <Link href="/admin/course" className="flex items-center gap-2 text-sm font-medium text-primary transition hover:text-primary/80">
             View All Courses
             <ArrowRight className="h-4 w-4" />
           </Link>
         </CardHeader>
-        <CardContent className="p-1">
+        <CardContent className="p-0">
           <Table>
             <TableHeader>
-              <TableRow className="bg-slate-100">
-                <TableHead>Course</TableHead>
-                <TableHead>Category</TableHead>
-                <TableHead>Sales</TableHead>
-                <TableHead>Revenue</TableHead>
-                <TableHead>Instructor</TableHead>
-                <TableHead className="text-right">Action</TableHead>
+              <TableRow className="border-b border-gray-100 bg-gray-50/80 hover:bg-gray-50/80">
+                <TableHead className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-gray-500">
+                  #
+                </TableHead>
+                <TableHead className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-gray-500">
+                  Course
+                </TableHead>
+                <TableHead className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-gray-500">
+                  Category
+                </TableHead>
+                <TableHead className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-gray-500">
+                  Sales
+                </TableHead>
+                <TableHead className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-gray-500">
+                  Revenue
+                </TableHead>
+                <TableHead className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-gray-500">
+                  Instructor
+                </TableHead>
+                <TableHead className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-gray-500">
+                  Actions
+                </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {topCourses.length === 0 ? (
-                <TableRow>
-                  <TableCell colSpan={6} className="py-6 text-center text-sm text-slate-500">
+                <TableRow className="border-b border-gray-50">
+                  <TableCell colSpan={7} className="px-4 py-16 text-center text-sm text-gray-500">
                     No purchases recorded yet.
                   </TableCell>
                 </TableRow>
               ) : (
-                topCourses.map((course) => (
-                  <TableRow key={course.id}>
-                    <TableCell>
-                      <div className="flex items-center gap-3">
-                        {/* <div className="h-12 w-12 rounded-2xl bg-slate-100" /> */}
+                topCourses.map((course, index) => (
+                  <TableRow
+                    key={course.id}
+                    className="border-b border-gray-50 transition-colors hover:bg-violet-50/30"
+                  >
+                    <TableCell className="px-4 py-3 text-center align-middle text-sm font-semibold text-gray-900">
+                      {index + 1}
+                    </TableCell>
+                    <TableCell className="px-4 py-3 text-center align-middle">
+                      <div className="flex items-center justify-center gap-3">
                         <Image
                           src={course.imageUrl || ""}
                           alt={course.title}
-                          className="h-12 w-12 rounded-2xl bg-slate-100 object-contain"
+                          className="h-12 w-12 shrink-0 rounded-lg border border-gray-100 bg-gray-50 object-contain"
                           width={48}
                           height={48}
                           unoptimized
                         />
-                        <div>
-                          <p className="font-medium text-slate-900">{course.title}</p>
-                        </div>
+                        <span className="text-sm font-semibold text-gray-900">{course.title}</span>
                       </div>
                     </TableCell>
-                    <TableCell>{course.category}</TableCell>
-                    <TableCell>{course.sales}</TableCell>
-                    <TableCell>{formatCurrency(course.revenue)}</TableCell>
-                    <TableCell>{course.instructor}</TableCell>
-                    <TableCell className="text-right">
-                      <div className="inline-flex items-center gap-2">
+                    <TableCell className="px-4 py-3 text-center align-middle">
+                      <span className="text-sm font-medium text-gray-700">{course.category}</span>
+                    </TableCell>
+                    <TableCell className="px-4 py-3 text-center align-middle">
+                      <span className="text-sm font-medium text-gray-700">{course.sales}</span>
+                    </TableCell>
+                    <TableCell className="px-4 py-3 text-center align-middle">
+                      <span className="text-sm font-medium text-gray-700">{formatCurrency(course.revenue)}</span>
+                    </TableCell>
+                    <TableCell className="px-4 py-3 text-center align-middle">
+                      <span className="text-sm font-medium text-gray-700">{course.instructor}</span>
+                    </TableCell>
+                    <TableCell className="px-4 py-3 text-center align-middle">
+                      <div className="flex items-center justify-center gap-2">
                         <button
                           type="button"
                           onClick={() => navigateEdit(course.id)}
-                          className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 text-slate-600 transition hover:bg-slate-100"
+                          className="flex h-8 w-8 items-center justify-center rounded-lg text-violet-500 transition-colors hover:bg-violet-50 hover:text-primary"
+                          title="Edit course"
                         >
-                          <Edit className="h-4 w-4" />
+                          <Pencil className="h-4 w-4" />
                         </button>
                         <ConfirmActionDialog
                           title="Delete Course"
@@ -475,7 +501,8 @@ export default function Graphs() {
                           trigger={
                             <button
                               type="button"
-                              className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 text-rose-600 transition hover:bg-rose-50"
+                              className="flex h-8 w-8 items-center justify-center rounded-lg text-red-400 transition-colors hover:bg-red-50 hover:text-red-600"
+                              title="Delete course"
                             >
                               <Trash2 className="h-4 w-4" />
                             </button>

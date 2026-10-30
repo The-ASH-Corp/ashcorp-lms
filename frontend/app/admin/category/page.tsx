@@ -53,6 +53,7 @@ const statusStyles: Record<string, { dot: string; bg: string; text: string }> =
   };
 
 export default function CategoryPage() {
+  const PAGE_SIZE = 10;
   const [currentPage, setCurrentPage] = useState(1);
   const [searchInput, setSearchInput] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
@@ -60,11 +61,12 @@ export default function CategoryPage() {
 
   const { data: categoryPage, isLoading, isError } = useGetPaginatedCategoriesQuery({
     page: currentPage,
-    limit: 10,
+    limit: PAGE_SIZE,
     search: searchTerm,
   });
   const categories = categoryPage?.data ?? [];
-  const totalPages = categoryPage?.pagination.totalPages ?? 1;
+  const totalCategories = categoryPage?.pagination?.totalCategories ?? categories.length;
+  const totalPages = Math.max(1, categoryPage?.pagination?.totalPages ?? 1);
   const resolvedCurrentPage = useMemo(
     () => Math.min(Math.max(1, currentPage), totalPages),
     [currentPage, totalPages],
@@ -125,7 +127,7 @@ export default function CategoryPage() {
       process.env.NEXT_PUBLIC_IMAGE_URL?.replace(/\/+$/, "") ?? "";
 
     const path = iconUrl
-      .replace(/\\/g, "/") // <-- replace \ with /
+      .replace(/\\/g, "/")
       .replace(/^\/+/, "");
 
     return `${baseUrl}/${path}`;
@@ -153,10 +155,9 @@ export default function CategoryPage() {
     applySearch();
   };
 
-
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center min-h-[80vh]">
+      <div className="flex min-h-[80vh] items-center justify-center">
         <PropagateLoader color="#7E23FE" loading={true} size={15} />
       </div>
     );
@@ -164,7 +165,7 @@ export default function CategoryPage() {
 
   if (isError) {
     return (
-      <div className="flex justify-center items-center min-h-[80vh]">
+      <div className="flex min-h-[80vh] items-center justify-center">
         <h1 className="text-2xl font-bold text-gray-900">
           Something went wrong
         </h1>
@@ -173,157 +174,158 @@ export default function CategoryPage() {
   }
 
   return (
-    <>
-      <div className="space-y-6">
-        {/* ─── Page Header ─── */}
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <h1 className="text-2xl font-bold text-indigo-950">
-              Category Management
-            </h1>
-          </div>
-          <div className="flex items-center gap-3">
-            <Button className="rounded-xl bg-primary text-white shadow-md shadow-violet-200 hover:bg-violet-700 h-10 px-5">
-              <Link
-                href="/admin/category/addCategory"
-                className="flex items-center"
-              >
-                <Plus className="h-4 w-4 mr-2" />
-                Add Category
-              </Link>
-            </Button>
-          </div>
+    <div className="space-y-6">
+      {/* ─── Page Header ─── */}
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h1 className="text-2xl font-bold text-indigo-950">
+            Category Management
+          </h1>
         </div>
+        <div className="flex items-center gap-3">
+          <Button asChild className="h-10 rounded-xl bg-primary px-5 text-white shadow-md shadow-violet-200 hover:bg-violet-700">
+            <Link
+              href="/admin/category/addCategory"
+              className="flex items-center"
+            >
+              <Plus className="mr-2 h-4 w-4" />
+              Add Category
+            </Link>
+          </Button>
+        </div>
+      </div>
 
-        {/* ─── Data Table ─── */}
-        <Card className="border-0 shadow-sm bg-white overflow-hidden" ref={listingRef}>
-          <form className="w-sm ml-4" onSubmit={handleSearchSubmit}>
-            <InputGroup>
-              <InputGroupInput
-                placeholder="Search Category..."
-                value={searchInput}
-                onChange={(event) => setSearchInput(event.target.value)}
-              />
-              <InputGroupAddon align="inline-end">
-                <Button size="icon" variant="ghost" className="h-8 w-8 shrink-0" type="submit">
-                  <Search className="h-4 w-4" />
+      {/* ─── Data Table ─── */}
+      <Card className="overflow-hidden border-0 bg-white shadow-sm" ref={listingRef}>
+        <form className="px-5 pt-2" onSubmit={handleSearchSubmit}>
+          <InputGroup className="w-full sm:w-96">
+            <InputGroupInput
+              placeholder="Search Category..."
+              value={searchInput}
+              onChange={(event) => setSearchInput(event.target.value)}
+            />
+            <InputGroupAddon align="inline-end">
+              <Button size="icon" variant="ghost" className="h-8 w-8 shrink-0" type="submit">
+                <Search className="h-4 w-4" />
+              </Button>
+              {(searchInput || searchTerm) && (
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  className="h-8 w-8 shrink-0"
+                  type="button"
+                  onClick={clearSearch}
+                >
+                  <X className="h-4 w-4" />
                 </Button>
-                {(searchInput || searchTerm) && (
-                  <Button
-                    size="icon"
-                    variant="ghost"
-                    className="h-8 w-8 shrink-0"
-                    type="button"
-                    onClick={clearSearch}
-                  >
-                    <X className="h-4 w-4" />
-                  </Button>
-                )}
-              </InputGroupAddon>
-            </InputGroup>
-          </form>
-          <Table>
-            <TableHeader>
-              <TableRow className="bg-gray-50/80 hover:bg-gray-50/80 border-b border-gray-100 ">
-                <TableHead className="text-xs font-semibold uppercase tracking-wider text-gray-500 text-center ">
-                  #
-                </TableHead>
-                <TableHead className="text-xs font-semibold uppercase tracking-wider text-gray-500 text-center">
-                  Thumbnail
-                </TableHead>
-                <TableHead className="text-xs font-semibold uppercase tracking-wider text-gray-500 text-center ">
-                  Title
-                </TableHead>
-                <TableHead className="text-xs font-semibold uppercase tracking-wider text-gray-500 text-center ">
-                  Featured
-                </TableHead>
-                <TableHead className="text-xs font-semibold uppercase tracking-wider text-gray-500 text-center ">
-                  Status
-                </TableHead>
-                <TableHead className="text-xs font-semibold uppercase tracking-wider text-gray-500 text-center ">
-                  Actions
-                </TableHead>
+              )}
+            </InputGroupAddon>
+          </InputGroup>
+        </form>
+        <Table>
+          <TableHeader>
+            <TableRow className="border-b border-gray-100 bg-gray-50/80 hover:bg-gray-50/80">
+              <TableHead className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-gray-500">
+                #
+              </TableHead>
+              <TableHead className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-gray-500">
+                Thumbnail
+              </TableHead>
+              <TableHead className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-gray-500">
+                Title
+              </TableHead>
+              <TableHead className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-gray-500">
+                Featured
+              </TableHead>
+              <TableHead className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-gray-500">
+                Status
+              </TableHead>
+              <TableHead className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-gray-500">
+                Actions
+              </TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {categories.length === 0 ? (
+              <TableRow className="border-b border-gray-50">
+                <TableCell colSpan={6} className="px-4 py-16 text-center text-sm text-gray-500">
+                  No categories found.
+                </TableCell>
               </TableRow>
-            </TableHeader>
-            <TableBody>
-              {categories?.map((category: Category, index: number) => {
-                const style = statusStyles[category.status];
+            ) : (
+              categories.map((category: Category, index: number) => {
+                const style = statusStyles[category.status] ?? statusStyles.Inactive;
 
                 return (
                   <TableRow
-                    key={index}
-                    className="hover:bg-violet-50/30 transition-colors border-b border-gray-50"
+                    key={category._id || index}
+                    className="border-b border-gray-50 transition-colors hover:bg-violet-50/30"
                   >
-                    <TableCell>
-                      <div className="flex items-center gap-3 justify-center">
-                        <p className="text-sm font-semibold text-gray-900">
-                          {index + 1}
-                        </p>
-                      </div>
+                    <TableCell className="px-4 py-3 text-center align-middle text-sm font-semibold text-gray-900">
+                      {index + 1 + (resolvedCurrentPage - 1) * PAGE_SIZE}
                     </TableCell>
 
-                    <TableCell>
-                      <div className="flex items-center gap-3 justify-center ">
+                    <TableCell className="px-4 py-3 text-center align-middle">
+                      <div className="flex items-center justify-center">
                         <Image
-                          width={100}
-                          height={100}
+                          width={56}
+                          height={56}
                           src={getCategoryImageUrl(category.iconUrl)}
                           alt={category.categoryName || "Category image"}
-                          className="h-24 w-24 rounded-md object-cover"
+                          className="h-14 w-14 rounded-lg border border-gray-100 object-cover"
                           unoptimized
                         />
                       </div>
                     </TableCell>
 
-                    <TableCell>
-                      <div className="flex items-center gap-3 min-w-30 justify-center">
-                        <span className="text-sm font-semibold text-gray-900 w-10">
-                          {category.categoryName}
-                        </span>
-                      </div>
+                    <TableCell className="px-4 py-3 text-center align-middle">
+                      <span className="text-sm font-semibold text-gray-900">
+                        {category.categoryName}
+                      </span>
                     </TableCell>
 
                     {/* Featured */}
-                    <TableCell className="text-center align-middle">
-                      <div
-                        className={
-                          category.isFeatured
-                            ? "bg-green-300 w-20 h-10 rounded-xl flex justify-center items-center "
-                            : ""
-                        }
-                      >
-                        {category.isFeatured ? (
-                          <Check className="h-4 w-4 text-green-600" />
-                        ) : (
-                          <X className="h-4 w-4 text-amber-600" />
-                        )}
+                    <TableCell className="px-4 py-3 text-center align-middle">
+                      <div className="flex items-center justify-center">
+                        <div
+                          className={
+                            category.isFeatured
+                              ? "flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-50"
+                              : "flex h-8 w-8 items-center justify-center rounded-lg bg-red-50"
+                          }
+                        >
+                          {category.isFeatured ? (
+                            <Check className="h-4 w-4 text-emerald-600" />
+                          ) : (
+                            <X className="h-4 w-4 text-red-600" />
+                          )}
+                        </div>
                       </div>
                     </TableCell>
 
                     {/* Status */}
-                    <TableCell className="text-center align-middle">
+                    <TableCell className="px-4 py-3 text-center align-middle">
                       <span
-                        className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium justify-center ${style?.bg} ${style?.text}`}
+                        className={`inline-flex items-center justify-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium ${style?.bg} ${style?.text}`}
                       >
                         <span
-                          className={`h-1.5 w-1.5 rounded-full ${style?.dot} animate-pulse`}
+                          className={`h-1.5 w-1.5 rounded-full ${style?.dot}`}
                         />
                         {category.status}
                       </span>
                     </TableCell>
 
                     {/* Actions */}
-                    <TableCell className="text-center align-middle">
-                      <div className="flex items-center justify-center gap-1">
+                    <TableCell className="px-4 py-3 text-center align-middle">
+                      <div className="flex items-center justify-center gap-2">
                         <Link href={`/admin/category/edit/${category._id}`}>
-                          <Button
-                            className="flex h-8 w-8 items-center justify-center rounded-lg text-gray-400 transition-colors hover:bg-violet-500/10 hover:text-primary"
-                            size="sm"
-                            variant="ghost"
+                          <button
+                            className="flex h-8 w-8 items-center justify-center rounded-lg text-violet-500 transition-colors hover:bg-violet-50 hover:text-primary"
                             type="button"
+                            title="Edit category"
                           >
                             <Pencil className="h-4 w-4" />
-                          </Button>
+                          </button>
                         </Link>
                         <ConfirmActionDialog
                           title="Delete Category"
@@ -333,78 +335,85 @@ export default function CategoryPage() {
                           loadingLabel="Deleting..."
                           onConfirm={() => handleDelete(category._id)}
                           trigger={
-                            <Button
+                            <button
                               className="flex h-8 w-8 items-center justify-center rounded-lg text-red-400 transition-colors hover:bg-red-50 hover:text-red-600"
-                              size="sm"
-                              variant="ghost"
                               type="button"
+                              title="Delete category"
                             >
                               <Trash className="h-4 w-4" />
-                            </Button>
+                            </button>
                           }
                         />
                       </div>
                     </TableCell>
                   </TableRow>
                 );
-              })}
-            </TableBody>
-          </Table>
+              })
+            )}
+          </TableBody>
+        </Table>
 
-          {/* Pagination Footer */}
-          <div className="flex items-center justify-center border-t border-gray-100 px-5 py-4">
-            <Pagination className="w-auto mx-0">
-              <PaginationContent>
-                <PaginationItem>
-                  <PaginationPrevious
-                    href="#"
-                    text=""
-                    className="h-8 w-8 p-0 rounded-lg border border-gray-200 hover:border-violet-300 hover:bg-violet-50"
-                    onClick={(event) => {
-                      event.preventDefault();
-                      setCurrentPage((page) => Math.max(1, page - 1));
-                    }}
-                  />
+        {/* Pagination Footer */}
+        <div className="flex flex-col items-center justify-between gap-4 border-t border-gray-100 px-5 py-4 sm:flex-row">
+          <p className="text-sm text-gray-500">
+            Showing <span className="font-semibold text-gray-700">{categories.length}</span> of{" "}
+            <span className="font-semibold text-gray-700">{totalCategories}</span> categories.
+          </p>
+          <Pagination className="mx-0 w-auto">
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious
+                  href="#"
+                  text=""
+                  className={`flex h-8 w-8 items-center justify-center rounded-lg border border-gray-200 p-0 hover:border-violet-300 hover:bg-violet-50 ${
+                    resolvedCurrentPage === 1 ? "pointer-events-none opacity-50" : ""
+                  }`}
+                  onClick={(event) => {
+                    event.preventDefault();
+                    setCurrentPage((page) => Math.max(1, page - 1));
+                  }}
+                />
+              </PaginationItem>
+              {paginationItems.map((item, index) => (
+                <PaginationItem key={`${item}-${index}`}>
+                  {item === "ellipsis" ? (
+                    <PaginationEllipsis />
+                  ) : (
+                    <PaginationLink
+                      href="#"
+                      isActive={item === resolvedCurrentPage}
+                      className={`h-8 w-8 rounded-lg text-sm ${
+                        item === resolvedCurrentPage
+                          ? "border-primary! bg-primary! text-white! hover:bg-violet-700!"
+                          : "border border-gray-200 hover:border-violet-300 hover:bg-violet-50"
+                      }`}
+                      onClick={(event) => {
+                        event.preventDefault();
+                        setCurrentPage(item);
+                      }}
+                    >
+                      {item}
+                    </PaginationLink>
+                  )}
                 </PaginationItem>
-                {paginationItems.map((item, index) => (
-                  <PaginationItem key={`${item}-${index}`}>
-                    {item === "ellipsis" ? (
-                      <PaginationEllipsis />
-                    ) : (
-                      <PaginationLink
-                        href="#"
-                        isActive={item === resolvedCurrentPage}
-                        className={`h-8 w-8 rounded-lg text-sm ${
-                          item === resolvedCurrentPage
-                            ? "bg-primary text-white border-primary hover:bg-violet-700"
-                            : "border border-gray-200 hover:border-violet-300 hover:bg-violet-50"
-                        }`}
-                        onClick={(event) => {
-                          event.preventDefault();
-                          setCurrentPage(item);
-                        }}
-                      >
-                        {item}
-                      </PaginationLink>
-                    )}
-                  </PaginationItem>
-                ))}
-                <PaginationItem>
-                  <PaginationNext
-                    href="#"
-                    text=""
-                    className="h-8 w-8 p-0 rounded-lg border border-gray-200 hover:border-violet-300 hover:bg-violet-50"
-                    onClick={(event) => {
-                      event.preventDefault();
-                      setCurrentPage((page) => Math.min(totalPages, page + 1));
-                    }}
-                  />
-                </PaginationItem>
-              </PaginationContent>
-            </Pagination>
-          </div>
-        </Card>
-      </div>
-    </>
+              ))}
+              <PaginationItem>
+                <PaginationNext
+                  href="#"
+                  text=""
+                  className={`flex h-8 w-8 items-center justify-center rounded-lg border border-gray-200 p-0 hover:border-violet-300 hover:bg-violet-50 ${
+                    resolvedCurrentPage === totalPages ? "pointer-events-none opacity-50" : ""
+                  }`}
+                  onClick={(event) => {
+                    event.preventDefault();
+                    setCurrentPage((page) => Math.min(totalPages, page + 1));
+                  }}
+                />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
+        </div>
+      </Card>
+    </div>
   );
 }

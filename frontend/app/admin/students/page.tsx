@@ -24,7 +24,15 @@ import {
 } from "@/lib/redux/features/student/studentApi";
 import { toast } from "sonner";
 import { ConfirmActionDialog } from "@/components/shared/confirm-action-dialog";
-import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 import { useRouter } from "next/navigation";
 
 const statusStyles: Record<
@@ -180,10 +188,7 @@ export default function StudentsPage() {
           <h1 className="text-2xl font-bold text-indigo-950">
             Students Management
           </h1>
-          <p className="mt-1 text-sm text-gray-500">
-            Showing <span className="font-semibold text-gray-700">{studentList.length}</span> of <span className="font-semibold text-gray-700">{totalStudents}</span> students.
-          </p>
-        </div>
+         </div>
 
         <Button asChild className="h-10 rounded-xl bg-primary px-5 text-white shadow-md shadow-violet-200 hover:bg-violet-700">
           <Link href="/admin/students/createStudent" className="flex items-center">
@@ -197,25 +202,25 @@ export default function StudentsPage() {
         <Table>
           <TableHeader>
             <TableRow className="border-b border-gray-100 bg-gray-50/80 hover:bg-gray-50/80">
-              <TableHead className="text-center text-xs font-semibold uppercase tracking-wider text-gray-500">
+              <TableHead className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-gray-500">
                 #
               </TableHead>
-              <TableHead className="text-center text-xs font-semibold uppercase tracking-wider text-gray-500">
+              <TableHead className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-gray-500">
                 Name
               </TableHead>
-              <TableHead className="text-center text-xs font-semibold uppercase tracking-wider text-gray-500">
+              <TableHead className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-gray-500">
                 Email
               </TableHead>
-              <TableHead className="text-center text-xs font-semibold uppercase tracking-wider text-gray-500">
+              <TableHead className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-gray-500">
                 Phone
               </TableHead>
-              <TableHead className="text-center text-xs font-semibold uppercase tracking-wider text-gray-500">
+              <TableHead className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-gray-500">
                 Role
               </TableHead>
-              <TableHead className="text-center text-xs font-semibold uppercase tracking-wider text-gray-500">
+              <TableHead className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-gray-500">
                 Status
               </TableHead>
-              <TableHead className="text-center text-xs font-semibold uppercase tracking-wider text-gray-500">
+              <TableHead className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-gray-500">
                 Actions
               </TableHead>
             </TableRow>
@@ -223,7 +228,7 @@ export default function StudentsPage() {
           <TableBody>
             {studentList.length === 0 ? (
               <TableRow className="border-b border-gray-50">
-                <TableCell colSpan={7} className="py-16 text-center text-gray-500">
+                <TableCell colSpan={7} className="px-4 py-16 text-center text-sm text-gray-500">
                   No students found yet.
                 </TableCell>
               </TableRow>
@@ -247,13 +252,13 @@ export default function StudentsPage() {
                     role="button"
                     aria-label={`View ${student.name} profile`}
                   >
-                    <TableCell className="text-center font-semibold text-gray-900">
+                    <TableCell className="px-4 py-3 text-center align-middle text-sm font-semibold text-gray-900">
                       {index + 1 + (currentPage - 1) * PAGE_SIZE}
                     </TableCell>
 
-                    <TableCell>
+                    <TableCell className="px-4 py-3 text-center align-middle">
                       <div className="flex items-center justify-center gap-3">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-violet-100 text-sm font-semibold text-violet-700">
+                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-violet-100 text-sm font-semibold text-violet-700">
                           {getInitials(student.name)}
                         </div>
                         <span className="text-sm font-semibold text-gray-900">
@@ -262,25 +267,25 @@ export default function StudentsPage() {
                       </div>
                     </TableCell>
 
-                    <TableCell className="text-center">
+                    <TableCell className="px-4 py-3 text-center align-middle">
                       <span className="text-sm font-medium text-gray-700">
                         {student.email}
                       </span>
                     </TableCell>
 
-                    <TableCell className="text-center">
+                    <TableCell className="px-4 py-3 text-center align-middle">
                       <span className="text-sm font-medium text-gray-700">
                         {student.phone}
                       </span>
                     </TableCell>
 
-                    <TableCell className="text-center">
+                    <TableCell className="px-4 py-3 text-center align-middle">
                       <span className="inline-flex rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-700">
                         {student.role}
                       </span>
                     </TableCell>
 
-                    <TableCell className="text-center">
+                    <TableCell className="px-4 py-3 text-center align-middle">
                       <span
                         className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium ${style.bg} ${style.text}`}
                       >
@@ -289,7 +294,10 @@ export default function StudentsPage() {
                       </span>
                     </TableCell>
 
-                    <TableCell onClick={(event) => event.stopPropagation()}>
+                    <TableCell
+                      className="px-4 py-3 text-center align-middle"
+                      onClick={(event) => event.stopPropagation()}
+                    >
                       <div className="flex items-center justify-center gap-2">
                         <button
                           type="button"
@@ -331,8 +339,7 @@ export default function StudentsPage() {
                               <Trash2 className="h-4 w-4" />
                             </button>
                           }
-                        >
-                        </ConfirmActionDialog>
+                        />
                       </div>
                     </TableCell>
                   </TableRow>
@@ -342,68 +349,73 @@ export default function StudentsPage() {
           </TableBody>
         </Table>
 
-
-        { (
-          <div className="flex items-center justify-center border-t border-gray-100 px-5 py-4">
-            <Pagination className="mx-0 w-auto">
-              <PaginationContent>
-                <PaginationItem>
-                  <PaginationPrevious
-                    href="#"
-                    text=""
-                    onClick={(event) => {
-                      event.preventDefault();
-                      handlePageChange(currentPage - 1);
-                    }}
-                    className={`h-8 w-8 rounded-lg border border-gray-200 p-0 hover:border-violet-300 hover:bg-violet-50 ${currentPage === 1 ? "pointer-events-none opacity-50" : ""}`}
-                  />
-                </PaginationItem>
-                {pageNumbers.map((page, index) => {
-                  if (page === "...") {
-                    return (
-                      <PaginationItem key={`ellipsis-${index}`}>
-                        <PaginationEllipsis />
-                      </PaginationItem>
-                    );
-                  }
-
-                  const pageNumber = Number(page);
-
+        <div className="flex flex-col items-center justify-between gap-4 border-t border-gray-100 px-5 py-4 sm:flex-row">
+          <p className="text-sm text-gray-500">
+            Showing <span className="font-semibold text-gray-700">{studentList.length}</span> of{" "}
+            <span className="font-semibold text-gray-700">{totalStudents}</span> students.
+          </p>
+          <Pagination className="mx-0 w-auto">
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious
+                  href="#"
+                  text=""
+                  onClick={(event) => {
+                    event.preventDefault();
+                    handlePageChange(currentPage - 1);
+                  }}
+                  className={`flex h-8 w-8 items-center justify-center rounded-lg border border-gray-200 p-0 hover:border-violet-300 hover:bg-violet-50 ${
+                    currentPage === 1 ? "pointer-events-none opacity-50" : ""
+                  }`}
+                />
+              </PaginationItem>
+              {pageNumbers.map((page, index) => {
+                if (page === "...") {
                   return (
-                    <PaginationItem key={pageNumber}>
-                      <PaginationLink
-                        href="#"
-                        isActive={pageNumber === currentPage}
-                        onClick={(event) => {
-                          event.preventDefault();
-                          handlePageChange(pageNumber);
-                        }}
-                        className={`h-8 w-8 rounded-lg text-sm ${
-                          pageNumber === currentPage
-                            ? "border-primary bg-primary! text-white! hover:bg-violet-700!"
-                            : "border border-gray-200 hover:border-violet-300 hover:bg-violet-50"
-                        }`}
-                      >
-                        {pageNumber}
-                      </PaginationLink>
+                    <PaginationItem key={`ellipsis-${index}`}>
+                      <PaginationEllipsis />
                     </PaginationItem>
                   );
-                })}
-                <PaginationItem>
-                  <PaginationNext
-                    href="#"
-                    text=""
-                    onClick={(event) => {
-                      event.preventDefault();
-                      handlePageChange(currentPage + 1);
-                    }}
-                    className={`h-8 w-8 rounded-lg border border-gray-200 p-0 hover:border-violet-300 hover:bg-violet-50 ${currentPage === totalPages ? "pointer-events-none opacity-50" : ""}`}
-                  />
-                </PaginationItem>
-              </PaginationContent>
-            </Pagination>
-          </div>
-        )}
+                }
+
+                const pageNumber = Number(page);
+
+                return (
+                  <PaginationItem key={pageNumber}>
+                    <PaginationLink
+                      href="#"
+                      isActive={pageNumber === currentPage}
+                      onClick={(event) => {
+                        event.preventDefault();
+                        handlePageChange(pageNumber);
+                      }}
+                      className={`h-8 w-8 rounded-lg text-sm ${
+                        pageNumber === currentPage
+                          ? "border-primary! bg-primary! text-white! hover:bg-violet-700!"
+                          : "border border-gray-200 hover:border-violet-300 hover:bg-violet-50"
+                      }`}
+                    >
+                      {pageNumber}
+                    </PaginationLink>
+                  </PaginationItem>
+                );
+              })}
+              <PaginationItem>
+                <PaginationNext
+                  href="#"
+                  text=""
+                  onClick={(event) => {
+                    event.preventDefault();
+                    handlePageChange(currentPage + 1);
+                  }}
+                  className={`flex h-8 w-8 items-center justify-center rounded-lg border border-gray-200 p-0 hover:border-violet-300 hover:bg-violet-50 ${
+                    currentPage === totalPages ? "pointer-events-none opacity-50" : ""
+                  }`}
+                />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
+        </div>
       </Card>
     </div>
   );

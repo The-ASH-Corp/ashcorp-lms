@@ -19,12 +19,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import { Plus, Search, GraduationCap, Building2, Pencil, Trash2 } from "lucide-react";
-import {
-  InputGroup,
-  InputGroupAddon,
-  InputGroupInput,
-} from "@/components/ui/input-group";
+import { Plus, GraduationCap, Pencil, Trash2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { PropagateLoader } from "react-spinners";
@@ -39,7 +34,7 @@ import {
 export default function GraduatesPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const limit = 10;
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery] = useState("");
 
   const { data: response, isLoading, isError } = useGetPaginatedGraduatesQuery({
     page: currentPage,
@@ -47,8 +42,8 @@ export default function GraduatesPage() {
     search: searchQuery,
   });
   const graduates = response?.data?.graduates || [];
-  const totalGraduates = response?.data?.totalGraduates || 0;
-  const totalPages = Math.ceil(totalGraduates / limit);
+  const totalGraduates = response?.data?.totalGraduates ?? graduates.length;
+  const totalPages = Math.max(1, Math.ceil(totalGraduates / limit));
 
   const [deleteGraduate, { isLoading: isDeleting }] = useDeleteGraduateMutation();
   const [toggleFeature, { isLoading: isToggling }] = useToggleGraduateFeatureMutation();
@@ -68,7 +63,7 @@ export default function GraduatesPage() {
       toast.success(
         !currentStatus
           ? "Graduate featured on landing page"
-          : "Graduate unfeatured from landing page"
+          : "Graduate unfeatured from landing page",
       );
     } catch (err: any) {
       toast.error(err?.data?.message || "Failed to update feature status");
@@ -88,7 +83,7 @@ export default function GraduatesPage() {
 
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center min-h-[80vh]">
+      <div className="flex min-h-[80vh] items-center justify-center">
         <PropagateLoader color="#7E23FE" loading={true} size={15} />
       </div>
     );
@@ -96,7 +91,7 @@ export default function GraduatesPage() {
 
   if (isError) {
     return (
-      <div className="flex justify-center items-center min-h-[80vh]">
+      <div className="flex min-h-[80vh] items-center justify-center">
         <h1 className="text-2xl font-bold text-gray-900">
           Failed to load graduates list
         </h1>
@@ -109,21 +104,19 @@ export default function GraduatesPage() {
       {/* Page Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-indigo-950 tracking-tight flex items-center gap-2.5">
+          <h1 className="flex items-center gap-2.5 text-2xl font-bold tracking-tight text-indigo-950">
             <GraduationCap className="h-7 w-7 text-primary" />
             Graduates Management
           </h1>
-          <p className="text-sm text-gray-500 mt-1">
-            Manage placed graduates, feature status, and landing page spotlights
-          </p>
+         
         </div>
         <div className="flex items-center gap-3">
-          <Button className="rounded-xl bg-primary text-white shadow-md shadow-violet-200 hover:bg-violet-700 h-10 px-5">
+          <Button asChild className="h-10 rounded-xl bg-primary px-5 text-white shadow-md shadow-violet-200 hover:bg-violet-700">
             <Link
               href="/admin/graduates/createGraduate"
               className="flex items-center text-sm font-medium"
             >
-              <Plus className="h-4 w-4 mr-2" />
+              <Plus className="mr-2 h-4 w-4" />
               Add Graduate
             </Link>
           </Button>
@@ -131,23 +124,20 @@ export default function GraduatesPage() {
       </div>
 
       {/* Data Table Card */}
-      <Card className="border-0 shadow-xs bg-white overflow-hidden rounded-2xl">
-
-
+      <Card className="overflow-hidden border-0 bg-white shadow-sm">
         <Table>
           <TableHeader>
-            <TableRow className="bg-gray-50/80 hover:bg-gray-50/80 border-b border-gray-100">
-              <TableHead className="text-xs font-semibold uppercase tracking-wider text-gray-500 text-center w-16">
+            <TableRow className="border-b border-gray-100 bg-gray-50/80 hover:bg-gray-50/80">
+              <TableHead className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-gray-500">
                 #
               </TableHead>
-              <TableHead className="text-xs font-semibold uppercase tracking-wider text-gray-500 text-center">
+              <TableHead className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-gray-500">
                 Graduate Photo
               </TableHead>
-
-              <TableHead className="text-xs font-semibold uppercase tracking-wider text-gray-500 text-center">
+              <TableHead className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-gray-500">
                 Featured On Landing Page
               </TableHead>
-              <TableHead className="text-xs font-semibold uppercase tracking-wider text-gray-500 text-center w-28">
+              <TableHead className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-gray-500">
                 Actions
               </TableHead>
             </TableRow>
@@ -160,19 +150,17 @@ export default function GraduatesPage() {
                 return (
                   <TableRow
                     key={id}
-                    className="hover:bg-violet-50/30 transition-colors border-b border-gray-50"
+                    className="border-b border-gray-50 transition-colors hover:bg-violet-50/30"
                   >
                     {/* Index */}
-                    <TableCell className="text-center align-middle">
-                      <span className="text-sm font-semibold text-gray-600">
-                        {index + 1}
-                      </span>
+                    <TableCell className="px-4 py-3 text-center align-middle text-sm font-semibold text-gray-900">
+                      {index + 1 + (currentPage - 1) * limit}
                     </TableCell>
 
                     {/* Image */}
-                    <TableCell className="text-center align-middle">
+                    <TableCell className="px-4 py-3 text-center align-middle">
                       <div className="flex items-center justify-center">
-                        <div className="relative h-14 w-14 rounded-xl overflow-hidden border border-gray-200 bg-gray-50 shadow-xs">
+                        <div className="relative h-14 w-14 overflow-hidden rounded-lg border border-gray-100 bg-gray-50">
                           {graduate.image ? (
                             <Image
                               src={getImageUrl(graduate.image)}
@@ -182,7 +170,7 @@ export default function GraduatesPage() {
                               unoptimized
                             />
                           ) : (
-                            <div className="w-full h-full flex items-center justify-center text-gray-400">
+                            <div className="flex h-full w-full items-center justify-center text-gray-400">
                               <GraduationCap className="h-6 w-6" />
                             </div>
                           )}
@@ -190,12 +178,10 @@ export default function GraduatesPage() {
                       </div>
                     </TableCell>
 
-
-
                     {/* Featured Toggle Switch */}
-                    <TableCell className="text-center align-middle">
+                    <TableCell className="px-4 py-3 text-center align-middle">
                       <div className="flex items-center justify-center gap-3">
-                        <span className="text-xs font-semibold text-gray-600">
+                        <span className="text-sm font-medium text-gray-700">
                           {graduate.featureOnLandingPage ? "Featured" : "Hidden"}
                         </span>
                         <button
@@ -204,10 +190,10 @@ export default function GraduatesPage() {
                           onClick={() =>
                             handleToggleFeature(
                               id,
-                              graduate.featureOnLandingPage ?? false
+                              graduate.featureOnLandingPage ?? false,
                             )
                           }
-                          className={`relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors focus:outline-hidden cursor-pointer ${
+                          className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer items-center rounded-full transition-colors focus:outline-hidden ${
                             graduate.featureOnLandingPage
                               ? "bg-emerald-500"
                               : "bg-gray-300 hover:bg-gray-400"
@@ -219,7 +205,7 @@ export default function GraduatesPage() {
                           }
                         >
                           <span
-                            className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform shadow-xs ${
+                            className={`inline-block h-4 w-4 transform rounded-full bg-white shadow-xs transition-transform ${
                               graduate.featureOnLandingPage
                                 ? "translate-x-6"
                                 : "translate-x-1"
@@ -229,19 +215,17 @@ export default function GraduatesPage() {
                       </div>
                     </TableCell>
 
-                    {/* Actions Column (Edit Page Link & Delete Confirmation) */}
-                    <TableCell className="text-center align-middle">
-                      <div className="flex items-center justify-center gap-1.5">
-                        {/* Edit Link */}
+                    {/* Actions Column */}
+                    <TableCell className="px-4 py-3 text-center align-middle">
+                      <div className="flex items-center justify-center gap-2">
                         <Link
                           href={`/admin/graduates/editGraduate/${id}`}
-                          className="p-2 text-gray-600 hover:text-primary hover:bg-violet-50 rounded-lg transition-colors inline-flex items-center justify-center"
+                          className="flex h-8 w-8 items-center justify-center rounded-lg text-violet-500 transition-colors hover:bg-violet-50 hover:text-primary"
                           title="Edit Graduate"
                         >
                           <Pencil className="h-4 w-4" />
                         </Link>
 
-                        {/* Delete Button with Confirmation Dialog */}
                         <ConfirmActionDialog
                           title="Delete Graduate Spotlight"
                           description={`Are you sure you want to delete this graduate? This action cannot be undone.`}
@@ -252,7 +236,7 @@ export default function GraduatesPage() {
                           trigger={
                             <button
                               type="button"
-                              className="p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors cursor-pointer"
+                              className="flex h-8 w-8 items-center justify-center rounded-lg text-red-400 transition-colors hover:bg-red-50 hover:text-red-600"
                               title="Delete Graduate"
                             >
                               <Trash2 className="h-4 w-4" />
@@ -265,81 +249,73 @@ export default function GraduatesPage() {
                 );
               })
             ) : (
-              <TableRow>
-                <TableCell colSpan={7} className="text-center py-12">
-                  <div className="flex flex-col items-center justify-center text-gray-400">
-                    <GraduationCap className="h-12 w-12 mb-3 stroke-[1.5]" />
-                    <p className="text-base font-semibold text-gray-700">
-                      No graduates found
-                    </p>
-                    <p className="text-xs text-gray-400 mt-1">
-                      {searchQuery
-                        ? "Try clearing your search query"
-                        : "Click 'Add Graduate' to create the first graduate entry"}
-                    </p>
-                  </div>
+              <TableRow className="border-b border-gray-50">
+                <TableCell colSpan={4} className="px-4 py-16 text-center text-sm text-gray-500">
+                  No graduates found.
                 </TableCell>
               </TableRow>
             )}
           </TableBody>
         </Table>
 
-        {totalPages > 1 && (
-          <div className="flex items-center justify-center border-t border-gray-100 px-5 py-4">
-            <Pagination className="w-auto mx-0">
-              <PaginationContent>
-                <PaginationItem>
-                  <PaginationPrevious
-                    href="#"
-                    text=""
-                    onClick={(e) => {
-                      e.preventDefault();
-                      if (currentPage > 1) setCurrentPage(currentPage - 1);
-                    }}
-                    className={`h-8 w-8 p-0 rounded-lg border border-gray-200 hover:border-violet-300 hover:bg-violet-50 flex items-center justify-center ${
-                      currentPage === 1 ? "opacity-50 pointer-events-none" : ""
-                    }`}
-                  />
-                </PaginationItem>
-                {Array.from({ length: totalPages }).map((_, i) => {
-                  const page = i + 1;
-                  return (
-                    <PaginationItem key={page}>
-                      <PaginationLink
-                        href="#"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          setCurrentPage(page);
-                        }}
-                        isActive={currentPage === page}
-                        className={`h-8 w-8 rounded-lg text-sm ${
-                          currentPage === page
-                            ? "bg-primary! text-white! border-primary!"
-                            : "border border-gray-200 hover:border-violet-300 hover:bg-violet-50"
-                        }`}
-                      >
-                        {page}
-                      </PaginationLink>
-                    </PaginationItem>
-                  );
-                })}
-                <PaginationItem>
-                  <PaginationNext
-                    href="#"
-                    text=""
-                    onClick={(e) => {
-                      e.preventDefault();
-                      if (currentPage < totalPages) setCurrentPage(currentPage + 1);
-                    }}
-                    className={`h-8 w-8 p-0 rounded-lg border border-gray-200 hover:border-violet-300 hover:bg-violet-50 flex items-center justify-center ${
-                      currentPage === totalPages ? "opacity-50 pointer-events-none" : ""
-                    }`}
-                  />
-                </PaginationItem>
-              </PaginationContent>
-            </Pagination>
-          </div>
-        )}
+        <div className="flex flex-col items-center justify-between gap-4 border-t border-gray-100 px-5 py-4 sm:flex-row">
+          <p className="text-sm text-gray-500">
+            Showing <span className="font-semibold text-gray-700">{filteredGraduates.length}</span> of{" "}
+            <span className="font-semibold text-gray-700">{totalGraduates}</span> graduates.
+          </p>
+          <Pagination className="mx-0 w-auto">
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious
+                  href="#"
+                  text=""
+                  onClick={(e) => {
+                    e.preventDefault();
+                    if (currentPage > 1) setCurrentPage(currentPage - 1);
+                  }}
+                  className={`flex h-8 w-8 items-center justify-center rounded-lg border border-gray-200 p-0 hover:border-violet-300 hover:bg-violet-50 ${
+                    currentPage === 1 ? "pointer-events-none opacity-50" : ""
+                  }`}
+                />
+              </PaginationItem>
+              {Array.from({ length: totalPages }).map((_, i) => {
+                const page = i + 1;
+                return (
+                  <PaginationItem key={page}>
+                    <PaginationLink
+                      href="#"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setCurrentPage(page);
+                      }}
+                      isActive={currentPage === page}
+                      className={`h-8 w-8 rounded-lg text-sm ${
+                        currentPage === page
+                          ? "border-primary! bg-primary! text-white! hover:bg-violet-700!"
+                          : "border border-gray-200 hover:border-violet-300 hover:bg-violet-50"
+                      }`}
+                    >
+                      {page}
+                    </PaginationLink>
+                  </PaginationItem>
+                );
+              })}
+              <PaginationItem>
+                <PaginationNext
+                  href="#"
+                  text=""
+                  onClick={(e) => {
+                    e.preventDefault();
+                    if (currentPage < totalPages) setCurrentPage(currentPage + 1);
+                  }}
+                  className={`flex h-8 w-8 items-center justify-center rounded-lg border border-gray-200 p-0 hover:border-violet-300 hover:bg-violet-50 ${
+                    currentPage === totalPages ? "pointer-events-none opacity-50" : ""
+                  }`}
+                />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
+        </div>
       </Card>
     </div>
   );

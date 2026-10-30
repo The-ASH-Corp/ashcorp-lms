@@ -1,9 +1,23 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { Search, Edit2, Trash2, Plus, X } from "lucide-react";
+import { Search, Pencil, Trash2, Plus, X, BookOpen } from "lucide-react";
 import { useRouter, useParams, useSearchParams } from "next/navigation";
-import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from "@/components/ui/input-group";
 import { useGetAllCourseQuery } from "@/lib/redux/features/course/courseApi";
 import {
   useDeleteChapterMutation,
@@ -22,7 +36,6 @@ import { toast } from "sonner";
 import { ConfirmActionDialog } from "@/components/shared/confirm-action-dialog";
 
 const CHAPTERS_PER_PAGE = 10;
-
 
 export default function ChaptersManagement() {
   const router = useRouter();
@@ -58,8 +71,8 @@ export default function ChaptersManagement() {
   };
 
   const chapters = (paginatedData?.data ?? []) as unknown as ExtendedChapter[];
-  const totalChapters = paginatedData?.pagination.totalChapters ?? 0;
-  const totalPages = paginatedData?.pagination.totalPages ?? 1;
+  const totalChapters = paginatedData?.pagination.totalChapters ?? chapters.length;
+  const totalPages = Math.max(1, paginatedData?.pagination.totalPages ?? 1);
 
   const resolvedCurrentPage = useMemo(
     () => Math.min(Math.max(1, currentPage), totalPages),
@@ -94,6 +107,7 @@ export default function ChaptersManagement() {
 
     return items;
   }, [resolvedCurrentPage, totalPages]);
+
   const courseTitle = useMemo(() => {
     if (courseTitleFromRoute) {
       return courseTitleFromRoute;
@@ -150,188 +164,181 @@ export default function ChaptersManagement() {
   };
 
   return (
-    <div className="min-h-screen bg-white rounded-xl">
-      <div className="px-4 sm:px-8 lg:px-12 py-6 sm:py-8 border-b border-gray-200">
-        <p className="text-gray-600 text-sm sm:text-base">
-          Showing chapters for: {" "}
-          <span className="font-semibold">{courseTitle}</span>
-        </p>
-      </div>
-      {/* Main Content */}
-      <div className="px-4 sm:px-8 lg:px-12 py-6 sm:py-8">
-        {/* Controls Section */}
-        <div className="flex flex-col sm:flex-row gap-4 mb-8">
-          {/* Search Bar */}
-          <div className="flex-1">
-            <form className="relative" onSubmit={handleSearchSubmit}>
-              <Search
-                className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
-                size={20}
-              />
-              <Input
-                type="text"
-                placeholder="Search chapters..."
-                value={searchInput}
-                onChange={(e) => setSearchInput(e.target.value)}
-                className="w-[70%] h-12 pl-10 pr-24 py-3 border border-gray-200 rounded-lg focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary bg-white text-gray-900"
-              />
-              <div className="absolute right-[30%] top-1/2 flex -translate-y-1/2 items-center gap-1 pr-2">
-                <button
-                  type="submit"
-                  className="flex h-8 w-8 items-center justify-center rounded-md text-gray-500 hover:bg-violet-50 hover:text-primary"
-                >
-                  <Search size={16} />
-                </button>
-                {(searchInput || searchTerm) && (
-                  <button
-                    type="button"
-                    className="flex h-8 w-8 items-center justify-center rounded-md text-gray-500 hover:bg-gray-100"
-                    onClick={clearSearch}
-                  >
-                    <X size={16} />
-                  </button>
-                )}
-              </div>
-            </form>
-          </div>
-
-          {/* Info and New Chapter Button */}
-          <div className="flex items-center justify-between sm:justify-end gap-4 flex-wrap">
-            <button
-              className="flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-lg hover:bg-violet-700 transition-colors font-medium whitespace-nowrap"
-              onClick={() => {
-                handleAddNewChapter();
-              }}
-            >
-              <Plus size={18} />
-              <span className="hidden sm:inline"> New Chapter</span>
-              <span className="sm:hidden"> New</span>
-            </button>
-          </div>
+    <div className="space-y-6">
+      {/* Page Header */}
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h1 className="text-2xl font-bold text-indigo-950">
+            Chapter: {courseTitle}
+          </h1>
+          <p className="mt-1 text-sm text-gray-500">
+            Showing <span className="font-semibold text-gray-700">{chapters.length}</span> of{" "}
+            <span className="font-semibold text-gray-700">{totalChapters}</span> chapters.
+          </p>
         </div>
 
-        {/* Table Section */}
-        <div className="overflow-x-auto border border-gray-200 rounded-lg mb-8">
-          <table className="w-full">
-            {/* Table Header */}
-            <thead>
-              <tr className="bg-gray-50 border-b border-gray-200">
-                <th className="px-4 sm:px-6 py-4 text-left align-middle">
-                  <span className="text-xs font-semibold text-gray-600 uppercase tracking-wide">
-                    #
-                  </span>
-                </th>
-                <th className="px-4 sm:px-6 py-4 text-left align-middle">
-                  <span className="text-xs font-semibold text-gray-600 uppercase tracking-wide">
-                    Chapter Title
-                  </span>
-                </th>
-                <th className="px-4 sm:px-6 py-4 text-left align-middle hidden md:table-cell">
-                  <span className="text-xs font-semibold text-gray-600 uppercase tracking-wide">
-                    Serial
-                  </span>
-                </th>
-                <th className="px-4 sm:px-6 py-4 text-left align-middle">
-                  <span className="text-xs font-semibold text-gray-600 uppercase tracking-wide">
-                    Contents
-                  </span>
-                </th>
-                <th className="px-4 sm:px-6 py-4 text-left align-middle">
-                  <span className="text-xs font-semibold text-gray-600 uppercase tracking-wide">
-                    Action
-                  </span>
-                </th>
-              </tr>
-            </thead>
+        <Button
+          onClick={handleAddNewChapter}
+          className="h-10 rounded-xl bg-primary px-5 text-white shadow-md shadow-violet-200 hover:bg-violet-700"
+        >
+          <Plus className="mr-2 h-4 w-4" />
+          New Chapter
+        </Button>
+      </div>
 
-            {/* Table Body */}
-            <tbody>
-              {isLoading ? (
-                <tr>
-                  <td colSpan={5} className="px-4 py-6 text-center text-gray-500">
-                    Loading chapters...
-                  </td>
-                </tr>
-              ) : chapters.length === 0 ? (
-                <tr>
-                  <td colSpan={5} className="px-4 py-6 text-center text-gray-500">
-                    {searchTerm ? "No chapters match your search." : "No chapters found for this course."}
-                  </td>
-                </tr>
-              ) : (
-                chapters.map((chapter, index) => (
-                  <tr
-                    key={chapter._id}
-                    className="border-b border-gray-200 hover:bg-gray-50 transition-colors"
-                  >
-                    <td className="px-4 sm:px-6 py-4 align-middle">
-                      <span className="text-sm font-semibold text-gray-900">
-                        {(resolvedCurrentPage - 1) * CHAPTERS_PER_PAGE + index + 1}
-                      </span>
-                    </td>
-                    <td className="px-4 sm:px-6 py-4 align-middle">
-                      <div className="flex items-center gap-3">
-                        <div className="flex items-center justify-center w-8 h-8 bg-violet-100 rounded text-primary shrink-0 mt-0.5">
-                          <Edit2 size={16} />
-                        </div>
-                        <div className="min-w-0">
-                          <p className="text-sm font-semibold text-gray-900 truncate">
-                            {chapter.title}
-                          </p>
-                          <p className="text-xs text-gray-600 truncate">
+      {/* Data Table Card */}
+      <Card className="overflow-hidden border-0 bg-white shadow-sm">
+        <form className="px-5 pt-2" onSubmit={handleSearchSubmit}>
+          <InputGroup className="w-full sm:w-96">
+            <InputGroupInput
+              placeholder="Search chapters..."
+              value={searchInput}
+              onChange={(e) => setSearchInput(e.target.value)}
+            />
+            <InputGroupAddon align="inline-end">
+              <Button size="icon" variant="ghost" className="h-8 w-8 shrink-0" type="submit">
+                <Search className="h-4 w-4" />
+              </Button>
+              {(searchInput || searchTerm) && (
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  className="h-8 w-8 shrink-0"
+                  type="button"
+                  onClick={clearSearch}
+                >
+                  <X className="h-4 w-4" />
+                </Button>
+              )}
+            </InputGroupAddon>
+          </InputGroup>
+        </form>
+
+        <Table>
+          <TableHeader>
+            <TableRow className="border-b border-gray-100 bg-gray-50/80 hover:bg-gray-50/80">
+              <TableHead className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-gray-500">
+                #
+              </TableHead>
+              <TableHead className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-gray-500">
+                Chapter Title
+              </TableHead>
+              <TableHead className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-gray-500">
+                Serial
+              </TableHead>
+              <TableHead className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-gray-500">
+                Contents
+              </TableHead>
+              <TableHead className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-gray-500">
+                Actions
+              </TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {isLoading ? (
+              <TableRow className="border-b border-gray-50">
+                <TableCell colSpan={5} className="px-4 py-16 text-center text-sm text-gray-500">
+                  Loading chapters...
+                </TableCell>
+              </TableRow>
+            ) : chapters.length === 0 ? (
+              <TableRow className="border-b border-gray-50">
+                <TableCell colSpan={5} className="px-4 py-16 text-center text-sm text-gray-500">
+                  {searchTerm
+                    ? "No chapters match your search."
+                    : "No chapters found for this course."}
+                </TableCell>
+              </TableRow>
+            ) : (
+              chapters.map((chapter, index) => (
+                <TableRow
+                  key={chapter._id}
+                  className="border-b border-gray-50 transition-colors hover:bg-violet-50/30"
+                >
+                  <TableCell className="px-4 py-3 text-center align-middle text-sm font-semibold text-gray-900">
+                    {(resolvedCurrentPage - 1) * CHAPTERS_PER_PAGE + index + 1}
+                  </TableCell>
+
+                  <TableCell className="px-4 py-3 text-center align-middle">
+                    <div className="flex items-center justify-center gap-3">
+                      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-violet-100 text-primary">
+                        <BookOpen className="h-4 w-4" />
+                      </div>
+                      <div className="text-left">
+                        <p className="text-sm font-semibold text-gray-900">
+                          {chapter.title}
+                        </p>
+                        {chapter.description && (
+                          <p className="max-w-xs truncate text-xs text-gray-500">
                             {chapter.description}
                           </p>
-                        </div>
+                        )}
                       </div>
-                    </td>
-                    <td className="px-4 sm:px-6 py-4 align-middle hidden md:table-cell">
-                      <span className="text-sm font-semibold text-gray-900">{chapter.serialNumber ?? "-"}</span>
-                    </td>
-                    <td className="px-4 sm:px-6 py-4 align-middle">
-                      <span className="inline-block px-3 py-1 bg-gray-100 text-gray-700 text-xs font-medium rounded">
-                        {chapter.contents?.length ?? 0} Lessons
-                      </span>
-                    </td>
-                    <td className="px-4 sm:px-6 py-4 align-middle">
-                      <div className="flex items-center justify-center gap-2">
-                        <button
-                          className="p-2 hover:bg-gray-100 rounded transition-colors text-gray-600"
-                          onClick={() => handleEditChapter(chapter._id)}
-                          type="button"
-                        >
-                          <Edit2 size={16} />
-                        </button>
-                        <ConfirmActionDialog
-                          title="Delete Chapter"
-                          description={`This will permanently delete ${chapter.title}.`}
-                          confirmLabel="Delete"
-                          loading={isDeletingChapter}
-                          loadingLabel="Deleting..."
-                          onConfirm={() => handleDeleteChapter(chapter._id)}
-                          trigger={
-                            <button className="p-2 hover:bg-red-50 rounded transition-colors text-red-600">
-                              <Trash2 size={16} />
-                            </button>
-                          }
-                        />
-                      </div>
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
+                    </div>
+                  </TableCell>
 
-        {/* Pagination */}
-        <div className="flex items-center justify-center border-t border-gray-100 px-5 py-4">
-          <Pagination className="w-auto mx-0">
+                  <TableCell className="px-4 py-3 text-center align-middle">
+                    <span className="text-sm font-medium text-gray-700">
+                      {chapter.serialNumber ?? "-"}
+                    </span>
+                  </TableCell>
+
+                  <TableCell className="px-4 py-3 text-center align-middle">
+                    <span className="inline-flex rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-700">
+                      {chapter.contents?.length ?? 0} Lessons
+                    </span>
+                  </TableCell>
+
+                  <TableCell className="px-4 py-3 text-center align-middle">
+                    <div className="flex items-center justify-center gap-2">
+                      <button
+                        className="flex h-8 w-8 items-center justify-center rounded-lg text-violet-500 transition-colors hover:bg-violet-50 hover:text-primary"
+                        onClick={() => handleEditChapter(chapter._id)}
+                        type="button"
+                        title="Edit chapter"
+                      >
+                        <Pencil className="h-4 w-4" />
+                      </button>
+                      <ConfirmActionDialog
+                        title="Delete Chapter"
+                        description={`This will permanently delete ${chapter.title}.`}
+                        confirmLabel="Delete"
+                        loading={isDeletingChapter}
+                        loadingLabel="Deleting..."
+                        onConfirm={() => handleDeleteChapter(chapter._id)}
+                        trigger={
+                          <button
+                            type="button"
+                            className="flex h-8 w-8 items-center justify-center rounded-lg text-red-400 transition-colors hover:bg-red-50 hover:text-red-600"
+                            title="Delete chapter"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </button>
+                        }
+                      />
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))
+            )}
+          </TableBody>
+        </Table>
+
+        {/* Pagination Footer */}
+        <div className="flex flex-col items-center justify-between gap-4 border-t border-gray-100 px-5 py-4 sm:flex-row">
+          <p className="text-sm text-gray-500">
+            Showing <span className="font-semibold text-gray-700">{chapters.length}</span> of{" "}
+            <span className="font-semibold text-gray-700">{totalChapters}</span> chapters.
+          </p>
+          <Pagination className="mx-0 w-auto">
             <PaginationContent>
               <PaginationItem>
                 <PaginationPrevious
                   href="#"
                   text=""
-                  className="h-8 w-8 p-0 rounded-lg border border-gray-200 hover:border-violet-300 hover:bg-violet-50"
+                  className={`flex h-8 w-8 items-center justify-center rounded-lg border border-gray-200 p-0 hover:border-violet-300 hover:bg-violet-50 ${
+                    resolvedCurrentPage === 1 ? "pointer-events-none opacity-50" : ""
+                  }`}
                   onClick={(event) => {
                     event.preventDefault();
                     setCurrentPage((page) => Math.max(1, page - 1));
@@ -352,7 +359,7 @@ export default function ChaptersManagement() {
                       }}
                       className={`h-8 w-8 rounded-lg text-sm ${
                         item === resolvedCurrentPage
-                          ? "bg-primary! text-white! border-primary! hover:bg-violet-700!"
+                          ? "border-primary! bg-primary! text-white! hover:bg-violet-700!"
                           : "border border-gray-200 hover:border-violet-300 hover:bg-violet-50"
                       }`}
                     >
@@ -365,7 +372,9 @@ export default function ChaptersManagement() {
                 <PaginationNext
                   href="#"
                   text=""
-                  className="h-8 w-8 p-0 rounded-lg border border-gray-200 hover:border-violet-300 hover:bg-violet-50"
+                  className={`flex h-8 w-8 items-center justify-center rounded-lg border border-gray-200 p-0 hover:border-violet-300 hover:bg-violet-50 ${
+                    resolvedCurrentPage === totalPages ? "pointer-events-none opacity-50" : ""
+                  }`}
                   onClick={(event) => {
                     event.preventDefault();
                     setCurrentPage((page) => Math.min(totalPages, page + 1));
@@ -375,7 +384,7 @@ export default function ChaptersManagement() {
             </PaginationContent>
           </Pagination>
         </div>
-      </div>
+      </Card>
     </div>
   );
 }
