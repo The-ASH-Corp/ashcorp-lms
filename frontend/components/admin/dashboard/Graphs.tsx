@@ -276,13 +276,15 @@ export default function Graphs() {
           <div>
             <CardTitle className="text-base font-semibold text-primary">Course & User Statistics</CardTitle>
           </div>
-          <div className="inline-flex rounded-xl bg-slate-100 p-1 text-sm text-slate-600">
+          <div className="inline-flex gap-1 rounded-xl border border-violet-100 bg-violet-50/60 p-1 text-sm">
             {(["Daily", "Monthly", "Yearly"] as const).map((tab) => (
               <button
                 key={tab}
                 type="button"
-                className={`rounded-lg px-4 py-1.5 font-medium transition ${
-                  range === tab ? "bg-sky-100 text-primary" : "hover:text-slate-900"
+                className={`cursor-pointer rounded-lg px-4 py-1.5 text-xs font-semibold transition-all duration-200 ${
+                  range === tab
+                    ? "bg-primary text-white shadow-sm shadow-violet-200"
+                    : "text-gray-600 hover:bg-violet-100/70 hover:text-violet-700"
                 }`}
                 onClick={() => setRange(tab)}
               >
@@ -372,7 +374,7 @@ export default function Graphs() {
                     {overviewStats.segments.map((segment) => (
                       <div key={segment.label} className="inline-flex items-center gap-2">
                         <span
-                          className="h-3 w-10 rounded-sm"
+                          className="h-2 w-10 rounded-sm"
                           style={{ backgroundColor: segment.color }}
                         />
                         <span>{segment.label}</span>

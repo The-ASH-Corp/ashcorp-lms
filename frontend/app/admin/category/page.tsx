@@ -20,7 +20,7 @@ import {
   PaginationPrevious,
   PaginationEllipsis,
 } from "@/components/ui/pagination";
-import { Pencil, Plus, Search, Check, X, Trash } from "lucide-react";
+import { Pencil, Plus, Search, Check, X, Trash2 } from "lucide-react";
 import {
   InputGroup,
   InputGroupAddon,
@@ -340,7 +340,7 @@ export default function CategoryPage() {
                               type="button"
                               title="Delete category"
                             >
-                              <Trash className="h-4 w-4" />
+                              <Trash2 className="h-4 w-4" />
                             </button>
                           }
                         />

@@ -20,7 +20,7 @@ import {
   PaginationPrevious,
   PaginationEllipsis,
 } from "@/components/ui/pagination";
-import { Ban, Plus, Search, Check, X, Trash, Pencil } from "lucide-react";
+import { Ban, Plus, Search, Check, X, Trash2, Pencil } from "lucide-react";
 import {
   InputGroup,
   InputGroupAddon,
@@ -394,7 +394,7 @@ export default function InstructorsPage() {
                               className="flex h-8 w-8 items-center justify-center rounded-lg text-red-400 transition-colors hover:bg-red-50 hover:text-red-600"
                               title="Delete instructor"
                             >
-                              <Trash className="h-4 w-4" />
+                              <Trash2 className="h-4 w-4" />
                             </button>
                           }
                         />

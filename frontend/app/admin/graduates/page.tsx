@@ -195,7 +195,7 @@ export default function GraduatesPage() {
                           }
                           className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer items-center rounded-full transition-colors focus:outline-hidden ${
                             graduate.featureOnLandingPage
-                              ? "bg-emerald-500"
+                              ? "bg-primary"
                               : "bg-gray-300 hover:bg-gray-400"
                           }`}
                           title={
