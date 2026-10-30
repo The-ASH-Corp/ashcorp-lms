@@ -272,16 +272,16 @@ export default function Graphs() {
   return (
     <div className="gap-6 xl:grid-cols-[1.6fr_1fr]">
       <Card className="mb-5 border-0 bg-white shadow-sm">
-        <CardHeader className="flex flex-col gap-4 border-b border-slate-200 p-5 sm:flex-row sm:items-start sm:justify-between">
+        <CardHeader className="flex flex-row gap-4 bg-[#] border-b border-slate-300 px-5 sm:items-center sm:justify-between">
           <div>
-            <CardTitle className="text-base font-semibold text-slate-900">Course & User Statistics</CardTitle>
+            <CardTitle className="text-base font-semibold text-primary">Course & User Statistics</CardTitle>
           </div>
           <div className="inline-flex rounded-xl bg-slate-100 p-1 text-sm text-slate-600">
             {(["Daily", "Monthly", "Yearly"] as const).map((tab) => (
               <button
                 key={tab}
                 type="button"
-                className={`rounded-lg px-4 py-2 font-medium transition ${
+                className={`rounded-lg px-4 py-1.5 font-medium transition ${
                   range === tab ? "bg-sky-100 text-primary" : "hover:text-slate-900"
                 }`}
                 onClick={() => setRange(tab)}
@@ -296,10 +296,10 @@ export default function Graphs() {
             <div className="flex h-56 items-center justify-center text-sm text-slate-500">Loading chart data...</div>
           ) : (
             <div className="grid gap-4 lg:grid-cols-[2fr_1fr]">
-              <div className="rounded-2xl border border-slate-200 p-4">
+              <div className="rounded-2xl border border-slate-300 p-4 bg-primary/10">
                 <h3 className="text-4xl font-semibold text-slate-900">{totalSalesCount}</h3>
-                <p className="mt-1 text-2xl text-slate-800">Course Sale Overview</p>
-                <div className="mt-4 border-t border-slate-200 pt-3">
+                <p className="mt-1 text-xl font-semibold tracking-tight text-indigo-950">Course Sale Overview</p>
+                <div className="mt-4 border-t border-slate-300 pt-3">
                   <svg viewBox={`0 0 ${chartGeometry.width} ${chartGeometry.height}`} className="h-90 w-full">
                     <defs>
                       <linearGradient id="salesAreaGradient" x1="0" x2="0" y1="0" y2="1">
@@ -318,7 +318,7 @@ export default function Graphs() {
                             y1={y}
                             x2={chartGeometry.padding.left + chartGeometry.graphWidth}
                             y2={y}
-                            stroke="#e2e8f0"
+                            stroke="#c8abe4ff"
                             strokeWidth="1"
                           />
                           <text
@@ -326,7 +326,7 @@ export default function Graphs() {
                             y={y + 4}
                             fontSize="11"
                             textAnchor="end"
-                            fill="#475569"
+                            fill="#c8abe4ff"
                           >
                             {value}
                           </text>
@@ -364,12 +364,12 @@ export default function Graphs() {
                 </div>
               </div>
 
-              <div className="rounded-2xl border border-slate-200 p-4">
+              <div className="rounded-2xl border border-slate-300 p-4 bg-primary/10">
                 <h3 className="text-4xl font-semibold text-slate-900">{totalOverviewUsers}</h3>
-                <p className="mt-1 text-2xl text-slate-800">New User Overview</p>
+                <p className="mt-1 text-xl font-semibold tracking-tight text-indigo-950">New User Overview</p>
 
                 <div className="mt-4 border-t border-slate-200 pt-3">
-                  <div className="mb-4 flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-base text-slate-500">
+                  <div className="mb-4 flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-sm text-slate-500">
                     {overviewStats.segments.map((segment) => (
                       <div key={segment.label} className="inline-flex items-center gap-2">
                         <span
@@ -409,7 +409,7 @@ export default function Graphs() {
             <CardTitle className="text-base font-semibold text-slate-900">Top Selling Course (Latest 5)</CardTitle>
             <p className="mt-1 text-sm text-slate-500">Latest performance by course.</p>
           </div>
-          <Link href="/admin/course" className="flex items-center gap-2 text-sm font-medium text-sky-600 transition hover:text-sky-700">
+          <Link href="/admin/course" className="flex items-center gap-2 text-sm font-medium text-primary transition hover:text-primary/80">
             View All Courses
             <ArrowRight className="h-4 w-4" />
           </Link>

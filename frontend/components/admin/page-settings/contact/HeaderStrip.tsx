@@ -22,7 +22,7 @@ export function HeaderStrip({
             <span className="inline-block size-1.5 rounded-full bg-violet-600 animate-ping" />
             Contact Us Management
           </div>
-          <h1 className="text-xl font-semibold text-slate-900 md:text-2xl">
+          <h1 className="text-2xl font-bold text-indigo-950 md:text-2xl">
             Contact Page Settings
           </h1>
           <p className="mt-1.5 max-w-3xl text-sm text-slate-600">
@@ -35,7 +35,7 @@ export function HeaderStrip({
             type="button"
             onClick={onPublish}
             disabled={isPublishing}
-            className="inline-flex items-center gap-2 rounded-xl bg-violet-600 px-5 py-2 text-sm font-semibold text-white shadow-[0_10px_24px_-14px_rgba(124,58,237,0.9)] transition hover:bg-violet-700 active:scale-[0.98] disabled:opacity-50 cursor-pointer"
+            className="whitespace-nowrap inline-flex items-center gap-2 rounded-xl bg-violet-600 px-5 py-2 text-sm font-semibold text-white shadow-[0_10px_24px_-14px_rgba(124,58,237,0.9)] transition hover:bg-violet-700 active:scale-[0.98] disabled:opacity-50 cursor-pointer"
           >
             {savedSuccessfully ? (
               <>

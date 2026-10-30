@@ -34,7 +34,7 @@ export default function PaymentsPage() {
   return (
     <div className="space-y-6">
       <div className="flex flex-col gap-2">
-        <h1 className="text-2xl font-bold text-gray-900">Payments</h1>
+        <h1 className="text-2xl font-bold text-indigo-950">Payments</h1>
         <p className="text-sm text-gray-500">
           A complete list of course purchases, payment amounts, and purchase dates.
         </p>

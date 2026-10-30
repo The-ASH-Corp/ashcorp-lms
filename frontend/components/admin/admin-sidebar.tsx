@@ -197,9 +197,12 @@ export function AdminSidebar({
                 <SidebarMenuItem key={item.title} className="relative">
                   <SidebarMenuButton
                     className={`w-full rounded-xl px-4 py-6 text-[13px] font-medium flex items-center justify-between transition-all duration-200 ${
+                      // isActive
+                      //   ? "bg-sky-100 text-sky-700"
+                      //   : "text-gray-600 hover:bg-violet-50 hover:text-violet-700"
                       isActive
-                        ? "bg-sky-100 text-sky-700"
-                        : "text-gray-600 hover:bg-violet-50 hover:text-violet-700"
+                          ? "bg-primary! text-white! shadow-md shadow-violet-200"
+                          : "text-gray-600 hover:bg-violet-50 hover:text-violet-700"
                     }`}
                     onClick={() =>
                       setOpen((s) => ({ ...s, [item.title]: !s[item.title] }))
@@ -220,7 +223,7 @@ export function AdminSidebar({
 
                   {/* Nested children */}
                   {isOpen && (
-                    <div className="mt-3 ml-8 flex flex-col gap-3">
+                    <div className="ml-8 flex flex-col gap-3">
                       {item.children.map((child: any, _idx: number) => {
                         if (child.children) {
                           const childActive = child.children.some((cc: any) =>
@@ -260,7 +263,7 @@ export function AdminSidebar({
                           <Link
                             key={child.title}
                             href={child.url}
-                            className={`block rounded-xl px-4 py-4 text-[13px] font-medium ${isChildActive ? "bg-sky-100 text-sky-700" : "bg-gray-50 text-gray-600"} transition-colors`}
+                            className={`block rounded-xl px-4 py-3 text-[13px] font-medium ${isChildActive ? "bg-sky-100 text-sky-700" : "bg-gray-50 text-gray-600"} transition-colors`}
                           >
                             {child.title}
                           </Link>

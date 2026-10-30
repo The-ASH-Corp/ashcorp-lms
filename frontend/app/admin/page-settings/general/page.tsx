@@ -75,7 +75,7 @@ export default function GeneralSettings() {
         {/* Header Strip */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 rounded-2xl bg-white p-5 border border-violet-100 shadow-sm">
           <div>
-            <h1 className="text-2xl font-bold text-slate-900 tracking-tight">General Settings</h1>
+            <h1 className="text-2xl font-bold text-indigo-950 tracking-tight">General Settings</h1>
             <p className="text-sm text-slate-500 mt-1">
               Manage your global company settings like the logo.
             </p>

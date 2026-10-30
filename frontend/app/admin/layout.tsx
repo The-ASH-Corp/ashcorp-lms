@@ -54,7 +54,7 @@ export default function AdminLayout({
 
           {/* Breadcrumb - hidden on Dashboard */}
           {!isDashboard && segments.length > 0 && (
-            <div className="px-6 pt-4">
+            <div className="px-6 pt-4 bg-primary/10">
               <Breadcrumb>
                 <BreadcrumbList>
                   <BreadcrumbItem>
@@ -97,7 +97,7 @@ export default function AdminLayout({
           )}
 
           {/* Page Content */}
-          <div className="flex flex-1 flex-col gap-4 p-6">
+          <div className="flex flex-1 flex-col gap-4 p-6 bg-primary/10 ">
             {children}
           </div>
         </SidebarInset>

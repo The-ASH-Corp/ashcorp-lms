@@ -63,11 +63,11 @@ export default function AuthSettingsPage() {
 
   return (
     <main className="min-h-screen rounded-3xl border border-violet-100 bg-white p-4 text-slate-900 sm:p-5 lg:p-6 relative z-0 overflow-hidden">
-      <div className="mx-auto max-w-7xl space-y-6 relative z-10">
+      <div className="mx-auto max-w-7xl space-y-6 relative ">
         {/* Header Strip */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 rounded-2xl bg-white p-5 border border-violet-100 shadow-sm">
           <div>
-            <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Auth Page Settings</h1>
+            <h1 className="text-2xl font-bold text-indigo-950 tracking-tight">Auth Page Settings</h1>
             <p className="text-sm text-slate-500 mt-1">
               Configure the appearance and content of the login and registration pages.
             </p>

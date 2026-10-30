@@ -17,7 +17,7 @@ export function HeaderStrip({
   return (
     <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
       <div>
-        <h1 className="text-xl font-bold text-slate-900 sm:text-2xl">
+        <h1 className="text-2xl font-bold text-indigo-950 sm:text-2xl">
           Terms & Conditions Settings
         </h1>
         <p className="mt-1 text-xs text-slate-500">

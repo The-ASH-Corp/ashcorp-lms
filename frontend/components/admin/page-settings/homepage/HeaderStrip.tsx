@@ -24,7 +24,7 @@ export function HeaderStrip({
             <span className="inline-block size-1.5 rounded-full bg-violet-600 animate-ping" />
             Real-Time Draft Sync
           </div>
-          <h1 className="text-xl font-semibold text-slate-900 md:text-2xl">
+          <h1 className="text-2xl font-bold text-indigo-950">
             Landing Page Settings
           </h1>
           <p className="mt-2 max-w-3xl text-sm text-slate-600">

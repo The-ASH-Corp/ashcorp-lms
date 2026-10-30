@@ -11,10 +11,7 @@ export default function AdminDashboardPage() {
     <div className="space-y-6">
       <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
         <div>
-          <p className="text-sm uppercase tracking-[0.24em] text-slate-500">
-            Dashboard
-          </p>
-          <h1 className="text-3xl font-semibold tracking-tight text-slate-900">
+          <h1 className="text-2xl font-semibold tracking-tight text-indigo-950">
             Admin Overview
           </h1>
           <p className="mt-2 max-w-2xl text-sm text-slate-600">

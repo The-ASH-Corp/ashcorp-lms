@@ -54,19 +54,8 @@ export function AuthSettingsCard({ settings, onChange }: AuthSettingsCardProps) 
 
   return (
     <div className="rounded-2xl border border-slate-200 bg-white shadow-sm overflow-hidden animate-in fade-in slide-in-from-bottom-2 duration-300 mb-6">
-      <div className="border-b border-slate-100 bg-slate-50/50 px-6 py-4 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="rounded-lg bg-violet-100 p-2 text-violet-600">
-            <LayoutTemplate className="h-5 w-5" />
-          </div>
-          <div>
-            <h2 className="text-lg font-semibold text-slate-800">Auth Pages Hero Settings</h2>
-            <p className="text-sm text-slate-500">Configure the image and text shown on the login and register pages.</p>
-          </div>
-        </div>
-      </div>
 
-      <div className="p-4">
+      <div className="px-4 py-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           {/* Left Column: Image */}
           <div>

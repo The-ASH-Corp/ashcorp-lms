@@ -22,7 +22,7 @@ export function HeaderStrip({
             <span className="inline-block size-1.5 rounded-full bg-violet-600 animate-ping" />
             About Page Orchestration
           </div>
-          <h1 className="text-xl font-semibold text-slate-900 md:text-2xl">
+          <h1 className="text-2xl font-bold text-indigo-950">
             About Page Settings
           </h1>
           <p className="mt-1.5 max-w-3xl text-sm text-slate-600">
