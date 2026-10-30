@@ -45,7 +45,7 @@ const navItems = [
 
   {
     title: "Course Management",
-    url: "/admin",
+    url: "/admin/course",
     icon: BookOpen,
     children: [
       { title: "Category", url: "/admin/category" },
@@ -105,6 +105,18 @@ const navItems = [
   },
 ];
 
+const hasMatchingChild = (item: any, currentPath: string): boolean => {
+  if (!item.children) return false;
+  return item.children.some((c: any) => {
+    if (c.children) {
+      return c.children.some(
+        (cc: any) => currentPath === cc.url || currentPath.startsWith(`${cc.url}/`),
+      );
+    }
+    return currentPath === c.url || currentPath.startsWith(`${c.url}/`);
+  });
+};
+
 export function AdminSidebar({
   ...props
 }: React.ComponentProps<typeof Sidebar>) {
@@ -116,18 +128,20 @@ export function AdminSidebar({
     const initial: Record<string, boolean> = {};
     navItems.forEach((it) => {
       if (it.children) {
-        // open group if current path starts with group url or any child matches
-        const matchChild = it.children.some((c: any) => {
-          if (c.children) {
-            return c.children.some((cc: any) => pathname.startsWith(cc.url));
-          }
-          return pathname.startsWith(c.url);
-        });
-        initial[it.title] = pathname.startsWith(it.url) || matchChild;
+        // open group if any child matches current path
+        initial[it.title] = hasMatchingChild(it, pathname);
       }
     });
     return initial;
   });
+
+  React.useEffect(() => {
+    navItems.forEach((it) => {
+      if (it.children && hasMatchingChild(it, pathname)) {
+        setOpen((prev) => (prev[it.title] ? prev : { ...prev, [it.title]: true }));
+      }
+    });
+  }, [pathname]);
 
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
@@ -164,10 +178,11 @@ export function AdminSidebar({
         <SidebarGroup>
           <SidebarMenu className="gap-1">
             {navItems.map((item: any) => {
-              const isActive =
-                item.url === "/admin"
+              const isActive = item.children
+                ? hasMatchingChild(item, pathname)
+                : item.url === "/admin"
                   ? pathname === "/admin"
-                  : pathname.startsWith(item.url);
+                  : pathname === item.url || pathname.startsWith(`${item.url}/`);
 
               if (!item.children) {
                 return (
@@ -191,7 +206,7 @@ export function AdminSidebar({
               }
 
               // Grouped item
-              const isOpen = !open[item.title];
+              const isOpen = !!open[item.title];
 
               return (
                 <SidebarMenuItem key={item.title} className="relative">
@@ -240,7 +255,7 @@ export function AdminSidebar({
                                 {child.children.map((cc: any) => {
                                   const isChildActive =
                                     pathname === cc.url ||
-                                    pathname.startsWith(cc.url);
+                                    pathname.startsWith(`${cc.url}/`);
                                   return (
                                     <Link
                                       key={cc.title}
@@ -258,7 +273,7 @@ export function AdminSidebar({
 
                         const isChildActive =
                           pathname === child.url ||
-                          pathname.startsWith(child.url);
+                          pathname.startsWith(`${child.url}/`);
                         return (
                           <Link
                             key={child.title}
