@@ -309,20 +309,16 @@ export default function CoursesPage() {
                       </div>
                     </TableCell>
 
-                    <TableCell>
-                      <div className="flex items-center gap-3 justify-center">
-                        <span className="text-sm font-semibold text-gray-900 w-10">
-                          {course.price}
-                        </span>
-                      </div>
+                    <TableCell className="text-center align-middle">
+                      <span className="text-sm font-semibold text-gray-900 whitespace-nowrap">
+                        {course.price}
+                      </span>
                     </TableCell>
 
-                    <TableCell>
-                      <div className="flex items-center gap-3 justify-center">
-                        <span className="text-sm font-semibold text-gray-900 w-10">
-                          {course.instructor || "N/A"}
-                        </span>
-                      </div>
+                    <TableCell className="text-center align-middle">
+                      <span className="text-sm font-semibold text-gray-900 whitespace-nowrap">
+                        {course.instructor || "N/A"}
+                      </span>
                     </TableCell>
 
                     {/* Status */}
