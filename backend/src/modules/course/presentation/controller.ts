@@ -95,6 +95,10 @@ export const createCourseController = async (
       category: String(body.category ?? ""),
       imageUrl: thumbnailUpload.url,
       videoUrl: introVideoUpload.url,
+      ratingSource: body.ratingSource === "admin" ? "admin" : "db",
+      staticRating: body.staticRating !== undefined && body.staticRating !== "" ? Number(body.staticRating) : 0,
+      staticRatingCount: body.staticRatingCount !== undefined && body.staticRatingCount !== "" ? Number(body.staticRatingCount) : 0,
+      staticEnrolledCount: body.staticEnrolledCount !== undefined && body.staticEnrolledCount !== "" ? Number(body.staticEnrolledCount) : 0,
     };
 
     const course = await createCourseUseCase.execute(courseData);
@@ -170,6 +174,10 @@ export const updateCourseController = async (
       imageUrl,
       videoUrl,
       isPublished: typeof body.isPublished === "string" ? body.isPublished === "true" : undefined,
+      ratingSource: typeof body.ratingSource === "string" ? (body.ratingSource as "db" | "admin") : undefined,
+      staticRating: body.staticRating !== undefined && body.staticRating !== "" ? Number(body.staticRating) : undefined,
+      staticRatingCount: body.staticRatingCount !== undefined && body.staticRatingCount !== "" ? Number(body.staticRatingCount) : undefined,
+      staticEnrolledCount: body.staticEnrolledCount !== undefined && body.staticEnrolledCount !== "" ? Number(body.staticEnrolledCount) : undefined,
     });
 
     const serializedCourse = await serializeCourse(course);
@@ -253,27 +261,83 @@ export const addReviewController = async (
   }
 };
 
+export const updateCourseRatingController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
+  try {
+    const id = String(req.params.id);
+    const body = req.body as {
+      ratingSource?: "db" | "admin";
+      staticRating?: number | string;
+      staticRatingCount?: number | string;
+      staticEnrolledCount?: number | string;
+    };
+
+    const updateData: Record<string, unknown> = {};
+    if (body.ratingSource === "db" || body.ratingSource === "admin") {
+      updateData.ratingSource = body.ratingSource;
+    }
+    if (body.staticRating !== undefined && body.staticRating !== "") {
+      const parsedRating = Number(body.staticRating);
+      updateData.staticRating = Math.max(0, Math.min(5, Number.isFinite(parsedRating) ? parsedRating : 0));
+    }
+    if (body.staticRatingCount !== undefined && body.staticRatingCount !== "") {
+      const parsedCount = Number(body.staticRatingCount);
+      updateData.staticRatingCount = Math.max(0, Number.isFinite(parsedCount) ? parsedCount : 0);
+    }
+    if (body.staticEnrolledCount !== undefined && body.staticEnrolledCount !== "") {
+      const parsedEnrolled = Number(body.staticEnrolledCount);
+      updateData.staticEnrolledCount = Math.max(0, Number.isFinite(parsedEnrolled) ? parsedEnrolled : 0);
+    }
+
+    const course = await CourseModel.findByIdAndUpdate(id, updateData, { new: true });
+    if (!course) {
+      throw new AppError("Course not found", 404);
+    }
+
+    const serializedCourse = await serializeCourse(course);
+
+    res.status(200).json({
+      success: true,
+      message: "Course rating settings updated successfully",
+      data: serializedCourse,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 export const getLandingStatsController = async (
   _req: Request,
   res: Response,
   next: NextFunction,
 ): Promise<void> => {
   try {
-    const [studentsGlobally, expertMentors, ratingResult] = await Promise.all([
+    const [studentsGlobally, expertMentors, allCourses] = await Promise.all([
       UserModel.countDocuments({ role: "user" }),
       InstructorModel.countDocuments({ status: "Active" }),
-      CourseModel.aggregate<{ avgRating: number }>([
-        { $unwind: "$rating" },
-        {
-          $group: {
-            _id: null,
-            avgRating: { $avg: "$rating.rating" },
-          },
-        },
-      ]),
+      CourseModel.find({}, "rating ratingSource staticRating"),
     ]);
 
-    const avgRating = ratingResult[0]?.avgRating ?? 0;
+    let totalScore = 0;
+    let countedCourses = 0;
+
+    for (const c of allCourses) {
+      if (c.ratingSource === "admin" && typeof c.staticRating === "number" && c.staticRating > 0) {
+        totalScore += c.staticRating;
+        countedCourses++;
+      } else if (Array.isArray(c.rating) && c.rating.length > 0) {
+        const ratingArray = c.rating as unknown as Array<{ rating?: number }>;
+        const ratingSum = ratingArray.reduce((sum: number, r) => sum + Number(r?.rating || 0), 0);
+        const avg = ratingSum / c.rating.length;
+        totalScore += avg;
+        countedCourses++;
+      }
+    }
+
+    const avgRating = countedCourses > 0 ? totalScore / countedCourses : 0;
     const satisfactionRate = Number(Math.max(0, Math.min(5, avgRating)).toFixed(1));
 
     res.status(200).json({

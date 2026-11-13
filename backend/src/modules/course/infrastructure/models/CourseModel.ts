@@ -69,6 +69,23 @@ const courseSchema = new mongoose.Schema(
         },
       },
     ],
+    ratingSource: {
+      type: String,
+      enum: ["db", "admin"],
+      default: "db",
+    },
+    staticRating: {
+      type: Number,
+      default: 0,
+    },
+    staticRatingCount: {
+      type: Number,
+      default: 0,
+    },
+    staticEnrolledCount: {
+      type: Number,
+      default: 0,
+    },
   },
   { timestamps: true },
 );

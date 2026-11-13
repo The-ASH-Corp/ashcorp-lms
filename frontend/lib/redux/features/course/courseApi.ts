@@ -112,6 +112,25 @@ export const courseApi = api.injectEndpoints({
       }),
       invalidatesTags: ["Course"],
     }),
+
+    updateCourseRating: builder.mutation<
+      Course,
+      {
+        id: string;
+        ratingSource: "db" | "admin";
+        staticRating: number;
+        staticRatingCount?: number;
+        staticEnrolledCount?: number;
+      }
+    >({
+      query: ({ id, ...body }) => ({
+        url: `/course/${id}/rating`,
+        method: "PATCH",
+        body,
+      }),
+      transformResponse: (response: singleCourseResponse) => response.data,
+      invalidatesTags: ["Course"],
+    }),
   }),
 });
 
@@ -125,4 +144,5 @@ export const {
   useDeleteCourseMutation,
   useMakeCourseFreeAndPublishedMutation,
   useAddReviewMutation,
+  useUpdateCourseRatingMutation,
 } = courseApi;

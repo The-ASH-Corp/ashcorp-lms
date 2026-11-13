@@ -42,6 +42,16 @@ export class CreateCourseUseCase {
             courseData.videoUrl,
             new Date(),
             new Date(),
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            courseData.ratingSource ?? "db",
+            courseData.staticRating ?? 0,
+            courseData.staticRatingCount ?? 0,
+            courseData.staticEnrolledCount ?? 0,
         );
 
         return this.courseRepository.create(course);

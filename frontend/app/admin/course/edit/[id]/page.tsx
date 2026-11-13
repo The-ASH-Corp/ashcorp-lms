@@ -97,6 +97,12 @@ export default function EditCoursePage() {
     isPublished: false,
   });
 
+  const [ratingConfig, setRatingConfig] = useState({
+    ratingSource: "db" as "db" | "admin",
+    staticRating: 0,
+    staticRatingCount: 0,
+  });
+
   const [sections, setSections] = useState([{ id: 1, title: "About the Course", content: "" }]);
   const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
   const [thumbnailPreview, setThumbnailPreview] = useState<string | null>(null);
@@ -133,6 +139,11 @@ export default function EditCoursePage() {
 
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setFormData(nextFormData);
+    setRatingConfig({
+      ratingSource: (courseData.ratingSource ?? "db") as "db" | "admin",
+      staticRating: courseData.staticRating ?? 0,
+      staticRatingCount: courseData.staticRatingCount ?? 0,
+    });
     setThumbnailPreview(courseData.imageUrl ?? null);
     setVideoName(courseData.videoUrl ?? null);
     setSections((prev) =>
@@ -221,6 +232,9 @@ export default function EditCoursePage() {
     formPayload.append("instructor", selectedInstructor);
     formPayload.append("category", selectedCategory);
     formPayload.append("isPublished", String(formData.isPublished));
+    formPayload.append("ratingSource", ratingConfig.ratingSource);
+    formPayload.append("staticRating", String(ratingConfig.staticRating));
+    formPayload.append("staticRatingCount", String(ratingConfig.staticRatingCount ?? 0));
 
     if (thumbnailFile) {
       formPayload.append("thumbnail", thumbnailFile);
