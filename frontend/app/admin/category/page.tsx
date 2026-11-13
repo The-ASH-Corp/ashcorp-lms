@@ -275,28 +275,28 @@ export default function CategoryPage() {
                       </div>
                     </TableCell>
 
-                    <TableCell>
-                      <div className="flex items-center gap-3 min-w-30 justify-center">
-                        <span className="text-sm font-semibold text-gray-900 w-10">
-                          {category.categoryName}
-                        </span>
-                      </div>
+                    <TableCell className="text-center align-middle px-4">
+                      <span className="text-sm font-semibold text-gray-900 whitespace-nowrap">
+                        {category.categoryName}
+                      </span>
                     </TableCell>
 
                     {/* Featured */}
-                    <TableCell className="text-center align-middle">
-                      <div
-                        className={
-                          category.isFeatured
-                            ? "bg-green-300 w-20 h-10 rounded-xl flex justify-center items-center "
-                            : ""
-                        }
-                      >
-                        {category.isFeatured ? (
-                          <Check className="h-4 w-4 text-green-600" />
-                        ) : (
-                          <X className="h-4 w-4 text-amber-600" />
-                        )}
+                    <TableCell className="text-center align-middle px-4">
+                      <div className="flex items-center justify-center">
+                        <div
+                          className={
+                            category.isFeatured
+                              ? "bg-green-300 w-16 h-9 rounded-xl flex justify-center items-center shadow-xs"
+                              : "bg-amber-100 w-16 h-9 rounded-xl flex justify-center items-center shadow-xs"
+                          }
+                        >
+                          {category.isFeatured ? (
+                            <Check className="h-4 w-4 text-green-700 stroke-[2.5]" />
+                          ) : (
+                            <X className="h-4 w-4 text-amber-700 stroke-[2.5]" />
+                          )}
+                        </div>
                       </div>
                     </TableCell>
 

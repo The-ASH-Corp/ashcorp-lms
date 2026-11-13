@@ -291,65 +291,61 @@ export default function InstructorsPage() {
                       key={instructor._id}
                       className="hover:bg-violet-50/30 transition-colors border-b border-gray-50"
                     >
-                      <TableCell>
-                        <div className="flex items-center gap-3 justify-center">
-                          <p className="text-sm font-semibold text-gray-900">
-                            {index + 1 + (currentPage - 1) * PAGE_SIZE}
-                          </p>
+                      <TableCell className="text-center align-middle">
+                        <span className="text-sm font-semibold text-gray-900">
+                          {index + 1 + (currentPage - 1) * PAGE_SIZE}
+                        </span>
+                      </TableCell>
+
+                      <TableCell className="text-center align-middle">
+                        <div className="flex items-center justify-center">
+                          <Image
+                            width={80}
+                            height={80}
+                            src={getInstructorImageUrl(instructor.profileImage)}
+                            alt={instructor.name || "Instructor image"}
+                            className="h-16 w-16 rounded-xl object-cover border border-gray-100 shadow-xs"
+                            unoptimized
+                          />
                         </div>
                       </TableCell>
 
-                    <TableCell>
-                      <div className="flex items-center gap-3 justify-center ">
-                        <Image
-                          width={100}
-                          height={100}
-                          src={getInstructorImageUrl(instructor.profileImage)}
-                          alt={instructor.name || "Instructor image"}
-                          className="h-24 w-24 rounded-md object-cover"
-                          unoptimized
-                        />
-                      </div>
-                    </TableCell>
-
-                    <TableCell>
-                      <div className="flex items-center gap-3 min-w-30 justify-center">
-                        <span className="text-sm font-semibold text-gray-900 w-10">
+                      <TableCell className="text-center align-middle px-4">
+                        <span className="text-sm font-semibold text-gray-900 whitespace-nowrap">
                           {instructor.name}
                         </span>
-                      </div>
-                    </TableCell>
+                      </TableCell>
 
-                    <TableCell>
-                        <div className="flex items-center gap-3 min-w-30 justify-center">
-                            <span className="text-sm font-semibold text-gray-900 w-10">
-                                {instructor.email}
-                            </span>
+                      <TableCell className="text-center align-middle px-4">
+                        <span className="text-sm text-gray-600 whitespace-nowrap">
+                          {instructor.email}
+                        </span>
+                      </TableCell>
+
+                      <TableCell className="text-center align-middle px-4">
+                        <span className="text-sm font-medium text-gray-800 whitespace-nowrap">
+                          {instructor.instructorTitle || "—"}
+                        </span>
+                      </TableCell>
+
+                      {/* Featured */}
+                      <TableCell className="text-center align-middle px-4">
+                        <div className="flex items-center justify-center">
+                          <div
+                            className={
+                              instructor.isFeatured
+                                ? "bg-green-300 w-16 h-9 rounded-xl flex justify-center items-center shadow-xs"
+                                : "bg-red-200 w-16 h-9 rounded-xl flex justify-center items-center shadow-xs"
+                            }
+                          >
+                            {instructor.isFeatured ? (
+                              <Check className="h-4 w-4 text-green-700 stroke-[2.5]" />
+                            ) : (
+                              <X className="h-4 w-4 text-red-600 stroke-[2.5]" />
+                            )}
+                          </div>
                         </div>
-                    </TableCell>
-                    <TableCell>
-                        <div className="flex items-center gap-3 min-w-30 justify-center">
-                            <span className="text-sm font-semibold text-gray-900 w-10">
-                                {instructor.instructorTitle}
-                            </span>
-                        </div>
-                    </TableCell>
-                    {/* Featured */}
-                    <TableCell className="text-center align-middle">
-                      <div
-                        className={
-                          instructor.isFeatured
-                            ? "bg-green-300 w-20 h-10 rounded-xl flex justify-center items-center "
-                            : "bg-red-300 w-20 h-10 rounded-xl flex justify-center items-center"
-                        }
-                      >
-                        {instructor.isFeatured ? (
-                          <Check className="h-4 w-4 text-green-600" />
-                        ) : (
-                          <X className="h-4 w-4 text-red-600" />
-                        )}
-                      </div>
-                    </TableCell>
+                      </TableCell>
 
                     {/* Status */}
                     <TableCell className="text-center align-middle">
