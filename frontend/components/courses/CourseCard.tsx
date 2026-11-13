@@ -18,17 +18,32 @@ interface CourseCardProps {
 
 export default function CourseCard({ course }: CourseCardProps) {
   const renderStars = (rating: number) => {
-    return Array.from({ length: 5 }).map((_, i) => (
-      <Star
-        key={i}
-        size={14}
-        className={
-          i < Math.floor(rating)
-            ? "fill-primary text-primary"
-            : "text-gray-300"
-        }
-      />
-    ));
+    return Array.from({ length: 5 }).map((_, i) => {
+      const fillPercentage = Math.max(
+        0,
+        Math.min(100, Math.round((rating - i) * 100)),
+      );
+
+      return (
+        <span key={i} className="relative inline-block size-3.5 shrink-0">
+          {/* Background empty star */}
+          <Star size={14} className="text-gray-300" />
+
+          {/* Foreground star filled with exact point data */}
+          {fillPercentage > 0 && (
+            <span
+              className="absolute inset-0 overflow-hidden pointer-events-none"
+              style={{ width: `${fillPercentage}%` }}
+            >
+              <Star
+                size={14}
+                className="fill-primary text-primary shrink-0 min-w-[14px]"
+              />
+            </span>
+          )}
+        </span>
+      );
+    });
   };
 
   return (
@@ -54,8 +69,11 @@ export default function CourseCard({ course }: CourseCardProps) {
         </p>
 
         {/* Rating */}
-        <div className="flex flex-wrap items-center gap-2 mb-3 sm:mb-4">
+        <div className="flex flex-wrap items-center gap-1.5 mb-3 sm:mb-4">
           <div className="flex gap-0.5">{renderStars(course.rating ?? 0)}</div>
+          <span className="text-xs font-semibold text-gray-800">
+            {Number(course.rating ?? 0).toFixed(1)}
+          </span>
           <span className="text-xs text-gray-600">
             ({course.reviews ?? "0 Reviews"})
           </span>

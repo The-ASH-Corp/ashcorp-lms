@@ -52,18 +52,29 @@ export function CourseRatingConfigCard({
   };
 
   const renderStars = (rating: number) => {
-    return Array.from({ length: 5 }).map((_, i) => (
-      <Star
-        key={i}
-        className={`size-4 ${
-          i < Math.floor(rating)
-            ? "fill-amber-400 text-amber-400"
-            : i < rating
-            ? "fill-amber-400/50 text-amber-400"
-            : "text-slate-200"
-        }`}
-      />
-    ));
+    return Array.from({ length: 5 }).map((_, i) => {
+      const fillPercentage = Math.max(
+        0,
+        Math.min(100, Math.round((rating - i) * 100)),
+      );
+
+      return (
+        <span key={i} className="relative inline-block size-4 shrink-0">
+          <Star size={16} className="text-slate-200" />
+          {fillPercentage > 0 && (
+            <span
+              className="absolute inset-0 overflow-hidden pointer-events-none"
+              style={{ width: `${fillPercentage}%` }}
+            >
+              <Star
+                size={16}
+                className="fill-amber-400 text-amber-400 shrink-0 min-w-[16px]"
+              />
+            </span>
+          )}
+        </span>
+      );
+    });
   };
 
   const previewRating = isFrontendActive ? value.staticRating : dbRating;

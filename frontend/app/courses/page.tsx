@@ -62,8 +62,17 @@ type SortKey =
   | "Top Rated";
 
 const getCourseRating = (course: Course) => {
-  const rating = course.rating?.[0]?.rating ?? 0;
-  return Number.isFinite(rating) ? rating : 0;
+  if (course.ratingSource === "admin") {
+    return Number(course.staticRating ?? 0);
+  }
+  if (typeof course.effectiveRating === "number") {
+    return course.effectiveRating;
+  }
+  if (Array.isArray(course.rating) && course.rating.length > 0) {
+    const sum = course.rating.reduce((acc, item) => acc + (item.rating || 0), 0);
+    return sum / course.rating.length;
+  }
+  return 0;
 };
 
 const normalizeText = (value: string) =>
