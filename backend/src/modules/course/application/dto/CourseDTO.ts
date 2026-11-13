@@ -8,6 +8,10 @@ export interface CourseRequestDTO {
   imageUrl: string;
   videoUrl: string;
   chapters?: string[];
+  ratingSource?: "db" | "admin";
+  staticRating?: number;
+  staticRatingCount?: number;
+  staticEnrolledCount?: number;
 }
 
 interface CourseRatingDTO {
@@ -35,6 +39,13 @@ export interface CourseResponseDTO {
   isPublished: boolean;
   status: string;
   rating: CourseRatingDTO[];
+  ratingSource?: "db" | "admin";
+  staticRating?: number;
+  staticRatingCount?: number;
+  staticEnrolledCount?: number;
+  effectiveRating?: number;
+  totalReviews?: number;
+  effectiveEnrolledCount?: number;
   createdAt: Date;
   updatedAt: Date;
 }

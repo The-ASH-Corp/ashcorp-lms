@@ -67,7 +67,10 @@ export default function TrendingWorkshops() {
   const sortedAllCourses = [...courses]
     .map((course) => ({
       ...course,
-      enrollmentCount: Number(course.enrolledStudents?.length ?? 0),
+      enrollmentCount:
+        course.ratingSource === "admin" && typeof course.staticEnrolledCount === "number" && course.staticEnrolledCount > 0
+          ? course.staticEnrolledCount
+          : (course.effectiveEnrolledCount ?? Number(course.enrolledStudents?.length ?? 0)),
     }))
     .sort((a, b) => {
       if (b.enrollmentCount !== a.enrollmentCount) {
@@ -157,10 +160,14 @@ export default function TrendingWorkshops() {
             viewport={{ once: true, amount: 0.22 }}
           >
             {displayedCourses.map((course) => {
-              const averageRating = course.rating?.length
+              const isStatic = course.ratingSource === "admin";
+              const dbAverageRating = course.rating?.length
                 ? course.rating.reduce((sum, item) => sum + item.rating, 0) /
                   course.rating.length
                 : 0;
+              const averageRating = isStatic
+                ? Number(course.staticRating ?? 0)
+                : (course.effectiveRating ?? dbAverageRating);
 
               const courseImage = getCourseImageUrl(course.imageUrl);
               const purchased = isPurchased(course.id);

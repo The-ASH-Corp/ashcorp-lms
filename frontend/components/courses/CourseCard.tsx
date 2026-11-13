@@ -7,6 +7,7 @@ interface CourseCardCourse extends Omit<Course, "offerPrice" | "rating"> {
   offerPrice?: string | number;
   rating?: number;
   reviews?: string;
+  enrolledText?: string;
   badge?: string;
   badgeColor?: string;
 }
@@ -53,11 +54,19 @@ export default function CourseCard({ course }: CourseCardProps) {
         </p>
 
         {/* Rating */}
-        <div className="flex items-center gap-2 mb-3 sm:mb-4">
+        <div className="flex flex-wrap items-center gap-2 mb-3 sm:mb-4">
           <div className="flex gap-0.5">{renderStars(course.rating ?? 0)}</div>
           <span className="text-xs text-gray-600">
             ({course.reviews ?? "0 Reviews"})
           </span>
+          {course.enrolledText && (
+            <>
+              <span className="text-xs text-gray-300">•</span>
+              <span className="text-xs font-medium text-gray-600">
+                {course.enrolledText}
+              </span>
+            </>
+          )}
         </div>
 
         {/* Price and Button */}

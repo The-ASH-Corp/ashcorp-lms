@@ -15,6 +15,10 @@ export interface UpdateCoursePayload {
   imageUrl?: string;
   videoUrl?: string;
   isPublished?: boolean;
+  ratingSource?: "db" | "admin";
+  staticRating?: number;
+  staticRatingCount?: number;
+  staticEnrolledCount?: number;
 }
 
 export class UpdateCourseUseCase {
@@ -89,6 +93,22 @@ export class UpdateCourseUseCase {
 
     if (courseData.isPublished !== undefined) {
       updatePayload.isPublished = courseData.isPublished;
+    }
+
+    if (courseData.ratingSource !== undefined) {
+      updatePayload.ratingSource = courseData.ratingSource;
+    }
+
+    if (courseData.staticRating !== undefined) {
+      updatePayload.staticRating = courseData.staticRating;
+    }
+
+    if (courseData.staticRatingCount !== undefined) {
+      updatePayload.staticRatingCount = courseData.staticRatingCount;
+    }
+
+    if (courseData.staticEnrolledCount !== undefined) {
+      updatePayload.staticEnrolledCount = courseData.staticEnrolledCount;
     }
 
     return this.courseRepository.updateCourse(id, updatePayload);

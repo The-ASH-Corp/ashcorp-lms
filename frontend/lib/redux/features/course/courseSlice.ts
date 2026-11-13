@@ -39,6 +39,13 @@ export interface Course {
   isPublished: boolean;
   status: string;
   rating: CourseRating[];
+  ratingSource?: "db" | "admin";
+  staticRating?: number;
+  staticRatingCount?: number;
+  staticEnrolledCount?: number;
+  effectiveRating?: number;
+  totalReviews?: number;
+  effectiveEnrolledCount?: number;
   createdAt: string;
   updatedAt: string;
   instructorTitle?: string;

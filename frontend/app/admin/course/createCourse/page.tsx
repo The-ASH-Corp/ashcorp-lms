@@ -40,6 +40,12 @@ export default function CreateCoursePage() {
     isPublished: false,
   });
 
+  const [ratingConfig] = useState({
+    ratingSource: "db" as "db" | "admin",
+    staticRating: 0,
+    staticRatingCount: 0,
+  });
+
   const [sections, setSections] = useState([
     { id: 1, title: "About the Course", content: "" },
   ]);
@@ -163,6 +169,9 @@ export default function CreateCoursePage() {
     );
     formPayload.append("thumbnail", thumbnailFile);
     formPayload.append("introVideo", videoFile);
+    formPayload.append("ratingSource", ratingConfig.ratingSource);
+    formPayload.append("staticRating", String(ratingConfig.staticRating));
+    formPayload.append("staticRatingCount", String(ratingConfig.staticRatingCount ?? 0));
 
     const uploadUrl = apiBaseUrl
       ? `${apiBaseUrl.replace(/\/+$/, "")}/course/create`

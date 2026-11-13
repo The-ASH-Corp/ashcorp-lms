@@ -95,6 +95,7 @@ const navItems = [
     children: [
       { title: "General", url: "/admin/page-settings/general" },
       { title: "Homepage", url: "/admin/page-settings/homepage" },
+      { title: "Course Rating", url: "/admin/page-settings/course-rating" },
       { title: "About", url: "/admin/page-settings/about" },
       { title: "Contact", url: "/admin/page-settings/contact" },
       { title: "Privacy Policy", url: "/admin/page-settings/privacy-policy" },

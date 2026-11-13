@@ -38,6 +38,32 @@ export const serializeCourse = async (course: any): Promise<CourseResponseDTO> =
     }),
   );
 
+  const dbRatingsCount = ratings.length;
+  const dbAvgRating = dbRatingsCount > 0
+    ? Number((ratings.reduce((acc: number, r: any) => acc + (r.rating || 0), 0) / dbRatingsCount).toFixed(1))
+    : 0;
+
+  const ratingSource = (rawCourse?.ratingSource === "admin" ? "admin" : "db") as "db" | "admin";
+  const staticRating = Number(rawCourse?.staticRating ?? 0);
+  const staticRatingCount = Number(rawCourse?.staticRatingCount ?? 0);
+  const staticEnrolledCount = Number(rawCourse?.staticEnrolledCount ?? 0);
+  const dbEnrolledStudents = Array.isArray(rawCourse?.enrolledStudents)
+    ? rawCourse.enrolledStudents.map((studentId: unknown) => String(studentId))
+    : [];
+  const dbEnrolledCount = dbEnrolledStudents.length;
+
+  const effectiveRating = ratingSource === "admin"
+    ? staticRating
+    : dbAvgRating;
+
+  const totalReviews = ratingSource === "admin"
+    ? (staticRatingCount > 0 ? staticRatingCount : dbRatingsCount)
+    : dbRatingsCount;
+
+  const effectiveEnrolledCount = ratingSource === "admin"
+    ? (staticEnrolledCount > 0 ? staticEnrolledCount : dbEnrolledCount)
+    : dbEnrolledCount;
+
   return {
     id: String(rawCourse?._id ?? rawCourse?.id ?? ""),
     title: String(rawCourse?.title ?? ""),
@@ -51,14 +77,17 @@ export const serializeCourse = async (course: any): Promise<CourseResponseDTO> =
     imageUrl: String(rawCourse?.imageUrl ?? ""),
     videoUrl: String(rawCourse?.videoUrl ?? ""),
     chapters: Array.isArray(rawCourse?.chapters) ? rawCourse.chapters : [],
-    enrolledStudents: Array.isArray(rawCourse?.enrolledStudents)
-      ? rawCourse.enrolledStudents.map((studentId: unknown) =>
-          String(studentId),
-        )
-      : [],
+    enrolledStudents: dbEnrolledStudents,
     isPublished: Boolean(rawCourse?.isPublished ?? false),
     status: String(rawCourse?.status ?? "Active"),
     rating: ratings,
+    ratingSource,
+    staticRating,
+    staticRatingCount,
+    staticEnrolledCount,
+    effectiveRating,
+    totalReviews,
+    effectiveEnrolledCount,
     createdAt: rawCourse?.createdAt
       ? new Date(rawCourse.createdAt)
       : new Date(),

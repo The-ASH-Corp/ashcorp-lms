@@ -203,14 +203,29 @@ export default function CourseDetail() {
     }
   };
 
-  const averageRating = course?.rating?.length
-    ? course.rating.reduce((sum, item) => sum + item.rating, 0) /
-      course.rating.length
-    : 0;
+  const isStaticRating = course?.ratingSource === "admin";
+  const dbRatingsCount = course?.rating?.length ?? 0;
+  const dbAverageRating =
+    dbRatingsCount && course?.rating
+      ? course.rating.reduce((sum, item) => sum + item.rating, 0) / dbRatingsCount
+      : 0;
 
-    const formattedRating = averageRating.toFixed(1);
+  const averageRating = isStaticRating
+    ? Number(course?.staticRating ?? 0)
+    : (course?.effectiveRating ?? dbAverageRating);
 
-    const [showAllReviews, setShowAllReviews] = useState(false);
+  const totalRatingCount = isStaticRating
+    ? Number(course?.staticRatingCount ?? 0)
+    : (course?.totalReviews ?? dbRatingsCount);
+
+  const dbEnrolledCount = course?.enrolledStudents?.length ?? 0;
+  const enrolledCount = isStaticRating
+    ? (course?.staticEnrolledCount ?? course?.effectiveEnrolledCount ?? dbEnrolledCount)
+    : (course?.effectiveEnrolledCount ?? dbEnrolledCount);
+
+  const formattedRating = averageRating.toFixed(1);
+
+  const [showAllReviews, setShowAllReviews] = useState(false);
 
     const visibleReviews = showAllReviews
       ? (course?.rating ?? [])
@@ -272,12 +287,12 @@ export default function CourseDetail() {
                     {formattedRating}
                   </span>
                   <span className="text-gray-600">
-                    ({course?.rating?.length} Ratings)
+                    ({totalRatingCount} Ratings)
                   </span>
                 </div>
                 <div className="flex items-center gap-2 text-gray-600">
                   <Users size={18} />
-                  <span>{course?.enrolledStudents.length} Enrolled</span>
+                  <span>{enrolledCount} Enrolled</span>
                 </div>
               </div>
 

@@ -28,5 +28,9 @@ export class Course {
         review: string;
         createdAt: Date;
       }[],
+    public ratingSource?: "db" | "admin",
+    public staticRating?: number,
+    public staticRatingCount?: number,
+    public staticEnrolledCount?: number,
   ) {}
 }

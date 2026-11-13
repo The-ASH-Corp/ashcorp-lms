@@ -629,30 +629,36 @@ function CoursesContent() {
               <>
                 {/* Course Grid */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 mb-10 lg:mb-12">
-                  {filteredCourses.map(
-                    (course) => (
+                  {filteredCourses.map((course) => {
+                    const isStatic = course.ratingSource === "admin";
+                    const dbAvgRating = course.rating?.length
+                      ? course.rating.reduce((sum, item) => sum + item.rating, 0) /
+                        course.rating.length
+                      : 0;
+                    const effectiveRating = isStatic
+                      ? Number(course.staticRating ?? 0)
+                      : (course.effectiveRating ?? dbAvgRating);
+
+                    const effectiveReviewsCount = isStatic
+                      ? Number(course.staticRatingCount ?? 0)
+                      : (course.totalReviews ?? (course.rating?.length ?? 0));
+
+                    const effectiveEnrolledCount = isStatic
+                      ? Number(course.staticEnrolledCount ?? 0)
+                      : (course.effectiveEnrolledCount ?? (course.enrolledStudents?.length ?? 0));
+
+                    return (
                       <CourseCard
-                        key={
-                          course.id
-                        }
+                        key={course.id}
                         course={{
                           ...course,
-
-                          rating:
-                            course
-                              .rating?.[0]
-                              ?.rating ??
-                            0,
-
-                          reviews:
-                            course.rating
-                              ?.length
-                              ? `${course.rating.length} Reviews`
-                              : "0 Reviews",
+                          rating: effectiveRating,
+                          reviews: `${effectiveReviewsCount} Reviews`,
+                          enrolledText: `${effectiveEnrolledCount} Enrolled`,
                         }}
                       />
-                    )
-                  )}
+                    );
+                  })}
                 </div>
 
                 {/* Pagination */}

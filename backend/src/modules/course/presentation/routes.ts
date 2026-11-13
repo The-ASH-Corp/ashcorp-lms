@@ -8,6 +8,7 @@ import {
   getCourseByIdController,
   makeCourseFreeAndPublishedController,
   updateCourseController,
+  updateCourseRatingController,
 } from "./controller";
 import { fileUpload } from "../../../shared/middleware/fileUpload";
 import { authMiddleware } from "../../../shared/middleware/authMiddleware";
@@ -47,6 +48,8 @@ router.patch(
   ]),
   updateCourseController,
 );
+
+router.patch("/:id/rating", ...adminOnly, updateCourseRatingController);
 
 router.delete("/delete-course/:id", ...adminOnly, deleteCourseController);
 
