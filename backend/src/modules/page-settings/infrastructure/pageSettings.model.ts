@@ -291,7 +291,8 @@ const contactSettingsSchema = new Schema(
     },
     locationMap: {
       enabled: { type: Boolean, default: true },
-      title: { type: String, default: "Our Campus & Location" },
+      sectionTitle: { type: String, default: "Our Campus & Location" },
+      title: { type: String, default: "Tirur Campus" },
       address: {
         type: String,
         default: "Ashcorp Technology - Digital Marketing, Software Development, Tirur",
@@ -300,6 +301,19 @@ const contactSettingsSchema = new Schema(
         type: String,
         default:
           "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d712.5535472308395!2d75.94660271623343!3d10.953023494019337!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ba7b35545b7a371%3A0x59efa33ed27234a7!2sAshcorp%20Technology-%20Digital%20Marketing%2C%20Software%20Development%2C%20Flutter%20%2C%20MERN%20Stack%20Development%20in%20Tirur!5e1!3m2!1sen!2sin!4v1785563688272!5m2!1sen!2sin",
+      },
+      secondaryTitle: {
+        type: String,
+        default: "Calicut Campus (HiLITE Business Park)",
+      },
+      secondaryAddress: {
+        type: String,
+        default: "HiLITE Business Park, Kozhikode, Kerala",
+      },
+      secondaryMapEmbedUrl: {
+        type: String,
+        default:
+          "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1455.378419197244!2d75.83347121985852!3d11.24809597559352!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ba6597c304c1f3b%3A0xbb7abc23c1ea8a!2sHiLITE%20Business%20Park!5e1!3m2!1sen!2sin!4v1794982341203!5m2!1sen!2sin",
       },
     },
     faqs: {

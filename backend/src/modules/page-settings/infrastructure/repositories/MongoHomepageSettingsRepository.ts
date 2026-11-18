@@ -99,7 +99,10 @@ export class MongoHomepageSettingsRepository implements HomepageSettingsReposito
       if (data.hero) settings.hero = { ...settings.hero, ...data.hero };
       if (data.inquiryForm) settings.inquiryForm = { ...settings.inquiryForm, ...data.inquiryForm };
       if (data.directories) settings.directories = { ...settings.directories, ...data.directories };
-      if (data.locationMap) settings.locationMap = { ...settings.locationMap, ...data.locationMap };
+      if (data.locationMap) {
+        (settings as any).locationMap = { ...settings.locationMap, ...data.locationMap };
+        settings.markModified("locationMap");
+      }
       if (data.faqs) (settings as any).faqs = { ...settings.faqs, ...data.faqs };
 
       await settings.save();

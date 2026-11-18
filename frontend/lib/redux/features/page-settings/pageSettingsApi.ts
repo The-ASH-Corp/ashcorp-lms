@@ -178,9 +178,13 @@ export interface IContactPageSettings {
   };
   locationMap: {
     enabled: boolean;
+    sectionTitle?: string;
     title: string;
     address: string;
     mapEmbedUrl: string;
+    secondaryTitle?: string;
+    secondaryAddress?: string;
+    secondaryMapEmbedUrl?: string;
   };
   faqs: {
     title: string;
