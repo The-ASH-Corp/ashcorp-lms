@@ -74,6 +74,9 @@ export default function Navbar() {
 
           {/* Navigation Links */}
           <nav className="hidden md:flex items-center gap-8">
+            <Link href="/courses" className={navLinkClass("/courses")}>
+              Courses
+            </Link>
             <Select value="" onValueChange={handleCategorySelect}>
               <SelectTrigger className="h-auto w-auto gap-1 border-0 bg-transparent p-0 text-sm font-medium text-gray-600 shadow-none hover:text-primary focus:ring-0 focus-visible:ring-0 data-[size=default]:h-auto data-placeholder:text-gray-600 hover:data-placeholder:text-primary cursor-pointer [&>svg]:size-3.5 [&>svg]:text-gray-600 hover:[&>svg]:text-primary transition-colors">
                 <SelectValue placeholder="Categories" />
@@ -86,10 +89,6 @@ export default function Navbar() {
                 ))}
               </SelectContent>
             </Select>
-
-            <Link href="/courses" className={navLinkClass("/courses")}>
-              Courses
-            </Link>
 
             <Link href="/about" className={navLinkClass("/about")}>
               About Us
